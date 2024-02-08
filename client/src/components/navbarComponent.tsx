@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 
 function NavbarComponent() {
   return (
@@ -23,8 +24,10 @@ function NavbarComponent() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Dojo menu
           </Typography>
-          <Button href={`/search`} color="inherit">Search</Button>
-          <Button href={`/login`} color="inherit">Login</Button>
+          <Stack direction= "row" spacing={2}>
+            <Button href={`/search`} color="inherit">Search</Button>
+            <Button href={`/login`} color="inherit">Login</Button>
+          </Stack>
         </Toolbar>
       </AppBar>
     </Box>
