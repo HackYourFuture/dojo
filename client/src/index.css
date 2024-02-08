@@ -1,3 +1,7 @@
+body {
+  margin: 0;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -18,4 +22,13 @@
     color: #213547;
     background-color: #ffffff;
   }
+}
+
+img {
+  max-width: 100%;
+  vertical-align: middle;
+  padding: 8px 0;
+  display: inline-block;
+  border: 0;
+  box-sizing: border-box;
 }
