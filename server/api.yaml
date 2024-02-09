@@ -1,0 +1,185 @@
+openapi: 3.0.3
+info:
+  title: Dojo API
+  description: |-
+    Welcome to the Dojo API specification
+  version: 1.0.0
+externalDocs:
+  description: Dojo GitHub repository
+  url: https://github.com/hackYourFuture/dojo
+tags:
+  - name: search
+    description: ''
+  - name: trainee
+    description: ''
+paths:
+  /search:
+    get:
+      tags:
+        - search
+      summary: Search for trainees
+      description: ''
+      parameters:
+        - name: q
+          in: query
+          description: Search query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'          
+        '400':
+          description: Missing query
+  /trainee:
+    post:
+      tags:
+        - trainee
+      summary: Create new profile
+      description: ''
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trainee'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trainee'
+  /trainee/{id}:
+    get:
+      tags:
+        - trainee
+      summary: Fetch information about a trainee
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+          
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trainee'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      tags:
+        - trainee
+      summary: Update trainee information
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+          
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trainee'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+    delete:
+      tags:
+        - trainee
+      summary: Delete trainee from the system
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+          
+      responses:
+        '204':
+          description: successful operation
+
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+components:
+  schemas:
+    SearchResponse:
+      type: object
+      properties:
+        hits:
+          $ref: '#/components/schemas/SearchHits'
+          
+    SearchHits:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResultItem'
+        size:
+          type: integer
+          example: 45
+          
+    SearchResultItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '3jvz35Z'
+        name:
+          type: string
+          example: John Doe
+        
+    Trainee:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '3jvz35Z'
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+          
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Error message'
+          
