@@ -10,13 +10,15 @@ import { SearchController } from "./controllers/SearchController";
 dotenv.config();
 
 const app: Application = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 7777;
 
 // Setup middlewares
 if (process.env.NODE_ENV !== "production") {
   app.use(cors());
 }
-app.use("/api", swagger("./api.yaml"));
+app.use("/api-docs", swagger("./api.yaml"));
+app.use(express.json());
+app.disable('x-powered-by')
 
 // setup controllers
 const traineeController = new TraineeController();
@@ -35,5 +37,8 @@ app.use((req, res, next) => {
 
 // Start application
 app.listen(port, () => {
-  console.log(`Dojo Server is running at http://localhost:${port}`);
+  console.log(`🟢 Dojo Server is running`);
+  console.log(`    🌐 Base URL: http://localhost:${port}/api`);
+  console.log(`    📝 API docs: http://localhost:${port}/api-docs`);
+
 });
