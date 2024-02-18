@@ -13,7 +13,7 @@ servers:
 tags:
   - name: search
     description: ''
-  - name: trainee
+  - name: trainees
     description: ''
 paths:
   /search:
@@ -38,10 +38,10 @@ paths:
                 $ref: '#/components/schemas/SearchResponse'          
         '400':
           description: Missing query
-  /trainee:
+  /trainees:
     post:
       tags:
-        - trainee
+        - trainees
       summary: Create new profile
       description: ''
       requestBody:
@@ -57,10 +57,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Trainee'
-  /trainee/{id}:
+  /trainees/{id}:
     get:
       tags:
-        - trainee
+        - trainees
       summary: Fetch information about a trainee
       description: ''
       parameters:
@@ -87,7 +87,7 @@ paths:
 
     patch:
       tags:
-        - trainee
+        - trainees
       summary: Update trainee information
       description: ''
       parameters:
@@ -114,7 +114,7 @@ paths:
                 
     delete:
       tags:
-        - trainee
+        - trainees
       summary: Delete trainee from the system
       description: ''
       parameters:

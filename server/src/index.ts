@@ -2,9 +2,9 @@ import express, { Request, Response, NextFunction} from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import swagger from "./api-docs/swagger";
-import TraineeRouter from "./routes/TraineeRouter";
+import TraineesRouter from "./routes/TraineesRouter";
 import SearchRouter from "./routes/SearchRouter";
-import { TraineeController } from "./controllers/TraineeController";
+import { TraineesController } from "./controllers/TraineesController";
 import { SearchController } from "./controllers/SearchController";
 
 class Main {
@@ -24,11 +24,11 @@ class Main {
 
   setupRoutes() {
     // setup controllers
-    const traineeController = new TraineeController();
+    const traineesController = new TraineesController();
     const searchController = new SearchController();
   
     // Setup routers
-    const traineeRouter = new TraineeRouter(traineeController);
+    const traineeRouter = new TraineesRouter(traineesController);
     const searchRouter = new SearchRouter(searchController);
   
     // Define routes
