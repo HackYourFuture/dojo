@@ -11,7 +11,7 @@ export default class SearchRouter implements RouterType {
 
   build(): Router {
     const router = Router();
-    router.get("/", this.searchController.search);
+    router.get("/", this.searchController.search.bind(this.searchController));
     return router;
   }
 }
