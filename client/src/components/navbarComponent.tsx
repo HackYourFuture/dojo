@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import HYFLogo from '../assets/HYF.svg';
+import HYFLogo from '../assets/HYF_logo.svg';
 
 function NavbarComponent() {
   return (
