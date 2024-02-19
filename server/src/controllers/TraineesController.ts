@@ -1,29 +1,40 @@
 import { Request, Response } from "express";
 import { Trainee } from "../models/Trainee";
+import { TraineesRepository } from "../repositories/TraineesRepository";
 
 export interface TraineesControllerType {
-  getTrainee(req: Request, res: Response): void;
-  createTrainee(req: Request, res: Response): void;
-  updateTrainee(req: Request, res: Response): void;
-  deleteTrainee(req: Request, res: Response): void;
+  getTrainee(req: Request, res: Response): Promise<void>;
+  createTrainee(req: Request, res: Response): Promise<void>;
+  updateTrainee(req: Request, res: Response): Promise<void>;
+  deleteTrainee(req: Request, res: Response): Promise<void>;
 }
 
 export class TraineesController {
-  constructor() {}
+  private traineeRepository: TraineesRepository;
+  constructor(traineeRepository: TraineesRepository) {
+    this.traineeRepository = traineeRepository;
+  }
 
-  getTrainee(req: Request, res: Response) {
+  async getTrainee(req: Request, res: Response) {
     res.status(200).json(fakeTrainee);
   }
 
-  createTrainee(req: Request, res: Response) {
+  async createTrainee(req: Request, res: Response) {
+    try {
+      const newTrainee = await this.traineeRepository.createTrainee(req.body);
+      res.status(201).json(newTrainee);
+    } catch (error: any) {
+      const allErrors = Object.keys(error.errors).map((key) => error.errors[key].message ).join(" ");
+      console.error(error);
+      res.status(400).send({ error: allErrors });
+    }
+  }
+
+  async updateTrainee(req: Request, res: Response) {
     res.status(500).send("Not implemented");
   }
 
-  updateTrainee(req: Request, res: Response) {
-    res.status(500).send("Not implemented");
-  }
-
-  deleteTrainee(req: Request, res: Response) {
+  async deleteTrainee(req: Request, res: Response) {
     res.status(500).send("Not implemented");
   }
 }

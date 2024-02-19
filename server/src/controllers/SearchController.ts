@@ -15,13 +15,13 @@ interface SearchResult {
 }
 
 export interface SearchControllerType {
-  search(req: Request, res: Response): void;
+  search(req: Request, res: Response): Promise<void>;
 }
 
 export class SearchController implements SearchControllerType {
   constructor() {}
 
-  search(req: Request, res: Response) {
+  async search(req: Request, res: Response) {
     const searchQuery: string = req.query.q as string ?? "";
     const results = fakeData.filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
     const response: SearchResponse = {
