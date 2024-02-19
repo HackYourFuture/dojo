@@ -4,10 +4,10 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "setup": "npm install && cp -n .env.example .env",
-    "build": "npx tsc",
-    "start": "npx tsc && node dist/index.js",
-    "dev": "nodemon -w src src/index.ts"
+    "build": "tsc",
+    "dev": "nodemon -w src src/index.ts",
+    "start": "tsc && node dist/index.js",
+    "setup": "npm install --dev"
   },
   "keywords": [],
   "author": "",
