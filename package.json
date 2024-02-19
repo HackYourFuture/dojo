@@ -1,0 +1,24 @@
+{
+  "name": "dojo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "setup": "npm run setup:client && npm run setup:server",
+    "setup:client": "cd client && npm run setup && cd ..",
+    "setup:server": "cd server && npm run setup && cd ..",
+    "start": "cd server && npm start",
+    "heroku-prebuild": "npm run setup",
+    "heroku-postbuild": "npm run build"
+  },
+  "author": "HackYourFuture",
+  "license": "ISC",
+  "engines": {
+    "node": "20.x"
+  }  
+}
