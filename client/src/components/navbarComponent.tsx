@@ -11,7 +11,7 @@ function NavbarComponent() {
       <AppBar position="static" sx={{ bgcolor: "black" }}>
         <Toolbar>
           <Box component="div" sx={{ flexGrow: 1 }}>
-            <img src={HYFLogo} height='60' alt="HYF logo"/>
+            <img src={HYFLogo} height='60' alt="HYF navbar logo" className="hyf-navbar-logo-img"/>
           </Box>
           <Stack direction= "row" spacing={2}>
             <Button href={`/search`} color="inherit">Search</Button>
