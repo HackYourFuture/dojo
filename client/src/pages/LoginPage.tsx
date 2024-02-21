@@ -7,6 +7,8 @@ import Stack from '@mui/material/Stack';
 
 function LoginPage() {
   const login = useGoogleLogin({
+    //TODO: send the response.access_token to the back-end so it can validate google's token, 
+    //extract the user info and return a new token for all other authenticated requests.
     onSuccess:async (response) => {
       try{
         const res = await axios.get(
@@ -30,7 +32,7 @@ function LoginPage() {
     }
   });
 
-  // log out function to log the user out of google and set the profile array to null
+  // Log-out function to log the user out of google and set the profile array to null
   const logOut = () => {
     googleLogout();
   };
