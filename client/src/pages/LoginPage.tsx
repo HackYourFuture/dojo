@@ -1,5 +1,4 @@
 import HYFLogo from '../assets/HYF_logo.svg';
-import axios from 'axios';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 
 import Button from '@mui/material/Button';
@@ -11,7 +10,7 @@ function LoginPage() {
     //extract the user info and return a new token for all other authenticated requests.
     onSuccess:async (response) => {
       try{
-        const res = await axios.get(
+        const res = await fetch(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers:{
@@ -19,7 +18,8 @@ function LoginPage() {
               Accept: 'application/json'
             },
           }
-        );
+        ).then((response) => response.json());    
+
         console.log(res);
       }
       catch(err){
