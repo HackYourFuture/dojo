@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import HYFLogo from '../assets/HYF.svg';
+import HYFLogo from '../assets/HYF_logo.svg';
 
 function NavbarComponent() {
   return (
@@ -11,7 +11,7 @@ function NavbarComponent() {
       <AppBar position="static" sx={{ bgcolor: "black" }}>
         <Toolbar>
           <Box component="div" sx={{ flexGrow: 1 }}>
-            <img src={HYFLogo} height='60' alt="HYF logo"/>
+            <img src={HYFLogo} height='60' alt="HYF navbar logo" className="hyf-navbar-logo-img"/>
           </Box>
           <Stack direction= "row" spacing={2}>
             <Button href={`/search`} color="inherit">Search</Button>
