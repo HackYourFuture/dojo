@@ -5,9 +5,14 @@ import {
 } from "react-router-dom";
 import './index.css'
 import { router } from './routes';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <GoogleOAuthProvider 
+      clientId = {import.meta.env.VITE_APP_CLIENTID}
+    >
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
   </React.StrictMode>,
 )

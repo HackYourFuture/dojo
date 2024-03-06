@@ -30,11 +30,33 @@ body {
   }
 }
 
-img {
+.hyf-navbar-logo-img {
   max-width: 100%;
   vertical-align: middle;
   padding: 8px 0;
   display: inline-block;
   border: 0;
   box-sizing: border-box;
+}
+
+
+.login-container {
+  padding-top: 20vh;
+  width: 40%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 200px;
+}
+
+.hyf-logo-img {
+  height: 100px;
+  background-color: black;
+  padding: 10px;
+  margin-bottom: 50px;
+}
+
+.login-button{
+  min-width: 400px;
 }
