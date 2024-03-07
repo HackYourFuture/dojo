@@ -13,6 +13,7 @@ import HYFLogo from '../assets/HYF_logo.svg';
 import { googleLogout } from '@react-oauth/google';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
+import Container from '@mui/material/Container';
 
 function ResponsiveNavbarComponent() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -42,69 +43,70 @@ function ResponsiveNavbarComponent() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: "black" }}>
-        <Toolbar>
-          <Box component="div">
-            <img src={HYFLogo} height='60' alt="HYF navbar logo" className="hyf-navbar-logo-img"/>
-          </Box>
+        <Container maxWidth={false}>
+          <Toolbar disableGutters>
+            <Box component="div">
+              <img src={HYFLogo} height='60' alt="HYF navbar logo" className="hyf-navbar-logo-img"/>
+            </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Stack direction= "row" spacing={2}>
-              <Button
-                key='Home'
-                href={`/home`}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Home
-              </Button>
-              <Button
-                key='Cohorts'
-                href={`/cohorts`}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Cohorts
-              </Button>
-              <Button
-                key='Dashboard'
-                href={`/dashboard`}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Dashboard
-              </Button>
-            </Stack>
-          </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              <Stack direction= "row" spacing={2}>
+                <Button
+                  key='Home'
+                  href={`/home`}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Home
+                </Button>
+                <Button
+                  key='Cohorts'
+                  href={`/cohorts`}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Cohorts
+                </Button>
+                <Button
+                  key='Dashboard'
+                  href={`/dashboard`}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Dashboard
+                </Button>
+              </Stack>
+            </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
-          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="menu of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-              sx={{ p: 0 }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="main-menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              <MenuItem key='Home'>
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="menu of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+                sx={{ p: 0 }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="main-menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                <MenuItem key='Home'>
                   <Button
                     href={`/home`}
                     sx={{ color: 'inherit', display: 'block', textAlign:'center' }}
@@ -128,43 +130,44 @@ function ResponsiveNavbarComponent() {
                     Dashboard
                   </Button>
                 </MenuItem>
-            </Menu>
-          </Box>
+              </Menu>
+            </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <IconButton href={`/search`} size="large" aria-label="search" color="inherit">
-              <SearchIcon />
-            </IconButton>
-            <Tooltip title="Open user menu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User image" src="../assets/avatar/user.jpg" />
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton href={`/search`} size="large" aria-label="search" color="inherit">
+                <SearchIcon />
               </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="user-menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem key='Login'>
-                <Button href={`/login`} color="inherit">Login</Button>
-              </MenuItem>
-              <MenuItem key='Logout'>
-                <Button onClick={logOut} href={`/`} color="inherit">Log out</Button>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
+              <Tooltip title="Open user menu">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="User image" src="../assets/avatar/user.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="user-menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem key='Login'>
+                  <Button href={`/login`} color="inherit">Login</Button>
+                </MenuItem>
+                <MenuItem key='Logout'>
+                  <Button onClick={logOut} href={`/`} color="inherit">Log out</Button>
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
       </AppBar>
     </Box>
   );
