@@ -1,5 +1,5 @@
 import HYFLogo from '../assets/HYF_logo.svg';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -32,22 +32,16 @@ function LoginPage() {
     }
   });
 
-  // Log-out function to log the user out of google and set the profile array to null
-  const logOut = () => {
-    googleLogout();
-  };
-
   return (
     <div className='login-container'>
       <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img"/>
       <div className='login-button'>
         <Stack spacing={2} direction="column">
           <Button onClick={() => login()} variant="contained">Login with Google</Button>
-          <Button onClick={logOut} variant="outlined">Log out</Button>
         </Stack>
       </div>
     </div>
   );
 }
 
-export default LoginPage
+export default LoginPage;

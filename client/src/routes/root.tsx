@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
-import NavbarComponent from "../components/navbarComponent";
+import ResponsiveNavbarComponent from "../components/navbarComponent";
 
 export default function Root() {
   return (
     <>
       <div id="navbar">
-      <NavbarComponent />
+      <ResponsiveNavbarComponent />
       </div>
       <div id="detail">
         <Outlet />
