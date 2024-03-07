@@ -1,3 +1,5 @@
+# Tip: Use https://editor.swagger.io/ to edit and preview this API specification
+
 openapi: 3.0.3
 info:
   title: Dojo API
@@ -10,6 +12,8 @@ externalDocs:
 servers:
   - url: http://localhost:7777/api/
     description: Local development server
+  - url: https://dojo-test.hackyourfuture.net/api/
+    description: Test server
 tags:
   - name: search
     description: ''
@@ -20,8 +24,8 @@ paths:
     get:
       tags:
         - search
-      summary: Search for trainees
-      description: ''
+      summary: Find trainees
+      description:  Find trainees by a keyword. The search will try to match the first name, last name or email.
       parameters:
         - name: q
           in: query
@@ -161,23 +165,328 @@ components:
       properties:
         id:
           type: string
-          example: '3jvz35Z'
+          example: '65ea2e1e696deb3b3ebff843'
         name:
           type: string
           example: John Doe
         
     Trainee:
       type: object
+      required:
+        - personalInfo
+        - contactInfo
       properties:
         id:
           type: string
-          example: '3jvz35Z'
+          example: '65ea2e1e696deb3b3ebff843'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-01-01T00:00:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2024-01-01T00:00:00.000Z'
+        personalInfo:
+          $ref: '#/components/schemas/TraineePersonalInfo'
+        contactInfo:
+          $ref: '#/components/schemas/TraineeContactInfo'
+        educationInfo:
+          $ref: '#/components/schemas/TraineeEducationInfo'  
+        employmentInfo:
+          $ref: '#/components/schemas/TraineeEmploymentInfo'
+        interactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraineeInteraction'
+          
+    TraineePersonalInfo:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - gender
+      properties:
         firstName:
           type: string
           example: John
         lastName:
           type: string
           example: Doe
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+            - other
+          example: male
+        pronouns:
+          type: string
+          example: He/His
+        location:
+          type: string
+          example: Amsterdam
+        englishLevel:
+          type: string
+          enum:
+            - needs-work
+            - medium
+            - good
+          example: good
+        professionalDutch:
+            type: boolean
+            example: true
+        imageUrl:
+          type: string
+          format: url
+          example: 'https://example.com/image.png'
+        countryOfOrigin:
+          type: string
+          example: Syria
+        background:
+          type: string
+          enum:
+            - refugee
+            - family-reunification
+            - partner-of-skilled-migrant
+            - vulnerable-group
+            - eu-citizen
+          example: refugee
+        hasWorkPermit:
+          type: boolean
+          example: true
+        receivesUitkering:
+          type: boolean
+          example: true
+        caseManagerPressing:
+          type: boolean
+          example: false
+        educationLevel:
+          type: string
+          enum:
+            - none
+            - high-school
+            - bachelors-degree
+            - masters-degree
+          example: bachelors-degree
+        educationBackground:
+          type: string
+          example: BSc in Biology
+        comments:
+          type: string
+          
+    TraineeContactInfo:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          example: john.doe@example.com
+        slack:
+          type: string
+          example: johnny.d
+        phone:
+          type: string
+          example: 0612345678
+        github:
+          type: string
+          example: johngithub
+        linkedin:
+          type: string
+          example: https://linkedin.com/in/john.doe
+
+    TraineeEducationInfo:
+      type: object
+      required:
+        - learningStatus
+      properties:
+        startCohort:
+          type: number
+          example: 46
+        currentCohort:
+          type: number
+          example: 47
+        learningStatus:
+          type: string
+          example: active
+        startDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z
+        graduationDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z  
+        quitReason:
+          type: string
+        strikes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Strike'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assignment'
+        tests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Test'
+        comments:
+          type: string
+          
+    TraineeEmploymentInfo:
+      type: object
+      required:
+        - email
+      properties:
+        status:
+          type: string
+          example: searching
+        cvURL:
+          type: string
+          example: https://example.com/cv.pdf
+        availability:
+          type: string
+        preferredRole:
+          type: string        
+        preferredLocation:
+          type: string   
+        employmentHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraineeEmploymentHistory'
+        comments: 
+          type: string
+
+    Strike:
+      type: object
+      required:
+        - strikeDate
+        - reason
+      properties:
+        createDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z  
+        strikeDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z 
+        reporterID:
+          type: string
+          example: 65ea2e1e696deb3b3ebff843
+        reason:
+          type: string
+          enum:
+            - late-submission
+            - no-prep-exercise
+            - no-question
+            - presence
+            - other
+        comments: 
+          type: string
+          
+    Assignment:
+      type: object
+      required:
+        - type
+        - status
+      properties:
+        createDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z  
+        type:
+          type: string
+          example: 'JS week 2'
+        status:
+          type: string
+          example: 'waiting-review'
+        content:
+          type: string
+          example: 'https://github.com/link/to/assignment'
+        comments: 
+          type: string
+          
+    Test:
+      type: object
+      required:
+        - testDate
+        - type
+      properties:
+        testDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z  
+        type:
+          type: string
+          example: 'React interview'
+        grade:
+          type: number
+          example: 8.6
+        pass:
+          type: boolean
+          example: true
+        warning:
+          type: boolean
+          example: false
+        comments: 
+          type: string
+          
+    TraineeEmploymentHistory:
+      type: object
+      required:
+        - startDate
+        - type
+        - role
+        - feeCollected
+      properties:
+        type:
+          type: string
+          enum:
+          - internship
+          - job
+        startDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z
+        endDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z  
+        role:
+          type: string
+        feeCollected:
+          type: boolean
+        feeAmount:
+          type: number
+          example: 500
+        comments: 
+          type: string
+          
+    TraineeInteraction:
+      type: object
+      required:
+        - type
+        - details
+      properties:
+        type:
+          type: string
+          enum:
+            - call
+            - feedback
+            - tech-hour
+            - other
+        reporterID:
+          type: string
+          example: 65ea2e1e696deb3b3ebff843
+        createDate:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z 
+        details:
+          type: string
           
     Error:
       type: object
@@ -185,4 +494,3 @@ components:
         message:
           type: string
           example: 'Error message'
-          
