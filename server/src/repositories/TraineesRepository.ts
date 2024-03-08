@@ -1,9 +1,10 @@
 import { Trainee } from "../models/Trainee";
 import TraineeSchema from "../schemas/TraineeSchema";
 import mongoose from "mongoose";
+import { escapeStringRegexp } from "../utils/string";
 
 export interface TraineesRepository {
-  searchTrainees(keyword: string): Promise<Trainee[]>;
+  searchTrainees(keyword: string, limit: number): Promise<Trainee[]>;
   getTrainee(id: string): Promise<Trainee | null>;
   createTrainee(trainee: Trainee): Promise<Trainee>;
   deleteTrainee(id: string): Promise<void>;
@@ -19,10 +20,19 @@ export class MongooseTraineesRepository implements TraineesRepository {
     this.TraineeModel = db.model<Trainee>("Trainee", TraineeSchema);
   }
 
-  async searchTrainees(keyword: string): Promise<Trainee[]> {
-    throw new Error("Not implemented");
+  async searchTrainees(keyword: string, limit: number): Promise<Trainee[]> {
+    const escapedKeyword = escapeStringRegexp(keyword);
+    return await this.TraineeModel.find({
+      $or: [
+        { "personalInfo.firstName": { $regex: escapedKeyword, $options: "i" } },
+        { "personalInfo.lastName": { $regex: escapedKeyword, $options: "i" } },
+        { "contactInfo.email": { $regex: escapedKeyword, $options: "i" } },
+      ],
+    })
+      .limit(limit)
+      .sort({ updatedAt: -1 });
   }
-  
+
   async getTrainee(id: string): Promise<Trainee | null> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return null;

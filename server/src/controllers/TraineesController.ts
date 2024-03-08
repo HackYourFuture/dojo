@@ -10,16 +10,16 @@ export interface TraineesControllerType {
 }
 
 export class TraineesController implements TraineesControllerType {
-  private traineeRepository: TraineesRepository;
-  constructor(traineeRepository: TraineesRepository) {
-    this.traineeRepository = traineeRepository;
+  private traineesRepository: TraineesRepository;
+  constructor(traineesRepository: TraineesRepository) {
+    this.traineesRepository = traineesRepository;
   }
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
     const traineeId = req.params.id;    
     // TODO: check if trainee id is a valid object id
     try {
-      const trainee = await this.traineeRepository.getTrainee(traineeId);
+      const trainee = await this.traineesRepository.getTrainee(traineeId);
       if (!trainee) {
         res.status(404).json({ error: "Trainee was not found" });
         return;
@@ -37,7 +37,7 @@ export class TraineesController implements TraineesControllerType {
 
     // Check if the request is valid
     try {
-      await this.traineeRepository.validateTrainee(req.body);
+      await this.traineesRepository.validateTrainee(req.body);
     } catch (error: any) {
       const message: string = `Invalid trainee information. ` + error.message;
       res.status(400).json(new ResponseError(message));
@@ -48,7 +48,7 @@ export class TraineesController implements TraineesControllerType {
     const email = req.body.contactInfo.email;
     let emailExists: boolean = false;
     try {
-      emailExists = await this.traineeRepository.isEmailExists(email)
+      emailExists = await this.traineesRepository.isEmailExists(email)
     } catch (error: any) {
       next(error);
       return;
@@ -61,7 +61,7 @@ export class TraineesController implements TraineesControllerType {
 
     // Create new trainee and return it
     try {
-      const newTrainee = await this.traineeRepository.createTrainee(req.body);
+      const newTrainee = await this.traineesRepository.createTrainee(req.body);
       res.status(201).json(newTrainee);
     } catch (error: any) {
       res.status(400).send({ error: error.message });
@@ -69,7 +69,7 @@ export class TraineesController implements TraineesControllerType {
   }
 
   async updateTrainee(req: Request, res: Response, next: NextFunction) {
-    res.status(500).send("Not implemented");
+        res.status(500).send("Not implemented");
   }
 
   async deleteTrainee(req: Request, res: Response, next: NextFunction) {
