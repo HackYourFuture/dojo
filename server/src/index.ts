@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import helmet from "helmet";
 import swagger from "./api-docs/swagger";
 import TraineesRouter from "./routes/TraineesRouter";
 import SearchRouter from "./routes/SearchRouter";
@@ -25,6 +26,7 @@ class Main {
     }
     this.app.use("/api-docs", swagger("./api.yaml"));
     this.app.use(express.json());
+    this.app.use(helmet());
     this.app.disable("x-powered-by");
   }
 
