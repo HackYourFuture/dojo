@@ -37,7 +37,7 @@ class Main {
 
     // setup controllers
     const traineeController = new TraineesController(traineesRepository);
-    const searchController = new SearchController();
+    const searchController = new SearchController(traineesRepository);
 
     // Setup routers
     const traineeRouter = new TraineesRouter(traineeController);
