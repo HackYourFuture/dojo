@@ -15,11 +15,45 @@ servers:
   - url: https://dojo-test.hackyourfuture.net/api/
     description: Test server
 tags:
+  - name: auth
+    description: ''
   - name: search
     description: ''
   - name: trainees
     description: ''
 paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login to the system
+      description: The endpoint exchanges Google OAuth2 token for internal JWT token to be used for authenticated requests
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        401:
+          description: Authentication failed. The provided token may be invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Unauthorized user - The user is not allowed to login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /search:
     get:
       tags:
@@ -143,6 +177,20 @@ paths:
 
 components:
   schemas:
+    LoginRequest:
+      type: object
+      properties:
+        googleAccessToken:
+            type: string
+            example: a79.a0vvd52N38l_KtsEccaskw3Ec-i2J_h_Qn3jAsCt_iHr_CcHz_-PXzciv5RuGFm7qWAUxTfOMjvX6HjXuvjYFLiDLu2PyUeV7HBeq4TO2sFBjoeO456XQ8bCM5f44K3wCzSCau3uIrBAT9iU6agg4ggFsdqqrjZYTc4aCaYKAQYSARISFQHGb2Mij1Yo8GFRSfE5gx_OH6kfgG0170
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
     SearchResponse:
       type: object
       properties:
@@ -304,9 +352,11 @@ components:
         startCohort:
           type: number
           example: 46
+          minimum: 0
         currentCohort:
           type: number
           example: 47
+          minimum: 0
         learningStatus:
           type: string
           example: active
@@ -447,6 +497,9 @@ components:
           enum:
           - internship
           - job
+        companyName:
+          type: string
+          example: HackYourFuture
         startDate:
           type: string
           format: date-time
