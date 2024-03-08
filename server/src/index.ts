@@ -5,8 +5,10 @@ import path from "path";
 import swagger from "./api-docs/swagger";
 import TraineesRouter from "./routes/TraineesRouter";
 import SearchRouter from "./routes/SearchRouter";
+import AuthenticationRouter from "./routes/AuthenticationRouter";
 import { TraineesController } from "./controllers/TraineesController";
 import { SearchController } from "./controllers/SearchController";
+import { AuthenticationController } from "./controllers/AuthenticationController";
 import { MongooseTraineesRepository } from "./repositories/TraineesRepository";
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
@@ -36,14 +38,17 @@ class Main {
     const traineesRepository = new MongooseTraineesRepository(this.db);
 
     // setup controllers
+    const authenticationController = new AuthenticationController();
     const traineeController = new TraineesController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
 
     // Setup routers
+    const authenticationRouter = new AuthenticationRouter(authenticationController);
     const traineeRouter = new TraineesRouter(traineeController);
     const searchRouter = new SearchRouter(searchController);
 
     // Define routes
+    this.app.use("/api/auth", authenticationRouter.build());
     this.app.use("/api/trainees", traineeRouter.build());
     this.app.use("/api/search", searchRouter.build());
   
