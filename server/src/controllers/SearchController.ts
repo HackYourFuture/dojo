@@ -26,7 +26,10 @@ export class SearchController implements SearchControllerType {
   }
 
   async search(req: Request, res: Response) {
-    const limit: number = 10;
+    const maxAllowedLimit = 50;
+    const inputLimit = Number(req.query.limit) || 20;
+    const limit = Math.min(inputLimit, maxAllowedLimit);
+
     const searchQuery: string = (req.query.q as string) ?? "";
     const trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
     const results = trainees.map(trainee => ({

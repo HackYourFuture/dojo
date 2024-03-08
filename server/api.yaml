@@ -33,6 +33,14 @@ paths:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Return maximum number of results. Maximum allowed value is 50
+          required: false
+          schema:
+            type: integer
+            default: 20
+            
       responses:
         '200':
           description: Successful operation
@@ -302,10 +310,10 @@ components:
         - learningStatus
       properties:
         startCohort:
-          type: number
+          type: integer
           example: 46
         currentCohort:
-          type: number
+          type: integer
           example: 47
         learningStatus:
           type: string
