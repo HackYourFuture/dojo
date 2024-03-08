@@ -49,7 +49,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async updateTrainee(trainee: Trainee): Promise<void> {
-    this.TraineeModel.updateOne({ _id: trainee.id }, trainee);
+    throw new Error("Not implemented");
   }
 
   async isEmailExists(email: string): Promise<boolean> {

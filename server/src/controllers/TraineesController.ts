@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { TraineesRepository } from "../repositories/TraineesRepository";
 import ResponseError from "../models/ResponseError";
-import { Trainee } from "../models/Trainee";
 
 export interface TraineesControllerType {
   getTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -22,7 +21,7 @@ export class TraineesController implements TraineesControllerType {
     try {
       const trainee = await this.traineesRepository.getTrainee(traineeId);
       if (!trainee) {
-        res.status(404).send(new ResponseError("Trainee not found"));
+        res.status(404).json({ error: "Trainee was not found" });
         return;
       }
       res.status(200).json(trainee);
@@ -65,37 +64,12 @@ export class TraineesController implements TraineesControllerType {
       const newTrainee = await this.traineesRepository.createTrainee(req.body);
       res.status(201).json(newTrainee);
     } catch (error: any) {
-      res.status(500).send(new ResponseError(error.message));
+      res.status(400).send({ error: error.message });
     }
   }
 
   async updateTrainee(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
-      return;
-    }
-    
-    // Update all properties
-    if(req.body.contactInfo) {
-      Object.assign(trainee.contactInfo, req.body.contactInfo);
-    }
-
-    // Validate new trainee model
-    try {
-      await this.traineesRepository.validateTrainee(trainee);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
-    }
-
-    // Save
-    try {
-      await this.traineesRepository.updateTrainee(trainee);
-      res.status(200).json(trainee);
-    } catch (error: any) {
-      res.status(500).send(new ResponseError(error.message));
-    }
+        res.status(500).send("Not implemented");
   }
 
   async deleteTrainee(req: Request, res: Response, next: NextFunction) {
