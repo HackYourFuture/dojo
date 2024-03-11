@@ -2,7 +2,7 @@ import { useState } from "react"
 import { SearchBar } from "../components/searchBarComponent"
 import "./SearchPage.css"
 import { SearchResultsList } from "../components/SearchResultsList";
-import HYFLogo from '../assets/HYF.svg';
+import HYFLogo from '../assets/HYF_logo.svg';
 
 
 function SearchPage() {
