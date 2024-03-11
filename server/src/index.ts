@@ -11,6 +11,9 @@ import { TraineesController } from "./controllers/TraineesController";
 import { SearchController } from "./controllers/SearchController";
 import { AuthenticationController } from "./controllers/AuthenticationController";
 import { MongooseTraineesRepository } from "./repositories/TraineesRepository";
+import { MongooseUserRepository } from "./repositories/UserRepository";
+import { GoogleOAuthService } from "./services/GoogleOAuthService";
+
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
 
@@ -43,10 +46,13 @@ class Main {
       throw new Error("Must connect to the database before setting up routes.");
     }
 
+    // Dependencies
+    const googleOAuthService = new GoogleOAuthService();
     const traineesRepository = new MongooseTraineesRepository(this.db);
+    const userRepository = new MongooseUserRepository(this.db); 
 
     // setup controllers
-    const authenticationController = new AuthenticationController();
+    const authenticationController = new AuthenticationController(userRepository, googleOAuthService);
     const traineeController = new TraineesController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
 
