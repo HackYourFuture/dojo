@@ -1,6 +1,7 @@
 export interface User {
-  id: string;
+  readonly id: string;
   email: string;
-  displayName: string;
-  canLogin: boolean;
+  name: string;
+  imageUrl?: string;
+  isActive: boolean;
 }

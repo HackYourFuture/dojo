@@ -162,7 +162,7 @@ const TraineeSchema = new Schema<Trainee>(
 TraineeSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (_, ret) {
+  transform: (_, ret) => {
     delete ret._id;
   },
 });
