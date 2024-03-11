@@ -28,8 +28,13 @@ class Main {
     }
     this.app.use("/api-docs", swagger("./api.yaml"));
     this.app.use(express.json());
-    this.app.use(helmet());
-    this.app.disable("x-powered-by");
+    this.app.use(helmet({
+      contentSecurityPolicy: {
+        directives: {
+          "script-src": ["'self'", "accounts.google.com"],
+        },
+      },
+    }));
   }
 
   setupRoutes() {
