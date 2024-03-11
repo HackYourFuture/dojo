@@ -31,7 +31,8 @@ class Main {
     this.app.use(helmet({
       contentSecurityPolicy: {
         directives: {
-          "script-src": ["'self'", "accounts.google.com"],
+          "script-src": ["'self'", "https://accounts.google.com"],
+          "connect-src": ["'self'", "https://jsonplaceholder.typicode.com"],
         },
       },
     }));
