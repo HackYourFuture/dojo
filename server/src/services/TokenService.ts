@@ -1,4 +1,4 @@
-import { User, AuthenticatedUser } from '../models/User';
+import { User, AuthenticatedUser } from "../models/User";
 import JWT from "jsonwebtoken";
 
 export interface TokenServiceType {
@@ -19,13 +19,16 @@ export class TokenService implements TokenServiceType {
   }
 
   generateAccessToken(user: User): string {
-    const plainObject: AuthenticatedUser = { 
-      id: user.id, 
-      email: user.email, 
-      name: user.name, 
+    const plainObject: AuthenticatedUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
       imageUrl: user.imageUrl,
     };
-    return JWT.sign(plainObject, this.secret, { algorithm: this.ALGORITHM ,expiresIn: this.EXPIRATION });
+    return JWT.sign(plainObject, this.secret, {
+      algorithm: this.ALGORITHM,
+      expiresIn: this.EXPIRATION,
+    });
   }
 
   verifyAccessToken(token: string): AuthenticatedUser {

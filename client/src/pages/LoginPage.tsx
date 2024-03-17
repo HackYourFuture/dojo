@@ -11,7 +11,7 @@ function LoginPage() {
     onSuccess:async (response) => {
       try{
         const res = await fetch(
-          "http://localhost:7777/api/auth/login",
+          "/api/auth/login",
           {
             method: 'POST',
             body: JSON.stringify({ token: response.access_token }),  

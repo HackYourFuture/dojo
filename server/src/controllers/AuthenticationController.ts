@@ -11,6 +11,8 @@ export interface AuthenticationControllerType {
   login(req: Request, res: Response): Promise<void>;
 }
 
+const TOKEN_COOKIE_NAME = "dojo_token";
+
 export class AuthenticationController implements AuthenticationControllerType {
   private readonly userRepository: UserRepository;
   private readonly tokenRepository: TokenRepository;
@@ -63,14 +65,16 @@ export class AuthenticationController implements AuthenticationControllerType {
     
     // Login Successful!
     // Invalidate google access token - this will prevent the same token from being used again
-    // await this.invalidateGoogleAccessToken(googleAccessToken);
+    await this.invalidateGoogleAccessToken(googleAccessToken);
 
     // Generate and send JWT token
     const jwtToken = this.tokenService.generateAccessToken(user);
-    res.cookie("dojo_token", jwtToken, {
+
+    // Set the token in a cookie
+    res.cookie(TOKEN_COOKIE_NAME, jwtToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: req.secure,
+      sameSite: 'strict',
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 

@@ -29,10 +29,7 @@ class Main {
 
   setupMiddlewares() {
     if (process.env.ALLOW_CORS) {
-      this.app.use(cors({ 
-        origin: 'http://localhost:5173',
-        credentials: true 
-      }));
+      this.app.use(cors());
     }
     this.app.use("/api-docs", swagger("./api.yaml"));
     this.app.use(express.json());
@@ -45,10 +42,6 @@ class Main {
         },
       },
     }));
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      console.log(`🔒 ${req.method} ${req.url}`);
-      next();
-    });
   }
 
   setupRoutes() {
