@@ -1,17 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    // Automatically open the app in the browser on server start.
-    open: '/',
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), 'VITE_');
+  const apiUrl = env.VITE_API_URL ?? "http://localhost:7777";
+  return {
+    plugins: [react()],
+    server: {
+      // Automatically open the app in the browser on server start.
+      open: "/",
 
-    // Proxy /api requests to the API server. This will avoid any CORS issues.
-    proxy: {
-      '/api': 'http://localhost:7777',
-      '/api-docs': 'http://localhost:7777',
+      // Proxy /api requests to the API server. This will avoid any CORS issues.
+      proxy: {
+        "/api": apiUrl,
+        "/api-docs": apiUrl,
+      },
     },
-  },
-})
+  };
+});
