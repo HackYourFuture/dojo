@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import swagger from "./api-docs/swagger";
 import TraineesRouter from "./routes/TraineesRouter";
 import SearchRouter from "./routes/SearchRouter";
@@ -12,8 +13,9 @@ import { SearchController } from "./controllers/SearchController";
 import { AuthenticationController } from "./controllers/AuthenticationController";
 import { MongooseTraineesRepository } from "./repositories/TraineesRepository";
 import { MongooseUserRepository } from "./repositories/UserRepository";
+import { MongooseTokenRepository } from "./repositories/TokenRepository";
 import { GoogleOAuthService } from "./services/GoogleOAuthService";
-
+import { TokenService } from "./services/TokenService";
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
 
@@ -27,18 +29,26 @@ class Main {
 
   setupMiddlewares() {
     if (process.env.ALLOW_CORS) {
-      this.app.use(cors());
+      this.app.use(cors({ 
+        origin: 'http://localhost:5173',
+        credentials: true 
+      }));
     }
     this.app.use("/api-docs", swagger("./api.yaml"));
     this.app.use(express.json());
+    this.app.use(cookieParser());
     this.app.use(helmet({
       contentSecurityPolicy: {
         directives: {
-          "script-src": ["'self'", "https://accounts.google.com"],
+          "default-src": ["'self'", "https://accounts.google.com"],
           "connect-src": ["'self'", "https://jsonplaceholder.typicode.com"],
         },
       },
     }));
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      console.log(`🔒 ${req.method} ${req.url}`);
+      next();
+    });
   }
 
   setupRoutes() {
@@ -48,11 +58,13 @@ class Main {
 
     // Dependencies
     const googleOAuthService = new GoogleOAuthService();
+    const tokenService = new TokenService(process.env.JWT_SECRET ?? "");
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
+    const tokenRepository = new MongooseTokenRepository(this.db);
 
     // setup controllers
-    const authenticationController = new AuthenticationController(userRepository, googleOAuthService);
+    const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService);
     const traineeController = new TraineesController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
 

@@ -5,3 +5,10 @@ export interface User {
   imageUrl?: string;
   isActive: boolean;
 }
+
+export interface AuthenticatedUser {
+  readonly id: string;
+  readonly email: string;
+  readonly name: string;
+  readonly imageUrl?: string;
+}
