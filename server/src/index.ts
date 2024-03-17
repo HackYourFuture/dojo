@@ -37,10 +37,11 @@ class Main {
     this.app.use(helmet({
       contentSecurityPolicy: {
         directives: {
-          "default-src": ["'self'", "https://accounts.google.com"],
+          "script-src": ["'self'", "https://accounts.google.com"],
           "connect-src": ["'self'", "https://jsonplaceholder.typicode.com"],
         },
       },
+      crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
     }));
   }
 
