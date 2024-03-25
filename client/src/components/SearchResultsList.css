@@ -1,5 +1,6 @@
 .results-list {
   width: 100%;
+  padding: 15px;
   background-color: white;
   display: flex;
   flex-direction: column;

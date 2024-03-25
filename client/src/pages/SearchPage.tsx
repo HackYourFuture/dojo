@@ -3,19 +3,24 @@ import { SearchBar } from "../components/searchBarComponent"
 import "./SearchPage.css"
 import { SearchResultsList } from "../components/SearchResultsList";
 import HYFLogo from '../assets/HYF_logo.svg';
-
+import { Box } from "@mui/material";
 
 function SearchPage() {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState("");
+
+  function handleDataFromChild(data: string) {
+    setResults(data);
+  }
 
   return (
     <div className='App'>
       <div className='search-bar-container'>
-        <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img"/>
-        <SearchBar setResults={setResults}/>
-        <SearchResultsList results={results} />
+        <Box sx={{ display: 'flex' }}>
+          <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img"/>
+        </Box>
+        <SearchBar data={handleDataFromChild}/>
+        {results&&<SearchResultsList results={results} />}
     </div>
-
   </div>
   )
 }
