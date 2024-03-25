@@ -4,7 +4,6 @@ import {
 import Root from "./root";
 import LoginPage from "../pages/LoginPage";
 import SearchPage from "../pages/SearchPage";
-import HomePage from "../pages/HomePage";
 import DashboardPage from "../pages/DashboardPage";
 import CohortsPage from "../pages/CohortsPage";
 
@@ -23,7 +22,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/home",
-        element: <HomePage />,
+        element: <SearchPage />,
       },
       {
         path: "/login",
