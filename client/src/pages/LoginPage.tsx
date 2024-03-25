@@ -10,7 +10,7 @@ function LoginPage() {
     //extract the user info and return a new token for all other authenticated requests.
     onSuccess:async (response) => {
       try{
-        const res = await fetch(
+        await fetch(
           "/api/auth/login",
           {
             method: 'POST',
@@ -21,7 +21,9 @@ function LoginPage() {
           }
         ).then((response) => response.json());    
 
-        console.log(res);
+        const user = await fetch('/api/auth/session').then((response) => response.json());
+
+        console.log("Successfully logged in!", user);
       }
       catch(err){
         console.log(err);
