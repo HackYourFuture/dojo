@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import swagger from "./api-docs/swagger";
 import TraineesRouter from "./routes/TraineesRouter";
 import SearchRouter from "./routes/SearchRouter";
@@ -11,6 +12,10 @@ import { TraineesController } from "./controllers/TraineesController";
 import { SearchController } from "./controllers/SearchController";
 import { AuthenticationController } from "./controllers/AuthenticationController";
 import { MongooseTraineesRepository } from "./repositories/TraineesRepository";
+import { MongooseUserRepository } from "./repositories/UserRepository";
+import { MongooseTokenRepository } from "./repositories/TokenRepository";
+import { GoogleOAuthService } from "./services/GoogleOAuthService";
+import { TokenService } from "./services/TokenService";
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
 
@@ -28,6 +33,7 @@ class Main {
     }
     this.app.use("/api-docs", swagger("./api.yaml"));
     this.app.use(express.json());
+    this.app.use(cookieParser());
     this.app.use(helmet({
       contentSecurityPolicy: {
         directives: {
@@ -35,6 +41,7 @@ class Main {
           "connect-src": ["'self'", "https://jsonplaceholder.typicode.com"],
         },
       },
+      crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
     }));
   }
 
@@ -43,10 +50,15 @@ class Main {
       throw new Error("Must connect to the database before setting up routes.");
     }
 
+    // Dependencies
+    const googleOAuthService = new GoogleOAuthService();
+    const tokenService = new TokenService(process.env.JWT_SECRET ?? "");
     const traineesRepository = new MongooseTraineesRepository(this.db);
+    const userRepository = new MongooseUserRepository(this.db); 
+    const tokenRepository = new MongooseTokenRepository(this.db);
 
     // setup controllers
-    const authenticationController = new AuthenticationController();
+    const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService);
     const traineeController = new TraineesController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
 

@@ -11,12 +11,13 @@ function LoginPage() {
     onSuccess:async (response) => {
       try{
         const res = await fetch(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
+          "/api/auth/login",
           {
-            headers:{
-              Authorization: `Bearer ${response.access_token}`,
-              Accept: 'application/json'
-            },
+            method: 'POST',
+            body: JSON.stringify({ token: response.access_token }),  
+            headers: {
+              'Content-Type': 'application/json'
+            }          
           }
         ).then((response) => response.json());    
 

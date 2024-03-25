@@ -8,12 +8,15 @@ const UserSchema: Schema = new Schema<User>({
   isActive: { type: Boolean, required: true },
 });
 
-UserSchema.set("toJSON", {
+const convertObject = {
   virtuals: true,
   versionKey: false,
-  transform: (_, ret) => {
+  transform: (_: any, ret: any) => {
     delete ret._id;
   },
-});
+};
+
+UserSchema.set("toJSON", convertObject);
+UserSchema.set("toObject", convertObject);
 
 export default UserSchema;
