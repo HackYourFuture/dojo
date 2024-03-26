@@ -32,6 +32,7 @@ export class TokenService implements TokenServiceType {
   }
 
   verifyAccessToken(token: string): AuthenticatedUser {
-    return JWT.verify(token, this.secret) as AuthenticatedUser;
+    const { id, email, name, imageUrl } = JWT.verify(token, this.secret) as AuthenticatedUser;
+    return { id, email, name, imageUrl } as AuthenticatedUser;
   }
 }

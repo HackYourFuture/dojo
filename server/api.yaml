@@ -53,6 +53,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /auth/session:
+    get:
+      tags:
+        - auth
+      summary: Get current logged in user info
+      description: This endpoint returns the currently authenticated user. It extracts and verifies the session token.
+      security:
+        - cookie_token:
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 
   /search:
     get:
@@ -60,6 +82,8 @@ paths:
         - search
       summary: Find trainees
       description:  Find trainees by a keyword. The search will try to match the first name, last name or email.
+      security:
+        - cookie_token:
       parameters:
         - name: q
           in: query
@@ -67,14 +91,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: limit
-          in: query
-          description: Return maximum number of results. Maximum allowed value is 50
-          required: false
-          schema:
-            type: integer
-            default: 20
-            
       responses:
         '200':
           description: Successful operation
@@ -90,6 +106,8 @@ paths:
         - trainees
       summary: Create new profile
       description: ''
+      security:
+        - cookie_token:
       requestBody:
         description: ''
         content:
@@ -109,6 +127,8 @@ paths:
         - trainees
       summary: Fetch information about a trainee
       description: ''
+      security:
+        - cookie_token:
       parameters:
         - name: id
           in: path
@@ -136,6 +156,8 @@ paths:
         - trainees
       summary: Update trainee information
       description: ''
+      security:
+        - cookie_token:
       parameters:
         - name: id
           in: path
@@ -163,6 +185,8 @@ paths:
         - trainees
       summary: Delete trainee from the system
       description: ''
+      security:
+        - cookie_token:
       parameters:
         - name: id
           in: path
@@ -358,11 +382,11 @@ components:
         - learningStatus
       properties:
         startCohort:
-          type: integer
+          type: number
           example: 46
           minimum: 0
         currentCohort:
-          type: integer
+          type: number
           example: 47
           minimum: 0
         learningStatus:
@@ -548,10 +572,33 @@ components:
           example: 2024-01-01T00:00:00.000Z 
         details:
           type: string
-          
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 65ea2e1e696deb3b3ebff843
+        name: 
+          type: string
+        email: 
+          type: string
+          example: user@example.com
+        imageUrl: 
+          type: string
+          example: "https://images.example.com/image.png"
+
+
     Error:
       type: object
       properties:
         message:
           type: string
           example: 'Error message'
+
+  securitySchemes:
+    cookie_token:
+      type: apiKey
+      name: dojo_token
+      description: A JWT which was provided after a successful login
+      in: cookie

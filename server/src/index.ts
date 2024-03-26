@@ -10,6 +10,7 @@ import SearchRouter from "./routes/SearchRouter";
 import AuthenticationRouter from "./routes/AuthenticationRouter";
 import { TraineesController } from "./controllers/TraineesController";
 import { SearchController } from "./controllers/SearchController";
+import AuthMiddleware from "./middlewares/AuthMiddleware";
 import { AuthenticationController } from "./controllers/AuthenticationController";
 import { MongooseTraineesRepository } from "./repositories/TraineesRepository";
 import { MongooseUserRepository } from "./repositories/UserRepository";
@@ -38,7 +39,6 @@ class Main {
       contentSecurityPolicy: {
         directives: {
           "script-src": ["'self'", "https://accounts.google.com"],
-          "connect-src": ["'self'", "https://jsonplaceholder.typicode.com"],
         },
       },
       crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
@@ -62,10 +62,13 @@ class Main {
     const traineeController = new TraineesController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
 
+    // Setup custom middlewares
+    const authMiddleware = new AuthMiddleware(tokenService);
+
     // Setup routers
-    const authenticationRouter = new AuthenticationRouter(authenticationController);
-    const traineeRouter = new TraineesRouter(traineeController);
-    const searchRouter = new SearchRouter(searchController);
+    const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
+    const traineeRouter = new TraineesRouter(traineeController, [authMiddleware]);
+    const searchRouter = new SearchRouter(searchController, [authMiddleware]);
 
     // Define routes
     this.app.use("/api/auth", authenticationRouter.build());

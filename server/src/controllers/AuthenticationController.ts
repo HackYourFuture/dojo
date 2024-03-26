@@ -6,12 +6,14 @@ import { UserRepository } from "../repositories/UserRepository";
 import { TokenRepository } from "../repositories/TokenRepository";
 import { TokenType } from "../models/Token";
 import crypto from "crypto";
+import { AuthenticatedUser } from "../models/User";
 
 export interface AuthenticationControllerType {
   login(req: Request, res: Response): Promise<void>;
+  getSession(req: Request, res: Response): Promise<void>;
 }
 
-const TOKEN_COOKIE_NAME = "dojo_token";
+export const TOKEN_COOKIE_NAME = "dojo_token";
 
 export class AuthenticationController implements AuthenticationControllerType {
   private readonly userRepository: UserRepository;
@@ -71,13 +73,19 @@ export class AuthenticationController implements AuthenticationControllerType {
     const jwtToken = this.tokenService.generateAccessToken(user);
 
     // Set the token in a cookie
+    const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
     res.cookie(TOKEN_COOKIE_NAME, jwtToken, {
       httpOnly: true,
-      secure: req.secure,
+      secure: isSecure,
       sameSite: 'strict',
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
+    res.status(200).json(user);
+  }
+
+  async getSession(req: Request, res: Response): Promise<void> {
+    const user = res.locals.user as AuthenticatedUser;
     res.status(200).json(user);
   }
 
