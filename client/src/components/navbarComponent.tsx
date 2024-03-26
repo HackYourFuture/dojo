@@ -14,11 +14,14 @@ import { googleLogout } from '@react-oauth/google';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import Container from '@mui/material/Container';
+import { useNavigate } from 'react-router-dom';
 
 function ResponsiveNavbarComponent() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+  const navigate = useNavigate();
+  
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -38,6 +41,7 @@ function ResponsiveNavbarComponent() {
   // Log-out function to log the user out of google and set the profile array to null
   const logOut = () => {
     googleLogout();
+    navigate('/login');
   };
 
   return (
@@ -177,7 +181,7 @@ function ResponsiveNavbarComponent() {
                   <Button href={`/login`} color="inherit">Login</Button>
                 </MenuItem>
                 <MenuItem key='Logout'>
-                  <Button onClick={logOut} href={`/`} color="inherit">Log out</Button>
+                  <Button onClick={logOut} color="inherit">Log out</Button>
                 </MenuItem>
               </Menu>
             </Box>

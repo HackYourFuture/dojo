@@ -3,8 +3,10 @@ import { useGoogleLogin } from '@react-oauth/google';
 
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+  const navigate = useNavigate();
   const login = useGoogleLogin({
     //TODO: send the response.access_token to the back-end so it can validate google's token, 
     //extract the user info and return a new token for all other authenticated requests.
@@ -24,6 +26,7 @@ function LoginPage() {
         const user = await fetch('/api/auth/session').then((response) => response.json());
 
         console.log("Successfully logged in!", user);
+        navigate('/');
       }
       catch(err){
         console.log(err);
