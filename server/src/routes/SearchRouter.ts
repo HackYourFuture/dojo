@@ -1,16 +1,20 @@
 import { Router } from "express";
 import RouterType from "./Router";
 import { SearchControllerType } from "../controllers/SearchController";
+import Middleware from "../middlewares/Middleware";
 
 export default class SearchRouter implements RouterType {
-  private searchController: SearchControllerType;
+  private readonly searchController: SearchControllerType;
+  private readonly middlewares: Middleware[];
 
-  constructor(searchController: SearchControllerType) {
+  constructor(searchController: SearchControllerType, middlewares: Middleware[] = []) {
     this.searchController = searchController;
+    this.middlewares = middlewares;
   }
 
   build(): Router {
     const router = Router();
+    this.middlewares.forEach(middleware => router.use(middleware.handle.bind(middleware)));
     router.get("/", this.searchController.search.bind(this.searchController));
     return router;
   }
