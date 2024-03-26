@@ -1,5 +1,6 @@
 export * from './CohortsPage'
 export * from './DashboardPage'
-export * from './HomePage'
+export * from './TraineePage'
 export * from './LoginPage'
 export * from './SearchPage'
+export * from './ErrorPage'

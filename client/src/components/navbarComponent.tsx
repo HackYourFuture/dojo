@@ -59,6 +59,13 @@ function ResponsiveNavbarComponent() {
                   Home
                 </Button>
                 <Button
+                  key='Trainee'
+                  href={`/trainee`}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Trainee info
+                </Button>
+                <Button
                   key='Cohorts'
                   href={`/cohorts`}
                   sx={{ my: 2, color: 'white', display: 'block' }}
@@ -112,6 +119,14 @@ function ResponsiveNavbarComponent() {
                     sx={{ color: 'inherit', display: 'block', textAlign:'center' }}
                   >
                     Home
+                  </Button>
+                </MenuItem>
+                <MenuItem key='Trainee'>
+                  <Button
+                    href={`/trainee`}
+                    sx={{ color: 'inherit', display: 'block', textAlign:'center' }}
+                  >
+                    Trainee info
                   </Button>
                 </MenuItem>
                 <MenuItem key='Cohorts'>
