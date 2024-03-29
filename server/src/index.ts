@@ -17,6 +17,7 @@ import { MongooseUserRepository } from "./repositories/UserRepository";
 import { MongooseTokenRepository } from "./repositories/TokenRepository";
 import { GoogleOAuthService } from "./services/GoogleOAuthService";
 import { TokenService } from "./services/TokenService";
+import { StorageService } from "./services/StorageService";
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
 
@@ -53,6 +54,13 @@ class Main {
     // Dependencies
     const googleOAuthService = new GoogleOAuthService();
     const tokenService = new TokenService(process.env.JWT_SECRET ?? "");
+    const storageService = new StorageService(
+      process.env.STORAGE_ENDPOINT ?? "",
+      process.env.STORAGE_REGION ?? "", 
+      process.env.STORAGE_BUCKET ?? "", 
+      process.env.STORAGE_ACCESS_KEY_ID ?? "", 
+      process.env.STORAGE_ACCESS_KEY_SECRET ?? ""
+    );
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
     const tokenRepository = new MongooseTokenRepository(this.db);
