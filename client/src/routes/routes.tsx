@@ -1,4 +1,5 @@
 import {
+  Navigate,
   createBrowserRouter,
 } from "react-router-dom";
 import Root from "./root";
@@ -12,6 +13,14 @@ export const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
+      { 
+        index: true, 
+        element: <Navigate to="/home" replace /> 
+      },
+      {
+        path: "/home",
+        element: <SearchPage />,
+      },
       {
         path: "/cohorts",
         element: <CohortsPage />,
@@ -21,10 +30,6 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: "/home",
-        element: <SearchPage />,
-      },
-      {
         path: "/login",
         element: <LoginPage />,
       },
@@ -32,6 +37,11 @@ export const router = createBrowserRouter([
         path: "/search",
         element: <SearchPage />,
       },
+      // We can replace with 404 page if you want, or just redirect to home page.
+      {
+        path: "*",
+        element: <Navigate to="/home" replace />
+      }
     ]
   }
 ]);
