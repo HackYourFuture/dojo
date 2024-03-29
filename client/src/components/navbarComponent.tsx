@@ -41,7 +41,7 @@ function ResponsiveNavbarComponent() {
   // Log-out function to log the user out of google and set the profile array to null
   const logOut = () => {
     googleLogout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (
