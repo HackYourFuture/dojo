@@ -64,7 +64,7 @@ function ResponsiveNavbarComponent() {
                 </Button>
                 <Button
                   key='Trainee'
-                  href={`/trainee`}
+                  href={`/trainee/:traineeInfo`}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Trainee info
@@ -127,7 +127,7 @@ function ResponsiveNavbarComponent() {
                 </MenuItem>
                 <MenuItem key='Trainee'>
                   <Button
-                    href={`/trainee`}
+                    href={`/trainee/:traineeInfo`}
                     sx={{ color: 'inherit', display: 'block', textAlign:'center' }}
                   >
                     Trainee info
