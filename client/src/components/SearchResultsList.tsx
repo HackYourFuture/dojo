@@ -1,5 +1,4 @@
 import "./SearchResultsList.css"
-// import { SearchResultItem } from "./SearchResultItem";
 import { SearchResult, SearchResultsListProps } from "../types";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -7,6 +6,7 @@ import Alert from "@mui/material/Alert";
 import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
 import { useDebounce } from "../hooks/useDebounce";
 import AlertTitle from "@mui/material/AlertTitle";
+import { Link } from "react-router-dom";
 
 export const SearchResultsList = ({results}: SearchResultsListProps) => {
   // You can change search debounce time using this hook.
@@ -38,7 +38,11 @@ export const SearchResultsList = ({results}: SearchResultsListProps) => {
     <div className="results-list">
       { data.length?
         data.map((trainee: SearchResult) => {
-          return <div key={trainee.id}> {trainee.name} </div>
+          return(
+            <div key={trainee.id}> 
+              <Link to={`/trainee/${trainee.name}-${trainee.id}`}>{trainee.name}</Link>
+            </div>
+          )
         }): <span>No results found!</span>
       }
     </div>
