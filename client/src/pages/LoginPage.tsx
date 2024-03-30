@@ -8,8 +8,6 @@ import { useNavigate } from 'react-router-dom';
 function LoginPage() {
   const navigate = useNavigate();
   const login = useGoogleLogin({
-    //TODO: send the response.access_token to the back-end so it can validate google's token, 
-    //extract the user info and return a new token for all other authenticated requests.
     onSuccess:async (response) => {
       try{
         await fetch(
