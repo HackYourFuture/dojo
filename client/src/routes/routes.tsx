@@ -33,16 +33,16 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: "/login",
-        element: <LoginPage />,
-      },
-      {
         path: "/search",
         element: <SearchPage />,
       },
       {
         path: "/trainee/:traineeInfo",
         element: <TraineePage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
       },
       // We can replace with 404 page if you want, or just redirect to home page.
       {
