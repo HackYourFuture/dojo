@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Alert } from "@mui/material";
 
 interface ErrorBoxProps {
   errorMessage: string;
@@ -6,15 +6,13 @@ interface ErrorBoxProps {
 
 export const ErrorBox = (props: ErrorBoxProps) => {
   return (
-    <Box
-      my={4}
-      display="flex"
-      alignItems="center"
-      borderRadius={1}
-      p={2}
-      bgcolor="#FFCCBA"
+    <Alert
+      severity="error"
+      sx={{
+        marginY: "24px",
+      }}
     >
-      <p className="error-message">{props.errorMessage}</p>
-    </Box>
+      {props.errorMessage}
+    </Alert>
   );
 };
