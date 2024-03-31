@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import { useAuth } from "../hooks/useAuth";
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, errorMessage } = useAuth();
   return (
     <div className="login-container">
       <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
@@ -15,6 +15,7 @@ export const LoginPage = () => {
           </Button>
         </Stack>
       </div>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };
