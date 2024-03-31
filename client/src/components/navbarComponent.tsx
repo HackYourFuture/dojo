@@ -10,17 +10,15 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import HYFLogo from '../assets/HYF_logo.svg';
-import { googleLogout } from '@react-oauth/google';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import Container from '@mui/material/Container';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 function ResponsiveNavbarComponent() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-  const navigate = useNavigate();
+  const { logout } = useAuth();
   
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -36,12 +34,6 @@ function ResponsiveNavbarComponent() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  // Log-out function to log the user out of google and set the profile array to null
-  const logOut = () => {
-    googleLogout();
-    navigate('/');
   };
 
   return (
@@ -181,7 +173,7 @@ function ResponsiveNavbarComponent() {
                   <Button href={`/login`} color="inherit">Login</Button>
                 </MenuItem>
                 <MenuItem key='Logout'>
-                  <Button onClick={logOut} color="inherit">Log out</Button>
+                  <Button onClick={() => logout()} color="inherit">Log out</Button>
                 </MenuItem>
               </Menu>
             </Box>
