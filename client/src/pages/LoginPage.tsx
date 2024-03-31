@@ -17,7 +17,6 @@ export const LoginPage = () => {
         </Stack>
       </div>
       {errorMessage && <ErrorBox errorMessage={errorMessage} />}
-      <ErrorBox errorMessage={"sfaslfnsalvsdnksnlknlknnlanlml"} />
     </div>
   );
 };

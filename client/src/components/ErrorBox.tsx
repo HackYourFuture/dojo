@@ -10,9 +10,12 @@ export const ErrorBox = (props: ErrorBoxProps) => {
       severity="error"
       sx={{
         marginY: "24px",
+        marginX: "auto",
+        width: "40%",
+        wordBreak: "break-word",
       }}
     >
-      {props.errorMessage}
+      <p>{props.errorMessage}</p>
     </Alert>
   );
 };
