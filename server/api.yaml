@@ -74,7 +74,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Logout from the system
+      description: The endpoint removes the session token from the cookies.
+      security:
+        - cookie_token:
+      responses:
+        204:
+          description: successful operation
+        401:
+          description: Not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /search:
     get:
