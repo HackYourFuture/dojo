@@ -18,6 +18,10 @@ export default class AuthenticationRouter implements RouterType {
     const router = Router();
     this.middlewares.forEach(middleware => router.use(middleware.handle.bind(middleware)));
     router.post("/login", this.authenticationController.login.bind(this.authenticationController));
+    router.post("/logout", 
+      this.authMiddleware.handle.bind(this.authMiddleware), 
+      this.authenticationController.logout.bind(this.authenticationController)
+    );
     router.get("/session", 
       this.authMiddleware.handle.bind(this.authMiddleware), 
       this.authenticationController.getSession.bind(this.authenticationController)

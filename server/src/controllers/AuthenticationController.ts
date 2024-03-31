@@ -10,6 +10,7 @@ import { AuthenticatedUser } from "../models/User";
 
 export interface AuthenticationControllerType {
   login(req: Request, res: Response): Promise<void>;
+  logout(req: Request, res: Response): Promise<void>;
   getSession(req: Request, res: Response): Promise<void>;
 }
 
@@ -87,6 +88,11 @@ export class AuthenticationController implements AuthenticationControllerType {
   async getSession(req: Request, res: Response): Promise<void> {
     const user = res.locals.user as AuthenticatedUser;
     res.status(200).json(user);
+  }
+
+  async logout(req: Request, res: Response): Promise<void> {
+    res.clearCookie(TOKEN_COOKIE_NAME);
+    res.status(204).end();
   }
 
   // Check if the google access token has already been used in a previous login
