@@ -5,7 +5,6 @@ import {
   SearchPage,
   DashboardPage,
   CohortsPage,
-  ErrorPage,
   TraineePage,
 } from "../pages";
 import { ApiProvider } from "../hooks/useAuth";
@@ -18,7 +17,6 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Root />,
-        errorElement: <ErrorPage />,
         children: [
           {
             index: true,
