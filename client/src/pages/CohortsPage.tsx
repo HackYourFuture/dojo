@@ -1,7 +1,3 @@
-export const  CohortsPage = () => {
-  return (
-    <div>
-      Cohorts Page
-    </div>
-  )
-}
+export const CohortsPage = () => {
+  return <div>Cohorts Page</div>;
+};

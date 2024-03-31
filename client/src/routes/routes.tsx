@@ -1,9 +1,13 @@
-import {
-  Navigate,
-  createBrowserRouter,
-} from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Root from "./root";
-import {LoginPage, SearchPage, DashboardPage, CohortsPage, ErrorPage, TraineePage} from "../pages";
+import {
+  LoginPage,
+  SearchPage,
+  DashboardPage,
+  CohortsPage,
+  ErrorPage,
+  TraineePage,
+} from "../pages";
 import { ApiProvider } from "../hooks/useAuth";
 import { ProtectedRoute } from "../components";
 
@@ -16,29 +20,50 @@ export const router = createBrowserRouter([
         element: <Root />,
         errorElement: <ErrorPage />,
         children: [
-          { 
-            index: true, 
-            element: <Navigate to="/home" replace /> 
+          {
+            index: true,
+            element: <Navigate to="/home" replace />,
           },
           {
             path: "/home",
-            element: <ProtectedRoute><SearchPage /></ProtectedRoute>,
+            element: (
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "/cohorts",
-            element: <ProtectedRoute> <CohortsPage /></ProtectedRoute>,
+            element: (
+              <ProtectedRoute>
+                {" "}
+                <CohortsPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "/dashboard",
-            element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
+            element: (
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "/search",
-            element: <ProtectedRoute><SearchPage /></ProtectedRoute>,
+            element: (
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "/trainee/:traineeInfo",
-            element: <ProtectedRoute><TraineePage /></ProtectedRoute>,
+            element: (
+              <ProtectedRoute>
+                <TraineePage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "/login",
@@ -47,8 +72,8 @@ export const router = createBrowserRouter([
           // We can replace with 404 page if you want, or just redirect to home page.
           {
             path: "*",
-            element: <Navigate to="/home" replace />
-          }
+            element: <Navigate to="/home" replace />,
+          },
         ],
       },
     ],
