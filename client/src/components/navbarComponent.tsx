@@ -15,7 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Container from '@mui/material/Container';
 import { useAuth } from '../hooks/useAuth';
 
-function ResponsiveNavbarComponent() {
+export const  ResponsiveNavbarComponent = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const { logout } = useAuth();
@@ -183,4 +183,4 @@ function ResponsiveNavbarComponent() {
     </Box>
   );
 }
-export default ResponsiveNavbarComponent;
+

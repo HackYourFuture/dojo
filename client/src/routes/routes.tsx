@@ -3,14 +3,9 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import Root from "./root";
-import LoginPage from "../pages/LoginPage";
-import SearchPage from "../pages/SearchPage";
-import DashboardPage from "../pages/DashboardPage";
-import CohortsPage from "../pages/CohortsPage";
-import ErrorPage from "../pages/ErrorPage";
-import TraineePage from "../pages/TraineePage";
+import {LoginPage, SearchPage, DashboardPage, CohortsPage, ErrorPage, TraineePage} from "../pages";
 import { ApiProvider } from "../hooks/useAuth";
-import { ProtectedRoute } from "../components/ProtectedRoute";
+import { ProtectedRoute } from "../components";
 
 export const router = createBrowserRouter([
   {

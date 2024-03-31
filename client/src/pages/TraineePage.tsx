@@ -5,7 +5,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function TraineePage() {
+export const  TraineePage = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split("-");
   const traineeId = trainee ? trainee[1] : ""
@@ -39,5 +39,3 @@ function TraineePage() {
     </>
   )
 }
-
-export default TraineePage;

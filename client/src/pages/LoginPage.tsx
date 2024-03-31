@@ -3,9 +3,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { useAuth } from '../hooks/useAuth';
 
-function LoginPage() {
+export const  LoginPage = () => {
   const { login } = useAuth();
-
   return (
     <div className='login-container'>
       <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img"/>
@@ -18,4 +17,3 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;

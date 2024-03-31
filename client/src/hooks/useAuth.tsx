@@ -1,18 +1,21 @@
-import { createContext, useContext, useMemo } from 'react';
+import  { createContext, useContext, useMemo, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useLocalStorage } from './useLocalStorage';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { Loader } from '../components'; 
 
 export const ApiContext = createContext<any | null>(null);
 
 export const ApiProvider = () => {
   const [user, setUser] = useLocalStorage("user", null);
+  const [loading, setLoading] = useState(false); 
 
   const navigate = useNavigate();
 
   const login = useGoogleLogin({
     onSuccess:async (response) => {
       try{
+        setLoading(true); 
         await fetch(
           "/api/auth/login",
           {
@@ -25,13 +28,14 @@ export const ApiProvider = () => {
         ).then((response) => response.json());    
 
         const user = await fetch('/api/auth/session').then((response) => response.json());
-
         console.log("Successfully logged in!", user);
         setUser(user);
         navigate('/', { replace: true });
       }
       catch(err){
         console.log(err);
+      } finally {
+        setLoading(false); // Set loading to false after login process completes
       }
     },
     onError: (error) => {
@@ -56,7 +60,7 @@ export const ApiProvider = () => {
 
   return (
     <ApiContext.Provider value={value}>
-      <Outlet />
+      {loading ? <Loader /> :   <Outlet />} 
     </ApiContext.Provider>
   );
 };

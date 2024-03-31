@@ -1,13 +1,12 @@
 import { useState } from "react"
-import { SearchBar } from "../components/searchBarComponent"
+import { SearchBar, SearchResultsList } from "../components"
 import "./SearchPage.css"
-import { SearchResultsList } from "../components/SearchResultsList";
 import HYFLogo from '../assets/HYF_logo.svg';
 import { Box } from "@mui/material";
 
-function SearchPage() {
+export const  SearchPage = () => {
   const [results, setResults] = useState("");
-
+  
   function handleDataFromChild(data: string) {
     setResults(data);
   }
@@ -25,4 +24,4 @@ function SearchPage() {
   )
 }
 
-export default SearchPage;
+

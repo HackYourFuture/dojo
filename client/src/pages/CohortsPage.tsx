@@ -1,9 +1,7 @@
-function CohortsPage() {
+export const  CohortsPage = () => {
   return (
     <div>
       Cohorts Page
     </div>
   )
 }
-
-export default CohortsPage;

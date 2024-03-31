@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import ResponsiveNavbarComponent from "../components/navbarComponent";
+import {ResponsiveNavbarComponent} from "../components";
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
