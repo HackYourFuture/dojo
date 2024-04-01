@@ -1,50 +1,22 @@
-import HYFLogo from '../assets/HYF_logo.svg';
-import { useGoogleLogin } from '@react-oauth/google';
+import HYFLogo from "../assets/HYF_logo.svg";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { useAuth } from "../hooks/useAuth";
+import { ErrorBox } from "../components";
 
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-
-function LoginPage() {
-  const login = useGoogleLogin({
-    //TODO: send the response.access_token to the back-end so it can validate google's token, 
-    //extract the user info and return a new token for all other authenticated requests.
-    onSuccess:async (response) => {
-      try{
-        await fetch(
-          "/api/auth/login",
-          {
-            method: 'POST',
-            body: JSON.stringify({ token: response.access_token }),  
-            headers: {
-              'Content-Type': 'application/json'
-            }          
-          }
-        ).then((response) => response.json());    
-
-        const user = await fetch('/api/auth/session').then((response) => response.json());
-
-        console.log("Successfully logged in!", user);
-      }
-      catch(err){
-        console.log(err);
-      }
-    },
-
-    onError: (error) => {
-      console.log('Login Failed:', error);
-    }
-  });
-
+export const LoginPage = () => {
+  const { login, errorMessage } = useAuth();
   return (
-    <div className='login-container'>
-      <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img"/>
-      <div className='login-button'>
+    <div className="login-container">
+      <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
+      <div className="login-button">
         <Stack spacing={2} direction="column">
-          <Button onClick={() => login()} variant="contained">Login with Google</Button>
+          <Button onClick={() => login()} variant="contained">
+            Login with Google
+          </Button>
         </Stack>
       </div>
+      {errorMessage && <ErrorBox errorMessage={errorMessage} />}
     </div>
   );
-}
-
-export default LoginPage;
+};

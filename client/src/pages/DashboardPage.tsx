@@ -1,9 +1,3 @@
-function DashboardPage() {
-  return (
-    <div>
-      Dashboard Page
-    </div>
-  )
-}
-
-export default DashboardPage;
+export const DashboardPage = () => {
+  return <div>Dashboard Page</div>;
+};

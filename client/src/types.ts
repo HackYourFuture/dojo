@@ -6,5 +6,5 @@ export interface SearchResult {
 }
 
 export interface SearchResultsListProps {
-	results: string;
+  results: string;
 }

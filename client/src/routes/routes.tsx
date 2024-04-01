@@ -1,52 +1,79 @@
-import {
-  Navigate,
-  createBrowserRouter,
-} from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Root from "./root";
-import LoginPage from "../pages/LoginPage";
-import SearchPage from "../pages/SearchPage";
-import DashboardPage from "../pages/DashboardPage";
-import CohortsPage from "../pages/CohortsPage";
-import TraineePage from "../pages/TraineePage";
+import {
+  LoginPage,
+  SearchPage,
+  DashboardPage,
+  CohortsPage,
+  TraineePage,
+} from "../pages";
+import { ApiProvider } from "../hooks/useAuth";
+import { ProtectedRoute } from "../components";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Root />,
+    element: <ApiProvider />,
     children: [
-      { 
-        index: true, 
-        element: <Navigate to="/home" replace /> 
-      },
       {
-        path: "/home",
-        element: <SearchPage />,
+        path: "/",
+        element: <Root />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/home" replace />,
+          },
+          {
+            path: "/home",
+            element: (
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/cohorts",
+            element: (
+              <ProtectedRoute>
+                {" "}
+                <CohortsPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/dashboard",
+            element: (
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/search",
+            element: (
+              <ProtectedRoute>
+                <SearchPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/trainee/:traineeInfo",
+            element: (
+              <ProtectedRoute>
+                <TraineePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/login",
+            element: <LoginPage />,
+          },
+          // We can replace with 404 page if you want, or just redirect to home page.
+          {
+            path: "*",
+            element: <Navigate to="/home" replace />,
+          },
+        ],
       },
-      {
-        path: "/cohorts",
-        element: <CohortsPage />,
-      },
-      {
-        path: "/dashboard",
-        element: <DashboardPage />,
-      },
-      {
-        path: "/search",
-        element: <SearchPage />,
-      },
-      {
-        path: "/trainee/:traineeInfo",
-        element: <TraineePage />,
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
-      },
-      // We can replace with 404 page if you want, or just redirect to home page.
-      {
-        path: "*",
-        element: <Navigate to="/home" replace />
-      }
-    ]
-  }
+    ],
+  },
 ]);
