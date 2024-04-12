@@ -1,6 +1,6 @@
 import multer from "multer";
 import { Request, Response } from "express";
-const fs = require('fs');
+import fs from 'fs';
 import * as size from '../utils/fileSize';
 
 const IMAGE_MAX_SIZE = size.MB(10);
