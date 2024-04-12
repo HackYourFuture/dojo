@@ -165,7 +165,12 @@ paths:
           schema:
             type: string
             example: "3jvz35Z"
-          
+      requestBody:
+        description: 'Can be partially sent for partial updates'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trainee'
       responses:
         '200':
           description: successful operation
@@ -184,6 +189,109 @@ paths:
       tags:
         - trainees
       summary: Delete trainee from the system
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+          
+      responses:
+        '204':
+          description: successful operation
+
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /trainees/{id}/profile-picture:
+    get:
+      tags:
+        - trainees
+      summary: Fetch the profile picture of a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+          
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/png:
+              schema:
+                $ref: '#/components/schemas/Binary'
+        '404':
+          description: Trainee was not found or image was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags:
+        - trainees
+      summary: Upload new profile picture of a given trainee
+      description: > 
+       Accepts only images. The new image will override the old image.
+       Max file size is 10MB. 
+       The image may be resized on the backend to reduce its size.
+
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+
+      requestBody:
+        description: ''
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                profilePicture:
+                  $ref: '#/components/schemas/Binary'
+          
+      responses:
+        '200':
+          description: successful operation. Returns the image url
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  imageUrl:
+                    type: string
+                    example: 'https://example.cpm/trainee/65e9c0d25cd76173a4e431c2/profile-picture'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+    delete:
+      tags:
+        - trainees
+      summary: Delete profile picture of a given trainee
       description: ''
       security:
         - cookie_token:
@@ -595,6 +703,11 @@ components:
         message:
           type: string
           example: 'Error message'
+
+    Binary:
+      type: string
+      format: binary
+      example: <binary data>
 
   securitySchemes:
     cookie_token:
