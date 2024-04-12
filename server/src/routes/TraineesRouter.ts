@@ -1,4 +1,4 @@
-import { Router, RequestHandler } from "express";
+import { Router } from "express";
 import RouterType from "./Router";
 import { TraineesControllerType } from "../controllers/TraineesController";
 import Middleware from "../middlewares/Middleware";
