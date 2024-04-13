@@ -18,6 +18,7 @@ import { MongooseTokenRepository } from "./repositories/TokenRepository";
 import { GoogleOAuthService } from "./services/GoogleOAuthService";
 import { TokenService } from "./services/TokenService";
 import { StorageService } from "./services/StorageService";
+import { UploadService } from "./services/UploadService";
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
 
@@ -61,13 +62,15 @@ class Main {
       process.env.STORAGE_ACCESS_KEY_ID ?? "", 
       process.env.STORAGE_ACCESS_KEY_SECRET ?? ""
     );
+    const uploadService = new UploadService(path.join(__dirname,'../temp'));
+    uploadService.cleanupTempFiles();
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
     const tokenRepository = new MongooseTokenRepository(this.db);
 
     // setup controllers
     const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService);
-    const traineeController = new TraineesController(traineesRepository);
+    const traineeController = new TraineesController(traineesRepository, storageService, uploadService);
     const searchController = new SearchController(traineesRepository);
 
     // Setup custom middlewares

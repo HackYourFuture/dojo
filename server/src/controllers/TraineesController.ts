@@ -1,18 +1,28 @@
 import { Request, Response, NextFunction } from "express";
 import { TraineesRepository } from "../repositories/TraineesRepository";
+import {StorageServiceType } from "../services/StorageService";
+import { UploadServiceType, UploadServiceError } from '../services/UploadService';
 import ResponseError from "../models/ResponseError";
+import fs from 'fs';
 
 export interface TraineesControllerType {
   getTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   createTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
+  setProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
+  deleteProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 export class TraineesController implements TraineesControllerType {
-  private traineesRepository: TraineesRepository;
-  constructor(traineesRepository: TraineesRepository) {
+  private readonly traineesRepository: TraineesRepository;
+  private readonly storageService: StorageServiceType;
+  private readonly uploadService: UploadServiceType;
+  constructor(traineesRepository: TraineesRepository, storageService: StorageServiceType, uploadService: UploadServiceType) {
     this.traineesRepository = traineesRepository;
+    this.storageService = storageService;
+    this.uploadService = uploadService;
   }
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
@@ -97,6 +107,69 @@ export class TraineesController implements TraineesControllerType {
 
   async deleteTrainee(req: Request, res: Response, next: NextFunction) {
     res.status(500).send("Not implemented");
+  }
+
+  async getProfilePicture(req: Request, res: Response, next: NextFunction) {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    try {
+      const stream = await this.storageService.download(`images/profile/${trainee.id}`);
+      res.status(200);
+      stream.pipe(res);
+    } catch (error: any) {
+      if(error.$metadata.httpStatusCode === 404) {
+        res.status(404).send(new ResponseError("Profile picture does not exist"));
+        return;
+      }
+      next(error);
+    }
+  }
+
+  async setProfilePicture(req: Request, res: Response, next: NextFunction) {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    // Handle file upload.
+    try {
+      await this.uploadService.uploadImage(req, res, "profilePicture");
+    } catch (error: any) {
+      if (error instanceof UploadServiceError) {
+        res.status(400).send(new ResponseError(error.message));
+      } else {
+        next(error);
+      }
+      return;
+    }
+    if (!req.file?.path) {
+      res.status(500).send(new ResponseError("No file was uploaded"));
+      return;
+    }
+
+    // Upload image to storage
+    const fileStream = fs.createReadStream(req.file.path);
+    await this.storageService.upload(`images/profile/${trainee.id}`, fileStream);
+    fs.unlink(req.file.path, (err) => { });
+
+    res.status(201).send({'imageUrl': `trainee/${trainee.id}/profile-picture`});
+  }
+
+  async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+    await this.storageService.delete(`images/profile/${trainee.id}`);
+    trainee.personalInfo.imageUrl = undefined;
+    await this.traineesRepository.updateTrainee(trainee);
+    res.status(204).end();
   }
 
   // This function updates the destination object with the source object.
