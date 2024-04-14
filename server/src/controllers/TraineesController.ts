@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { TraineesRepository } from "../repositories/TraineesRepository";
 import {StorageServiceType } from "../services/StorageService";
 import { UploadServiceType, UploadServiceError } from '../services/UploadService';
+import { ImageServiceType } from '../services/ImageService';
 import ResponseError from "../models/ResponseError";
 import fs from 'fs';
 
@@ -19,10 +20,17 @@ export class TraineesController implements TraineesControllerType {
   private readonly traineesRepository: TraineesRepository;
   private readonly storageService: StorageServiceType;
   private readonly uploadService: UploadServiceType;
-  constructor(traineesRepository: TraineesRepository, storageService: StorageServiceType, uploadService: UploadServiceType) {
+  private readonly imageService: ImageServiceType;
+  constructor(
+    traineesRepository: TraineesRepository, 
+    storageService: StorageServiceType,
+    uploadService: UploadServiceType,
+    imageService: ImageServiceType
+  ) {
     this.traineesRepository = traineesRepository;
     this.storageService = storageService;
     this.uploadService = uploadService;
+    this.imageService = imageService;
   }
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
@@ -116,8 +124,12 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
 
+    let key = `images/profile/${trainee.id}`;
+    if(req.query.size === "small") {
+      key += "_small";
+    }
     try {
-      const stream = await this.storageService.download(`images/profile/${trainee.id}`);
+      const stream = await this.storageService.download(key);
       res.status(200);
       stream.pipe(res);
     } catch (error: any) {
@@ -152,10 +164,29 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
 
+    // Resize image to reduce file size and create a smaller version
+    const originalFilePath = req.file.path;
+    const largeFilePath = originalFilePath + "_large";
+    const smallFilePath = originalFilePath + "_small";
+    try {
+      await this.imageService.resizeImage(originalFilePath, largeFilePath, 700, 700);
+      await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
+    } catch (error: any) {
+      next(error);
+      console.error(error);
+      return;
+    }
+
     // Upload image to storage
-    const fileStream = fs.createReadStream(req.file.path);
-    await this.storageService.upload(`images/profile/${trainee.id}`, fileStream);
-    fs.unlink(req.file.path, (err) => { });
+    const largeFileStream = fs.createReadStream(largeFilePath);
+    const smallFileStream = fs.createReadStream(smallFilePath);
+    await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
+    await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
+
+    // Cleanup
+    fs.unlink(originalFilePath, (err) => { });
+    fs.unlink(largeFilePath, (err) => { });
+    fs.unlink(smallFilePath, (err) => { });
 
     res.status(201).send({'imageUrl': `trainee/${trainee.id}/profile-picture`});
   }
@@ -167,8 +198,8 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
     await this.storageService.delete(`images/profile/${trainee.id}`);
-    trainee.personalInfo.imageUrl = undefined;
-    await this.traineesRepository.updateTrainee(trainee);
+    await this.storageService.delete(`images/profile/${trainee.id}_small`);
+
     res.status(204).end();
   }
 

@@ -242,6 +242,15 @@ paths:
           schema:
             type: string
             example: "3jvz35Z"
+        - name: size
+          in: query
+          description: Fetch a different size of the image.
+          required: false
+          schema:
+            type: string
+            enum:
+            - small
+          
           
       responses:
         '200':

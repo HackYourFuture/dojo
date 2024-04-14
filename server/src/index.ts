@@ -19,6 +19,7 @@ import { GoogleOAuthService } from "./services/GoogleOAuthService";
 import { TokenService } from "./services/TokenService";
 import { StorageService } from "./services/StorageService";
 import { UploadService } from "./services/UploadService";
+import { ImageService } from "./services/ImageService";
 import mongoose from "mongoose";
 import ResponseError from "./models/ResponseError";
 
@@ -64,13 +65,14 @@ class Main {
     );
     const uploadService = new UploadService(path.join(__dirname,'../temp'));
     uploadService.cleanupTempFiles();
+    const imageService = new ImageService();
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
     const tokenRepository = new MongooseTokenRepository(this.db);
 
     // setup controllers
     const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService);
-    const traineeController = new TraineesController(traineesRepository, storageService, uploadService);
+    const traineeController = new TraineesController(traineesRepository, storageService, uploadService, imageService);
     const searchController = new SearchController(traineesRepository);
 
     // Setup custom middlewares
@@ -100,7 +102,11 @@ class Main {
     this.app.use(
       (error: Error, req: Request, res: Response, next: NextFunction) => {
         console.error(error);
-        res.status(500).json(new ResponseError("Something broke!" ));
+        if(this.isProduction) {
+          res.status(500).json(new ResponseError("Something broke!" ));
+        } else {
+          res.status(500).json(error);
+        }
       }
     );
   }
