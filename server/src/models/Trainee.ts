@@ -197,7 +197,8 @@ export interface TraineeEmploymentHistory {
 }
 
 export interface TraineeInteraction {
-  createDate: Date;
+  readonly _id: string;
+  date: Date;
   type: InteractionType;
   reporterID: string;
   details: string;

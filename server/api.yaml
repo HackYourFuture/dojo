@@ -615,6 +615,9 @@ components:
         - reporterID
         - comments
       properties:
+        _id:
+          type: string
+          example: g5HQGuL8
         date:
           type: string
           format: date-time
@@ -661,6 +664,9 @@ components:
         - type
         - result
       properties:
+        _id:
+          type: string
+          example: g5HQGuL8
         date:
           type: string
           format: date-time
@@ -695,6 +701,9 @@ components:
         - role
         - feeCollected
       properties:
+        _id:
+          type: string
+          example: g5HQGuL8
         type:
           type: string
           enum:
