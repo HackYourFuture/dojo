@@ -20,7 +20,7 @@ export class TokenService implements TokenServiceType {
 
   generateAccessToken(user: User): string {
     const plainObject: AuthenticatedUser = {
-      id: user.id,
+      id: user._id,
       email: user.email,
       name: user.name,
       imageUrl: user.imageUrl,

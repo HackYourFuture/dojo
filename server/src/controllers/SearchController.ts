@@ -33,7 +33,7 @@ export class SearchController implements SearchControllerType {
     const searchQuery: string = (req.query.q as string) ?? "";
     const trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
     const results = trainees.map(trainee => ({
-      id: trainee.id,
+      id: trainee._id,
       name: `${trainee.personalInfo.firstName} ${trainee.personalInfo.lastName}`,
     }));
 
