@@ -95,7 +95,7 @@ const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
     startCohort: { type: Number, required: true, min: 0, max: 999},
     currentCohort: { type: Number, required: false, default: null, min: 0, max: 999},
     learningStatus: { type: String, required: true, enum: Object.values(LearningStatus), default: LearningStatus.Studying },
-    startDate: { type: Date, required: true },
+    startDate: { type: Date, required: false, default: null},
     graduationDate: { type: Date, required: false, default: null },
     quitReason: { type: String, required: false, enum: Object.values(QuitReason), default: null },
     strikes: [StrikeSchema],
@@ -127,6 +127,8 @@ const TraineeEmploymentInfoSchema = new Schema<TraineeEmploymentInfo>(
     cvURL: { type: String, required: false, default: null },
     availability: { type: String, required: false, default: null },
     preferredRole: { type: String, required: false, default: null },
+    preferredLocation: { type: String, required: false, default: null },
+    extraTechnologies: { type: String, required: false, default: null },
     employmentHistory: {
       type: [TraineeEmploymentHistorySchema],
       required: true,

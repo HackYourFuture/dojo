@@ -378,7 +378,7 @@ components:
       properties:
         id:
           type: string
-          example: '65ea2e1e696deb3b3ebff843'
+          example: 'Pv3R416r'
         name:
           type: string
           example: John Doe
@@ -388,8 +388,9 @@ components:
       required:
         - personalInfo
         - contactInfo
+        - educationInfo
       properties:
-        id:
+        _id:
           type: string
           example: '65ea2e1e696deb3b3ebff843'
         createdAt:
@@ -426,6 +427,9 @@ components:
         lastName:
           type: string
           example: Doe
+        preferredName:
+          type: string
+          example: Johnny
         gender:
           type: string
           enum:
@@ -443,16 +447,12 @@ components:
           type: string
           enum:
             - needs-work
-            - medium
+            - moderate
             - good
           example: good
         professionalDutch:
             type: boolean
             example: true
-        imageUrl:
-          type: string
-          format: url
-          example: 'https://example.com/image.png'
         countryOfOrigin:
           type: string
           example: Syria
@@ -468,10 +468,17 @@ components:
         hasWorkPermit:
           type: boolean
           example: true
-        receivesUitkering:
+        residencyStatus:
+          type: string
+          enum:
+            - first-interview
+            - second-interview
+            - residency
+            - citizenship
+        receivesSocialBenefits:
           type: boolean
           example: true
-        caseManagerPressing:
+        caseManagerUrging:
           type: boolean
           example: false
         educationLevel:
@@ -479,6 +486,7 @@ components:
           enum:
             - none
             - high-school
+            - diploma
             - bachelors-degree
             - masters-degree
           example: bachelors-degree
@@ -502,7 +510,7 @@ components:
         phone:
           type: string
           example: 0612345678
-        github:
+        githubHandle:
           type: string
           example: johngithub
         linkedin:
@@ -513,18 +521,26 @@ components:
       type: object
       required:
         - learningStatus
+        - startCohort
       properties:
         startCohort:
           type: number
           example: 46
           minimum: 0
+          maximum: 999
         currentCohort:
           type: number
           example: 47
           minimum: 0
+          maximum: 999
         learningStatus:
           type: string
-          example: active
+          enum:
+            - studying
+            - graduated
+            - no-hold
+            - quit
+          example: studying
         startDate:
           type: string
           format: date-time
@@ -535,6 +551,13 @@ components:
           example: 2024-01-01T00:00:00.000Z  
         quitReason:
           type: string
+          enum:
+            - technical
+            - social-skills
+            - personal
+            - municipality-or-monetary
+            - left-nl
+            - other
         strikes:
           type: array
           items:
@@ -553,11 +576,19 @@ components:
     TraineeEmploymentInfo:
       type: object
       required:
-        - email
+        - jobPath
       properties:
-        status:
+        jobPath:
           type: string
-          example: searching
+          enum:
+            - not-graduated
+            - searching
+            - internship
+            - tech-job
+            - non-tech-job
+            - not-searching
+            - other-studies
+            - no-longer-helping
         cvURL:
           type: string
           example: https://example.com/cv.pdf
@@ -567,6 +598,8 @@ components:
           type: string        
         preferredLocation:
           type: string   
+        extraTechnologies:
+          type: string  
         employmentHistory:
           type: array
           items:
@@ -577,27 +610,24 @@ components:
     Strike:
       type: object
       required:
-        - strikeDate
+        - date
         - reason
+        - reporterID
+        - comments
       properties:
-        createDate:
+        date:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z  
-        strikeDate:
-          type: string
-          format: date-time
-          example: 2024-01-01T00:00:00.000Z 
+          example: 2024-01-01T00:00:00.000Z   
         reporterID:
           type: string
-          example: 65ea2e1e696deb3b3ebff843
+          example: g4G3dc4d
         reason:
           type: string
           enum:
-            - late-submission
-            - no-prep-exercise
-            - no-question
-            - presence
+            - assignment
+            - preparation
+            - attendance
             - other
         comments: 
           type: string
@@ -629,23 +659,31 @@ components:
       required:
         - testDate
         - type
+        - result
       properties:
-        testDate:
+        date:
           type: string
           format: date-time
           example: 2024-01-01T00:00:00.000Z  
         type:
           type: string
-          example: 'React interview'
+          enum:
+            - javaScript
+            - browsers-interview
+            - using-apis-interview
+            - nodejs
+            - react-interview
+            - final-project-interview
         grade:
           type: number
           example: 8.6
-        pass:
-          type: boolean
-          example: true
-        warning:
-          type: boolean
-          example: false
+        result:
+          type: string
+          enum:
+            - passed
+            - passed-with-warning
+            - failed
+            - disqualified
         comments: 
           type: string
           
@@ -665,6 +703,8 @@ components:
         companyName:
           type: string
           example: HackYourFuture
+        role:
+          type: string
         startDate:
           type: string
           format: date-time
@@ -673,8 +713,6 @@ components:
           type: string
           format: date-time
           example: 2024-01-01T00:00:00.000Z  
-        role:
-          type: string
         feeCollected:
           type: boolean
         feeAmount:
@@ -709,9 +747,9 @@ components:
     User:
       type: object
       properties:
-        id:
+        _id:
           type: string
-          example: 65ea2e1e696deb3b3ebff843
+          example: Pv3R416r
         name: 
           type: string
         email: 
@@ -720,7 +758,6 @@ components:
         imageUrl: 
           type: string
           example: "https://images.example.com/image.png"
-
 
     Error:
       type: object

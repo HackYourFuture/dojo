@@ -6,7 +6,7 @@ export enum Gender {
 
 export enum EnglishLevel {
   NeedsWork = "needs-work",
-  Medium = "medium",
+  Moderate = "moderate",
   Good = "good",
 }
 
@@ -50,7 +50,7 @@ export enum QuitReason {
   SocialSkills = "social-skills",
   Personal = "personal",
   MunicipalityOrMonetary = "municipality-or-monetary",
-  LeftNL = "left-NL",
+  LeftNL = "left-nl",
   Other = "other",
 }
 
@@ -164,7 +164,7 @@ export interface TraineeEducationInfo {
   startCohort: number;
   currentCohort?: number;
   learningStatus: LearningStatus;
-  startDate: Date;
+  startDate?: Date;
   graduationDate?: Date;
   quitReason?: QuitReason;
   strikes: Strike[];
