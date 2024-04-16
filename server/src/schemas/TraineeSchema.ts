@@ -24,8 +24,7 @@ import {
 } from "../models/Trainee";
 import { genId } from "../utils/random";
 
-const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>(
-  {
+const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
     firstName: { type: String, required: true, index: true },
     lastName: { type: String, required: true, index: true },
     preferredName: { type: String, required: false, index: true, default: null },

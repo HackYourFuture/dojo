@@ -34,9 +34,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getTrainee(id: string): Promise<Trainee | null> {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return null;
-    }
     return await this.TraineeModel.findById(id);
   }
 
