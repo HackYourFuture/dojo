@@ -34,9 +34,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getTrainee(id: string): Promise<Trainee | null> {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return null;
-    }
     return await this.TraineeModel.findById(id);
   }
 
@@ -49,7 +46,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async updateTrainee(trainee: Trainee): Promise<void> {
-    await this.TraineeModel.updateOne({ _id: trainee.id }, trainee);
+    await this.TraineeModel.updateOne({ _id: trainee._id }, trainee);
   }
 
   async isEmailExists(email: string): Promise<boolean> {

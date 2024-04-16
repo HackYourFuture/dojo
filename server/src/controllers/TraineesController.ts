@@ -35,7 +35,6 @@ export class TraineesController implements TraineesControllerType {
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
     const traineeId = req.params.id;
-    // TODO: check if trainee id is a valid object id
     try {
       const trainee = await this.traineesRepository.getTrainee(traineeId);
       if (!trainee) {
@@ -124,7 +123,7 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
 
-    let key = `images/profile/${trainee.id}`;
+    let key = `images/profile/${trainee._id}`;
     if(req.query.size === "small") {
       key += "_small";
     }
@@ -180,15 +179,15 @@ export class TraineesController implements TraineesControllerType {
     // Upload image to storage
     const largeFileStream = fs.createReadStream(largeFilePath);
     const smallFileStream = fs.createReadStream(smallFilePath);
-    await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
-    await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
+    await this.storageService.upload(`images/profile/${trainee._id}`, largeFileStream);
+    await this.storageService.upload(`images/profile/${trainee._id}_small`, smallFileStream);
 
     // Cleanup
     fs.unlink(originalFilePath, (err) => { });
     fs.unlink(largeFilePath, (err) => { });
     fs.unlink(smallFilePath, (err) => { });
 
-    res.status(201).send({'imageUrl': `trainee/${trainee.id}/profile-picture`});
+    res.status(201).send({'imageUrl': `trainee/${trainee._id}/profile-picture`});
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
@@ -197,8 +196,8 @@ export class TraineesController implements TraineesControllerType {
       res.status(404).send(new ResponseError("Trainee not found"));
       return;
     }
-    await this.storageService.delete(`images/profile/${trainee.id}`);
-    await this.storageService.delete(`images/profile/${trainee.id}_small`);
+    await this.storageService.delete(`images/profile/${trainee._id}`);
+    await this.storageService.delete(`images/profile/${trainee._id}_small`);
 
     res.status(204).end();
   }
