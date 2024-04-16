@@ -1,5 +1,3 @@
-// file to keep interfaces and enums 
-
 export interface SearchResult {
   id: number;
   name: string;
@@ -7,4 +5,9 @@ export interface SearchResult {
 
 export interface SearchResultsListProps {
   results: string;
+}
+
+export interface ProfileNavProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }

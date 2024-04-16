@@ -4,11 +4,22 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { router } from "./routes";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  typography: {
+    button: {
+      textTransform: 'none',
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_CLIENTID}>
+    <ThemeProvider theme={theme}>
       <RouterProvider router={router} />
+      </ThemeProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>
 );
