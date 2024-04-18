@@ -1,6 +1,4 @@
 import { Typography, Button, Box } from "@mui/material";
-import guImage from "../assets/gu.png";
-import joImage from "../assets/jo.png";
 import CommentImg from "../assets/comment.png";
 
 // change later with real data
@@ -61,7 +59,7 @@ export const Comment = () => {
         >
           <div>
             <img
-              src={guImage}
+              src=''
               alt="Profile"
               style={{
                 width: "48px",
@@ -98,7 +96,7 @@ export const Comment = () => {
         >
           <div>
             <img
-              src={joImage}
+              src=''
               alt="Profile"
               style={{
                 width: "48px",
