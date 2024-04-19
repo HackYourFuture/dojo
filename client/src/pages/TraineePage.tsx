@@ -3,26 +3,23 @@ import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Loader, TraineeProfilePage } from "../components";
 
 export const TraineePage = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split("-");
   const traineeId = trainee ? trainee[1] : "";
-  const { isLoading, data, isError, error, isFetching } =
-    useTraineeInfoData(traineeId);
+  const { isLoading, isError, error, isFetching } = useTraineeInfoData(traineeId);
 
   if (isLoading || isFetching) {
     return (
-      <Box p={4} sx={{ display: "flex" }}>
-        <CircularProgress />
-      </Box>
+      <Loader /> 
     );
   }
 
   if (isError && error instanceof Error) {
     return (
-      <Box p={4} sx={{ width: "100%" }}>
+      <Box p={8} sx={{ width: "100%" }}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
           {error.message}
@@ -31,10 +28,5 @@ export const TraineePage = () => {
     );
   }
 
-  return (
-    <>
-      <h2>Trainee Page</h2>
-      <div>{data?.data.id}</div>
-    </>
-  );
+  return <TraineeProfilePage />;
 };

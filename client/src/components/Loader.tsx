@@ -13,7 +13,7 @@ export const Loader = () => {
         position: "absolute",
       }}
     >
-      <CircularProgress size={80} />
+      <CircularProgress size={70} />
     </Box>
   );
 };
