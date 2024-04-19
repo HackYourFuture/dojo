@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { Token, TokenType } from "../models/Token";
+import { Token, TokenType } from "../models";
 
 const ONE_WEEK = 7 * 24 * 60 * 60;
 
@@ -14,4 +14,4 @@ const TokenSchema: Schema = new Schema<Token>({
   isValid: { type: Boolean, required: true },
 });
 
-export default TokenSchema;
+export { TokenSchema };

@@ -1,7 +1,6 @@
-import UserSchema from "../schemas/UserSchema";
 import mongoose from "mongoose";
-import { escapeStringRegexp } from "../utils/string";
-import { User } from "../models/User";
+import { UserSchema } from "../schemas";
+import { User } from "../models";
 
 export interface UserRepository {
   findUserByEmail(email: string): Promise<User | null>

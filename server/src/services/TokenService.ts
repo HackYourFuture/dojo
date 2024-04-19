@@ -1,4 +1,4 @@
-import { User, AuthenticatedUser } from "../models/User";
+import { User, AuthenticatedUser } from "../models";
 import JWT from "jsonwebtoken";
 
 export interface TokenServiceType {

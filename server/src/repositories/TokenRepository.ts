@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { Token, TokenType } from "../models/Token";
-import TokenSchema from "../schemas/TokenSchema";
+import { Token } from "../models";
+import { TokenSchema } from "../schemas";
 
 export interface TokenRepository {
   addToken(token: Token): Promise<void>;

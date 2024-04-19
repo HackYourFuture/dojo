@@ -3,7 +3,7 @@ import RouterType from "./Router";
 import { TraineesControllerType } from "../controllers/TraineesController";
 import Middleware from "../middlewares/Middleware";
 
-export default class TraineesRouter implements RouterType {
+export class TraineesRouter implements RouterType {
   private readonly traineesController: TraineesControllerType;
   private readonly middlewares: Middleware[];
 

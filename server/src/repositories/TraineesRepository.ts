@@ -1,6 +1,6 @@
-import { Trainee } from "../models/Trainee";
-import TraineeSchema from "../schemas/TraineeSchema";
 import mongoose from "mongoose";
+import { Trainee } from "../models";
+import { TraineeSchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
 
 export interface TraineesRepository {
