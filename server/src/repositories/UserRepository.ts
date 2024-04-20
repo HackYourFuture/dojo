@@ -1,6 +1,5 @@
 import UserSchema from "../schemas/UserSchema";
 import mongoose from "mongoose";
-import { escapeStringRegexp } from "../utils/string";
 import { User } from "../models/User";
 
 export interface UserRepository {
