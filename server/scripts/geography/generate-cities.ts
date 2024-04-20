@@ -31,6 +31,7 @@ const main = async() => {
 main().then().catch(console.error);
 
 const buildAZCList = (): City[] => {
+  // azc list data taken from the drop-down list on the website https://www.coa.nl/nl/locatiezoeker
   const azcList = fs.readFileSync('azc-list.txt', 'utf-8').split('\n');
   return azcList.map(azc => {
     return {
