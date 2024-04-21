@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Token, TokenType } from "../models/Token";
+import { Token } from "../models/Token";
 import TokenSchema from "../schemas/TokenSchema";
 
 export interface TokenRepository {
