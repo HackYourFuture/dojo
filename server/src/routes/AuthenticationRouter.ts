@@ -3,7 +3,7 @@ import RouterType from "./Router";
 import { AuthenticationControllerType } from "../controllers/AuthenticationController";
 import Middleware from "../middlewares/Middleware";
 
-export default class AuthenticationRouter implements RouterType {
+export class AuthenticationRouter implements RouterType {
   private readonly authenticationController: AuthenticationControllerType;
   private readonly authMiddleware: Middleware;
   private readonly middlewares: Middleware[];

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TraineesRepository } from "../repositories/TraineesRepository";
+import { TraineesRepository } from "../repositories";
 
 interface SearchResponse {
   hits: SearchHits;

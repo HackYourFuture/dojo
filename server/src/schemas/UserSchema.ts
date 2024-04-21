@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { User } from "../models/User";
+import { User } from "../models";
 import { genId } from "../utils/random";
 
 const UserSchema: Schema = new Schema<User>({
@@ -21,4 +21,4 @@ const convertObject = {
 UserSchema.set("toJSON", convertObject);
 UserSchema.set("toObject", convertObject);
 
-export default UserSchema;
+export { UserSchema };

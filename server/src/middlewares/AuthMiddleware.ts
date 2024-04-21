@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import ResponseError from "../models/ResponseError";
+import { ResponseError } from "../models";
 import { TOKEN_COOKIE_NAME } from "../controllers/AuthenticationController";
 import { TokenService } from '../services/TokenService';
 import Middleware from './Middleware';

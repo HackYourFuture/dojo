@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { TraineesRepository } from "../repositories/TraineesRepository";
-import {StorageServiceType } from "../services/StorageService";
-import { UploadServiceType, UploadServiceError } from '../services/UploadService';
-import { ImageServiceType } from '../services/ImageService';
-import ResponseError from "../models/ResponseError";
+import { TraineesRepository } from "../repositories";
+import {StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from "../services";
+import { ResponseError } from "../models";
 import fs from 'fs';
 
 export interface TraineesControllerType {

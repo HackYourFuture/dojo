@@ -3,7 +3,7 @@ import RouterType from "./Router";
 import { SearchControllerType } from "../controllers/SearchController";
 import Middleware from "../middlewares/Middleware";
 
-export default class SearchRouter implements RouterType {
+export class SearchRouter implements RouterType {
   private readonly searchController: SearchControllerType;
   private readonly middlewares: Middleware[];
 

@@ -21,7 +21,7 @@ import {
   ResidencyStatus,
   TestResult,
   TestType
-} from "../models/Trainee";
+} from "../models";
 import { genId } from "../utils/random";
 
 const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
@@ -165,4 +165,4 @@ TraineeSchema.set("toJSON", {
   },
 });
 
-export default TraineeSchema;
+export { TraineeSchema };

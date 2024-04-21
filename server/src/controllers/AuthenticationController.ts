@@ -1,12 +1,8 @@
 import { Request, Response } from "express";
-import ResponseError from "../models/ResponseError";
-import { GoogleOAuthServiceType, GoogleOAuthUserInfo } from "../services/GoogleOAuthService";
-import { TokenServiceType } from "../services/TokenService";
-import { UserRepository } from "../repositories/UserRepository";
-import { TokenRepository } from "../repositories/TokenRepository";
-import { TokenType } from "../models/Token";
+import { GoogleOAuthServiceType, GoogleOAuthUserInfo, TokenServiceType } from "../services";
+import { UserRepository, TokenRepository } from "../repositories";
+import { TokenType, ResponseError, AuthenticatedUser } from "../models";
 import crypto from "crypto";
-import { AuthenticatedUser } from "../models/User";
 
 export interface AuthenticationControllerType {
   login(req: Request, res: Response): Promise<void>;
