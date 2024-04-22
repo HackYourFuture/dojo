@@ -21,6 +21,8 @@ tags:
     description: ''
   - name: trainees
     description: ''
+  - name: geography
+    description: ''
 paths:
   /auth/login:
     post:
@@ -107,6 +109,14 @@ paths:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Limit the number of results. Default value is 20, Max value is 50.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
       responses:
         '200':
           description: Successful operation
@@ -338,6 +348,77 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /geo/cities:
+    get:
+      tags:
+        - geography
+      summary: Get list of cities
+      description:  Find cities by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
+      security:
+        - cookie_token:
+      parameters:
+        - name: q
+          in: query
+          description: Search query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limit the number of results
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: string
+                  example: "Amsterdam"
+
+  /geo/countries:
+    get:
+      tags:
+        - geography
+      summary: Get list of countries
+      description:  Find countries by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
+      security:
+        - cookie_token:
+      parameters:
+        - name: q
+          in: query
+          description: Search query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limit the number of results
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: "The Netherlands"
+                    flag:
+                      type: string
+                      example: "🇳🇱"
+
 
 
 components:
