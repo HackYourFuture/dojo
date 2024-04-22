@@ -1,6 +1,6 @@
 import { Router } from "express";
 import RouterType from "./Router";
-import { AuthenticationControllerType } from "../controllers/AuthenticationController";
+import { AuthenticationControllerType } from "../controllers";
 import Middleware from "../middlewares/Middleware";
 
 export class AuthenticationRouter implements RouterType {

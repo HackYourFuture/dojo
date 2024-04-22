@@ -4,8 +4,8 @@ import { CitySchema, CountrySchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
 
 export interface GeographyRepository {
-  searchCountry(query: string, limit: number): Promise<Country[]>;
-  searchCity(query: string, limit: number): Promise<City[]>;
+  searchCountry(query: string, limit: number | null): Promise<Country[]>;
+  searchCity(query: string, limit: number | null): Promise<City[]>;
 }
 
 export class MongooseGeographyRepository implements GeographyRepository {
@@ -17,25 +17,33 @@ export class MongooseGeographyRepository implements GeographyRepository {
     this.CountryModel = db.model<Country>("Country", CountrySchema);
   }
 
-  async searchCountry(query: string, limit: number): Promise<Country[]> {
+  async searchCountry(query: string, limit: number | null): Promise<Country[]> {
     const escapedQuery = escapeStringRegexp(query);
-    return await this.CountryModel.find({
+    const dbQuery = this.CountryModel.find({
         name: { $regex: escapedQuery, $options: "i" }
-    })
-    .limit(limit)
-    .sort({ name: 1 });
+    });
+    
+    if (limit) {
+      dbQuery.limit(limit);
+    }
+    return await dbQuery
+      .sort({ name: 1 })
+      .exec();
   }
 
-  async searchCity(query: string, limit: number): Promise<City[]> {
+  async searchCity(query: string, limit: number | null): Promise<City[]> {
     const escapedQuery = escapeStringRegexp(query);
-    console.log(escapedQuery)
-    return await this.CityModel.find({
+    const dbQuery = this.CityModel.find({
       $or: [
         { name: { $regex: escapedQuery, $options: "i" } },
         { alternate_names: { $regex: escapedQuery, $options: "i" } }
       ]
-    })
-    .limit(limit)
-    .sort({ population: -1, name: 1 });
+    });
+    if (limit) {
+      dbQuery.limit(limit);
+    }
+    return await dbQuery
+      .sort({ population: -1, name: 1 })
+      .exec();
   }
 }

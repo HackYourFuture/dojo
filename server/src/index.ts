@@ -6,9 +6,9 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import swagger from "./api-docs/swagger";
 import mongoose from "mongoose";
-import { TraineesRouter, SearchRouter, AuthenticationRouter } from "./routes";
-import { TraineesController, SearchController, AuthenticationController } from "./controllers";
-import { MongooseTraineesRepository, MongooseUserRepository, MongooseTokenRepository } from "./repositories";
+import { TraineesRouter, SearchRouter, AuthenticationRouter, GeographyRouter } from "./routes";
+import { TraineesController, SearchController, AuthenticationController, GeographyController } from "./controllers";
+import { MongooseTraineesRepository, MongooseUserRepository, MongooseTokenRepository, MongooseGeographyRepository } from "./repositories";
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from "./services";
 import { ResponseError } from "./models";
 import AuthMiddleware from "./middlewares/AuthMiddleware";
@@ -59,11 +59,13 @@ class Main {
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
     const tokenRepository = new MongooseTokenRepository(this.db);
+    const geographyRepository = new MongooseGeographyRepository(this.db);
 
     // setup controllers
     const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService);
     const traineeController = new TraineesController(traineesRepository, storageService, uploadService, imageService);
     const searchController = new SearchController(traineesRepository);
+    const geographyController = new GeographyController(geographyRepository);
 
     // Setup custom middlewares
     const authMiddleware = new AuthMiddleware(tokenService);
@@ -72,11 +74,13 @@ class Main {
     const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
     const traineeRouter = new TraineesRouter(traineeController, [authMiddleware]);
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
+    const geographyRouter = new GeographyRouter(geographyController);
 
     // Define routes
     this.app.use("/api/auth", authenticationRouter.build());
     this.app.use("/api/trainees", traineeRouter.build());
     this.app.use("/api/search", searchRouter.build());
+    this.app.use("/api/geo", geographyRouter.build());
   
     // Not found handler for API
     this.app.use('/api', (req: Request, res: Response) => {
