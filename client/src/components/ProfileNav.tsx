@@ -3,7 +3,7 @@ import { ProfileNavProps } from "../types";
 
 export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
   return (
-    <Box display="flex" marginLeft="16px" color="black">
+    <Box display="flex" color="black" sx={{ mx: 5, my: 1 }}>
       <Button
         variant="contained"
         color={activeTab === "personal" ? "primary" : "inherit"}
