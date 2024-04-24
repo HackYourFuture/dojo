@@ -17,7 +17,7 @@ export const TraineeProfilePage = () => {
   };
 
   return (
-    <div style={{ display: "flex", background: "#ecfef6" }}>
+    <div style={{ display: "flex", background: "#fff" }}>
       <Box
         width="40%"
         position="sticky"

@@ -415,21 +415,23 @@ export const PersonalInfo = () => {
         </FormControl>
       </div>
 
-      {/* Comments */}
-      <FormControl fullWidth sx={{ mx: 2 }}>
-        <InputLabel htmlFor="comments">Comments</InputLabel>
-        <OutlinedInput
-          id="comments"
-          name="comments"
-          label="Comments"
-          multiline
-          rows={4}
-          value={traineeData?.comments || ""}
-          onChange={handleChange}
-          disabled={!isEditing}
-          startAdornment=" "
-        />
-      </FormControl>
+      <div style={{ width: "100%" }}>
+        {/* Comments */}
+        <FormControl sx={{ mx: 2, width: "81ch" }}>
+          <InputLabel htmlFor="comments">Comments</InputLabel>
+          <OutlinedInput
+            id="comments"
+            name="comments"
+            label="Comments"
+            multiline
+            rows={4}
+            value={traineeData?.comments || ""}
+            onChange={handleChange}
+            disabled={!isEditing}
+            startAdornment=" "
+          />
+        </FormControl>
+      </div>
 
       <Box sx={{ mx: 2 }}>
         {isEditing ? (
