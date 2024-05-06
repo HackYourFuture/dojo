@@ -1,8 +1,5 @@
 import { Alert } from "@mui/material";
-
-interface ErrorBoxProps {
-  errorMessage: string;
-}
+import { ErrorBoxProps } from "../types";
 
 export const ErrorBox = (props: ErrorBoxProps) => {
   return (
