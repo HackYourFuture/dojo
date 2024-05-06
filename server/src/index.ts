@@ -22,7 +22,7 @@ class Main {
   }
 
   setupMiddlewares() {
-    if (process.env.ALLOW_CORS) {
+    if (process.env.ALLOW_CORS?.toLowerCase() === "true") {
       this.app.use(cors());
     }
     this.app.use("/api-docs", swagger("./api.yaml"));
@@ -97,7 +97,7 @@ class Main {
       (error: Error, req: Request, res: Response, next: NextFunction) => {
         console.error(error);
         if(this.isProduction) {
-          res.status(500).json(new ResponseError("Something broke!" ));
+          res.status(500).json(new ResponseError("Something broke!"));
         } else {
           res.status(500).json(error);
         }

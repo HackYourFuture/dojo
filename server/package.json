@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "nodemon -w src src/index.ts",
     "start": "tsc && node dist/index.js",
-    "setup": "npm install --dev"
+    "setup": "npm install --include=dev"
   },
   "keywords": [],
   "author": "",
