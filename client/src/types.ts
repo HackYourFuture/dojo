@@ -48,7 +48,3 @@ export interface ContactData {
   githubHandle: string;
   linkedin: string;
 }
-
-export interface ErrorBoxProps {
-  errorMessage: string;
-}
