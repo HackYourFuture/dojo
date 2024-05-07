@@ -1,10 +1,6 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-
-interface TraineeInfo {
-  id: string;
-  personalInfo: any;
-}
+import { TraineeInfo } from "../types";
 
 export const useTraineeInfoData = (traineeId: string) => {
   return useQuery<TraineeInfo, Error>(

@@ -1,9 +1,7 @@
-import React, { ReactNode, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ReactNode, useEffect, useState } from "react";
+
 import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 
 import {
   Button,
@@ -14,39 +12,22 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { Loader } from "./Loader";
+import { TraineeData } from "../types";
 
-interface TraineeData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  preferredName: string;
-  gender: string;
-  pronouns: string;
-  location: string;
-  englishLevel: string;
-  professionalDutch: boolean;
-  countryOfOrigin: string;
-  background: string;
-  hasWorkPermit: boolean;
-  residencyStatus: string;
-  receivesSocialBenefits: boolean;
-  caseManagerUrging: boolean;
-  educationLevel: string;
-  educationBackground: string;
-  comments: string;
+interface PersonalInfoProps {
+  traineeData?: TraineeData;
+  saveTraineeData: (editedData: TraineeData) => void;
 }
 
-export const PersonalInfo = () => {
-  const { traineeInfo } = useParams();
-  const trainee = traineeInfo?.split("-");
-  const traineeId = trainee ? trainee[1] : "";
-  const { isLoading, isError, data, error, isFetching } =
-    useTraineeInfoData(traineeId);
-  const [traineeData, setTraineeData] = useState<TraineeData | null>(
-    data && data.personalInfo ? data.personalInfo : null
-  );
+export const PersonalInfo = ({
+  traineeData,
+  saveTraineeData,
+}: PersonalInfoProps) => {
+  useEffect(() => {
+    if (traineeData) setEditedFields(traineeData as TraineeData);
+  }, [traineeData]);
 
+  const [editedFields, setEditedFields] = useState<TraineeData>(traineeData!);
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEditClick = () => {
@@ -54,16 +35,22 @@ export const PersonalInfo = () => {
   };
 
   const handleSaveClick = () => {
+    const editedData: any = {};
+    if (!editedFields || !traineeData) return;
+    Object.entries(editedFields).forEach(([key, value]) => {
+      if (traineeData && traineeData[key as keyof TraineeData] !== value) {
+        editedData[key as keyof any] = value;
+      }
+    });
+    saveTraineeData(editedData);
     setIsEditing(false);
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: ReactNode }>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setTraineeData((prevData) => ({
-      ...prevData!,
-      [name!]: value,
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      [name]: value,
     }));
   };
 
@@ -73,26 +60,11 @@ export const PersonalInfo = () => {
     >
   ) => {
     const { name, value } = event.target;
-    setTraineeData((prevData) => ({
-      ...prevData!,
-      [name!]: value,
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      [name]: value,
     }));
   };
-
-  if (isLoading || isFetching) {
-    return <Loader />;
-  }
-
-  if (isError && error instanceof Error) {
-    return (
-      <Box p={8} sx={{ width: "100%" }}>
-        <Alert severity="error">
-          <AlertTitle>Error</AlertTitle>
-          {error.message}
-        </Alert>
-      </Box>
-    );
-  }
 
   return (
     <Box
@@ -102,6 +74,17 @@ export const PersonalInfo = () => {
       gap={4}
       padding="24px"
     >
+      <Box width={"100%"} display="flex" justifyContent={"end"}>
+        {isEditing ? (
+          <Button variant="contained" color="primary" onClick={handleSaveClick}>
+            Save
+          </Button>
+        ) : (
+          <Button variant="contained" onClick={handleEditClick}>
+            Edit Profile
+          </Button>
+        )}
+      </Box>
       <div style={{ width: "100%" }}>
         {/* First Name */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
@@ -112,7 +95,7 @@ export const PersonalInfo = () => {
             id="firstName"
             name="firstName"
             label="First Name"
-            value={traineeData?.firstName || ""}
+            value={editedFields?.firstName || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -128,7 +111,7 @@ export const PersonalInfo = () => {
             id="lastName"
             name="lastName"
             label="Last Name"
-            value={traineeData?.lastName || ""}
+            value={editedFields?.lastName || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -144,7 +127,7 @@ export const PersonalInfo = () => {
             id="preferredName"
             name="preferredName"
             label="Preferred Name"
-            value={traineeData?.preferredName || ""}
+            value={editedFields?.preferredName || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -162,7 +145,7 @@ export const PersonalInfo = () => {
             name="gender"
             id="gender"
             label="Gender"
-            value={traineeData?.gender || ""}
+            value={editedFields?.gender || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -182,7 +165,7 @@ export const PersonalInfo = () => {
             name="pronouns"
             id="pronouns"
             label="Pronouns"
-            value={traineeData?.pronouns || ""}
+            value={editedFields?.pronouns || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -204,7 +187,7 @@ export const PersonalInfo = () => {
             id="location"
             name="location"
             label="Location"
-            value={traineeData?.location || ""}
+            value={editedFields?.location || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -220,7 +203,7 @@ export const PersonalInfo = () => {
             id="countryOfOrigin"
             name="countryOfOrigin"
             label="Country of Origin"
-            value={traineeData?.countryOfOrigin || ""}
+            value={editedFields?.countryOfOrigin || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -236,7 +219,7 @@ export const PersonalInfo = () => {
             name="background"
             id="background"
             label="Background"
-            value={traineeData?.background || ""}
+            value={editedFields?.background || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -264,7 +247,7 @@ export const PersonalInfo = () => {
             name="hasWorkPermit"
             id="hasWorkPermit"
             label="Work Permit"
-            value={traineeData?.hasWorkPermit || ""}
+            value={editedFields?.hasWorkPermit || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -283,7 +266,7 @@ export const PersonalInfo = () => {
             name="residencyStatus"
             id="residencyStatus"
             label="Residency Status"
-            value={traineeData?.residencyStatus || ""}
+            value={editedFields?.residencyStatus || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -304,7 +287,7 @@ export const PersonalInfo = () => {
             name="receivesSocialBenefits"
             id="receivesSocialBenefits"
             label="Social Benefits"
-            value={traineeData?.receivesSocialBenefits || ""}
+            value={editedFields?.receivesSocialBenefits || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -323,7 +306,7 @@ export const PersonalInfo = () => {
             name="caseManagerUrging"
             id="caseManagerUrging"
             label="Case Manager Urging"
-            value={traineeData?.caseManagerUrging || ""}
+            value={editedFields?.caseManagerUrging || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -344,7 +327,7 @@ export const PersonalInfo = () => {
             name="englishLevel"
             id="englishLevel"
             label="English Level"
-            value={traineeData?.englishLevel || ""}
+            value={editedFields?.englishLevel || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -364,7 +347,7 @@ export const PersonalInfo = () => {
             name="professionalDutch"
             id="professionalDutch"
             label="Professional Dutch"
-            value={traineeData?.professionalDutch || ""}
+            value={editedFields?.professionalDutch || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -385,7 +368,7 @@ export const PersonalInfo = () => {
             name="educationLevel"
             id="educationLevel"
             label="Education Level"
-            value={traineeData?.educationLevel || ""}
+            value={editedFields?.educationLevel || ""}
             onChange={handleSelectChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -407,7 +390,7 @@ export const PersonalInfo = () => {
             id="educationBackground"
             name="educationBackground"
             label="Education Background"
-            value={traineeData?.educationBackground || ""}
+            value={editedFields?.educationBackground || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
@@ -425,25 +408,13 @@ export const PersonalInfo = () => {
             label="Comments"
             multiline
             rows={4}
-            value={traineeData?.comments || ""}
+            value={editedFields?.comments || ""}
             onChange={handleChange}
             disabled={!isEditing}
             startAdornment=" "
           />
         </FormControl>
       </div>
-
-      <Box sx={{ mx: 2 }}>
-        {isEditing ? (
-          <Button variant="contained" color="primary" onClick={handleSaveClick}>
-            Save
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={handleEditClick}>
-            Edit Profile
-          </Button>
-        )}
-      </Box>
     </Box>
   );
 };

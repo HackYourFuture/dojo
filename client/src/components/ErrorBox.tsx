@@ -1,6 +1,6 @@
 import { Alert } from "@mui/material";
 
-interface ErrorBoxProps {
+export interface ErrorBoxProps {
   errorMessage: string;
 }
 

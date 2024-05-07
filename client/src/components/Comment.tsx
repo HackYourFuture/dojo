@@ -59,7 +59,7 @@ export const Comment = () => {
         >
           <div>
             <img
-              src=''
+              src=""
               alt="Profile"
               style={{
                 width: "48px",
@@ -96,7 +96,7 @@ export const Comment = () => {
         >
           <div>
             <img
-              src=''
+              src=""
               alt="Profile"
               style={{
                 width: "48px",
