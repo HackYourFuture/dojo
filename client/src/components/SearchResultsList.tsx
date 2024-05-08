@@ -7,6 +7,7 @@ import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
 import { useDebounce } from "../hooks/useDebounce";
 import AlertTitle from "@mui/material/AlertTitle";
 import { Link } from "react-router-dom";
+import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 
 export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   // You can change search debounce time using this hook.
@@ -36,20 +37,33 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   }
 
   return (
-    <div className="results-list">
+    <Box
+      sx={{
+        width: "100%",
+        maxHeight: 300,
+        bgcolor: "background.paper",
+        overflowY: "scroll",
+      }}
+    >
       {data.length ? (
-        data.map((trainee: SearchResult) => {
-          return (
-            <div key={trainee.id}>
-              <Link to={`/trainee/${trainee.name}-${trainee.id}`}>
+        <List>
+          {data.map((trainee: SearchResult) => {
+            return (
+              <ListItem disablePadding>
+              <Link to={`/trainee/${trainee.name}-${trainee.id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+                <ListItemButton key={trainee.id}>
                 {trainee.name}
+                </ListItemButton>
               </Link>
-            </div>
-          );
-        })
+              </ListItem>
+            );
+          })}
+        </List>
       ) : (
-        <span>No results found!</span>
+        <Alert severity="info" sx={{ bgcolor: "background.paper" }}>
+          No results found!
+        </Alert>
       )}
-    </div>
+    </Box>
   );
 };

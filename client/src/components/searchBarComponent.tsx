@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./searchBarComponent.css";
-import { FaSearch } from "react-icons/fa";
+import { TextField, Box } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SearchBar = ({ data }: any) => {
@@ -13,13 +14,18 @@ export const SearchBar = ({ data }: any) => {
 
   return (
     <div className="input-wrapper">
-      <FaSearch id="search-icon" />
-      <input
-        type="search"
-        placeholder="Type to search..."
-        value={input}
-        onChange={(e) => handleChange(e.target.value)}
-      />
+      <Box sx={{ display: "flex", width: 1 }}>
+        <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.4 }} />
+        <TextField
+          variant="standard"
+          placeholder="Search trainee..."
+          fullWidth
+          autoFocus
+          value={input}
+          onChange={(e) => handleChange(e.target.value)}
+          InputProps={{ disableUnderline: true }}
+        />
+      </Box>
     </div>
   );
 };
