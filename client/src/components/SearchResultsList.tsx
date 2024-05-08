@@ -41,7 +41,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
         data.map((trainee: SearchResult) => {
           return (
             <div key={trainee.id}>
-              <Link to={`/trainee/${trainee.name}-${trainee.id}`}>
+              <Link to={`/trainee/${trainee.name.replace(/ /g, '-')}_${trainee.id}`}>
                 {trainee.name}
               </Link>
             </div>

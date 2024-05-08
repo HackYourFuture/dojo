@@ -7,7 +7,7 @@ import { Loader, TraineeProfilePage } from "../components";
 
 export const TraineePage = () => {
   const { traineeInfo } = useParams();
-  const trainee = traineeInfo?.split("-");
+  const trainee = traineeInfo?.split("_");
   const traineeId = trainee ? trainee[1] : "";
   const { isLoading, isError, error, isFetching } = useTraineeInfoData(traineeId);
 
