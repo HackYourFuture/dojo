@@ -1,4 +1,3 @@
-import "./SearchResultsList.css";
 import { SearchResult, SearchResultsListProps } from "../types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -7,7 +6,8 @@ import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
 import { useDebounce } from "../hooks/useDebounce";
 import AlertTitle from "@mui/material/AlertTitle";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemButton } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
+import PersonIcon from '@mui/icons-material/Person';
 
 export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   // You can change search debounce time using this hook.
@@ -43,13 +43,14 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
         maxHeight: 300,
         bgcolor: "background.paper",
         overflowY: "scroll",
+        boxShadow: "0px 0px 8px #ccc",
       }}
     >
       {data.length ? (
         <List>
           {data.map((trainee: SearchResult) => {
             return (
-              <ListItem disablePadding>
+              <ListItem disablePadding key={trainee.id}>
                 <Link
                   to={`/trainee/${trainee.name.replace(/ /g, "-")}_${
                     trainee.id
@@ -61,6 +62,9 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
                   }}
                 >
                   <ListItemButton key={trainee.id}>
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
                     {trainee.name}
                   </ListItemButton>
                 </Link>
