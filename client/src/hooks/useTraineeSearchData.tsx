@@ -6,7 +6,7 @@ export const useTraineeSearchData = (search: string) => {
   return useQuery(
     ["search-results", search],
     () => {
-      return axios.get(`/api/search?q=${search}`);
+      return axios.get(`/api/search?q=${search}&limit=20`);
     },
     {
       select: (data) => {
