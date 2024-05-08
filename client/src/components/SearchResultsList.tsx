@@ -50,7 +50,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
           {data.map((trainee: SearchResult) => {
             return (
               <ListItem disablePadding>
-              <Link to={`/trainee/${trainee.name}-${trainee.id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+              <Link to={`/trainee/${trainee.name.replace(/ /g, '-')}_${trainee.id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
                 <ListItemButton key={trainee.id}>
                 {trainee.name}
                 </ListItemButton>
