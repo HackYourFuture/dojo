@@ -7,7 +7,7 @@ import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
 import { useDebounce } from "../hooks/useDebounce";
 import AlertTitle from "@mui/material/AlertTitle";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { List, ListItem, ListItemButton } from "@mui/material";
 
 export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   // You can change search debounce time using this hook.
@@ -50,11 +50,20 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
           {data.map((trainee: SearchResult) => {
             return (
               <ListItem disablePadding>
-              <Link to={`/trainee/${trainee.name.replace(/ /g, '-')}_${trainee.id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
-                <ListItemButton key={trainee.id}>
-                {trainee.name}
-                </ListItemButton>
-              </Link>
+                <Link
+                  to={`/trainee/${trainee.name.replace(/ /g, "-")}_${
+                    trainee.id
+                  }`}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    width: "100%",
+                  }}
+                >
+                  <ListItemButton key={trainee.id}>
+                    {trainee.name}
+                  </ListItemButton>
+                </Link>
               </ListItem>
             );
           })}
