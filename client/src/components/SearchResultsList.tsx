@@ -43,6 +43,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
         maxHeight: 300,
         bgcolor: "background.paper",
         overflowY: "scroll",
+        borderRadius: "10px",
       }}
     >
       {data.length ? (
