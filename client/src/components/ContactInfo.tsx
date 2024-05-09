@@ -1,4 +1,12 @@
-import { Box, Button, FormControl, Icon, Link, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Icon,
+  InputAdornment,
+  Link,
+  TextField,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { ContactData } from "../types";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
@@ -6,6 +14,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import slackIcon from "../assets/slack.png";
+import LinkIcon from "@mui/icons-material/Link";
 
 interface ContactInfoProps {
   contactData?: ContactData;
@@ -69,32 +78,39 @@ export const ContactInfo = ({
           }}
         >
           <EmailIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link href={"mailto:" + editedFields?.email}>
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: "80ch",
-                gap: "2rem",
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: "80ch",
+              gap: "2rem",
+            }}
+          >
+            <TextField
+              id="email"
+              name="email"
+              label="Email"
+              type="email"
+              value={editedFields?.email || ""}
+              InputProps={{
+                readOnly: isEditing ? false : true,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && (
+                      <Link href={"mailto:" + editedFields?.email}>
+                        <LinkIcon sx={{ color: "action.active" }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
               }}
-            >
-              <TextField
-                id="email"
-                name="email"
-                label="Email"
-                type="email"
-                value={editedFields?.email || ""}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant={isEditing ? "outlined" : "standard"}
-                onChange={handleChange}
-              />
-            </FormControl>
-          </Link>
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? "outlined" : "standard"}
+              onChange={handleChange}
+            />
+          </FormControl>
         </Box>
 
         {/* Slack */}
@@ -141,32 +157,30 @@ export const ContactInfo = ({
           }}
         >
           <PhoneIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link href={"tel:" + editedFields?.phone}>
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: "80ch",
-                gap: "2rem",
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: "80ch",
+              gap: "2rem",
+            }}
+          >
+            <TextField
+              id="phone"
+              name="phone"
+              label="Phone"
+              type="tel"
+              value={editedFields?.phone || ""}
+              InputProps={{
+                readOnly: isEditing ? false : true,
               }}
-            >
-              <TextField
-                id="phone"
-                name="phone"
-                label="Phone"
-                type="tel"
-                value={editedFields?.phone || ""}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant={isEditing ? "outlined" : "standard"}
-                onChange={handleChange}
-              />
-            </FormControl>
-          </Link>
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? "outlined" : "standard"}
+              onChange={handleChange}
+            />
+          </FormControl>
         </Box>
 
         {/* Github Handle */}
@@ -177,35 +191,44 @@ export const ContactInfo = ({
           }}
         >
           <GitHubIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link
-            href={"https://github.com/" + editedFields?.githubHandle}
-            target="_blank"
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: "80ch",
+              gap: "2rem",
+            }}
           >
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: "80ch",
-                gap: "2rem",
+            <TextField
+              id="githubHandle"
+              name="githubHandle"
+              label="Github Handle"
+              type="text"
+              value={editedFields?.githubHandle || ""}
+              InputProps={{
+                readOnly: isEditing ? false : true,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && (
+                      <Link
+                        href={
+                          "https://github.com/" + editedFields?.githubHandle
+                        }
+                        target="_blank"
+                      >
+                        <LinkIcon sx={{ color: "action.active" }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
               }}
-            >
-              <TextField
-                id="githubHandle"
-                name="githubHandle"
-                label="Github Handle"
-                type="text"
-                value={editedFields?.githubHandle || ""}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant={isEditing ? "outlined" : "standard"}
-                onChange={handleChange}
-              />
-            </FormControl>
-          </Link>
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? "outlined" : "standard"}
+              onChange={handleChange}
+            />
+          </FormControl>
         </Box>
 
         {/* Linkedin */}
@@ -216,32 +239,39 @@ export const ContactInfo = ({
           }}
         >
           <LinkedInIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link href={editedFields?.linkedin} target="_blank">
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: "80ch",
-                gap: "2rem",
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: "80ch",
+              gap: "2rem",
+            }}
+          >
+            <TextField
+              id="linkedin"
+              name="linkedin"
+              label="Linkedin"
+              type="url"
+              value={editedFields?.linkedin || ""}
+              InputProps={{
+                readOnly: isEditing ? false : true,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && (
+                      <Link href={editedFields?.linkedin} target="_blank">
+                        <LinkIcon sx={{ color: "action.active" }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
               }}
-            >
-              <TextField
-                id="linkedin"
-                name="linkedin"
-                label="Linkedin"
-                type="url"
-                value={editedFields?.linkedin || ""}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant={isEditing ? "outlined" : "standard"}
-                onChange={handleChange}
-              />
-            </FormControl>
-          </Link>
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? "outlined" : "standard"}
+              onChange={handleChange}
+            />
+          </FormControl>
         </Box>
       </div>
     </Box>
