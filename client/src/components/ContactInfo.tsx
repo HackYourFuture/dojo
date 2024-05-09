@@ -107,30 +107,32 @@ export const ContactInfo = ({
           <Icon sx={{ mr: 1 }}>
             <img src={slackIcon} alt="Slack" width="27" height="27" />
           </Icon>
-          <FormControl
-            sx={{
-              mx: 2,
-              my: 2,
-              width: "80ch",
-              gap: "2rem",
-            }}
-          >
-            <TextField
-              id="slack"
-              name="slack"
-              label="Slack"
-              type="text"
-              value={editedFields?.slack || ""}
-              InputProps={{
-                readOnly: isEditing ? false : true,
+          <Link href="">
+            <FormControl
+              sx={{
+                mx: 2,
+                my: 2,
+                width: "80ch",
+                gap: "2rem",
               }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              variant={isEditing ? "outlined" : "standard"}
-              onChange={handleChange}
-            />
-          </FormControl>
+            >
+              <TextField
+                id="slack"
+                name="slack"
+                label="Slack"
+                type="text"
+                value={editedFields?.slack || ""}
+                InputProps={{
+                  readOnly: isEditing ? false : true,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant={isEditing ? "outlined" : "standard"}
+                onChange={handleChange}
+              />
+            </FormControl>
+          </Link>
         </Box>
 
         {/* Phone */}
@@ -141,30 +143,32 @@ export const ContactInfo = ({
           }}
         >
           <PhoneIcon sx={{ color: "action.active", mr: 1 }} />
-          <FormControl
-            sx={{
-              mx: 2,
-              my: 2,
-              width: "80ch",
-              gap: "2rem",
-            }}
-          >
-            <TextField
-              id="phone"
-              name="phone"
-              label="Phone"
-              type="tel"
-              value={editedFields?.phone || ""}
-              InputProps={{
-                readOnly: isEditing ? false : true,
+          <Link href="">
+            <FormControl
+              sx={{
+                mx: 2,
+                my: 2,
+                width: "80ch",
+                gap: "2rem",
               }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              variant={isEditing ? "outlined" : "standard"}
-              onChange={handleChange}
-            />
-          </FormControl>
+            >
+              <TextField
+                id="phone"
+                name="phone"
+                label="Phone"
+                type="tel"
+                value={editedFields?.phone || ""}
+                InputProps={{
+                  readOnly: isEditing ? false : true,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant={isEditing ? "outlined" : "standard"}
+                onChange={handleChange}
+              />
+            </FormControl>
+          </Link>
         </Box>
 
         {/* Github Handle */}
@@ -175,30 +179,32 @@ export const ContactInfo = ({
           }}
         >
           <GitHubIcon sx={{ color: "action.active", mr: 1 }} />
-          <FormControl
-            sx={{
-              mx: 2,
-              my: 2,
-              width: "80ch",
-              gap: "2rem",
-            }}
-          >
-            <TextField
-              id="githubHandle"
-              name="githubHandle"
-              label="Github Handle"
-              type="text"
-              value={editedFields?.githubHandle || ""}
-              InputProps={{
-                readOnly: isEditing ? false : true,
+          <Link href="">
+            <FormControl
+              sx={{
+                mx: 2,
+                my: 2,
+                width: "80ch",
+                gap: "2rem",
               }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              variant={isEditing ? "outlined" : "standard"}
-              onChange={handleChange}
-            />
-          </FormControl>
+            >
+              <TextField
+                id="githubHandle"
+                name="githubHandle"
+                label="Github Handle"
+                type="text"
+                value={editedFields?.githubHandle || ""}
+                InputProps={{
+                  readOnly: isEditing ? false : true,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant={isEditing ? "outlined" : "standard"}
+                onChange={handleChange}
+              />
+            </FormControl>
+          </Link>
         </Box>
 
         {/* Linkedin */}
@@ -209,30 +215,32 @@ export const ContactInfo = ({
           }}
         >
           <LinkedInIcon sx={{ color: "action.active", mr: 1 }} />
-          <FormControl
-            sx={{
-              mx: 2,
-              my: 2,
-              width: "80ch",
-              gap: "2rem",
-            }}
-          >
-            <TextField
-              id="linkedin"
-              name="linkedin"
-              label="Linkedin"
-              type="url"
-              value={editedFields?.linkedin || ""}
-              InputProps={{
-                readOnly: isEditing ? false : true,
+          <Link href="">
+            <FormControl
+              sx={{
+                mx: 2,
+                my: 2,
+                width: "80ch",
+                gap: "2rem",
               }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              variant={isEditing ? "outlined" : "standard"}
-              onChange={handleChange}
-            />
-          </FormControl>
+            >
+              <TextField
+                id="linkedin"
+                name="linkedin"
+                label="Linkedin"
+                type="url"
+                value={editedFields?.linkedin || ""}
+                InputProps={{
+                  readOnly: isEditing ? false : true,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant={isEditing ? "outlined" : "standard"}
+                onChange={handleChange}
+              />
+            </FormControl>
+          </Link>
         </Box>
       </div>
     </Box>
