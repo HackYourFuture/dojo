@@ -107,32 +107,30 @@ export const ContactInfo = ({
           <Icon sx={{ mr: 1 }}>
             <img src={slackIcon} alt="Slack" width="27" height="27" />
           </Icon>
-          <Link href="">
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: "80ch",
-                gap: "2rem",
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: "80ch",
+              gap: "2rem",
+            }}
+          >
+            <TextField
+              id="slack"
+              name="slack"
+              label="Slack"
+              type="text"
+              value={editedFields?.slack || ""}
+              InputProps={{
+                readOnly: isEditing ? false : true,
               }}
-            >
-              <TextField
-                id="slack"
-                name="slack"
-                label="Slack"
-                type="text"
-                value={editedFields?.slack || ""}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant={isEditing ? "outlined" : "standard"}
-                onChange={handleChange}
-              />
-            </FormControl>
-          </Link>
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? "outlined" : "standard"}
+              onChange={handleChange}
+            />
+          </FormControl>
         </Box>
 
         {/* Phone */}
@@ -143,7 +141,7 @@ export const ContactInfo = ({
           }}
         >
           <PhoneIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link href="">
+          <Link href={"tel:" + editedFields?.phone}>
             <FormControl
               sx={{
                 mx: 2,
@@ -179,7 +177,10 @@ export const ContactInfo = ({
           }}
         >
           <GitHubIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link href="">
+          <Link
+            href={"https://github.com/" + editedFields?.githubHandle}
+            target="_blank"
+          >
             <FormControl
               sx={{
                 mx: 2,
@@ -215,7 +216,7 @@ export const ContactInfo = ({
           }}
         >
           <LinkedInIcon sx={{ color: "action.active", mr: 1 }} />
-          <Link href="">
+          <Link href={editedFields?.linkedin} target="_blank">
             <FormControl
               sx={{
                 mx: 2,
