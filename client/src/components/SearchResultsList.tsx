@@ -7,7 +7,7 @@ import { useDebounce } from "../hooks/useDebounce";
 import AlertTitle from "@mui/material/AlertTitle";
 import { Link } from "react-router-dom";
 import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 
 export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   // You can change search debounce time using this hook.
@@ -44,6 +44,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
         bgcolor: "background.paper",
         overflowY: "scroll",
         boxShadow: "0px 0px 8px #ccc",
+        borderRadius: "10px",
       }}
     >
       {data.length ? (
