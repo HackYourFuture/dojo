@@ -96,7 +96,7 @@ export const ContactInfo = ({
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
-                    {!isEditing && (
+                    {!isEditing && editedFields?.email && (
                       <Link href={"mailto:" + editedFields?.email}>
                         <LinkIcon sx={{ color: "action.active" }} />
                       </Link>
@@ -209,7 +209,7 @@ export const ContactInfo = ({
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
-                    {!isEditing && (
+                    {!isEditing && editedFields?.githubHandle && (
                       <Link
                         href={
                           "https://github.com/" + editedFields?.githubHandle
@@ -257,7 +257,7 @@ export const ContactInfo = ({
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
-                    {!isEditing && (
+                    {!isEditing && editedFields?.linkedin && (
                       <Link href={editedFields?.linkedin} target="_blank">
                         <LinkIcon sx={{ color: "action.active" }} />
                       </Link>
