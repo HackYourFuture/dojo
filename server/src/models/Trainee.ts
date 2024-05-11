@@ -1,6 +1,7 @@
 export enum Gender {
-  Male = "male",
-  Female = "female",
+  Man = "man",
+  Woman = "woman",
+  NonBinary = "non-binary",
   Other = "other",
 }
 
@@ -35,13 +36,17 @@ export enum InteractionType {
   Call = "call",
   Feedback = "feedback",
   TechHour = "tech-hour",
+  InPerson = "in-person",
   Other = "other",
 }
 
 export enum StrikeReason {
-  Assignment = "assignment",
-  Preparation = "preparation",
-  Attendance = "attendance",
+  LastSubmission = "late-submission",
+  MissedSubmission = "missed-submission",
+  IncompleteSubmission = "incomplete-submission",
+  LateAttendance = "late-attendance",
+  Absence = "absence",
+  PendingFeedback= "pending-feedback",
   Other = "other",
 }
 
@@ -49,6 +54,7 @@ export enum QuitReason {
   Technical = "technical",
   SocialSkills = "social-skills",
   Personal = "personal",
+  Withdrawn = "withdrawn",
   MunicipalityOrMonetary = "municipality-or-monetary",
   LeftNL = "left-nl",
   Other = "other",
@@ -87,7 +93,8 @@ export enum TestResult {
 }
 
 export enum TestType {
-  JavaScript = "javaScript",
+  Presentation = "presentation",
+  JavaScript = "javascript",
   BrowsersInterview = "browsers-interview",
   UsingApisInterview = "using-apis-interview",
   NodeJS = "nodejs",
@@ -167,6 +174,7 @@ export interface TraineeEducationInfo {
   startDate?: Date;
   graduationDate?: Date;
   quitReason?: QuitReason;
+  quitDate?: Date;
   strikes: Strike[];
   assignments: Assignment[];
   tests: Test[];
@@ -178,6 +186,7 @@ export interface TraineeEmploymentInfo {
   cvURL?: string;
   availability?: string;
   preferredRole?: string;
+  drivingLicense?: boolean;
   preferredLocation?: string;
   extraTechnologies?: string;
   employmentHistory: TraineeEmploymentHistory[];
