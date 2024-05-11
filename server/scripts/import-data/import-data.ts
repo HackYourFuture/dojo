@@ -48,6 +48,7 @@ const extractData = (data: string) => {
         startDate: row['Start Date'],
         graduationDate: row['Graduation Date'],
         quitReason: row['Quit Reason'],
+        quitDate: row['Quit Date'],
         comments: row['Comments - Education'],
       },
       employmentInfo: {
