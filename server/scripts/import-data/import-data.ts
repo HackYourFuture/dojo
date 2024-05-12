@@ -4,9 +4,8 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 
-const replaceBoolean = (str: string) => {
-  return str.toLowerCase() === 'yes' ? true : false;
-};
+const replaceBoolean = (str: string) => str.toLowerCase() === 'yes' ? true : false;
+const handleString = (str: string) => str.trim() === '' ? null : str.trim();
 
 const extractData = (data: string) => {
   const rows = parse(data, {
@@ -16,50 +15,50 @@ const extractData = (data: string) => {
   return rows.map((row: any) => {
     return {
       personalInfo: {
-        firstName: row['First Name*'],
-        lastName: row['Last Name*'],
-        preferredName: row['Preferred Name'],
-        gender: row['Gender*'],
-        pronouns: row['Pronouns'],
-        location: row['Location'],
-        countryOfOrigin: row['Country of Origin'],
-        background: row['Background'],
-        englishLevel: row['English Level'],
+        firstName: handleString(row['First Name*']),
+        lastName: handleString(row['Last Name*']),
+        preferredName: handleString(row['Preferred Name']),
+        gender: handleString(row['Gender*']),
+        pronouns: handleString(row['Pronouns']),
+        location: handleString(row['Location']),
+        countryOfOrigin: handleString(row['Country of Origin']),
+        background: handleString(row['Background']),
+        englishLevel: handleString(row['English Level']),
         professionalDutch: replaceBoolean(row['Professional Dutch']),
         hasWorkPermit: replaceBoolean(row['Work Permit']),
-        residencyStatus: row['Residency Status'],
+        residencyStatus: handleString(row['Residency Status']),
         receivesSocialBenefits: replaceBoolean(row['Uitkering']),
         caseManagerUrging: replaceBoolean(row['Case Manager Urging']),
-        educationLevel: row['Education Level'],
-        educationBackground: row['Education Background'],
-        comments: row['Comments - Personal'],
+        educationLevel: handleString(row['Education Level']),
+        educationBackground: handleString(row['Education Background']),
+        comments: handleString(row['Comments - Personal']),
       },
       contactInfo: {
-        email: row['Email*'],
-        githubHandle: row['GitHub Handle'],
-        slack: row['Slack Handle'],
-        phone: row['Phone Number'],
-        linkedin: row['LinkedIn Profile URL'],
+        email: handleString(row['Email*']),
+        githubHandle: handleString(row['GitHub Handle']),
+        slack: handleString(row['Slack Handle']),
+        phone: handleString(row['Phone Number']),
+        linkedin: handleString(row['LinkedIn Profile URL']),
       },
       educationInfo: {
         startCohort: row['Start Cohort*'],
         currentCohort: row['Current Cohort'],
-        learningStatus: row['Learning Status*'],
-        startDate: row['Start Date'],
-        graduationDate: row['Graduation Date'],
-        quitReason: row['Quit Reason'],
-        quitDate: row['Quit Date'],
-        comments: row['Comments - Education'],
+        learningStatus: handleString(row['Learning Status*']),
+        startDate: handleString(row['Start Date']),
+        graduationDate: handleString(row['Graduation Date']),
+        quitReason: handleString(row['Quit Reason']),
+        quitDate: handleString(row['Quit Date']),
+        comments: handleString(row['Comments - Education']),
       },
       employmentInfo: {
-        jobPath: row['Job Path*'],
-        cvURL: row['CV URL'],
-        availability: row['Availability'],
-        preferredRole: row['Preferred Role'],
+        jobPath: handleString(row['Job Path*']),
+        cvURL: handleString(row['CV URL']),
+        availability: handleString(row['Availability']),
+        preferredRole: handleString(row['Preferred Role']),
         drivingLicense: replaceBoolean(row['Driving License']),
-        preferredLocation: row['Preferred Location'],
-        extraTechnologies: row['Extra Technologies'],
-        comments: row['Comments - Employment'],
+        preferredLocation: handleString(row['Preferred Location']),
+        extraTechnologies: handleString(row['Extra Technologies']),
+        comments: handleString(row['Comments - Employment']),
       }
     }
   });
