@@ -5,7 +5,7 @@ import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 
 const replaceBoolean = (str: string) => {
-  return str === 'Yes' ? true : false;
+  return str.toLowerCase() === 'yes' ? true : false;
 };
 
 const extractData = (data: string) => {
@@ -48,6 +48,7 @@ const extractData = (data: string) => {
         startDate: row['Start Date'],
         graduationDate: row['Graduation Date'],
         quitReason: row['Quit Reason'],
+        quitDate: row['Quit Date'],
         comments: row['Comments - Education'],
       },
       employmentInfo: {
@@ -55,6 +56,7 @@ const extractData = (data: string) => {
         cvURL: row['CV URL'],
         availability: row['Availability'],
         preferredRole: row['Preferred Role'],
+        drivingLicense: replaceBoolean(row['Driving License']),
         preferredLocation: row['Preferred Location'],
         extraTechnologies: row['Extra Technologies'],
         comments: row['Comments - Employment'],

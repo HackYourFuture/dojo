@@ -97,6 +97,7 @@ const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
     startDate: { type: Date, required: false, default: null},
     graduationDate: { type: Date, required: false, default: null },
     quitReason: { type: String, required: false, enum: Object.values(QuitReason), default: null },
+    quitDate: { type: Date, required: false, default: null },
     strikes: [StrikeSchema],
     assignments: [AssignmentSchema],
     tests: [TestSchema],
@@ -126,6 +127,7 @@ const TraineeEmploymentInfoSchema = new Schema<TraineeEmploymentInfo>(
     cvURL: { type: String, required: false, default: null },
     availability: { type: String, required: false, default: null },
     preferredRole: { type: String, required: false, default: null },
+    drivingLicense: { type: Boolean, required: false, default: null },
     preferredLocation: { type: String, required: false, default: null },
     extraTechnologies: { type: String, required: false, default: null },
     employmentHistory: {

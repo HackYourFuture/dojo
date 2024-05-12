@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-
 import Box from "@mui/material/Box";
 
 import {
@@ -150,8 +149,9 @@ export const PersonalInfo = ({
             disabled={!isEditing}
             startAdornment=" "
           >
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
+            <MenuItem value="woman">Woman</MenuItem>
+            <MenuItem value="man">Man</MenuItem>
+            <MenuItem value="non-binary">Non-Binary</MenuItem>
             <MenuItem value="other">Other</MenuItem>
           </Select>
         </FormControl>
