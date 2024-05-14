@@ -12,6 +12,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { TraineeData } from "../types";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 interface PersonalInfoProps {
   traineeData?: TraineeData;
@@ -20,6 +21,7 @@ interface PersonalInfoProps {
 
 export const PersonalInfo = ({
   traineeData,
+
   saveTraineeData,
 }: PersonalInfoProps) => {
   useEffect(() => {
@@ -28,6 +30,7 @@ export const PersonalInfo = ({
 
   const [editedFields, setEditedFields] = useState<TraineeData>(traineeData!);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -39,9 +42,11 @@ export const PersonalInfo = ({
         ...editedFields,
       },
     };
+    setIsSaving(true);
     if (!editedFields || !traineeData) return;
     saveTraineeData(editedData);
     setIsEditing(false);
+    setIsSaving(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,9 +79,14 @@ export const PersonalInfo = ({
     >
       <Box width={"100%"} display="flex" justifyContent={"end"}>
         {isEditing ? (
-          <Button variant="contained" color="primary" onClick={handleSaveClick}>
-            Save
-          </Button>
+          <LoadingButton
+            color="primary"
+            onClick={handleSaveClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>Save</span>
+          </LoadingButton>
         ) : (
           <Button variant="contained" onClick={handleEditClick}>
             Edit Profile

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   ProfileInfo,
@@ -45,21 +46,18 @@ export const TraineeProfilePage = () => {
     setActiveTab(tab);
   };
 
-  const saveTraineeData = (editedData: Partial<TraineeInfo>) => {
-    axios
-      .patch(`/api/trainees/${traineeId}`, editedData)
-      .then((response) => {
-        console.log("Trainee data saved successfully", response.data);
-        setTraineeData(response.data);
-      })
-      .catch((error) => {
-        console.error(
-          "There was a problem saving trainee data:",
-          error.message
-        );
-      });
+  const saveTraineeData = async (editedData: Partial<TraineeInfo>) => {
+    try {
+      const response = await axios.patch(
+        `/api/trainees/${traineeId}`,
+        editedData
+      );
+      console.log("Trainee data saved successfully", response.data);
+      setTraineeData(response.data);
+    } catch (error: any) {
+      console.error("There was a problem saving trainee data:", error.message);
+    }
   };
-
   return (
     <div style={{ display: "flex", background: "#fff" }}>
       <Box

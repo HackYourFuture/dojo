@@ -16,6 +16,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import slackIcon from "../assets/slack.png";
 import LinkIcon from "@mui/icons-material/Link";
+import { LoadingButton } from "@mui/lab";
 
 interface ContactInfoProps {
   contactData?: ContactData;
@@ -28,6 +29,7 @@ export const ContactInfo = ({
 }: ContactInfoProps) => {
   const [editedFields, setEditedFields] = useState<ContactData>(contactData!);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (contactData) setEditedFields(contactData as ContactData);
@@ -43,9 +45,11 @@ export const ContactInfo = ({
         ...editedFields,
       },
     };
+    setIsSaving(true);
     if (!editedFields || !contactData) return;
     saveTraineeData(editedData);
     setIsEditing(false);
+    setIsSaving(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,9 +64,14 @@ export const ContactInfo = ({
     <Box display="flex" flexDirection="column" gap={4} padding="24px">
       <Box width={"100%"} display="flex" justifyContent={"end"}>
         {isEditing ? (
-          <Button variant="contained" color="primary" onClick={handleSaveClick}>
-            Save
-          </Button>
+          <LoadingButton
+            color="primary"
+            onClick={handleSaveClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>Save</span>
+          </LoadingButton>
         ) : (
           <Button variant="contained" onClick={handleEditClick}>
             Edit Profile
