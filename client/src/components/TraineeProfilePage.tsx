@@ -8,12 +8,14 @@ import {
   EducationInfo,
   EmploymentInfo,
 } from "./index";
-import { Alert, AlertTitle, Box } from "@mui/material";
+import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { Loader } from "./Loader";
 import { useParams } from "react-router-dom";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { TraineeInfo } from "../types";
 import axios from "axios";
+
+import MuiAlert from "@mui/material/Alert";
 
 export const TraineeProfilePage = () => {
   // Default active tab
@@ -26,6 +28,16 @@ export const TraineeProfilePage = () => {
     useTraineeInfoData(traineeId);
 
   const [traineeData, setTraineeData] = useState(data && data);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   if (isLoading || isFetching) {
     return <Loader />;
@@ -54,10 +66,17 @@ export const TraineeProfilePage = () => {
       );
       console.log("Trainee data saved successfully", response.data);
       setTraineeData(response.data);
+      setSnackbarSeverity("success");
+      setSnackbarMessage("Trainee data saved successfully");
     } catch (error: any) {
       console.error("There was a problem saving trainee data:", error.message);
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Error saving trainee data");
+    } finally {
+      setSnackbarOpen(true);
     }
   };
+
   return (
     <div style={{ display: "flex", background: "#fff" }}>
       <Box
@@ -73,6 +92,20 @@ export const TraineeProfilePage = () => {
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleSnackbarClose}
+            severity={snackbarSeverity}
+          >
+            {snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
         {activeTab === "personal" && (
           <PersonalInfo
             traineeData={traineeData && traineeData.personalInfo}
