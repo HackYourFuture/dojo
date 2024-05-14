@@ -43,10 +43,27 @@ export const ApiProvider = () => {
   });
 
   // call this function to sign out logged in user
-  const logout = () => {
-    googleLogout();
-    setUser(null);
-    navigate("/", { replace: true });
+  const logout = async () => {
+    try {
+      setLoading(true);
+
+      const { data } = await axios.get("/api/auth/session");
+      if (data) {
+        await axios.post("/api/auth/logout");
+        googleLogout();
+        setUser(null);
+        console.log("Successfully logged out!");
+        navigate("/", { replace: true });
+      }
+    } catch (error: any) {
+      console.log("Error logging out:", error);
+      setErrorMessage(
+        `Error code: ${error.response?.status} ${error.response?.data?.error}`
+      );
+      console.log(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const value = useMemo(
