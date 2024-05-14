@@ -47,14 +47,11 @@ export const ApiProvider = () => {
     try {
       setLoading(true);
 
-      const { data } = await axios.get("/api/auth/session");
-      if (data) {
-        await axios.post("/api/auth/logout");
-        googleLogout();
-        setUser(null);
-        console.log("Successfully logged out!");
-        navigate("/", { replace: true });
-      }
+      await axios.post("/api/auth/logout");
+      googleLogout();
+      setUser(null);
+      console.log("Successfully logged out!");
+      navigate("/", { replace: true });
     } catch (error: any) {
       console.log("Error logging out:", error);
       setErrorMessage(
