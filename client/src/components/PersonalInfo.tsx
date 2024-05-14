@@ -10,6 +10,7 @@ import {
   TextField,
   Select,
   SelectChangeEvent,
+  Autocomplete,
 } from "@mui/material";
 import { TraineeData } from "../types";
 
@@ -28,6 +29,12 @@ export const PersonalInfo = ({
 
   const [editedFields, setEditedFields] = useState<TraineeData>(traineeData!);
   const [isEditing, setIsEditing] = useState(false);
+
+  const pronounOptions = [
+    { label: "He/His", value: "he" },
+    { label: "She/Her", value: "she" },
+    { label: "They/Their", value: "they" },
+  ];
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -159,20 +166,42 @@ export const PersonalInfo = ({
           variant={isEditing ? "outlined" : "standard"}
           sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
         >
-          <InputLabel htmlFor="pronouns">Pronouns</InputLabel>
-          <Select
-            name="pronouns"
-            id="pronouns"
-            label="Pronouns"
-            value={editedFields?.pronouns || ""}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="he">He/His</MenuItem>
-            <MenuItem value="she">She/Her</MenuItem>
-            <MenuItem value="they">They/Their</MenuItem>
-          </Select>
+          {isEditing ? (
+            <Autocomplete
+              id="pronouns"
+              freeSolo
+              options={pronounOptions.map((option) => option.label)}
+              getOptionLabel={(option) => option}
+              value={editedFields.pronouns || ""}
+              onChange={(_, newValue) => {
+                setEditedFields((prevFields: TraineeData) => ({
+                  ...prevFields,
+                  pronouns: newValue as string,
+                }));
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Pronouns"
+                  id="pronouns"
+                  name="pronouns"
+                  type="text"
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
+            />
+          ) : (
+            <TextField
+              name="pronouns"
+              id="pronouns"
+              label="Pronouns"
+              type="text"
+              value={editedFields?.pronouns || ""}
+              InputProps={{ readOnly: true }}
+              InputLabelProps={{ shrink: true }}
+              variant="standard"
+            />
+          )}
         </FormControl>
       </div>
 
