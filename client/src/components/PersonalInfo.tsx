@@ -7,7 +7,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  OutlinedInput,
+  TextField,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
@@ -87,67 +87,65 @@ export const PersonalInfo = ({
       <div style={{ width: "100%" }}>
         {/* First Name */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="firstName">
-            First Name
-          </InputLabel>
-          <OutlinedInput
+          <TextField
             id="firstName"
             name="firstName"
             label="First Name"
+            type="text"
             value={editedFields?.firstName || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
 
         {/* Last Name */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="lastName">
-            Last Name
-          </InputLabel>
-          <OutlinedInput
+          <TextField
             id="lastName"
             name="lastName"
             label="Last Name"
+            type="text"
             value={editedFields?.lastName || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
 
         {/* Preferred Name */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="preferredName">
-            Preferred Name
-          </InputLabel>
-          <OutlinedInput
+          <TextField
             id="preferredName"
             name="preferredName"
             label="Preferred Name"
+            type="text"
             value={editedFields?.preferredName || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
       </div>
 
       <div style={{ width: "100%" }}>
         {/* Gender */}
-        <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="gender">
-            Gender
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="gender">Gender</InputLabel>
           <Select
             name="gender"
             id="gender"
             label="Gender"
             value={editedFields?.gender || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="woman">Woman</MenuItem>
             <MenuItem value="man">Man</MenuItem>
@@ -157,18 +155,19 @@ export const PersonalInfo = ({
         </FormControl>
 
         {/* Pronouns */}
-        <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="pronouns">
-            Pronouns
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="pronouns">Pronouns</InputLabel>
           <Select
             name="pronouns"
             id="pronouns"
             label="Pronouns"
             value={editedFields?.pronouns || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="he">He/His</MenuItem>
             <MenuItem value="she">She/Her</MenuItem>
@@ -180,49 +179,48 @@ export const PersonalInfo = ({
       <div style={{ width: "100%" }}>
         {/* Location */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="location">
-            Location
-          </InputLabel>
-          <OutlinedInput
+          <TextField
             id="location"
             name="location"
             label="Location"
+            type="text"
             value={editedFields?.location || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
 
         {/* Country of Origin */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="countryOfOrigin">
-            Country of Origin
-          </InputLabel>
-          <OutlinedInput
+          <TextField
             id="countryOfOrigin"
             name="countryOfOrigin"
             label="Country of Origin"
+            type="text"
             value={editedFields?.countryOfOrigin || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
 
         {/* Background */}
-        <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="background">
-            Background
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="background">Background</InputLabel>
           <Select
             name="background"
             id="background"
             label="Background"
             value={editedFields?.background || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="eu-citizen">EU citizen</MenuItem>
             <MenuItem value="family-reunification">
@@ -239,18 +237,19 @@ export const PersonalInfo = ({
 
       <div style={{ width: "100%" }}>
         {/* Work Permit */}
-        <FormControl sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="hasWorkPermit">
-            Work Permit
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="hasWorkPermit">Work Permit</InputLabel>
           <Select
             name="hasWorkPermit"
             id="hasWorkPermit"
             label="Work Permit"
             value={editedFields?.hasWorkPermit || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="yes">Yes</MenuItem>
             <MenuItem value="no">No</MenuItem>
@@ -258,18 +257,19 @@ export const PersonalInfo = ({
         </FormControl>
 
         {/* Residency Status */}
-        <FormControl sx={{ mx: 2, my: 1, width: "24ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="residencyStatus">
-            Residency Status
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "24ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="residencyStatus">Residency Status</InputLabel>
           <Select
             name="residencyStatus"
             id="residencyStatus"
             label="Residency Status"
             value={editedFields?.residencyStatus || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="first-interview">First Interview</MenuItem>
             <MenuItem value="second-interview">Second Interview</MenuItem>
@@ -279,8 +279,11 @@ export const PersonalInfo = ({
         </FormControl>
 
         {/* Social Benefits */}
-        <FormControl sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="receivesSocialBenefits">
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="receivesSocialBenefits">
             Social Benefits
           </InputLabel>
           <Select
@@ -288,9 +291,9 @@ export const PersonalInfo = ({
             id="receivesSocialBenefits"
             label="Social Benefits"
             value={editedFields?.receivesSocialBenefits || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="yes">Yes</MenuItem>
             <MenuItem value="no">No</MenuItem>
@@ -298,8 +301,11 @@ export const PersonalInfo = ({
         </FormControl>
 
         {/* Case Manager Urging */}
-        <FormControl sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="caseManagerUrging">
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="caseManagerUrging">
             Case Manager Urging
           </InputLabel>
           <Select
@@ -307,9 +313,9 @@ export const PersonalInfo = ({
             id="caseManagerUrging"
             label="Case Manager Urging"
             value={editedFields?.caseManagerUrging || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="yes">Yes</MenuItem>
             <MenuItem value="no">No</MenuItem>
@@ -319,18 +325,19 @@ export const PersonalInfo = ({
 
       <div style={{ width: "100%" }}>
         {/* English Level */}
-        <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="englishLevel">
-            English Level
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="englishLevel">English Level</InputLabel>
           <Select
             name="englishLevel"
             id="englishLevel"
             label="English Level"
             value={editedFields?.englishLevel || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="needs-work">Needs work</MenuItem>
             <MenuItem value="moderate">Moderate</MenuItem>
@@ -339,8 +346,11 @@ export const PersonalInfo = ({
         </FormControl>
 
         {/* Professional Dutch */}
-        <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="professionalDutch">
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="professionalDutch">
             Professional Dutch
           </InputLabel>
           <Select
@@ -348,9 +358,9 @@ export const PersonalInfo = ({
             id="professionalDutch"
             label="Professional Dutch"
             value={editedFields?.professionalDutch || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="yes">Yes</MenuItem>
             <MenuItem value="no">No</MenuItem>
@@ -360,18 +370,19 @@ export const PersonalInfo = ({
 
       <div style={{ width: "100%" }}>
         {/* Education Level */}
-        <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="educationLevel">
-            Education Level
-          </InputLabel>
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="educationLevel">Education Level</InputLabel>
           <Select
             name="educationLevel"
             id="educationLevel"
             label="Education Level"
             value={editedFields?.educationLevel || ""}
-            onChange={handleSelectChange}
-            disabled={!isEditing}
+            inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
+            onChange={handleSelectChange}
           >
             <MenuItem value="none">None</MenuItem>
             <MenuItem value="high-school">High school</MenuItem>
@@ -383,17 +394,16 @@ export const PersonalInfo = ({
 
         {/* Education Background */}
         <FormControl sx={{ mx: 2, my: 1, width: "53ch", gap: "2rem" }}>
-          <InputLabel sx={{ color: "black" }} htmlFor="educationBackground">
-            Education Background
-          </InputLabel>
-          <OutlinedInput
+          <TextField
             id="educationBackground"
             name="educationBackground"
             label="Education Background"
+            type="text"
             value={editedFields?.educationBackground || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
       </div>
@@ -401,17 +411,17 @@ export const PersonalInfo = ({
       <div style={{ width: "100%" }}>
         {/* Comments */}
         <FormControl sx={{ mx: 2, width: "81ch" }}>
-          <InputLabel htmlFor="comments">Comments</InputLabel>
-          <OutlinedInput
+          <TextField
             id="comments"
             name="comments"
             label="Comments"
+            type="text"
             multiline
-            rows={4}
             value={editedFields?.comments || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
-            disabled={!isEditing}
-            startAdornment=" "
           />
         </FormControl>
       </div>
