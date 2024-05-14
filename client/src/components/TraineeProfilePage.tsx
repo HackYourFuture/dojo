@@ -12,6 +12,7 @@ import { Loader } from "./Loader";
 import { useParams } from "react-router-dom";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { TraineeInfo } from "../types";
+import axios from "axios";
 
 export const TraineeProfilePage = () => {
   // Default active tab
@@ -22,6 +23,8 @@ export const TraineeProfilePage = () => {
   const traineeId = trainee ? trainee[1] : "";
   const { isLoading, isError, data, error, isFetching } =
     useTraineeInfoData(traineeId);
+
+  const [traineeData, setTraineeData] = useState(data && data);
 
   if (isLoading || isFetching) {
     return <Loader />;
@@ -43,7 +46,18 @@ export const TraineeProfilePage = () => {
   };
 
   const saveTraineeData = (editedData: Partial<TraineeInfo>) => {
-    console.log("Save edited data:", editedData);
+    axios
+      .patch(`/api/trainees/${traineeId}`, editedData)
+      .then((response) => {
+        console.log("Trainee data saved successfully", response.data);
+        setTraineeData(response.data);
+      })
+      .catch((error) => {
+        console.error(
+          "There was a problem saving trainee data:",
+          error.message
+        );
+      });
   };
 
   return (
@@ -63,13 +77,13 @@ export const TraineeProfilePage = () => {
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
         {activeTab === "personal" && (
           <PersonalInfo
-            traineeData={data && data.personalInfo}
+            traineeData={traineeData && traineeData.personalInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
         {activeTab === "contact" && (
           <ContactInfo
-            contactData={data && data.contactInfo}
+            contactData={traineeData && traineeData.contactInfo}
             saveTraineeData={saveTraineeData}
           />
         )}

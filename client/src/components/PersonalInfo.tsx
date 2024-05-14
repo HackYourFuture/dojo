@@ -34,13 +34,12 @@ export const PersonalInfo = ({
   };
 
   const handleSaveClick = () => {
-    const editedData: any = {};
+    const editedData: any = {
+      personalInfo: {
+        ...editedFields,
+      },
+    };
     if (!editedFields || !traineeData) return;
-    Object.entries(editedFields).forEach(([key, value]) => {
-      if (traineeData && traineeData[key as keyof TraineeData] !== value) {
-        editedData[key as keyof any] = value;
-      }
-    });
     saveTraineeData(editedData);
     setIsEditing(false);
   };

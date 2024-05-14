@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -37,13 +38,12 @@ export const ContactInfo = ({
   };
 
   const handleSaveClick = () => {
-    const editedData: any = {};
+    const editedData: any = {
+      contactInfo: {
+        ...editedFields,
+      },
+    };
     if (!editedFields || !contactData) return;
-    Object.entries(editedFields).forEach(([key, value]) => {
-      if (contactData && contactData[key as keyof ContactData] !== value) {
-        editedData[key as keyof any] = value;
-      }
-    });
     saveTraineeData(editedData);
     setIsEditing(false);
   };
