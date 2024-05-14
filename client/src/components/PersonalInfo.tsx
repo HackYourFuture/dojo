@@ -245,13 +245,13 @@ export const PersonalInfo = ({
             name="hasWorkPermit"
             id="hasWorkPermit"
             label="Work Permit"
-            value={editedFields?.hasWorkPermit || ""}
+            value={editedFields?.hasWorkPermit}
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="yes">Yes</MenuItem>
-            <MenuItem value="no">No</MenuItem>
+            <MenuItem value="true">Yes</MenuItem>
+            <MenuItem value="false">No</MenuItem>
           </Select>
         </FormControl>
 
@@ -289,13 +289,13 @@ export const PersonalInfo = ({
             name="receivesSocialBenefits"
             id="receivesSocialBenefits"
             label="Social Benefits"
-            value={editedFields?.receivesSocialBenefits || ""}
+            value={editedFields?.receivesSocialBenefits}
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="yes">Yes</MenuItem>
-            <MenuItem value="no">No</MenuItem>
+            <MenuItem value="true">Yes</MenuItem>
+            <MenuItem value="false">No</MenuItem>
           </Select>
         </FormControl>
 
@@ -311,13 +311,13 @@ export const PersonalInfo = ({
             name="caseManagerUrging"
             id="caseManagerUrging"
             label="Case Manager Urging"
-            value={editedFields?.caseManagerUrging || ""}
+            value={editedFields?.caseManagerUrging}
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="yes">Yes</MenuItem>
-            <MenuItem value="no">No</MenuItem>
+            <MenuItem value="true">Yes</MenuItem>
+            <MenuItem value="false">No</MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -356,13 +356,13 @@ export const PersonalInfo = ({
             name="professionalDutch"
             id="professionalDutch"
             label="Professional Dutch"
-            value={editedFields?.professionalDutch || ""}
+            value={editedFields?.professionalDutch}
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="yes">Yes</MenuItem>
-            <MenuItem value="no">No</MenuItem>
+            <MenuItem value="true">Yes</MenuItem>
+            <MenuItem value="false">No</MenuItem>
           </Select>
         </FormControl>
       </div>
