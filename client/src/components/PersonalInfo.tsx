@@ -266,7 +266,11 @@ export const PersonalInfo = ({
             name="hasWorkPermit"
             id="hasWorkPermit"
             label="Work Permit"
-            value={editedFields?.hasWorkPermit || "false"}
+            value={
+              editedFields?.hasWorkPermit == null
+                ? ""
+                : editedFields?.hasWorkPermit
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -310,7 +314,11 @@ export const PersonalInfo = ({
             name="receivesSocialBenefits"
             id="receivesSocialBenefits"
             label="Social Benefits"
-            value={editedFields?.receivesSocialBenefits || "false"}
+            value={
+              editedFields?.receivesSocialBenefits == null
+                ? ""
+                : editedFields?.receivesSocialBenefits
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -332,7 +340,11 @@ export const PersonalInfo = ({
             name="caseManagerUrging"
             id="caseManagerUrging"
             label="Case Manager Urging"
-            value={editedFields?.caseManagerUrging || "false"}
+            value={
+              editedFields?.caseManagerUrging == null
+                ? ""
+                : editedFields?.caseManagerUrging
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -377,7 +389,11 @@ export const PersonalInfo = ({
             name="professionalDutch"
             id="professionalDutch"
             label="Professional Dutch"
-            value={editedFields?.professionalDutch || "false"}
+            value={
+              editedFields?.professionalDutch == null
+                ? ""
+                : editedFields?.professionalDutch
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
