@@ -10,6 +10,7 @@ import {
   TextField,
   Select,
   SelectChangeEvent,
+  Stack,
 } from "@mui/material";
 import { TraineeData } from "../types";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -34,6 +35,13 @@ export const PersonalInfo = ({
 
   const handleEditClick = () => {
     setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    if (traineeData) {
+      setEditedFields(traineeData);
+    }
+    setIsEditing(false);
   };
 
   const handleSaveClick = () => {
@@ -79,14 +87,17 @@ export const PersonalInfo = ({
     >
       <Box width={"100%"} display="flex" justifyContent={"end"}>
         {isEditing ? (
-          <LoadingButton
-            color="primary"
-            onClick={handleSaveClick}
-            loading={isSaving}
-            variant="contained"
-          >
-            <span>Save</span>
-          </LoadingButton>
+          <Stack direction="row" spacing={2}>
+            <LoadingButton
+              color="primary"
+              onClick={handleSaveClick}
+              loading={isSaving}
+              variant="contained"
+            >
+              <span>Save</span>
+            </LoadingButton>
+            <Button onClick={handleCancelClick}>cancel</Button>
+          </Stack>
         ) : (
           <Button variant="contained" onClick={handleEditClick}>
             Edit Profile

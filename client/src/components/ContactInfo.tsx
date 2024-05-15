@@ -6,6 +6,7 @@ import {
   Icon,
   InputAdornment,
   Link,
+  Stack,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -39,6 +40,13 @@ export const ContactInfo = ({
     setIsEditing(true);
   };
 
+  const handleCancelClick = () => {
+    if (contactData) {
+      setEditedFields(contactData);
+    }
+    setIsEditing(false);
+  };
+
   const handleSaveClick = () => {
     const editedData: any = {
       contactInfo: {
@@ -64,14 +72,17 @@ export const ContactInfo = ({
     <Box display="flex" flexDirection="column" gap={4} padding="24px">
       <Box width={"100%"} display="flex" justifyContent={"end"}>
         {isEditing ? (
-          <LoadingButton
-            color="primary"
-            onClick={handleSaveClick}
-            loading={isSaving}
-            variant="contained"
-          >
-            <span>Save</span>
-          </LoadingButton>
+          <Stack direction="row" spacing={2}>
+            <LoadingButton
+              color="primary"
+              onClick={handleSaveClick}
+              loading={isSaving}
+              variant="contained"
+            >
+              <span>Save</span>
+            </LoadingButton>
+            <Button onClick={handleCancelClick}>cancel</Button>
+          </Stack>
         ) : (
           <Button variant="contained" onClick={handleEditClick}>
             Edit Profile
