@@ -178,9 +178,9 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="He/His">He/His</MenuItem>
+            <MenuItem value="He/Him">He/Him</MenuItem>
             <MenuItem value="She/Her">She/Her</MenuItem>
-            <MenuItem value="They/Their">They/Their</MenuItem>
+            <MenuItem value="They/Them">They/Them</MenuItem>
           </Select>
         </FormControl>
       </div>
