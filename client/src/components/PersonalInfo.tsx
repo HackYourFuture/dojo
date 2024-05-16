@@ -44,7 +44,7 @@ export const PersonalInfo = ({
     setIsEditing(false);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     const editedData: any = {
       personalInfo: {
         ...editedFields,
@@ -52,7 +52,7 @@ export const PersonalInfo = ({
     };
     setIsSaving(true);
     if (!editedFields || !traineeData) return;
-    saveTraineeData(editedData);
+    await saveTraineeData(editedData);
     setIsEditing(false);
     setIsSaving(false);
   };
@@ -86,23 +86,17 @@ export const PersonalInfo = ({
       padding="24px"
     >
       <Box width={"100%"} display="flex" justifyContent={"end"}>
-        {isEditing ? (
-          <Stack direction="row" spacing={2}>
-            <LoadingButton
-              color="primary"
-              onClick={handleSaveClick}
-              loading={isSaving}
-              variant="contained"
-            >
-              <span>Save</span>
-            </LoadingButton>
-            <Button onClick={handleCancelClick}>cancel</Button>
-          </Stack>
-        ) : (
-          <Button variant="contained" onClick={handleEditClick}>
-            Edit Profile
-          </Button>
-        )}
+        <Stack direction="row" spacing={2}>
+          <LoadingButton
+            color="primary"
+            onClick={isEditing ? handleSaveClick : handleEditClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>{isEditing ? "Save" : "Edit profile"}</span>
+          </LoadingButton>
+          <Button onClick={handleCancelClick}>cancel</Button>
+        </Stack>
       </Box>
       <div style={{ width: "100%" }}>
         {/* First Name */}

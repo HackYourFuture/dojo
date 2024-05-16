@@ -47,15 +47,15 @@ export const ContactInfo = ({
     setIsEditing(false);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     const editedData: any = {
-      contactInfo: {
+      personalInfo: {
         ...editedFields,
       },
     };
     setIsSaving(true);
     if (!editedFields || !contactData) return;
-    saveTraineeData(editedData);
+    await saveTraineeData(editedData);
     setIsEditing(false);
     setIsSaving(false);
   };
@@ -71,23 +71,17 @@ export const ContactInfo = ({
   return (
     <Box display="flex" flexDirection="column" gap={4} padding="24px">
       <Box width={"100%"} display="flex" justifyContent={"end"}>
-        {isEditing ? (
-          <Stack direction="row" spacing={2}>
-            <LoadingButton
-              color="primary"
-              onClick={handleSaveClick}
-              loading={isSaving}
-              variant="contained"
-            >
-              <span>Save</span>
-            </LoadingButton>
-            <Button onClick={handleCancelClick}>cancel</Button>
-          </Stack>
-        ) : (
-          <Button variant="contained" onClick={handleEditClick}>
-            Edit Profile
-          </Button>
-        )}
+        <Stack direction="row" spacing={2}>
+          <LoadingButton
+            color="primary"
+            onClick={isEditing ? handleSaveClick : handleEditClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>{isEditing ? "Save" : "Edit profile"}</span>
+          </LoadingButton>
+          <Button onClick={handleCancelClick}>cancel</Button>
+        </Stack>
       </Box>
       <div style={{ width: "100%" }}>
         {/* Email */}
