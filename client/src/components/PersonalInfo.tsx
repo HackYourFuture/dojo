@@ -44,16 +44,32 @@ export const PersonalInfo = ({
   };
 
   const handleSaveClick = async () => {
+    if (!editedFields || !traineeData) return;
+
+    const changedFields: Partial<TraineeData> = {};
+    Object.entries(editedFields).forEach(([key, value]) => {
+      if (traineeData[key as keyof TraineeData] !== value) {
+        changedFields[key as keyof TraineeData] = value;
+      }
+    });
+
     const editedData: any = {
       personalInfo: {
-        ...editedFields,
+        ...changedFields,
       },
     };
+
     setIsSaving(true);
-    if (!editedFields || !traineeData) return;
-    await saveTraineeData(editedData);
-    setIsEditing(false);
-    setIsSaving(false);
+
+    try {
+      console.log("Saving trainee data:", editedData);
+      await saveTraineeData(editedData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving trainee data:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
