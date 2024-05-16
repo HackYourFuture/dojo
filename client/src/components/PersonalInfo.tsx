@@ -22,7 +22,6 @@ interface PersonalInfoProps {
 
 export const PersonalInfo = ({
   traineeData,
-
   saveTraineeData,
 }: PersonalInfoProps) => {
   useEffect(() => {
