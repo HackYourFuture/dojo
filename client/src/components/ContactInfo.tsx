@@ -73,6 +73,7 @@ export const ContactInfo = ({
       console.error("Error saving trainee data:", error);
     } finally {
       setIsSaving(false);
+      setIsEditing(true);
     }
   };
 
@@ -96,7 +97,7 @@ export const ContactInfo = ({
           >
             <span>{isEditing ? "Save" : "Edit profile"}</span>
           </LoadingButton>
-          <Button onClick={handleCancelClick}>cancel</Button>
+          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
       <div style={{ width: "100%" }}>
