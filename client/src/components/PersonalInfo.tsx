@@ -15,10 +15,14 @@ import {
 import { TraineeData } from "../types";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 interface PersonalInfoProps {
   traineeData?: TraineeData;
   saveTraineeData: (editedData: TraineeData) => void;
 }
+
+const NoIcon = () => null;
 
 export const PersonalInfo = ({
   traineeData,
@@ -173,6 +177,7 @@ export const PersonalInfo = ({
             label="Gender"
             value={editedFields?.gender || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -195,6 +200,7 @@ export const PersonalInfo = ({
             label="Pronouns"
             value={editedFields?.pronouns || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -248,6 +254,7 @@ export const PersonalInfo = ({
             label="Background"
             value={editedFields?.background || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -281,6 +288,7 @@ export const PersonalInfo = ({
                 : editedFields?.hasWorkPermit
             }
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -301,6 +309,7 @@ export const PersonalInfo = ({
             label="Residency Status"
             value={editedFields?.residencyStatus || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -329,6 +338,7 @@ export const PersonalInfo = ({
                 : editedFields?.receivesSocialBenefits
             }
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -355,6 +365,7 @@ export const PersonalInfo = ({
                 : editedFields?.caseManagerUrging
             }
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -377,6 +388,7 @@ export const PersonalInfo = ({
             label="English Level"
             value={editedFields?.englishLevel || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -404,6 +416,7 @@ export const PersonalInfo = ({
                 : editedFields?.professionalDutch
             }
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
@@ -426,6 +439,7 @@ export const PersonalInfo = ({
             label="Education Level"
             value={editedFields?.educationLevel || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
           >
