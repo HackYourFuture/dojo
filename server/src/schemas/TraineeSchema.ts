@@ -158,6 +158,11 @@ const TraineeSchema = new Schema<Trainee>(
   { timestamps: true, minimize: false },
 );
 
+TraineeSchema.virtual("displayName").get(function() {
+  const name: string = this.personalInfo.preferredName ?? this.personalInfo.firstName; 
+  return `${name} ${this.personalInfo.lastName}`;
+});
+
 TraineeSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
