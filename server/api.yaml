@@ -585,9 +585,9 @@ components:
         email:
           type: string
           example: john.doe@example.com
-        slack:
+        slackId:
           type: string
-          example: johnny.d
+          example: U068AQ9G99F
         phone:
           type: string
           example: 0612345678

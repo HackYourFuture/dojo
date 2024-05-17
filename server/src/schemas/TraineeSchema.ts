@@ -48,7 +48,7 @@ const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
 
 const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
   {
-    slack: { type: String, required: false, default: null},
+    slackId: { type: String, required: false, default: null, match: /^U[A-Z0-9]{8,10}$/},
     email: { type: String, required: true, index: true, unique: true, match: /@/},
     phone: { type: String, required: false, default: null },
     githubHandle: { type: String, required: false, index: true, default: null },

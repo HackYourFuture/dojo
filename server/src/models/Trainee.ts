@@ -115,7 +115,7 @@ export interface Trainee {
 
 export interface TraineeContactInfo {
   email: string;
-  slack?: string;
+  slackId?: string;
   phone?: string;
   githubHandle?: string;
   linkedin?: string;
