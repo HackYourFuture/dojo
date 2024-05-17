@@ -34,7 +34,7 @@ export class SearchController implements SearchControllerType {
     const trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
     const results = trainees.map(trainee => ({
       id: trainee._id,
-      name: `${trainee.personalInfo.firstName} ${trainee.personalInfo.lastName}`,
+      name: `${trainee.displayName}`,
     }));
 
     const response: SearchResponse = {

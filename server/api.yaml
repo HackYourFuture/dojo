@@ -123,7 +123,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchResponse'          
+                type: object
+                properties:
+                  hits:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 'Pv3R416r'
+                            name:
+                              type: string
+                              example: John Doe
+                      size:
+                        type: integer
+                        example: 45
+
         '400':
           description: Missing query
   /trainees:
@@ -436,34 +455,7 @@ components:
         token:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-
-    SearchResponse:
-      type: object
-      properties:
-        hits:
-          $ref: '#/components/schemas/SearchHits'
           
-    SearchHits:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SearchResultItem'
-        size:
-          type: integer
-          example: 45
-          
-    SearchResultItem:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 'Pv3R416r'
-        name:
-          type: string
-          example: John Doe
-        
     Trainee:
       type: object
       required:
@@ -471,7 +463,7 @@ components:
         - contactInfo
         - educationInfo
       properties:
-        _id:
+        id:
           type: string
           example: '65ea2e1e696deb3b3ebff843'
         createdAt:
@@ -482,6 +474,9 @@ components:
           type: string
           format: date-time
           example: '2024-01-01T00:00:00.000Z'
+        displayName:
+          type: string
+          example: Johnny Doe
         personalInfo:
           $ref: '#/components/schemas/TraineePersonalInfo'
         contactInfo:
@@ -696,7 +691,7 @@ components:
         - reporterID
         - comments
       properties:
-        _id:
+        id:
           type: string
           example: g5HQGuL8
         date:
@@ -745,7 +740,7 @@ components:
         - type
         - result
       properties:
-        _id:
+        id:
           type: string
           example: g5HQGuL8
         date:
@@ -782,7 +777,7 @@ components:
         - role
         - feeCollected
       properties:
-        _id:
+        id:
           type: string
           example: g5HQGuL8
         type:
@@ -837,7 +832,7 @@ components:
     User:
       type: object
       properties:
-        _id:
+        id:
           type: string
           example: Pv3R416r
         name: 
