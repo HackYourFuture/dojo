@@ -73,7 +73,6 @@ export const ContactInfo = ({
       console.error("Error saving trainee data:", error);
     } finally {
       setIsSaving(false);
-      setIsEditing(true);
     }
   };
 

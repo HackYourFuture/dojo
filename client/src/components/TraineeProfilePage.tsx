@@ -72,6 +72,7 @@ export const TraineeProfilePage = () => {
       console.error("There was a problem saving trainee data:", error.message);
       setSnackbarSeverity("error");
       setSnackbarMessage("Error saving trainee data");
+      throw error;
     } finally {
       setSnackbarOpen(true);
     }
@@ -96,6 +97,7 @@ export const TraineeProfilePage = () => {
           open={snackbarOpen}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <MuiAlert
             elevation={6}
