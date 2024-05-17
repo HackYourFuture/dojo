@@ -36,7 +36,7 @@ const extractData = (data: string) => {
       contactInfo: {
         email: handleString(row['Email*']),
         githubHandle: handleString(row['GitHub Handle']),
-        slack: handleString(row['Slack Handle']),
+        slackId: handleString(row['Slack ID']),
         phone: handleString(row['Phone Number']),
         linkedin: handleString(row['LinkedIn Profile URL']),
       },

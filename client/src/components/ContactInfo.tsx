@@ -162,13 +162,23 @@ export const ContactInfo = ({
             }}
           >
             <TextField
-              id="slack"
-              name="slack"
-              label="Slack"
+              id="slackId"
+              name="slackId"
+              label="Slack ID"
               type="text"
-              value={editedFields?.slack || ""}
+              placeholder="Format: UXXXXXXXXXX"
+              value={editedFields?.slackId || ""}
               InputProps={{
                 readOnly: isEditing ? false : true,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && editedFields?.slackId && (
+                      <Link href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}>
+                        <LinkIcon sx={{ color: "action.active" }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
               }}
               InputLabelProps={{
                 shrink: true,

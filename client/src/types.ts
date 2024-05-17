@@ -43,7 +43,7 @@ export interface TraineeData {
 export interface ContactData {
   id: string;
   email: string;
-  slack: string;
+  slackId: string;
   phone: string;
   githubHandle: string;
   linkedin: string;
