@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Button,
@@ -16,6 +17,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import slackIcon from "../assets/slack.png";
 import LinkIcon from "@mui/icons-material/Link";
+import { LoadingButton } from "@mui/lab";
 
 interface ContactInfoProps {
   contactData?: ContactData;
@@ -28,6 +30,7 @@ export const ContactInfo = ({
 }: ContactInfoProps) => {
   const [editedFields, setEditedFields] = useState<ContactData>(contactData!);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (contactData) setEditedFields(contactData as ContactData);
@@ -44,16 +47,33 @@ export const ContactInfo = ({
     setIsEditing(false);
   };
 
-  const handleSaveClick = () => {
-    const editedData: any = {};
+  const handleSaveClick = async () => {
     if (!editedFields || !contactData) return;
+
+    const changedFields: Partial<ContactData> = {};
     Object.entries(editedFields).forEach(([key, value]) => {
-      if (contactData && contactData[key as keyof ContactData] !== value) {
-        editedData[key as keyof any] = value;
+      if (contactData[key as keyof ContactData] !== value) {
+        changedFields[key as keyof ContactData] = value;
       }
     });
-    saveTraineeData(editedData);
-    setIsEditing(false);
+
+    const editedData: any = {
+      contactInfo: {
+        ...changedFields,
+      },
+    };
+
+    setIsSaving(true);
+
+    try {
+      console.log("Saving trainee data:", editedData);
+      await saveTraineeData(editedData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving trainee data:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,22 +87,17 @@ export const ContactInfo = ({
   return (
     <Box display="flex" flexDirection="column" gap={4} padding="24px">
       <Box width={"100%"} display="flex" justifyContent={"end"}>
-        {isEditing ? (
-          <Stack direction="row" spacing={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSaveClick}
-            >
-              Save
-            </Button>
-            <Button onClick={handleCancelClick}>cancel</Button>
-          </Stack>
-        ) : (
-          <Button variant="contained" onClick={handleEditClick}>
-            Edit Profile
-          </Button>
-        )}
+        <Stack direction="row" spacing={2}>
+          <LoadingButton
+            color="primary"
+            onClick={isEditing ? handleSaveClick : handleEditClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>{isEditing ? "Save" : "Edit profile"}</span>
+          </LoadingButton>
+          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
+        </Stack>
       </Box>
       <div style={{ width: "100%" }}>
         {/* Email */}

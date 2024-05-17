@@ -13,6 +13,7 @@ import {
   Stack,
 } from "@mui/material";
 import { TraineeData } from "../types";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 interface PersonalInfoProps {
   traineeData?: TraineeData;
@@ -29,6 +30,7 @@ export const PersonalInfo = ({
 
   const [editedFields, setEditedFields] = useState<TraineeData>(traineeData!);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -41,16 +43,33 @@ export const PersonalInfo = ({
     setIsEditing(false);
   };
 
-  const handleSaveClick = () => {
-    const editedData: any = {};
+  const handleSaveClick = async () => {
     if (!editedFields || !traineeData) return;
+
+    const changedFields: Partial<TraineeData> = {};
     Object.entries(editedFields).forEach(([key, value]) => {
-      if (traineeData && traineeData[key as keyof TraineeData] !== value) {
-        editedData[key as keyof any] = value;
+      if (traineeData[key as keyof TraineeData] !== value) {
+        changedFields[key as keyof TraineeData] = value;
       }
     });
-    saveTraineeData(editedData);
-    setIsEditing(false);
+
+    const editedData: any = {
+      personalInfo: {
+        ...changedFields,
+      },
+    };
+
+    setIsSaving(true);
+
+    try {
+      console.log("Saving trainee data:", editedData);
+      await saveTraineeData(editedData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving trainee data:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,22 +101,17 @@ export const PersonalInfo = ({
       padding="24px"
     >
       <Box width={"100%"} display="flex" justifyContent={"end"}>
-        {isEditing ? (
-          <Stack direction="row" spacing={2}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSaveClick}
-            >
-              Save
-            </Button>
-            <Button onClick={handleCancelClick}>cancel</Button>
-          </Stack>
-        ) : (
-          <Button variant="contained" onClick={handleEditClick}>
-            Edit Profile
-          </Button>
-        )}
+        <Stack direction="row" spacing={2}>
+          <LoadingButton
+            color="primary"
+            onClick={isEditing ? handleSaveClick : handleEditClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>{isEditing ? "Save" : "Edit profile"}</span>
+          </LoadingButton>
+          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
+        </Stack>
       </Box>
       <div style={{ width: "100%" }}>
         {/* First Name */}
@@ -184,9 +198,9 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="he">He/His</MenuItem>
-            <MenuItem value="she">She/Her</MenuItem>
-            <MenuItem value="they">They/Their</MenuItem>
+            <MenuItem value="He/Him">He/Him</MenuItem>
+            <MenuItem value="She/Her">She/Her</MenuItem>
+            <MenuItem value="They/Them">They/Them</MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -261,7 +275,11 @@ export const PersonalInfo = ({
             name="hasWorkPermit"
             id="hasWorkPermit"
             label="Work Permit"
-            value={editedFields?.hasWorkPermit}
+            value={
+              editedFields?.hasWorkPermit == null
+                ? ""
+                : editedFields?.hasWorkPermit
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -305,7 +323,11 @@ export const PersonalInfo = ({
             name="receivesSocialBenefits"
             id="receivesSocialBenefits"
             label="Social Benefits"
-            value={editedFields?.receivesSocialBenefits}
+            value={
+              editedFields?.receivesSocialBenefits == null
+                ? ""
+                : editedFields?.receivesSocialBenefits
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -327,7 +349,11 @@ export const PersonalInfo = ({
             name="caseManagerUrging"
             id="caseManagerUrging"
             label="Case Manager Urging"
-            value={editedFields?.caseManagerUrging}
+            value={
+              editedFields?.caseManagerUrging == null
+                ? ""
+                : editedFields?.caseManagerUrging
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -372,7 +398,11 @@ export const PersonalInfo = ({
             name="professionalDutch"
             id="professionalDutch"
             label="Professional Dutch"
-            value={editedFields?.professionalDutch}
+            value={
+              editedFields?.professionalDutch == null
+                ? ""
+                : editedFields?.professionalDutch
+            }
             inputProps={{ readOnly: isEditing ? false : true }}
             startAdornment=" "
             onChange={handleSelectChange}

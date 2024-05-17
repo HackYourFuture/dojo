@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   ProfileInfo,
@@ -7,11 +8,14 @@ import {
   EducationInfo,
   EmploymentInfo,
 } from "./index";
-import { Alert, AlertTitle, Box } from "@mui/material";
+import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { Loader } from "./Loader";
 import { useParams } from "react-router-dom";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { TraineeInfo } from "../types";
+import axios from "axios";
+
+import MuiAlert from "@mui/material/Alert";
 
 export const TraineeProfilePage = () => {
   // Default active tab
@@ -22,6 +26,18 @@ export const TraineeProfilePage = () => {
   const traineeId = trainee ? trainee[1] : "";
   const { isLoading, isError, data, error, isFetching } =
     useTraineeInfoData(traineeId);
+
+  const [traineeData, setTraineeData] = useState(data && data);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   if (isLoading || isFetching) {
     return <Loader />;
@@ -42,8 +58,24 @@ export const TraineeProfilePage = () => {
     setActiveTab(tab);
   };
 
-  const saveTraineeData = (editedData: Partial<TraineeInfo>) => {
-    console.log("Save edited data:", editedData);
+  const saveTraineeData = async (editedData: Partial<TraineeInfo>) => {
+    try {
+      const response = await axios.patch(
+        `/api/trainees/${traineeId}`,
+        editedData
+      );
+      console.log("Trainee data saved successfully", response.data);
+      setTraineeData(response.data);
+      setSnackbarSeverity("success");
+      setSnackbarMessage("Trainee data saved successfully");
+    } catch (error: any) {
+      console.error("There was a problem saving trainee data:", error.message);
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Error saving trainee data");
+      throw error;
+    } finally {
+      setSnackbarOpen(true);
+    }
   };
 
   return (
@@ -61,15 +93,30 @@ export const TraineeProfilePage = () => {
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleSnackbarClose}
+            severity={snackbarSeverity}
+          >
+            {snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
         {activeTab === "personal" && (
           <PersonalInfo
-            traineeData={data && data.personalInfo}
+            traineeData={traineeData && traineeData.personalInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
         {activeTab === "contact" && (
           <ContactInfo
-            contactData={data && data.contactInfo}
+            contactData={traineeData && traineeData.contactInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
