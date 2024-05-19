@@ -8,7 +8,7 @@ import {
   TraineePage,
 } from "../pages";
 import { ApiProvider } from "../hooks/useAuth";
-import { ProtectedRoute } from "../components";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
   {

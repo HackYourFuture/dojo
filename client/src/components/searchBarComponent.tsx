@@ -1,4 +1,3 @@
-import "./searchBarComponent.css";
 import { TextField, Box, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
