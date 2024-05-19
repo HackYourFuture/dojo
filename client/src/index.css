@@ -61,3 +61,26 @@ body {
   min-width: 400px;
 }
 
+.App {
+  height: 100vh;
+  width: 100vw;
+  color: #333;
+  background: #fff;
+}
+
+.search-bar-container {
+  padding-top: 20vh;
+  width: 40%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 200px;
+}
+
+.hyf-logo-img {
+  height: 100px;
+  background-color: black;
+  padding: 10px;
+  margin-bottom: 50px;
+}
