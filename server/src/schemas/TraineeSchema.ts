@@ -159,8 +159,9 @@ const TraineeSchema = new Schema<Trainee>(
 );
 
 TraineeSchema.virtual("displayName").get(function() {
-  const name: string = this.personalInfo.preferredName ?? this.personalInfo.firstName; 
-  return `${name} ${this.personalInfo.lastName}`;
+  const { preferredName, firstName, lastName } = this.personalInfo;
+  const name: string = preferredName ? preferredName : firstName;
+  return `${name} ${lastName}`;
 });
 
 TraineeSchema.set("toJSON", {
