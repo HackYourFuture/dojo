@@ -22,6 +22,11 @@ export interface ContactInfoProps {
   saveTraineeData: (editedData: TraineeContactInfo) => void;
 }
 
+export interface EducationInfoProps {
+  educationData?: TraineeEducationInfo;
+  saveTraineeData: (editedData: TraineeEducationInfo) => void;
+}
+
 export interface Trainee {
   id: string;
   createdAt: string;
