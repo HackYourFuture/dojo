@@ -12,15 +12,10 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import { TraineeData } from "../types";
+import { PersonalInfoProps, TraineePersonalInfo } from "../types";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
-interface PersonalInfoProps {
-  traineeData?: TraineeData;
-  saveTraineeData: (editedData: TraineeData) => void;
-}
 
 const NoIcon = () => null;
 
@@ -29,10 +24,12 @@ export const PersonalInfo = ({
   saveTraineeData,
 }: PersonalInfoProps) => {
   useEffect(() => {
-    if (traineeData) setEditedFields(traineeData as TraineeData);
+    if (traineeData) setEditedFields(traineeData as TraineePersonalInfo);
   }, [traineeData]);
 
-  const [editedFields, setEditedFields] = useState<TraineeData>(traineeData!);
+  const [editedFields, setEditedFields] = useState<TraineePersonalInfo>(
+    traineeData!
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -50,10 +47,10 @@ export const PersonalInfo = ({
   const handleSaveClick = async () => {
     if (!editedFields || !traineeData) return;
 
-    const changedFields: Partial<TraineeData> = {};
+    const changedFields: Partial<TraineePersonalInfo> = {};
     Object.entries(editedFields).forEach(([key, value]) => {
-      if (traineeData[key as keyof TraineeData] !== value) {
-        changedFields[key as keyof TraineeData] = value;
+      if (traineeData[key as keyof TraineePersonalInfo] !== value) {
+        changedFields[key as keyof TraineePersonalInfo] = value;
       }
     });
 
