@@ -1,3 +1,4 @@
+import React from "react";
 import { ReactNode, useEffect, useState } from "react";
 import { TraineeEducationInfo } from "../types";
 import {
@@ -10,10 +11,18 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
+  Typography,
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { Strikes } from ".";
+import AddIcon from "@mui/icons-material/Add";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 const NoIcon = () => null;
 
@@ -114,6 +123,10 @@ export const EducationInfo = ({
       return dateString;
     }
     return date.toISOString().split("T")[0];
+  };
+
+  const handleOpenStrike = () => {
+    console.log("Opening new strike dialog");
   };
 
   return (
@@ -266,14 +279,58 @@ export const EducationInfo = ({
         </FormControl>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "50%" }}>
         {/* Strikes */}
-        <Strikes />
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={4}
+        >
+          <Typography variant="h6" color="black" padding="16px">
+            Strikes ({editedFields?.strikes.length || 0})
+          </Typography>
+
+          <Stack direction="row" spacing={2}>
+            <Button startIcon={<AddIcon />} onClick={handleOpenStrike}>
+              New strikes
+            </Button>
+          </Stack>
+        </Box>
+
+        <List
+          sx={{ width: "100%", bgcolor: "background.paper", padding: "16px" }}
+        >
+          {editedFields?.strikes.map((strike, index) => (
+            <React.Fragment key={strike.id}>
+              <ListItem
+                alignItems="flex-start"
+                sx={{ paddingBottom: 2 }}
+                secondaryAction={strike.date}
+                disablePadding
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    <HighlightOffIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={strike.reason}
+                  secondary={strike.comments}
+                />
+              </ListItem>
+              {index < editedFields.strikes.length - 1 && (
+                <Divider sx={{ color: "black" }} component="li" />
+              )}
+            </React.Fragment>
+          ))}
+        </List>
       </div>
 
       <div style={{ width: "100%" }}>
         {/* Comments */}
-        <FormControl sx={{ mx: 2, width: "81ch" }}>
+        <FormControl sx={{ mx: 2, width: "80ch" }}>
           <TextField
             id="comments"
             name="comments"
