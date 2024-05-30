@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { EducationInfoProps, TraineeEducationInfo } from "../types";
-import { Typography } from "@mui/material";
+import { Box, Button, FormControl, Stack, TextField } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export const EducationInfo = ({
   educationData,
@@ -9,6 +10,7 @@ export const EducationInfo = ({
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(
     educationData!
   );
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -65,8 +67,46 @@ export const EducationInfo = ({
   };
 
   return (
-    <Typography variant="h6" color="black" padding="24px">
-      Education Info
-    </Typography>
+    <Box
+      display="flex"
+      flexDirection="row"
+      flexWrap="wrap"
+      gap={4}
+      padding="24px"
+    >
+      <Box width={"100%"} display="flex" justifyContent={"end"}>
+        <Stack direction="row" spacing={2}>
+          <LoadingButton
+            color="primary"
+            onClick={isEditing ? handleSaveClick : handleEditClick}
+            loading={isSaving}
+            variant="contained"
+          >
+            <span>{isEditing ? "Save" : "Edit profile"}</span>
+          </LoadingButton>
+          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
+        </Stack>
+      </Box>
+      <div style={{ width: "100%" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: "15ch", gap: "2rem" }}>
+          <TextField
+            id="currentCohort"
+            name="currentCohort"
+            label="Cohort"
+            value={editedFields?.currentCohort || ""}
+            InputProps={{
+              readOnly: isEditing ? false : true,
+              inputProps: {
+                min: 0,
+              },
+            }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
+            onChange={handleChange}
+          />
+        </FormControl>
+      </div>
+      <div style={{ width: "100%" }}></div>
+    </Box>
   );
 };

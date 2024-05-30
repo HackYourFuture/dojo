@@ -120,7 +120,12 @@ export const TraineeProfilePage = () => {
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === "education" && <EducationInfo />}
+        {activeTab === "education" && (
+          <EducationInfo
+            contactData={traineeData && traineeData.educationInfo}
+            saveTraineeData={saveTraineeData}
+          />
+        )}
         {activeTab === "employment" && <EmploymentInfo />}
       </Box>
     </div>
