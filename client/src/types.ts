@@ -25,6 +25,7 @@ export interface Trainee {
 }
 
 export interface TraineePersonalInfo {
+  id: string;
   firstName: string;
   lastName: string;
   preferredName: string;
@@ -45,6 +46,7 @@ export interface TraineePersonalInfo {
 }
 
 export interface TraineeContactInfo {
+  id: string;
   email: string;
   slackId: string;
   phone: string;
@@ -53,6 +55,7 @@ export interface TraineeContactInfo {
 }
 
 export interface TraineeEducationInfo {
+  id: string;
   startCohort: number;
   currentCohort: number;
   learningStatus: string;
@@ -66,6 +69,7 @@ export interface TraineeEducationInfo {
 }
 
 export interface TraineeEmploymentInfo {
+  id: string;
   jobPath: string;
   cvURL: string;
   availability: string;

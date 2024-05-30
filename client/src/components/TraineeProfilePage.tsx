@@ -122,7 +122,7 @@ export const TraineeProfilePage = () => {
         )}
         {activeTab === "education" && (
           <EducationInfo
-            contactData={traineeData && traineeData.educationInfo}
+            educationData={traineeData && traineeData.educationInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
