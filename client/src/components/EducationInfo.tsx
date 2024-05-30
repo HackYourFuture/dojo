@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { EducationInfoProps, TraineeEducationInfo } from "../types";
+import { TraineeEducationInfo } from "../types";
 import { Box, Button, FormControl, Stack, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+
+interface EducationInfoProps {
+  educationData?: TraineeEducationInfo;
+  saveTraineeData: (editedData: TraineeEducationInfo) => void;
+}
 
 export const EducationInfo = ({
   educationData,
