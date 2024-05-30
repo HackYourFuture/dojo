@@ -1,7 +1,21 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { TraineeEducationInfo } from "../types";
-import { Box, Button, FormControl, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  TextField,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Strikes } from ".";
+
+const NoIcon = () => null;
 
 interface EducationInfoProps {
   educationData?: TraineeEducationInfo;
@@ -45,7 +59,7 @@ export const EducationInfo = ({
     });
 
     const editedData: any = {
-      contactInfo: {
+      educationInfo: {
         ...changedFields,
       },
     };
@@ -71,6 +85,37 @@ export const EducationInfo = ({
     }));
   };
 
+  const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (/^\d*$/.test(value)) {
+      setEditedFields((prevFields) => ({
+        ...prevFields,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSelectChange = (
+    event: SelectChangeEvent<
+      string | boolean | { name?: string; value: ReactNode }
+    >
+  ) => {
+    const { name, value } = event.target;
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      [name]: value,
+    }));
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+    return date.toISOString().split("T")[0];
+  };
+
   return (
     <Box
       display="flex"
@@ -92,8 +137,10 @@ export const EducationInfo = ({
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
+
       <div style={{ width: "100%" }}>
-        <FormControl sx={{ mx: 2, my: 1, width: "15ch", gap: "2rem" }}>
+        {/* Cohort */}
+        <FormControl sx={{ mx: 2, my: 1, width: "10ch", gap: "2rem" }}>
           <TextField
             id="currentCohort"
             name="currentCohort"
@@ -101,17 +148,146 @@ export const EducationInfo = ({
             value={editedFields?.currentCohort || ""}
             InputProps={{
               readOnly: isEditing ? false : true,
-              inputProps: {
-                min: 0,
-              },
+              inputMode: "numeric",
             }}
+            inputProps={{
+              pattern: "[0-9]*",
+            }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
+            onChange={handleNumericChange}
+          />
+        </FormControl>
+
+        {/* Learning status */}
+        <FormControl
+          variant={isEditing ? "outlined" : "standard"}
+          sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
+        >
+          <InputLabel htmlFor="learningStatus">Learning status</InputLabel>
+          <Select
+            name="learningStatus"
+            id="learningStatus"
+            label="Learning status"
+            value={editedFields?.learningStatus || ""}
+            inputProps={{ readOnly: isEditing ? false : true }}
+            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
+            startAdornment=" "
+            onChange={handleSelectChange}
+          >
+            <MenuItem value="studying">Studying</MenuItem>
+            <MenuItem value="graduated">Graduated</MenuItem>
+            <MenuItem value="no-hold">No hold</MenuItem>
+            <MenuItem value="quit">Quit</MenuItem>
+          </Select>
+        </FormControl>
+
+        {/* Quit reason */}
+        {editedFields?.learningStatus === "quit" && (
+          <FormControl
+            variant={isEditing ? "outlined" : "standard"}
+            sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
+          >
+            <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
+            <Select
+              name="quitReason"
+              id="quitReason"
+              label="Quit reason"
+              value={editedFields?.quitReason || ""}
+              inputProps={{ readOnly: isEditing ? false : true }}
+              IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
+              startAdornment=" "
+              onChange={handleSelectChange}
+            >
+              <MenuItem value="technical">Technical</MenuItem>
+              <MenuItem value="social-skills">Social skills</MenuItem>
+              <MenuItem value="personal">Personal</MenuItem>
+              <MenuItem value="municipality-or-monetary">
+                Municipality or monetary
+              </MenuItem>
+              <MenuItem value="left-nl">Left NL</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+          </FormControl>
+        )}
+
+        {/* Graduation date */}
+        {editedFields?.learningStatus === "graduated" && (
+          <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
+            <TextField
+              id="graduationDate"
+              name="graduationDate"
+              label="Graduation date"
+              type="text"
+              value={formatDate(editedFields?.graduationDate) || ""}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? "outlined" : "standard"}
+              onChange={handleChange}
+            />
+          </FormControl>
+        )}
+      </div>
+
+      <div style={{ width: "100%" }}>
+        {/* Start Cohort */}
+        <FormControl sx={{ mx: 2, my: 1, width: "10ch", gap: "2rem" }}>
+          <TextField
+            id="startCohort"
+            name="startCohort"
+            label="Start cohort"
+            value={editedFields?.startCohort || ""}
+            InputProps={{
+              readOnly: isEditing ? false : true,
+              inputMode: "numeric",
+            }}
+            inputProps={{
+              pattern: "[0-9]*",
+            }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
+            onChange={handleNumericChange}
+          />
+        </FormControl>
+
+        {/* Start date */}
+        <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
+          <TextField
+            id="startDate"
+            name="startDate"
+            label="Start date"
+            type="text"
+            value={formatDate(editedFields?.startDate) || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? "outlined" : "standard"}
             onChange={handleChange}
           />
         </FormControl>
       </div>
-      <div style={{ width: "100%" }}></div>
+
+      <div style={{ width: "100%" }}>
+        {/* Strikes */}
+        <Strikes />
+      </div>
+
+      <div style={{ width: "100%" }}>
+        {/* Comments */}
+        <FormControl sx={{ mx: 2, width: "81ch" }}>
+          <TextField
+            id="comments"
+            name="comments"
+            label="Comments"
+            type="text"
+            multiline
+            value={editedFields?.comments || ""}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? "outlined" : "standard"}
+            onChange={handleChange}
+          />
+        </FormControl>
+      </div>
     </Box>
   );
 };

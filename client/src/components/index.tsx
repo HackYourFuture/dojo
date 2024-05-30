@@ -9,5 +9,6 @@ export * from "./EducationInfo";
 export * from "./EmploymentInfo";
 export * from "./ProfileNav";
 export * from "./ProfileInfo";
+export * from "./Strikes";
 export * from "./TraineeProfilePage";
 export * from "./Comment";

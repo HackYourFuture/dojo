@@ -119,6 +119,7 @@ export const PersonalInfo = ({
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
+
       <div style={{ width: "100%" }}>
         {/* First Name */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
@@ -185,7 +186,7 @@ export const PersonalInfo = ({
           >
             <MenuItem value="woman">Woman</MenuItem>
             <MenuItem value="man">Man</MenuItem>
-            <MenuItem value="non-binary">Non-Binary</MenuItem>
+            <MenuItem value="non-binary">Non binary</MenuItem>
             <MenuItem value="other">Other</MenuItem>
           </Select>
         </FormControl>
@@ -315,8 +316,8 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="first-interview">First Interview</MenuItem>
-            <MenuItem value="second-interview">Second Interview</MenuItem>
+            <MenuItem value="first-interview">First interview</MenuItem>
+            <MenuItem value="second-interview">Second interview</MenuItem>
             <MenuItem value="residency">Residency</MenuItem>
             <MenuItem value="citizenship">Citizenship</MenuItem>
           </Select>
