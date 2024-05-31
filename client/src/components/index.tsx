@@ -10,5 +10,6 @@ export * from "./EducationInfo";
 export * from "./EmploymentInfo";
 export * from "./ProfileNav";
 export * from "./ProfileInfo";
-export * from "./TraineeProfilePage";
+export * from "../pages/TraineeProfilePage";
 export * from "./Comment";
+export * from "./LearningStatusComponent";

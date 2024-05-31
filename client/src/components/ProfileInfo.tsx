@@ -1,17 +1,29 @@
-import { Alert, AlertTitle, Avatar, Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 import slackLogo from "../assets/slack.png";
 import githubLogo from "../assets/github.png";
+import LinkedInLogo from "../assets/LinkedIn_logo.png";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { useParams } from "react-router-dom";
 import { Loader } from "./Loader";
+import { LearningStatus } from "../types";
+import { LearningStatusComponent } from "./LearningStatusComponent";
+import { JobPathComponent } from "./JobPathComponent";
+import { useTraineeProfileImg } from "../hooks/useTraineeProfileImg";
 
 export const ProfileInfo = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split("_");
   const traineeId = trainee ? trainee[1] : "";
   const { isLoading, isError, data, error, isFetching } =
-    useTraineeInfoData(traineeId);
+  useTraineeInfoData(traineeId);
+  console.log('data: ', data);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { profileImgSrc }: any = useTraineeProfileImg(traineeId);
+  const slackId = data?.contactInfo?.slackId;
+  const githubHandle = data?.contactInfo?.githubHandle;
+  const linkedIn = data?.contactInfo?.linkedin;
+  
   if (isLoading || isFetching) {
     return <Loader />;
   }
@@ -31,66 +43,64 @@ export const ProfileInfo = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap={2}
       alignItems="center"
+      gap={2}
       color="black"
       bgcolor="#d1fbe6"
       height="100vh"
       paddingX={4}
       paddingY={4}
     >
-      {/* replace later with image */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "240px",
-          borderRadius: "8px",
-          overflow: "hidden",
-        }}
+      {/* Profile image */}
+      <Box
+         height={180}
+         width={180}
+         display="flex"
+         justifyContent="center"
       >
         <Avatar
           variant="square"
-          sx={{ width: "100%", height: "auto" }}
-          alt="Profile Picture"
+          sx={{ width: "100%", height: "100%" }}
+          src={profileImgSrc}
+          alt="Trainee profile picture"
         />
-      </div>
+      </Box>
+      
+      <Stack 
+        direction="column" 
+        spacing={1}  
+        justifyContent="center"
+        alignItems="center">
+        {/* Name */}
+        <Typography variant="h6" fontWeight="bold">
+          {data?.displayName}
+        </Typography>
+        {/* Pronouns */}
+        <Typography variant="body1" color="text.secondary">
+          {data?.personalInfo?.pronouns?.toLowerCase()}
+        </Typography>
+        {/* Learning Status */}
+        {data?.educationInfo?.learningStatus === LearningStatus.Graduated ?
+        <JobPathComponent jobPath={data?.employmentInfo?.jobPath}></JobPathComponent>
+        : <LearningStatusComponent learningStatus={data?.educationInfo?.learningStatus}></LearningStatusComponent>}
+        {/* Cohort */}
+        <Typography variant="body1" color="text.secondary">
+          Cohort {data?.educationInfo?.startCohort}
+        </Typography>
+      </Stack>
 
-      {/* Name */}
-      <Typography variant="h6" fontWeight="bold">
-        {data?.personalInfo.firstName} {data?.personalInfo.lastName}
-      </Typography>
-
-      {/* replace later with real data */}
-      <Typography variant="body1" color="text.secondary">
-        Trainee
-      </Typography>
-
-      <Typography
-        variant="body2"
-        bgcolor="#4cde80"
-        paddingX="10px"
-        borderRadius="20px"
-      >
-        Studying
-      </Typography>
-
-      {/* replace later with real data */}
-      <Typography variant="body1" color="text.secondary">
-        Cohort 55
-      </Typography>
-
-      {/* replace later with real data */}
+      {/* social media contact info */}
       <div style={{ display: "flex", justifyContent: "center", gap: "16px" }}>
-        <a href="#" className="text-blue-500 hover:text-blue-700">
+        <IconButton aria-label="Slack Id" onClick={() => window.open(`slack://user?team=TOEJTTUQ87&ID/${slackId}`)}>
           <img
-            src={slackLogo}
-            alt="Slack"
-            width="32"
-            height="32"
-            style={{ borderRadius: "50%" }}
-          />
-        </a>
-        <a href="#" className="text-gray-700 hover:text-gray-900">
+              src={slackLogo}
+              alt="Slack"
+              width="32"
+              height="32"
+              style={{ borderRadius: "50%" }}
+            />
+        </IconButton>
+        <IconButton aria-label="GitHub handel" onClick={() => window.open(`https://github.com/${githubHandle}`)}>
           <img
             src={githubLogo}
             alt="GitHub"
@@ -98,7 +108,15 @@ export const ProfileInfo = () => {
             height="32"
             style={{ borderRadius: "50%" }}
           />
-        </a>
+        </IconButton>
+        <IconButton aria-label="LinkedIn URL" onClick={() => window.open(`https://www.linkedin.com/in/${linkedIn}`)}>
+          <img
+            src={LinkedInLogo}
+            alt="GitHub"
+            width="32"
+            height="32"
+          />
+        </IconButton>
       </div>
     </Box>
   );
