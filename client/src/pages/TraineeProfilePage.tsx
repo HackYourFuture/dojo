@@ -7,9 +7,9 @@ import {
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
-} from "./index";
+} from "../components/index";
 import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
-import { Loader } from "./Loader";
+import { Loader } from "../components/Loader";
 import { useParams } from "react-router-dom";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { TraineeInfo } from "../types";
