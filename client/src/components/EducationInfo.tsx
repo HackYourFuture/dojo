@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactNode, useEffect, useState } from "react";
-import { TraineeEducationInfo } from "../types";
+import { Strike, TraineeEducationInfo } from "../types";
 import {
   Box,
   Button,
@@ -42,6 +42,15 @@ export const EducationInfo = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  const [isAddingStrike, setIsAddingStrike] = useState(false);
+  const [newStrike, setNewStrike] = useState<Strike>({
+    id: "",
+    date: "",
+    reporterID: "",
+    reason: "",
+    comments: "",
+  });
+
   useEffect(() => {
     if (educationData) setEditedFields(educationData as TraineeEducationInfo);
   }, [educationData]);
@@ -55,6 +64,17 @@ export const EducationInfo = ({
       setEditedFields(educationData);
     }
     setIsEditing(false);
+  };
+
+  const handleOpenStrike = () => {
+    setIsAddingStrike(true);
+  };
+
+  const handleCancelOpenStrike = () => {
+    if (educationData?.strikes) {
+      setEditedFields(educationData);
+    }
+    setIsAddingStrike(false);
   };
 
   const handleSaveClick = async () => {
@@ -94,16 +114,6 @@ export const EducationInfo = ({
     }));
   };
 
-  const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (/^\d*$/.test(value)) {
-      setEditedFields((prevFields) => ({
-        ...prevFields,
-        [name]: value,
-      }));
-    }
-  };
-
   const handleSelectChange = (
     event: SelectChangeEvent<
       string | boolean | { name?: string; value: ReactNode }
@@ -116,6 +126,16 @@ export const EducationInfo = ({
     }));
   };
 
+  const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (/^\d*$/.test(value)) {
+      setEditedFields((prevFields) => ({
+        ...prevFields,
+        [name]: value,
+      }));
+    }
+  };
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -125,8 +145,38 @@ export const EducationInfo = ({
     return date.toISOString().split("T")[0];
   };
 
-  const handleOpenStrike = () => {
-    console.log("Opening new strike dialog");
+  const handleNewStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewStrike((prevStrike) => ({
+      ...prevStrike,
+      [name]: value,
+    }));
+  };
+
+  const handleNewStrikeSelectChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setNewStrike((prevStrike) => ({
+      ...prevStrike,
+      [name]: value,
+    }));
+  };
+
+  const handleAddStrike = () => {
+    setEditedFields((prevFields) => ({
+      ...prevFields,
+      strikes: [
+        ...prevFields.strikes,
+        { ...newStrike, id: Date.now().toString() },
+      ],
+    }));
+    setIsAddingStrike(false);
+    setNewStrike({
+      id: "",
+      date: "",
+      reporterID: "",
+      reason: "",
+      comments: "",
+    });
   };
 
   return (
@@ -231,7 +281,7 @@ export const EducationInfo = ({
               id="graduationDate"
               name="graduationDate"
               label="Graduation date"
-              type="text"
+              type="date"
               value={formatDate(editedFields?.graduationDate) || ""}
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
@@ -269,7 +319,7 @@ export const EducationInfo = ({
             id="startDate"
             name="startDate"
             label="Start date"
-            type="text"
+            type="date"
             value={formatDate(editedFields?.startDate) || ""}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -306,7 +356,6 @@ export const EducationInfo = ({
             <React.Fragment key={strike.id}>
               <ListItem
                 alignItems="flex-start"
-                sx={{ paddingBottom: 2 }}
                 secondaryAction={strike.date}
                 disablePadding
               >
@@ -326,6 +375,55 @@ export const EducationInfo = ({
             </React.Fragment>
           ))}
         </List>
+
+        {isAddingStrike && (
+          <Box
+            component="form"
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            sx={{ padding: "16px", bgcolor: "background.paper" }}
+          >
+            <TextField
+              id="date"
+              name="date"
+              label="Date"
+              type="date"
+              value={newStrike.date}
+              InputLabelProps={{ shrink: true }}
+              onChange={handleNewStrikeChange}
+            />
+            <FormControl>
+              <InputLabel htmlFor="reason">Reason</InputLabel>
+              <Select
+                name="reason"
+                id="reason"
+                label="Reason"
+                value={newStrike.reason}
+                onChange={handleNewStrikeSelectChange}
+              >
+                <MenuItem value="assignment">Assignment</MenuItem>
+                <MenuItem value="attendance">Attendance</MenuItem>
+                <MenuItem value="preparation">Preparation</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              name="comments"
+              label="Comments"
+              value={newStrike.comments}
+              onChange={handleNewStrikeChange}
+            />
+            <Stack direction="row" spacing={2}>
+              <Button variant="contained" onClick={handleAddStrike}>
+                Add Strike
+              </Button>
+              <Button variant="outlined" onClick={handleCancelOpenStrike}>
+                Cancel
+              </Button>
+            </Stack>
+          </Box>
+        )}
       </div>
 
       <div style={{ width: "100%" }}>
