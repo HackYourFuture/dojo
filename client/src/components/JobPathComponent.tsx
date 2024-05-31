@@ -1,7 +1,7 @@
 import Paper from "@mui/material/Paper";
-import { JobPath, LearningStatus } from "../types";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { JobPath, LearningStatus } from "../types";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
