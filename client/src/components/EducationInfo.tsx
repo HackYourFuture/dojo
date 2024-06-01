@@ -75,7 +75,13 @@ export const EducationInfo = ({
 
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
-      setEditedFields(educationData);
+      setStrikeFields({
+        id: "",
+        date: "",
+        reporterID: "",
+        reason: "",
+        comments: "",
+      });
     }
     setIsAddingStrike(false);
   };
@@ -166,11 +172,13 @@ export const EducationInfo = ({
 
   const handleAddStrike = async () => {
     if (!editedFields || !educationData) return;
+
     const newStrike = {
       ...strikeFields,
       id: `${Date.now()}`,
       reporterID: user.id,
     };
+
     const updatedStrikes = [...(editedFields.strikes || []), newStrike];
 
     const updatedData: any = {
