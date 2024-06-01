@@ -86,15 +86,11 @@ export interface EducationData {
   learningStatus: LearningStatus;
   startDate?: Date;
   graduationDate?: Date;
-  // use enum for quitReason when needed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  quitReason?: any;
+  quitReason?: string;
   quitDate?: Date;
   strikes: Strike[];
   assignments: Assignment[];
-  // use enum for tests when needed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tests: any;
+  tests: string;
   comments?: string;
 }
 
@@ -113,9 +109,7 @@ export interface EmploymentData {
 export interface InteractionData {
   readonly _id: string;
   date: Date;
-  // use enum for type when needed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type: any;
+  type: string;
   reporterID: string;
   details: string;
 }
@@ -136,9 +130,7 @@ export interface Strike {
   readonly _id: string;
   date: Date;
   reporterID: string;
-  // use enum for reason when needed
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  reason: any;
+  reason: string;
   comments: string;
 }
 
