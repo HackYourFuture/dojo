@@ -161,32 +161,7 @@ export const EducationInfo = ({
   };
 
   const handleAddStrike = async () => {
-    if (!strikeFields) return;
-
-    const changedFields: Partial<Strike> = {};
-    Object.entries(strikeFields).forEach(([key, value]) => {
-      if (strikeFields[key as keyof Strike] !== value) {
-        changedFields[key as keyof Strike] = value;
-      }
-    });
-
-    const editedData: any = {
-      strikeInfo: {
-        ...changedFields,
-      },
-    };
-
-    setIsAddingStrike(true);
-
-    try {
-      console.log("Saving trainee data:", editedData);
-      await saveTraineeData(editedData);
-      setIsAddingStrike(false);
-    } catch (error) {
-      console.error("Error saving trainee data:", error);
-    } finally {
-      setIsAddingStrike(false);
-    }
+    // TODO: To Save the strike added
   };
 
   return (
