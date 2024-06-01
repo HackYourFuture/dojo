@@ -1,5 +1,4 @@
-import React from "react";
-import { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Strike, TraineeEducationInfo } from "../types";
 import {
   Box,
@@ -41,9 +40,9 @@ export const EducationInfo = ({
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
   const [isAddingStrike, setIsAddingStrike] = useState(false);
-  const [newStrike, setNewStrike] = useState<Strike>({
+
+  const [strikeFields, setStrikeFields] = useState<Strike>({
     id: "",
     date: "",
     reporterID: "",
@@ -145,38 +144,49 @@ export const EducationInfo = ({
     return date.toISOString().split("T")[0];
   };
 
-  const handleNewStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewStrike((prevStrike) => ({
+    setStrikeFields((prevStrike) => ({
       ...prevStrike,
       [name]: value,
     }));
   };
 
-  const handleNewStrikeSelectChange = (event: SelectChangeEvent<string>) => {
+  const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
-    setNewStrike((prevStrike) => ({
+    setStrikeFields((prevStrike) => ({
       ...prevStrike,
       [name]: value,
     }));
   };
 
-  const handleAddStrike = () => {
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      strikes: [
-        ...prevFields.strikes,
-        { ...newStrike, id: Date.now().toString() },
-      ],
-    }));
-    setIsAddingStrike(false);
-    setNewStrike({
-      id: "",
-      date: "",
-      reporterID: "",
-      reason: "",
-      comments: "",
+  const handleAddStrike = async () => {
+    if (!strikeFields) return;
+
+    const changedFields: Partial<Strike> = {};
+    Object.entries(strikeFields).forEach(([key, value]) => {
+      if (strikeFields[key as keyof Strike] !== value) {
+        changedFields[key as keyof Strike] = value;
+      }
     });
+
+    const editedData: any = {
+      strikeInfo: {
+        ...changedFields,
+      },
+    };
+
+    setIsAddingStrike(true);
+
+    try {
+      console.log("Saving trainee data:", editedData);
+      await saveTraineeData(editedData);
+      setIsAddingStrike(false);
+    } catch (error) {
+      console.error("Error saving trainee data:", error);
+    } finally {
+      setIsAddingStrike(false);
+    }
   };
 
   return (
@@ -389,9 +399,9 @@ export const EducationInfo = ({
               name="date"
               label="Date"
               type="date"
-              value={newStrike.date}
+              value={strikeFields.date}
               InputLabelProps={{ shrink: true }}
-              onChange={handleNewStrikeChange}
+              onChange={handleStrikeChange}
             />
             <FormControl>
               <InputLabel htmlFor="reason">Reason</InputLabel>
@@ -399,8 +409,8 @@ export const EducationInfo = ({
                 name="reason"
                 id="reason"
                 label="Reason"
-                value={newStrike.reason}
-                onChange={handleNewStrikeSelectChange}
+                value={strikeFields.reason}
+                onChange={handleStrikeSelectChange}
               >
                 <MenuItem value="assignment">Assignment</MenuItem>
                 <MenuItem value="attendance">Attendance</MenuItem>
@@ -411,8 +421,8 @@ export const EducationInfo = ({
             <TextField
               name="comments"
               label="Comments"
-              value={newStrike.comments}
-              onChange={handleNewStrikeChange}
+              value={strikeFields.comments}
+              onChange={handleStrikeChange}
             />
             <Stack direction="row" spacing={2}>
               <Button variant="contained" onClick={handleAddStrike}>
