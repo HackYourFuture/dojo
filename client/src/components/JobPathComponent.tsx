@@ -3,22 +3,24 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { JobPath, LearningStatus } from "../types";
 
+interface JobPathComponentProps {
+  jobPath: JobPath
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const JobPathComponent = ({ jobPath }: (any)) => {
-
+export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
   const jobChipColor = (status: JobPath) => {
-    let color;
     switch (status) {
       case JobPath.Searching:
-        return color = "primary";
-      case JobPath.Internship || JobPath.TechJob:
-        return color = "success";
+        return "primary";
+      case JobPath.Internship:
+      case JobPath.TechJob:
+        return "success";
       case JobPath.NotSearching:
-        return color = "warning";
-      case JobPath.NonTechJob || JobPath.OtherStudies || JobPath.NoLongerHelping:
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        return color = "error";
+        return "warning";
+      case JobPath.NonTechJob:
+      case JobPath.OtherStudies:
+      case JobPath.NoLongerHelping:
+        return "error";
     }
   };
   

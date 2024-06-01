@@ -1,23 +1,21 @@
 import Chip from "@mui/material/Chip"
 import { LearningStatus } from "../types"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const LearningStatusComponent = ({ learningStatus }: (any)) => {
+interface LearningPathComponentProps {
+  learningStatus: LearningStatus | undefined
+}
+export const LearningStatusComponent = ({learningStatus}: LearningPathComponentProps)=> {
 
-  const chipColor = (status: LearningStatus) => {
-    let color;
+  const chipColor = (status: LearningStatus | undefined) => {
     switch (status) {
       case LearningStatus.Studying:
-        return color = "primary";
+        return "primary";
       case LearningStatus.Graduated:
-        return color = "success";
+        return "success";
       case LearningStatus.OnHold:
-        return color = "warning";
+        return "warning";
       case LearningStatus.Quit:
-        return color = "error";
-      default: 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        return color = "success";
+        return "error";
     }
   }
 
