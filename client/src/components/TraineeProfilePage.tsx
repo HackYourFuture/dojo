@@ -59,6 +59,7 @@ export const TraineeProfilePage = () => {
   };
 
   const saveTraineeData = async (editedData: Partial<Trainee>) => {
+    console.log("Saving trainee data", editedData);
     try {
       const response = await axios.patch(
         `/api/trainees/${traineeId}`,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
 import { Strike, TraineeEducationInfo } from "../types";
 import {
@@ -22,6 +23,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useAuth } from "../hooks/useAuth";
 
 const NoIcon = () => null;
 
@@ -34,6 +36,8 @@ export const EducationInfo = ({
   educationData,
   saveTraineeData,
 }: EducationInfoProps) => {
+  const { user } = useAuth();
+
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(
     educationData!
   );
@@ -161,7 +165,32 @@ export const EducationInfo = ({
   };
 
   const handleAddStrike = async () => {
-    // TODO: To Save the strike added
+    const newStrike = {
+      ...strikeFields,
+      id: `${Date.now()}`,
+      reporterID: user.id,
+    };
+    const updatedStrikes = [...(editedFields.strikes || []), newStrike];
+
+    const updatedData: any = {
+      educationInfo: {
+        strikes: updatedStrikes,
+      },
+    };
+
+    try {
+      await saveTraineeData(updatedData);
+      setIsAddingStrike(false);
+      setStrikeFields({
+        id: "",
+        date: "",
+        reporterID: "",
+        reason: "",
+        comments: "",
+      });
+    } catch (error) {
+      console.error("There was a problem adding the strike:", error);
+    }
   };
 
   return (
