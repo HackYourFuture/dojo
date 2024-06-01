@@ -25,12 +25,12 @@ import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { useAuth } from "../hooks/useAuth";
 
-const NoIcon = () => null;
-
 interface EducationInfoProps {
   educationData?: TraineeEducationInfo;
   saveTraineeData: (editedData: TraineeEducationInfo) => void;
 }
+
+const NoIcon = () => null;
 
 export const EducationInfo = ({
   educationData,

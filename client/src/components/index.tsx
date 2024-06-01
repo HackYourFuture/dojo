@@ -1,5 +1,5 @@
-export * from "./navbarComponent";
-export * from "./searchBarComponent";
+export * from "./ResponsiveNavBar";
+export * from "./searchBar";
 export * from "./Loader";
 export * from "./SearchResultsList";
 export * from "./ErrorBox";
@@ -9,5 +9,5 @@ export * from "./EducationInfo";
 export * from "./EmploymentInfo";
 export * from "./ProfileNav";
 export * from "./ProfileInfo";
-export * from "./TraineeProfilePage";
+export * from "./TraineeProfile";
 export * from "./Comment";

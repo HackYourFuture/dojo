@@ -17,7 +17,7 @@ import axios from "axios";
 
 import MuiAlert from "@mui/material/Alert";
 
-export const TraineeProfilePage = () => {
+export const TraineeProfile = () => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
 

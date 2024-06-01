@@ -3,18 +3,17 @@ import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { Loader, TraineeProfilePage } from "../components";
+import { Loader, TraineeProfile } from "../components";
 
 export const TraineePage = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split("_");
   const traineeId = trainee ? trainee[1] : "";
-  const { isLoading, isError, error, isFetching } = useTraineeInfoData(traineeId);
+  const { isLoading, isError, error, isFetching } =
+    useTraineeInfoData(traineeId);
 
   if (isLoading || isFetching) {
-    return (
-      <Loader /> 
-    );
+    return <Loader />;
   }
 
   if (isError && error instanceof Error) {
@@ -28,5 +27,5 @@ export const TraineePage = () => {
     );
   }
 
-  return <TraineeProfilePage />;
+  return <TraineeProfile />;
 };
