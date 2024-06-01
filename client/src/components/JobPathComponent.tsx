@@ -1,11 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { JobPath, LearningStatus } from "../types";
-
-interface JobPathComponentProps {
-  jobPath: JobPath
-}
+import { JobPath, JobPathComponentProps, LearningStatus } from "../types";
 
 export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
   const jobChipColor = (status: JobPath) => {

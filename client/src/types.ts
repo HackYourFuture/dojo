@@ -23,16 +23,28 @@ export enum EmploymentType {
 }
 
 // interfaces
-export interface SearchResult {
+export interface SearchResultComponentProps {
   id: number;
   name: string;
 }
 
-export interface SearchResultsListProps {
+export interface SearchResultsListComponentProps {
   results: string;
 }
 
-export interface ProfileNavProps {
+export interface SearchBarComponentProps {
+  data: TraineeInfo;
+}
+
+export interface JobPathComponentProps {
+  jobPath: JobPath
+}
+
+export interface LearningPathComponentProps {
+  learningStatus: LearningStatus | undefined
+}
+
+export interface ProfileNavComponentProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
 }
