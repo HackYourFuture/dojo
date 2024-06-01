@@ -23,7 +23,7 @@ export enum EmploymentType {
 }
 
 // interfaces
-export interface SearchResultComponentProps {
+export interface SearchResult {
   id: number;
   name: string;
 }

@@ -1,4 +1,4 @@
-import { SearchResultComponentProps, SearchResultsListComponentProps } from "../types";
+import { SearchResult, SearchResultsListComponentProps } from "../types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -49,7 +49,7 @@ export const SearchResultsListComponent = ({ results }: SearchResultsListCompone
     >
       {data.length ? (
         <List>
-          {data.map((trainee: SearchResultComponentProps) => {
+          {data.map((trainee: SearchResult) => {
             return (
               <ListItem disablePadding key={trainee.id}>
                 <Link
