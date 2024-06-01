@@ -10,13 +10,12 @@ import { LearningStatusComponent } from "./LearningStatusComponent";
 import { JobPathComponent } from "./JobPathComponent";
 import { useTraineeProfileImg } from "../hooks/useTraineeProfileImg";
 
-export const ProfileInfo = () => {
+export const ProfileInfoComponent = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split("_");
   const traineeId = trainee ? trainee[1] : "";
   const { isLoading, isError, data, error, isFetching } =
   useTraineeInfoData(traineeId);
-  console.log('data: ', data);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { profileImgSrc }: any = useTraineeProfileImg(traineeId);

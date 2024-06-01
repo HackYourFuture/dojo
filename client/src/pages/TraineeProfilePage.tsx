@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
-  ProfileInfo,
+  ProfileInfoComponent,
   ProfileNav,
   PersonalInfo,
   ContactInfo,
@@ -89,7 +89,7 @@ export const TraineeProfilePage = () => {
         color="black"
         style={{ overflowY: "auto" }}
       >
-        <ProfileInfo />
+        <ProfileInfoComponent />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
