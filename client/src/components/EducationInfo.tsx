@@ -165,6 +165,7 @@ export const EducationInfo = ({
   };
 
   const handleAddStrike = async () => {
+    if (!editedFields || !educationData) return;
     const newStrike = {
       ...strikeFields,
       id: `${Date.now()}`,
