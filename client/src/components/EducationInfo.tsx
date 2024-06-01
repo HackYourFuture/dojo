@@ -230,33 +230,51 @@ export const EducationInfo = ({
           </Select>
         </FormControl>
 
-        {/* Quit reason */}
+        {/* Quit */}
         {editedFields?.learningStatus === "quit" && (
-          <FormControl
-            variant={isEditing ? "outlined" : "standard"}
-            sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
-          >
-            <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
-            <Select
-              name="quitReason"
-              id="quitReason"
-              label="Quit reason"
-              value={editedFields?.quitReason || ""}
-              inputProps={{ readOnly: isEditing ? false : true }}
-              IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-              startAdornment=" "
-              onChange={handleSelectChange}
+          <div>
+            {/* Quit date */}
+            <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
+              <TextField
+                id="quitDate"
+                name="quitDate"
+                label="Quit date"
+                type="date"
+                value={formatDate(editedFields?.quitDate) || ""}
+                InputProps={{ readOnly: isEditing ? false : true }}
+                InputLabelProps={{ shrink: true }}
+                variant={isEditing ? "outlined" : "standard"}
+                onChange={handleChange}
+              />
+            </FormControl>
+
+            {/* Quit reason */}
+            <FormControl
+              variant={isEditing ? "outlined" : "standard"}
+              sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
             >
-              <MenuItem value="technical">Technical</MenuItem>
-              <MenuItem value="social-skills">Social skills</MenuItem>
-              <MenuItem value="personal">Personal</MenuItem>
-              <MenuItem value="municipality-or-monetary">
-                Municipality or monetary
-              </MenuItem>
-              <MenuItem value="left-nl">Left NL</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
+              <Select
+                name="quitReason"
+                id="quitReason"
+                label="Quit reason"
+                value={editedFields?.quitReason || ""}
+                inputProps={{ readOnly: isEditing ? false : true }}
+                IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
+                startAdornment=" "
+                onChange={handleSelectChange}
+              >
+                <MenuItem value="technical">Technical</MenuItem>
+                <MenuItem value="social-skills">Social skills</MenuItem>
+                <MenuItem value="personal">Personal</MenuItem>
+                <MenuItem value="municipality-or-monetary">
+                  Municipality or monetary
+                </MenuItem>
+                <MenuItem value="left-nl">Left NL</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
         )}
 
         {/* Graduation date */}

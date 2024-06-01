@@ -62,6 +62,7 @@ export interface TraineeEducationInfo {
   startDate: string;
   graduationDate: string;
   quitReason: string;
+  quitDate: string;
   strikes: Strike[];
   assignments: Assignment[];
   tests: Test[];
