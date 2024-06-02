@@ -84,7 +84,7 @@ export const ProfileInfoComponent = () => {
         : <LearningStatusComponent learningStatus={data?.educationInfo?.learningStatus}></LearningStatusComponent>}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
-          Cohort {data?.educationInfo?.startCohort}
+          Cohort {data?.educationInfo?.currentCohort || "Not assigned"}
         </Typography>
       </Stack>
 

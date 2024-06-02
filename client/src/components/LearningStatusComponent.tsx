@@ -17,6 +17,6 @@ export const LearningStatusComponent = ({learningStatus}: LearningPathComponentP
   }
 
   return (
-    <Chip label={learningStatus} color={chipColor(learningStatus)} />
+    <Chip label={learningStatus} color={chipColor(learningStatus)} size="small" />
   );
 };

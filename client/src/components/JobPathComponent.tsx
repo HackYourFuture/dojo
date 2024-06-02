@@ -1,4 +1,3 @@
-import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { JobPath, JobPathComponentProps, LearningStatus } from "../types";
@@ -22,19 +21,8 @@ export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
   };
   
   return(
-    <Paper
-      elevation={0}
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        p: 1,
-        m: 0,
-      }}
-    >
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} p={1}>
       <LearningStatusComponent learningStatus={LearningStatus.Graduated}></LearningStatusComponent>        <Chip label={jobPath} color={jobChipColor(jobPath)} size="small"/>
       </Stack>
-    </Paper>
   );
 };
