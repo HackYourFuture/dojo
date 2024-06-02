@@ -2,6 +2,7 @@ import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { JobPath, JobPathComponentProps, LearningStatus } from "../types";
+import { LearningStatusComponent } from "./LearningStatusComponent";
 
 export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
   const jobChipColor = (status: JobPath) => {
@@ -32,8 +33,7 @@ export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
       }}
     >
       <Stack direction="row" spacing={2}>
-        <Chip label={LearningStatus.Graduated} color="success" size="small"/>
-        <Chip label={jobPath} color={jobChipColor(jobPath)} size="small"/>
+      <LearningStatusComponent learningStatus={LearningStatus.Graduated}></LearningStatusComponent>        <Chip label={jobPath} color={jobChipColor(jobPath)} size="small"/>
       </Stack>
     </Paper>
   );
