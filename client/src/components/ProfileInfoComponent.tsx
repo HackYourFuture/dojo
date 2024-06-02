@@ -90,7 +90,7 @@ export const ProfileInfoComponent = () => {
 
       {/* social media contact info */}
       <div style={{ display: "flex", justifyContent: "center", gap: "16px" }}>
-        <IconButton aria-label="Slack Id" onClick={() => window.open(`slack://user?team=TOEJTTUQ87&ID/${slackId}`)}>
+        {slackId && <IconButton aria-label="Slack Id" onClick={() => window.open(`slack://user?team=TOEJTTUQ87&ID/${slackId}`)}>
           <img
               src={slackLogo}
               alt="Slack"
@@ -98,8 +98,8 @@ export const ProfileInfoComponent = () => {
               height="32"
               style={{ borderRadius: "50%" }}
             />
-        </IconButton>
-        <IconButton aria-label="GitHub handel" onClick={() => window.open(`https://github.com/${githubHandle}`)}>
+        </IconButton>}
+        {githubHandle && <IconButton aria-label="GitHub handel" onClick={() => window.open(`https://github.com/${githubHandle}`)}>
           <img
             src={githubLogo}
             alt="GitHub"
@@ -107,15 +107,15 @@ export const ProfileInfoComponent = () => {
             height="32"
             style={{ borderRadius: "50%" }}
           />
-        </IconButton>
-        <IconButton aria-label="LinkedIn URL" onClick={() => window.open(`https://www.linkedin.com/in/${linkedIn}`)}>
+        </IconButton>}
+        {linkedIn && <IconButton aria-label="LinkedIn URL" onClick={() => window.open(`https://www.linkedin.com/in/${linkedIn}`)}>
           <img
             src={LinkedInLogo}
             alt="GitHub"
             width="32"
             height="32"
           />
-        </IconButton>
+        </IconButton>}
       </div>
     </Box>
   );
