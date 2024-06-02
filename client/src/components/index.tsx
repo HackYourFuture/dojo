@@ -13,3 +13,4 @@ export * from "./ProfileInfoComponent";
 export * from "../pages/TraineeProfilePage";
 export * from "./Comment";
 export * from "./LearningStatusComponent";
+export * from "./JobPathComponent";
