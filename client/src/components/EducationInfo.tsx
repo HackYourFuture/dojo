@@ -348,7 +348,6 @@ export const EducationInfo = ({
           flexDirection="row"
           alignItems="center"
           justifyContent="space-between"
-          gap={4}
         >
           <Typography variant="h6" color="black" padding="16px">
             Strikes ({editedFields?.strikes.length || 0})
@@ -362,7 +361,10 @@ export const EducationInfo = ({
         </Box>
 
         <List
-          sx={{ width: "100%", bgcolor: "background.paper", padding: "16px" }}
+          sx={{
+            width: "100%",
+            bgcolor: "background.paper",
+          }}
         >
           {editedFields?.strikes.map((strike, index) => (
             <React.Fragment key={strike.id}>
@@ -370,6 +372,9 @@ export const EducationInfo = ({
                 alignItems="flex-start"
                 secondaryAction={strike.date}
                 disablePadding
+                sx={{
+                  paddingBottom: "16px",
+                }}
               >
                 <ListItemAvatar>
                   <Avatar>
@@ -414,6 +419,9 @@ export const EducationInfo = ({
                 p: 4,
               }}
             >
+              <Typography variant="h6" mb={0.5}>
+                Adding a strike:
+              </Typography>
               <Box display="flex" flexDirection="row" gap={2}>
                 <TextField
                   id="date"
