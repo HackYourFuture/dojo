@@ -237,6 +237,7 @@ export const EducationInfo = ({
             }}
             inputProps={{
               pattern: "[0-9]*",
+              maxLength: 3,
             }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? "outlined" : "standard"}
@@ -345,6 +346,7 @@ export const EducationInfo = ({
             }}
             inputProps={{
               pattern: "[0-9]*",
+              maxLength: 3,
             }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? "outlined" : "standard"}

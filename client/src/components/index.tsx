@@ -1,5 +1,5 @@
 export * from "./ResponsiveNavBar";
-export * from "./Search";
+export * from "./SearchBar";
 export * from "./Loader";
 export * from "./SearchResultsList";
 export * from "./ErrorBox";
