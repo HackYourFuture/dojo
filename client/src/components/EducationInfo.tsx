@@ -243,11 +243,11 @@ export const EducationInfo = ({
         {editedFields?.learningStatus === "quit" && (
           <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
             <TextField
-              id="quitDate"
+              id={editedFields?.quitDate ? "quitDate" : "dateEmpty"}
               name="quitDate"
               label="Quit date"
               type="date"
-              value={formatDate(editedFields?.quitDate) || ""}
+              value={formatDate(editedFields?.quitDate)}
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
               variant={isEditing ? "outlined" : "standard"}
@@ -289,11 +289,11 @@ export const EducationInfo = ({
         {editedFields?.learningStatus === "graduated" && (
           <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
             <TextField
-              id="graduationDate"
+              id={editedFields?.graduationDate ? "graduationDate" : "dateEmpty"}
               name="graduationDate"
               label="Graduation date"
               type="date"
-              value={formatDate(editedFields?.graduationDate) || ""}
+              value={formatDate(editedFields?.graduationDate)}
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
               variant={isEditing ? "outlined" : "standard"}
@@ -328,7 +328,7 @@ export const EducationInfo = ({
         {/* Start date */}
         <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
           <TextField
-            id={editedFields?.startDate ? "startDate" : "startDateEmpty"}
+            id={editedFields?.startDate ? "startDate" : "dateEmpty"}
             name="startDate"
             label="Start date"
             type="date"
@@ -386,7 +386,7 @@ export const EducationInfo = ({
                   secondary={strike.comments}
                 />
               </ListItem>
-              {index < editedFields.strikes.length - 1 && (
+              {index < editedFields?.strikes.length - 1 && (
                 <Divider sx={{ color: "black" }} component="li" />
               )}
             </React.Fragment>
@@ -424,7 +424,7 @@ export const EducationInfo = ({
               </Typography>
               <Box display="flex" flexDirection="row" gap={2}>
                 <TextField
-                  id="date"
+                  id={strikeFields?.date ? "date" : "dateEmpty"}
                   name="date"
                   label="Date"
                   type="date"
@@ -439,7 +439,7 @@ export const EducationInfo = ({
                     name="reason"
                     id="reason"
                     label="Reason"
-                    value={strikeFields.reason}
+                    value={strikeFields?.reason}
                     startAdornment=" "
                     onChange={handleStrikeSelectChange}
                   >
@@ -456,7 +456,7 @@ export const EducationInfo = ({
                 label="Comments"
                 type="text"
                 multiline
-                value={strikeFields.comments}
+                value={strikeFields?.comments}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleStrikeChange}
                 fullWidth

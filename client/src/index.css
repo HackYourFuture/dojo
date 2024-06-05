@@ -96,6 +96,6 @@ body {
   align-items: center;
 }
 
-#startDateEmpty[type=date]::-webkit-datetime-edit {
+#dateEmpty[type=date]::-webkit-datetime-edit {
   display: none;
 }
