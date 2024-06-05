@@ -18,12 +18,14 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Modal,
+  Fade,
+  Backdrop,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { useAuth } from "../hooks/useAuth";
 
 interface EducationInfoProps {
   educationData?: TraineeEducationInfo;
@@ -36,8 +38,6 @@ export const EducationInfo = ({
   educationData,
   saveTraineeData,
 }: EducationInfoProps) => {
-  const { user } = useAuth();
-
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(
     educationData!
   );
@@ -169,37 +169,8 @@ export const EducationInfo = ({
     }));
   };
 
-  const handleAddStrike = async () => {
-    if (!editedFields || !educationData) return;
-
-    const newStrike = {
-      ...strikeFields,
-      id: `${Date.now()}`,
-      reporterID: user.id,
-    };
-
-    const updatedStrikes = [...(editedFields.strikes || []), newStrike];
-
-    const updatedData: any = {
-      educationInfo: {
-        strikes: updatedStrikes,
-      },
-    };
-
-    try {
-      await saveTraineeData(updatedData);
-      setIsAddingStrike(false);
-      setStrikeFields({
-        id: "",
-        date: "",
-        reporterID: "",
-        reason: "",
-        comments: "",
-      });
-    } catch (error) {
-      console.error("There was a problem adding the strike:", error);
-    }
-  };
+  // TODO: Add patching strike functionality when the API is ready.
+  const handleAddStrike = async () => {};
 
   return (
     <Box
@@ -237,6 +208,7 @@ export const EducationInfo = ({
             }}
             inputProps={{
               pattern: "[0-9]*",
+              maxLength: 3,
             }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? "outlined" : "standard"}
@@ -262,7 +234,7 @@ export const EducationInfo = ({
           >
             <MenuItem value="studying">Studying</MenuItem>
             <MenuItem value="graduated">Graduated</MenuItem>
-            <MenuItem value="no-hold">No hold</MenuItem>
+            <MenuItem value="on-hold">On hold</MenuItem>
             <MenuItem value="quit">Quit</MenuItem>
           </Select>
         </FormControl>
@@ -345,6 +317,7 @@ export const EducationInfo = ({
             }}
             inputProps={{
               pattern: "[0-9]*",
+              maxLength: 3,
             }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? "outlined" : "standard"}
@@ -375,7 +348,6 @@ export const EducationInfo = ({
           flexDirection="row"
           alignItems="center"
           justifyContent="space-between"
-          gap={4}
         >
           <Typography variant="h6" color="black" padding="16px">
             Strikes ({editedFields?.strikes.length || 0})
@@ -383,13 +355,16 @@ export const EducationInfo = ({
 
           <Stack direction="row" spacing={2}>
             <Button startIcon={<AddIcon />} onClick={handleOpenStrike}>
-              New strikes
+              New strike
             </Button>
           </Stack>
         </Box>
 
         <List
-          sx={{ width: "100%", bgcolor: "background.paper", padding: "16px" }}
+          sx={{
+            width: "100%",
+            bgcolor: "background.paper",
+          }}
         >
           {editedFields?.strikes.map((strike, index) => (
             <React.Fragment key={strike.id}>
@@ -397,6 +372,9 @@ export const EducationInfo = ({
                 alignItems="flex-start"
                 secondaryAction={strike.date}
                 disablePadding
+                sx={{
+                  paddingBottom: "16px",
+                }}
               >
                 <ListItemAvatar>
                   <Avatar>
@@ -415,54 +393,89 @@ export const EducationInfo = ({
           ))}
         </List>
 
-        {isAddingStrike && (
-          <Box
-            component="form"
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            sx={{ padding: "16px", bgcolor: "background.paper" }}
-          >
-            <TextField
-              id="date"
-              name="date"
-              label="Date"
-              type="date"
-              value={strikeFields.date}
-              InputLabelProps={{ shrink: true }}
-              onChange={handleStrikeChange}
-            />
-            <FormControl>
-              <InputLabel htmlFor="reason">Reason</InputLabel>
-              <Select
-                name="reason"
-                id="reason"
-                label="Reason"
-                value={strikeFields.reason}
-                onChange={handleStrikeSelectChange}
-              >
-                <MenuItem value="assignment">Assignment</MenuItem>
-                <MenuItem value="attendance">Attendance</MenuItem>
-                <MenuItem value="preparation">Preparation</MenuItem>
-                <MenuItem value="other">Other</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              name="comments"
-              label="Comments"
-              value={strikeFields.comments}
-              onChange={handleStrikeChange}
-            />
-            <Stack direction="row" spacing={2}>
-              <Button variant="contained" onClick={handleAddStrike}>
-                Add Strike
-              </Button>
-              <Button variant="outlined" onClick={handleCancelOpenStrike}>
-                Cancel
-              </Button>
-            </Stack>
-          </Box>
-        )}
+        <Modal
+          open={isAddingStrike}
+          onClose={handleCancelOpenStrike}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={isAddingStrike}>
+            <Box
+              component="form"
+              display="flex"
+              flexDirection="column"
+              gap={2}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <Typography variant="h6" mb={0.5}>
+                Adding a strike:
+              </Typography>
+              <Box display="flex" flexDirection="row" gap={2}>
+                <TextField
+                  id="date"
+                  name="date"
+                  label="Date"
+                  type="date"
+                  value={strikeFields.date}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={handleStrikeChange}
+                  fullWidth
+                />
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="reason">Reason</InputLabel>
+                  <Select
+                    name="reason"
+                    id="reason"
+                    label="Reason"
+                    value={strikeFields.reason}
+                    startAdornment=" "
+                    onChange={handleStrikeSelectChange}
+                  >
+                    <MenuItem value="assignment">Assignment</MenuItem>
+                    <MenuItem value="attendance">Attendance</MenuItem>
+                    <MenuItem value="preparation">Preparation</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <TextField
+                id="strikeComment"
+                name="strikeComment"
+                label="Comments"
+                type="text"
+                multiline
+                value={strikeFields.comments}
+                InputLabelProps={{ shrink: true }}
+                onChange={handleStrikeChange}
+                fullWidth
+              />
+              <Box display="flex" flexDirection="row" gap={2}>
+                <Button variant="contained" onClick={handleAddStrike} fullWidth>
+                  Add Strike
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleCancelOpenStrike}
+                  fullWidth
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Box>
+          </Fade>
+        </Modal>
       </div>
 
       <div style={{ width: "100%" }}>

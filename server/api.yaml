@@ -614,7 +614,7 @@ components:
           enum:
             - studying
             - graduated
-            - no-hold
+            - on-hold
             - quit
           example: studying
         startDate:
