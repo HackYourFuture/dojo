@@ -12,14 +12,19 @@ export interface ProfileNavProps {
   onTabChange: (tab: string) => void;
 }
 
-export interface TraineeInfo {
+export interface Trainee {
   id: string;
-  personalInfo: TraineeData;
-  contactInfo: ContactData;
-
+  createdAt: string;
+  updatedAt: string;
+  displayName: string;
+  personalInfo: TraineePersonalInfo;
+  contactInfo: TraineeContactInfo;
+  educationInfo: TraineeEducationInfo;
+  employmentInfo: TraineeEmploymentInfo;
+  interactions: TraineeInteraction[];
 }
 
-export interface TraineeData {
+export interface TraineePersonalInfo {
   id: string;
   firstName: string;
   lastName: string;
@@ -40,11 +45,82 @@ export interface TraineeData {
   comments: string;
 }
 
-export interface ContactData {
+export interface TraineeContactInfo {
   id: string;
   email: string;
   slackId: string;
   phone: string;
   githubHandle: string;
   linkedin: string;
+}
+
+export interface TraineeEducationInfo {
+  id: string;
+  startCohort: number;
+  currentCohort: number;
+  learningStatus: string;
+  startDate: string;
+  graduationDate: string;
+  quitReason: string;
+  quitDate: string;
+  strikes: Strike[];
+  assignments: Assignment[];
+  tests: Test[];
+  comments: string;
+}
+
+export interface TraineeEmploymentInfo {
+  id: string;
+  jobPath: string;
+  cvURL: string;
+  availability: string;
+  preferredRole: string;
+  preferredLocation: string;
+  extraTechnologies: string;
+  employmentHistory: TraineeEmploymentHistory[];
+  comments: string;
+}
+
+export interface Strike {
+  id: string;
+  date: string;
+  reporterID: string;
+  reason: string;
+  comments: string;
+}
+
+export interface Assignment {
+  createDate: string;
+  type: string;
+  status: string;
+  content: string;
+  comments: string;
+}
+
+export interface Test {
+  id: string;
+  date: string;
+  type: string;
+  grade: number;
+  result: string;
+  comments: string;
+}
+
+export interface TraineeEmploymentHistory {
+  id: string;
+  type: string;
+  companyName: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+  feeCollected: boolean;
+  feeAmount: number;
+  comments: string;
+}
+
+export interface TraineeInteraction {
+  type: string;
+  reporterID: string;
+  createDate: string;
+  details: string;
 }

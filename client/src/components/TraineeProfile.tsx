@@ -12,12 +12,12 @@ import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { Loader } from "./Loader";
 import { useParams } from "react-router-dom";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import { TraineeInfo } from "../types";
+import { Trainee } from "../types";
 import axios from "axios";
 
 import MuiAlert from "@mui/material/Alert";
 
-export const TraineeProfilePage = () => {
+export const TraineeProfile = () => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
 
@@ -58,7 +58,8 @@ export const TraineeProfilePage = () => {
     setActiveTab(tab);
   };
 
-  const saveTraineeData = async (editedData: Partial<TraineeInfo>) => {
+  const saveTraineeData = async (editedData: Partial<Trainee>) => {
+    console.log("Saving trainee data", editedData);
     try {
       const response = await axios.patch(
         `/api/trainees/${traineeId}`,
@@ -120,7 +121,12 @@ export const TraineeProfilePage = () => {
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === "education" && <EducationInfo />}
+        {activeTab === "education" && (
+          <EducationInfo
+            educationData={traineeData && traineeData.educationInfo}
+            saveTraineeData={saveTraineeData}
+          />
+        )}
         {activeTab === "employment" && <EmploymentInfo />}
       </Box>
     </div>

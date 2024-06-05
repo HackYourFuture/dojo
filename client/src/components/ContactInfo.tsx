@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ContactData } from "../types";
+import { TraineeContactInfo } from "../types";
 import EmailIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIcon from "@mui/icons-material/Phone";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -20,20 +20,22 @@ import LinkIcon from "@mui/icons-material/Link";
 import { LoadingButton } from "@mui/lab";
 
 interface ContactInfoProps {
-  contactData?: ContactData;
-  saveTraineeData: (editedData: ContactData) => void;
+  contactData?: TraineeContactInfo;
+  saveTraineeData: (editedData: TraineeContactInfo) => void;
 }
 
 export const ContactInfo = ({
   contactData,
   saveTraineeData,
 }: ContactInfoProps) => {
-  const [editedFields, setEditedFields] = useState<ContactData>(contactData!);
+  const [editedFields, setEditedFields] = useState<TraineeContactInfo>(
+    contactData!
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (contactData) setEditedFields(contactData as ContactData);
+    if (contactData) setEditedFields(contactData as TraineeContactInfo);
   }, [contactData]);
 
   const handleEditClick = () => {
@@ -50,10 +52,10 @@ export const ContactInfo = ({
   const handleSaveClick = async () => {
     if (!editedFields || !contactData) return;
 
-    const changedFields: Partial<ContactData> = {};
+    const changedFields: Partial<TraineeContactInfo> = {};
     Object.entries(editedFields).forEach(([key, value]) => {
-      if (contactData[key as keyof ContactData] !== value) {
-        changedFields[key as keyof ContactData] = value;
+      if (contactData[key as keyof TraineeContactInfo] !== value) {
+        changedFields[key as keyof TraineeContactInfo] = value;
       }
     });
 
@@ -173,7 +175,9 @@ export const ContactInfo = ({
                 endAdornment: (
                   <InputAdornment position="start">
                     {!isEditing && editedFields?.slackId && (
-                      <Link href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}>
+                      <Link
+                        href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}
+                      >
                         <LinkIcon sx={{ color: "action.active" }} />
                       </Link>
                     )}
