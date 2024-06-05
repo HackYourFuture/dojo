@@ -8,7 +8,6 @@ import { Loader } from "./Loader";
 import { LearningStatus } from "../types";
 import { LearningStatusComponent } from "./LearningStatusComponent";
 import { JobPathComponent } from "./JobPathComponent";
-import { useTraineeProfileImg } from "../hooks/useTraineeProfileImg";
 
 export const ProfileInfoComponent = () => {
   const { traineeInfo } = useParams();
@@ -18,7 +17,8 @@ export const ProfileInfoComponent = () => {
   useTraineeInfoData(traineeId);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { profileImgSrc }: any = useTraineeProfileImg(traineeId);
+  const profileImgSrc = `/api/trainees/${traineeId}/profile-picture`;
+  console.log('profileImgSrc: ', profileImgSrc);
   const slackId = data?.contactInfo?.slackId;
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;
