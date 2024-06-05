@@ -95,7 +95,7 @@ export interface TraineeEducationInfo {
   id: string;
   startCohort: number;
   currentCohort: number;
-  learningStatus: string;
+  learningStatus: LearningStatus;
   startDate: string;
   graduationDate: string;
   quitReason: string;
@@ -108,7 +108,7 @@ export interface TraineeEducationInfo {
 
 export interface TraineeEmploymentInfo {
   id: string;
-  jobPath: string;
+  jobPath: JobPath;
   cvURL: string;
   availability: string;
   preferredRole: string;
