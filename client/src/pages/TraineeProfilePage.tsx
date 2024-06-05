@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
-  ProfileInfoComponent,
   ProfileNav,
   PersonalInfo,
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
+  ProfileSidebarComponent,
 } from "../components/index";
 import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { Loader } from "../components/Loader";
@@ -90,7 +90,7 @@ export const TraineeProfile = () => {
         color="black"
         style={{ overflowY: "auto" }}
       >
-        <ProfileInfoComponent />
+        <ProfileSidebarComponent />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />

@@ -9,7 +9,7 @@ import { LearningStatus } from "../types";
 import { LearningStatusComponent } from "./LearningStatusComponent";
 import { JobPathComponent } from "./JobPathComponent";
 
-export const ProfileInfoComponent = () => {
+export const ProfileSidebarComponent = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split("_");
   const traineeId = trainee ? trainee[1] : "";

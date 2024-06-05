@@ -8,7 +8,7 @@ export * from "./ContactInfo";
 export * from "./EducationInfo";
 export * from "./EmploymentInfo";
 export * from "./ProfileNav";
-export * from "./ProfileInfoComponent";
+export * from "./ProfileSidebarComponent";
 export * from "./TraineeProfile";
 export * from "./Comment";
 export * from "./LearningStatusComponent";
