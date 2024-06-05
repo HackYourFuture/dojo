@@ -678,6 +678,9 @@ components:
           type: string        
         preferredLocation:
           type: string   
+        drivingLicense:
+          type: boolean
+          example: false
         extraTechnologies:
           type: string  
         employmentHistory:

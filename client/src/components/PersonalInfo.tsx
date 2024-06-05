@@ -12,17 +12,12 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import { TraineePersonalInfo } from "../types";
+import { PersonalInfoProps, TraineePersonalInfo } from "../types";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const NoIcon = () => null;
-
-interface PersonalInfoProps {
-  traineeData?: TraineePersonalInfo;
-  saveTraineeData: (editedData: TraineePersonalInfo) => void;
-}
 
 export const PersonalInfo = ({
   traineeData,
