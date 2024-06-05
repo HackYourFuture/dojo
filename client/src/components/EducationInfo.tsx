@@ -196,7 +196,7 @@ export const EducationInfo = ({
 
       <div style={{ width: "100%" }}>
         {/* Cohort */}
-        <FormControl sx={{ mx: 2, my: 1, width: "10ch", gap: "2rem" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: "11ch", gap: "2rem" }}>
           <TextField
             id="currentCohort"
             name="currentCohort"
@@ -305,7 +305,7 @@ export const EducationInfo = ({
 
       <div style={{ width: "100%" }}>
         {/* Start Cohort */}
-        <FormControl sx={{ mx: 2, my: 1, width: "10ch", gap: "2rem" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: "11ch", gap: "2rem" }}>
           <TextField
             id="startCohort"
             name="startCohort"
@@ -423,23 +423,25 @@ export const EducationInfo = ({
                 Adding a strike:
               </Typography>
               <Box display="flex" flexDirection="row" gap={2}>
-                <TextField
-                  id={strikeFields?.date ? "date" : "dateEmpty"}
-                  name="date"
-                  label="Date"
-                  type="date"
-                  value={strikeFields.date}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={handleStrikeChange}
-                  fullWidth
-                />
+                <FormControl fullWidth>
+                  <TextField
+                    id={strikeFields?.date ? "date" : "dateEmpty"}
+                    name="date"
+                    label="Date"
+                    type="date"
+                    value={strikeFields.date}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={handleStrikeChange}
+                    fullWidth
+                  />
+                </FormControl>
                 <FormControl fullWidth>
                   <InputLabel htmlFor="reason">Reason</InputLabel>
                   <Select
                     name="reason"
                     id="reason"
                     label="Reason"
-                    value={strikeFields?.reason}
+                    value={strikeFields.reason}
                     startAdornment=" "
                     onChange={handleStrikeSelectChange}
                   >
@@ -450,17 +452,19 @@ export const EducationInfo = ({
                   </Select>
                 </FormControl>
               </Box>
-              <TextField
-                id="strikeComment"
-                name="strikeComment"
-                label="Comments"
-                type="text"
-                multiline
-                value={strikeFields?.comments}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleStrikeChange}
-                fullWidth
-              />
+              <FormControl fullWidth>
+                <TextField
+                  id="comments"
+                  name="comments"
+                  label="Comments"
+                  type="text"
+                  multiline
+                  value={strikeFields.comments}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={handleStrikeChange}
+                  fullWidth
+                />
+              </FormControl>
               <Box display="flex" flexDirection="row" gap={2}>
                 <Button variant="contained" onClick={handleAddStrike} fullWidth>
                   Add Strike
@@ -480,7 +484,7 @@ export const EducationInfo = ({
 
       <div style={{ width: "100%" }}>
         {/* Comments */}
-        <FormControl sx={{ mx: 2, width: "80ch" }}>
+        <FormControl sx={{ mx: 2, width: "81ch" }}>
           <TextField
             id="comments"
             name="comments"

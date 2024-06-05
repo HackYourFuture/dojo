@@ -127,7 +127,12 @@ export const TraineeProfile = () => {
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === "employment" && <EmploymentInfo />}
+        {activeTab === "employment" && (
+          <EmploymentInfo
+            employmentData={traineeData && traineeData.employmentInfo}
+            saveTraineeData={saveTraineeData}
+          />
+        )}
       </Box>
     </div>
   );

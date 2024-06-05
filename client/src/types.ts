@@ -76,6 +76,7 @@ export interface TraineeEmploymentInfo {
   availability: string;
   preferredRole: string;
   preferredLocation: string;
+  drivingLicense: string;
   extraTechnologies: string;
   employmentHistory: TraineeEmploymentHistory[];
   comments: string;
