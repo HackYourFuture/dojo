@@ -12,6 +12,26 @@ export interface ProfileNavProps {
   onTabChange: (tab: string) => void;
 }
 
+export interface PersonalInfoProps {
+  traineeData?: TraineePersonalInfo;
+  saveTraineeData: (editedData: TraineePersonalInfo) => void;
+}
+
+export interface ContactInfoProps {
+  contactData?: TraineeContactInfo;
+  saveTraineeData: (editedData: TraineeContactInfo) => void;
+}
+
+export interface EducationInfoProps {
+  educationData?: TraineeEducationInfo;
+  saveTraineeData: (editedData: TraineeEducationInfo) => void;
+}
+
+export interface EmploymentInfoProps {
+  employmentData?: TraineeEmploymentInfo;
+  saveTraineeData: (editedData: TraineeEmploymentInfo) => void;
+}
+
 export interface Trainee {
   id: string;
   createdAt: string;
@@ -76,6 +96,7 @@ export interface TraineeEmploymentInfo {
   availability: string;
   preferredRole: string;
   preferredLocation: string;
+  drivingLicense: string;
   extraTechnologies: string;
   employmentHistory: TraineeEmploymentHistory[];
   comments: string;
