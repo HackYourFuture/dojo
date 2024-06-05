@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-import { Strike, TraineeEducationInfo } from "../types";
+import { EducationInfoProps, Strike, TraineeEducationInfo } from "../types";
 import {
   Box,
   Button,
@@ -26,11 +26,6 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-
-interface EducationInfoProps {
-  educationData?: TraineeEducationInfo;
-  saveTraineeData: (editedData: TraineeEducationInfo) => void;
-}
 
 const NoIcon = () => null;
 
