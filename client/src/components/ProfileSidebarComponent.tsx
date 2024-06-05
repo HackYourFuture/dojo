@@ -3,22 +3,16 @@ import slackLogo from "../assets/slack.png";
 import githubLogo from "../assets/github.png";
 import LinkedInLogo from "../assets/LinkedIn_logo.png";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import { useParams } from "react-router-dom";
 import { Loader } from "./Loader";
-import { LearningStatus } from "../types";
+import { LearningStatus, ProfileSidebarProps } from "../types";
 import { LearningStatusComponent } from "./LearningStatusComponent";
 import { JobPathComponent } from "./JobPathComponent";
 
-export const ProfileSidebarComponent = () => {
-  const { traineeInfo } = useParams();
-  const trainee = traineeInfo?.split("_");
-  const traineeId = trainee ? trainee[1] : "";
+export const ProfileSidebarComponent = ({traineeId}: ProfileSidebarProps) => {
   const { isLoading, isError, data, error, isFetching } =
   useTraineeInfoData(traineeId);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const profileImgSrc = `/api/trainees/${traineeId}/profile-picture`;
-  console.log('profileImgSrc: ', profileImgSrc);
   const slackId = data?.contactInfo?.slackId;
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;

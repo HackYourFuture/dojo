@@ -49,6 +49,14 @@ export interface ProfileNavComponentProps {
   onTabChange: (tab: string) => void;
 }
 
+export interface TraineePageProps {
+  id: string;
+}
+
+export interface ProfileSidebarProps {
+  traineeId: string;
+}
+
 export interface Trainee {
   id: string;
   readonly createdAt: string;
