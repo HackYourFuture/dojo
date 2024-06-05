@@ -33,7 +33,7 @@ export interface SearchResultsListComponentProps {
 }
 
 export interface SearchBarComponentProps {
-  data: TraineeInfo;
+  data: Trainee;
 }
 
 export interface JobPathComponentProps {
@@ -49,19 +49,19 @@ export interface ProfileNavComponentProps {
   onTabChange: (tab: string) => void;
 }
 
-export interface TraineeInfo {
+export interface Trainee {
   id: string;
   readonly createdAt: string;
   readonly updatedAt: string;
   displayName: string;
-  personalInfo: TraineeData;
-  contactInfo: ContactData;
-  educationInfo: EducationData;
-  employmentInfo: EmploymentData;
-  interactions: InteractionData[];
+  personalInfo: TraineePersonalInfo;
+  contactInfo: TraineeContactInfo;
+  educationInfo: TraineeEducationInfo;
+  employmentInfo: TraineeEmploymentInfo;
+  interactions: TraineeInteraction[];
 }
 
-export interface TraineeData {
+export interface TraineePersonalInfo {
   id: string;
   firstName: string;
   lastName: string;
@@ -82,7 +82,7 @@ export interface TraineeData {
   comments: string;
 }
 
-export interface ContactData {
+export interface TraineeContactInfo {
   id: string;
   email: string;
   slackId: string;
@@ -91,56 +91,36 @@ export interface ContactData {
   linkedin: string;
 }
 
-
-export interface EducationData {
+export interface TraineeEducationInfo {
+  id: string;
   startCohort: number;
-  currentCohort?: number;
-  learningStatus: LearningStatus;
-  startDate?: Date;
-  graduationDate?: Date;
-  quitReason?: string;
-  quitDate?: Date;
+  currentCohort: number;
+  learningStatus: string;
+  startDate: string;
+  graduationDate: string;
+  quitReason: string;
+  quitDate: string;
   strikes: Strike[];
   assignments: Assignment[];
-  tests: string;
-  comments?: string;
+  tests: Test[];
+  comments: string;
 }
 
-export interface EmploymentData {
-  jobPath: JobPath;
-  cvURL?: string;
-  availability?: string;
-  preferredRole?: string;
-  drivingLicense?: boolean;
-  preferredLocation?: string;
-  extraTechnologies?: string;
-  employmentHistory: EmploymentHistory[];
-  comments?: string;
-}
-
-export interface InteractionData {
-  readonly _id: string;
-  date: Date;
-  type: string;
-  reporterID: string;
-  details: string;
-}
-
-export interface EmploymentHistory {
-  readonly _id: string;
-  type: EmploymentType;
-  companyName: string;
-  role: string;
-  startDate: Date;
-  endDate?: Date;
-  feeCollected: boolean;
-  feeAmount?: number;
-  comments?: string;
+export interface TraineeEmploymentInfo {
+  id: string;
+  jobPath: string;
+  cvURL: string;
+  availability: string;
+  preferredRole: string;
+  preferredLocation: string;
+  extraTechnologies: string;
+  employmentHistory: TraineeEmploymentHistory[];
+  comments: string;
 }
 
 export interface Strike {
-  readonly _id: string;
-  date: Date;
+  id: string;
+  date: string;
   reporterID: string;
   reason: string;
   comments: string;
@@ -155,3 +135,30 @@ export interface Assignment {
   comments?: string;
 }
 
+export interface Test {
+  id: string;
+  date: string;
+  type: string;
+  grade: number;
+  result: string;
+  comments: string;
+}
+
+export interface TraineeEmploymentHistory {
+  id: string;
+  type: string;
+  companyName: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+  feeCollected: boolean;
+  feeAmount: number;
+  comments: string;
+}
+
+export interface TraineeInteraction {
+  type: string;
+  reporterID: string;
+  createDate: string;
+  details: string;
+}

@@ -1,10 +1,8 @@
-import "./searchBarComponent.css";
 import { TextField, Box, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SearchBar = ({ data }: (any)) => {
-
+export const SearchBar = ({ data }: any) => {
   const handleChange = (value: string) => {
     data(value);
   };

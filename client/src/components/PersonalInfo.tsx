@@ -12,27 +12,29 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import { TraineeData } from "../types";
+import { TraineePersonalInfo } from "../types";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-interface PersonalInfoProps {
-  traineeData?: TraineeData;
-  saveTraineeData: (editedData: TraineeData) => void;
-}
-
 const NoIcon = () => null;
+
+interface PersonalInfoProps {
+  traineeData?: TraineePersonalInfo;
+  saveTraineeData: (editedData: TraineePersonalInfo) => void;
+}
 
 export const PersonalInfo = ({
   traineeData,
   saveTraineeData,
 }: PersonalInfoProps) => {
   useEffect(() => {
-    if (traineeData) setEditedFields(traineeData as TraineeData);
+    if (traineeData) setEditedFields(traineeData as TraineePersonalInfo);
   }, [traineeData]);
 
-  const [editedFields, setEditedFields] = useState<TraineeData>(traineeData!);
+  const [editedFields, setEditedFields] = useState<TraineePersonalInfo>(
+    traineeData!
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -50,10 +52,10 @@ export const PersonalInfo = ({
   const handleSaveClick = async () => {
     if (!editedFields || !traineeData) return;
 
-    const changedFields: Partial<TraineeData> = {};
+    const changedFields: Partial<TraineePersonalInfo> = {};
     Object.entries(editedFields).forEach(([key, value]) => {
-      if (traineeData[key as keyof TraineeData] !== value) {
-        changedFields[key as keyof TraineeData] = value;
+      if (traineeData[key as keyof TraineePersonalInfo] !== value) {
+        changedFields[key as keyof TraineePersonalInfo] = value;
       }
     });
 
@@ -117,6 +119,7 @@ export const PersonalInfo = ({
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
+
       <div style={{ width: "100%" }}>
         {/* First Name */}
         <FormControl sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}>
@@ -183,7 +186,7 @@ export const PersonalInfo = ({
           >
             <MenuItem value="woman">Woman</MenuItem>
             <MenuItem value="man">Man</MenuItem>
-            <MenuItem value="non-binary">Non-Binary</MenuItem>
+            <MenuItem value="non-binary">Non binary</MenuItem>
             <MenuItem value="other">Other</MenuItem>
           </Select>
         </FormControl>
@@ -313,8 +316,8 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="first-interview">First Interview</MenuItem>
-            <MenuItem value="second-interview">Second Interview</MenuItem>
+            <MenuItem value="first-interview">First interview</MenuItem>
+            <MenuItem value="second-interview">Second interview</MenuItem>
             <MenuItem value="residency">Residency</MenuItem>
             <MenuItem value="citizenship">Citizenship</MenuItem>
           </Select>

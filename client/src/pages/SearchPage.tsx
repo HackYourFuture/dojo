@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SearchBar, SearchResultsListComponent } from "../components";
-import "./SearchPage.css";
 import HYFLogo from "../assets/HYF_logo.svg";
 import { Box } from "@mui/material";
 
