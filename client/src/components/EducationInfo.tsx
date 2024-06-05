@@ -355,11 +355,11 @@ export const EducationInfo = ({
         {/* Start date */}
         <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
           <TextField
-            id="startDate"
+            id={editedFields?.startDate ? "startDate" : "startDateEmpty"}
             name="startDate"
             label="Start date"
             type="date"
-            value={formatDate(editedFields?.startDate) || ""}
+            value={formatDate(editedFields?.startDate)}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? "outlined" : "standard"}
