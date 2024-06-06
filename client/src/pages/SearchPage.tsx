@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SearchBar, SearchResultsListComponent } from "../components";
+import { SearchBar, SearchResultsList } from "../components";
 import HYFLogo from "../assets/HYF_logo.svg";
 import { Box } from "@mui/material";
 
@@ -17,7 +17,7 @@ export const SearchPage = () => {
           <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
         </Box>
         <SearchBar data={handleDataFromChild} />
-        {results && <SearchResultsListComponent results={results} />}
+        {results && <SearchResultsList results={results} />}
       </div>
     </div>
   );

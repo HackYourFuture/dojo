@@ -22,10 +22,10 @@ import {
   Fade,
   Backdrop,
 } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { LoadingButton } from "@mui/lab";
 
 const NoIcon = () => null;
 

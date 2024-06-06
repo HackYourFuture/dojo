@@ -1,22 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import {
-  ProfileNav,
-  PersonalInfo,
-  ContactInfo,
-  EducationInfo,
-  EmploymentInfo,
-  ProfileSidebarComponent,
-} from "../components/index";
 import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
-import { Loader } from "../components/Loader";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { Trainee, TraineePageProps } from "../types";
 import axios from "axios";
-
+import {
+  ContactInfo,
+  EducationInfo,
+  EmploymentInfo,
+  Loader,
+  PersonalInfo,
+  ProfileNav,
+  ProfileSidebar,
+} from ".";
 import MuiAlert from "@mui/material/Alert";
 
-export const TraineeProfile = ({id}: TraineePageProps) => {
+export const TraineeProfile = ({ id }: TraineePageProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
 
@@ -57,10 +56,7 @@ export const TraineeProfile = ({id}: TraineePageProps) => {
   const saveTraineeData = async (editedData: Partial<Trainee>) => {
     console.log("Saving trainee data", editedData);
     try {
-      const response = await axios.patch(
-        `/api/trainees/${id}`,
-        editedData
-      );
+      const response = await axios.patch(`/api/trainees/${id}`, editedData);
       console.log("Trainee data saved successfully", response.data);
       setTraineeData(response.data);
       setSnackbarSeverity("success");
@@ -86,7 +82,7 @@ export const TraineeProfile = ({id}: TraineePageProps) => {
         color="black"
         style={{ overflowY: "auto" }}
       >
-        <ProfileSidebarComponent traineeId={id} />
+        <ProfileSidebar traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />

@@ -9,7 +9,9 @@ import { Link } from "react-router-dom";
 import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
-export const SearchResultsListComponent = ({ results }: SearchResultsListComponentProps) => {
+export const SearchResultsList = ({
+  results,
+}: SearchResultsListComponentProps) => {
   // You can change search debounce time using this hook.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const debouncedSearchTerm: any = useDebounce(results, 400);

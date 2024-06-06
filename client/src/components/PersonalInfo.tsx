@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-
 import {
   Button,
   FormControl,
@@ -11,11 +9,11 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  Box,
 } from "@mui/material";
 import { PersonalInfoProps, TraineePersonalInfo } from "../types";
-import LoadingButton from "@mui/lab/LoadingButton";
-
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { LoadingButton } from "@mui/lab";
 
 const NoIcon = () => null;
 

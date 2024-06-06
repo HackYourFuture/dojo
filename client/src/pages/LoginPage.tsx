@@ -1,8 +1,7 @@
 import HYFLogo from "../assets/HYF_logo.svg";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import { useAuth } from "../hooks/useAuth";
 import { ErrorBox } from "../components";
+import { Button, Stack } from "@mui/material";
 
 export const LoginPage = () => {
   const { login, errorMessage } = useAuth();
