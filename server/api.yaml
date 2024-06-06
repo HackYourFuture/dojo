@@ -1,4 +1,4 @@
-# Tip: Use https://editor.swagger.io/ to edit and preview this API specification
+# Tip: Use https://editor-next.swagger.io/ to edit and preview this API specification
 
 openapi: 3.0.3
 info:
@@ -22,6 +22,8 @@ tags:
   - name: trainees
     description: ''
   - name: geography
+    description: ''
+  - name: dashboard
     description: ''
 paths:
   /auth/login:
@@ -437,8 +439,43 @@ paths:
                     flag:
                       type: string
                       example: "🇳🇱"
-
-
+  /dashboard:
+      get:
+        tags:
+          - dashboard
+        summary: Get the data to display on the dashboard
+        description: ''
+        security:
+          - cookie_token:
+        responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    demographics:
+                      type: object
+                      properties:
+                        genderDistribution:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
+                        countryOfOrigin:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
+                    program:
+                      properties:
+                        graduations:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
+                        employment:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
 
 components:
   schemas:
@@ -850,6 +887,18 @@ components:
         imageUrl: 
           type: string
           example: "https://images.example.com/image.png"
+
+    DashboardData:
+      type: object
+      properties:
+        label:
+          type: string
+        value: 
+          type: number
+          example: 42.12
+        percent: 
+          type: number
+          example: 58.1
 
     Error:
       type: object
