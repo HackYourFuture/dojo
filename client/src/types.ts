@@ -1,15 +1,60 @@
+// enums
+export enum LearningStatus {
+  Studying = "studying",
+  Graduated = "graduated",
+  OnHold = "on-hold",
+  Quit = "quit",
+}
+
+export enum JobPath {
+  NotGraduated = "not-graduated",
+  Searching = "searching",
+  Internship = "internship",
+  TechJob = "tech-job",
+  NonTechJob = "non-tech-job",
+  NotSearching = "not-searching",
+  OtherStudies = "other-studies",
+  NoLongerHelping = "no-longer-helping",
+}
+
+export enum EmploymentType {
+  Internship = "internship",
+  Job = "job",
+}
+
+// interfaces
 export interface SearchResult {
   id: number;
   name: string;
 }
 
-export interface SearchResultsListProps {
+export interface SearchResultsListComponentProps {
   results: string;
 }
 
-export interface ProfileNavProps {
+export interface SearchBarComponentProps {
+  data: Trainee;
+}
+
+export interface JobPathComponentProps {
+  jobPath: JobPath
+}
+
+export interface LearningPathComponentProps {
+  learningStatus: LearningStatus | undefined
+}
+
+export interface ProfileNavComponentProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+}
+
+export interface TraineePageProps {
+  id: string;
+}
+
+export interface ProfileSidebarProps {
+  traineeId: string;
 }
 
 export interface PersonalInfoProps {
@@ -34,8 +79,8 @@ export interface EmploymentInfoProps {
 
 export interface Trainee {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   displayName: string;
   personalInfo: TraineePersonalInfo;
   contactInfo: TraineeContactInfo;
@@ -78,7 +123,7 @@ export interface TraineeEducationInfo {
   id: string;
   startCohort: number;
   currentCohort: number;
-  learningStatus: string;
+  learningStatus: LearningStatus;
   startDate: string;
   graduationDate: string;
   quitReason: string;
@@ -91,7 +136,7 @@ export interface TraineeEducationInfo {
 
 export interface TraineeEmploymentInfo {
   id: string;
-  jobPath: string;
+  jobPath: JobPath;
   cvURL: string;
   availability: string;
   preferredRole: string;
@@ -111,11 +156,12 @@ export interface Strike {
 }
 
 export interface Assignment {
-  createDate: string;
+  readonly _id: string;
+  createDate: Date;
   type: string;
   status: string;
-  content: string;
-  comments: string;
+  content?: string;
+  comments?: string;
 }
 
 export interface Test {

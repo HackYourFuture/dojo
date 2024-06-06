@@ -27,5 +27,5 @@ export const TraineePage = () => {
     );
   }
 
-  return <TraineeProfile />;
+  return <TraineeProfile id={traineeId} />;
 };

@@ -1,31 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
-  ProfileInfo,
   ProfileNav,
   PersonalInfo,
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
-} from "./index";
+  ProfileSidebarComponent,
+} from "../components/index";
 import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
-import { Loader } from "./Loader";
-import { useParams } from "react-router-dom";
+import { Loader } from "../components/Loader";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import { Trainee } from "../types";
+import { Trainee, TraineePageProps } from "../types";
 import axios from "axios";
 
 import MuiAlert from "@mui/material/Alert";
 
-export const TraineeProfile = () => {
+export const TraineeProfile = ({id}: TraineePageProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
 
-  const { traineeInfo } = useParams();
-  const trainee = traineeInfo?.split("_");
-  const traineeId = trainee ? trainee[1] : "";
   const { isLoading, isError, data, error, isFetching } =
-    useTraineeInfoData(traineeId);
+    useTraineeInfoData(id);
 
   const [traineeData, setTraineeData] = useState(data && data);
 
@@ -62,7 +58,7 @@ export const TraineeProfile = () => {
     console.log("Saving trainee data", editedData);
     try {
       const response = await axios.patch(
-        `/api/trainees/${traineeId}`,
+        `/api/trainees/${id}`,
         editedData
       );
       console.log("Trainee data saved successfully", response.data);
@@ -90,7 +86,7 @@ export const TraineeProfile = () => {
         color="black"
         style={{ overflowY: "auto" }}
       >
-        <ProfileInfo />
+        <ProfileSidebarComponent traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
