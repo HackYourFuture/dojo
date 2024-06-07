@@ -160,9 +160,9 @@ export interface SearchResult {
 }
 
 export interface Trainee {
-  id: string;
-  readonly createdAt: string;
-  readonly updatedAt: string;
+  readonly _id: string;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
   displayName: string;
   personalInfo: TraineePersonalInfo;
   contactInfo: TraineeContactInfo;
@@ -172,74 +172,70 @@ export interface Trainee {
 }
 
 export interface TraineePersonalInfo {
-  id: string;
   firstName: string;
   lastName: string;
-  preferredName: string;
-  gender: string;
-  pronouns: string;
-  location: string;
-  englishLevel: string;
-  professionalDutch: string;
-  countryOfOrigin: string;
-  background: string;
-  hasWorkPermit: string;
-  residencyStatus: string;
-  receivesSocialBenefits: string;
-  caseManagerUrging: string;
-  educationLevel: string;
-  educationBackground: string;
-  comments: string;
+  preferredName?: string;
+  gender: Gender;
+  pronouns?: string;
+  location?: string;
+  englishLevel?: EnglishLevel;
+  professionalDutch?: boolean;
+  countryOfOrigin?: string;
+  background?: Background;
+  hasWorkPermit?: boolean;
+  residencyStatus?: ResidencyStatus;
+  receivesSocialBenefits?: boolean;
+  caseManagerUrging?: boolean;
+  educationLevel?: EducationLevel;
+  educationBackground?: string;
+  comments?: string;
 }
 
 export interface TraineeContactInfo {
-  id: string;
   email: string;
-  slackId: string;
-  phone: string;
-  githubHandle: string;
-  linkedin: string;
+  slackId?: string;
+  phone?: string;
+  githubHandle?: string;
+  linkedin?: string;
 }
 
 export interface TraineeEducationInfo {
-  id: string;
   startCohort: number;
-  currentCohort: number;
+  currentCohort?: number;
   learningStatus: LearningStatus;
-  startDate: string;
-  graduationDate: string;
-  quitReason: string;
-  quitDate: string;
+  startDate?: Date;
+  graduationDate?: Date;
+  quitReason?: QuitReason;
+  quitDate?: Date;
   strikes: Strike[];
   assignments: Assignment[];
   tests: Test[];
-  comments: string;
+  comments?: string;
 }
 
 export interface TraineeEmploymentInfo {
-  id: string;
   jobPath: JobPath;
-  cvURL: string;
-  availability: string;
-  preferredRole: string;
-  preferredLocation: string;
-  drivingLicense: string;
-  extraTechnologies: string;
+  cvURL?: string;
+  availability?: string;
+  preferredRole?: string;
+  drivingLicense?: boolean;
+  preferredLocation?: string;
+  extraTechnologies?: string;
   employmentHistory: TraineeEmploymentHistory[];
-  comments: string;
+  comments?: string;
 }
 
 export interface Strike {
-  id: string;
-  date: string;
+  readonly _id: string;
+  date: Date;
   reporterID: string;
-  reason: string;
+  reason: StrikeReason;
   comments: string;
 }
 
 export interface Assignment {
   readonly _id: string;
-  createDate: string;
+  createDate: Date;
   type: string;
   status: string;
   content?: string;
@@ -247,29 +243,30 @@ export interface Assignment {
 }
 
 export interface Test {
-  id: string;
-  date: string;
-  type: string;
-  grade: number;
-  result: string;
-  comments: string;
+  readonly _id: string;
+  date: Date;
+  type: TestType;
+  grade?: number;
+  result: TestResult;
+  comments?: string;
 }
 
 export interface TraineeEmploymentHistory {
-  id: string;
-  type: string;
+  readonly _id: string;
+  type: EmploymentType;
   companyName: string;
   role: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate?: Date;
   feeCollected: boolean;
-  feeAmount: number;
-  comments: string;
+  feeAmount?: number;
+  comments?: string;
 }
 
 export interface TraineeInteraction {
-  type: string;
+  readonly _id: string;
+  date: Date;
+  type: InteractionType;
   reporterID: string;
-  createDate: string;
   details: string;
 }
