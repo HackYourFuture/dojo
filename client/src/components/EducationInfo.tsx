@@ -49,7 +49,7 @@ export const EducationInfo = ({
   const [isAddingStrike, setIsAddingStrike] = useState(false);
 
   const [strikeFields, setStrikeFields] = useState<Strike>({
-    _id: "",
+    id: "",
     date: new Date(),
     reporterID: "",
     reason: StrikeReason.Other,
@@ -78,7 +78,7 @@ export const EducationInfo = ({
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
       setStrikeFields({
-        _id: "",
+        id: "",
         date: new Date(),
         reporterID: "",
         reason: StrikeReason.Other,
@@ -234,10 +234,22 @@ export const EducationInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value={LearningStatus.Studying}>Studying</MenuItem>
-            <MenuItem value={LearningStatus.Graduated}>Graduated</MenuItem>
-            <MenuItem value={LearningStatus.OnHold}>On hold</MenuItem>
-            <MenuItem value={LearningStatus.Quit}>Quit</MenuItem>
+            {Object.entries(LearningStatus).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
@@ -275,14 +287,22 @@ export const EducationInfo = ({
               startAdornment=" "
               onChange={handleSelectChange}
             >
-              <MenuItem value={QuitReason.Technical}>Technical</MenuItem>
-              <MenuItem value={QuitReason.SocialSkills}>Social skills</MenuItem>
-              <MenuItem value={QuitReason.Personal}>Personal</MenuItem>
-              <MenuItem value={QuitReason.MunicipalityOrMonetary}>
-                Municipality or monetary
-              </MenuItem>
-              <MenuItem value={QuitReason.LeftNL}>Left NL</MenuItem>
-              <MenuItem value={QuitReason.Other}>Other</MenuItem>
+              {Object.entries(QuitReason).map(([key, value]) => {
+                const text = value
+                  .split("-")
+                  .map((word, index) =>
+                    index === 0
+                      ? word.charAt(0).toUpperCase() + word.slice(1)
+                      : word
+                  )
+                  .join(" ");
+
+                return (
+                  <MenuItem key={key} value={value}>
+                    {text}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         )}
@@ -369,7 +389,7 @@ export const EducationInfo = ({
           }}
         >
           {editedFields?.strikes.map((strike, index) => (
-            <React.Fragment key={strike._id}>
+            <React.Fragment key={strike.id}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={formatDate(strike.date)}
@@ -447,23 +467,22 @@ export const EducationInfo = ({
                     startAdornment=" "
                     onChange={handleStrikeSelectChange}
                   >
-                    <MenuItem value={StrikeReason.LastSubmission}>
-                      Last submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.MissedSubmission}>
-                      Missed submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.IncompleteSubmission}>
-                      Incomplete submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.LateAttendance}>
-                      Late attendance
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.Absence}>Absence</MenuItem>
-                    <MenuItem value={StrikeReason.PendingFeedback}>
-                      Pending feedback
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.Other}>Other</MenuItem>
+                    {Object.entries(StrikeReason).map(([key, value]) => {
+                      const text = value
+                        .split("-")
+                        .map((word, index) =>
+                          index === 0
+                            ? word.charAt(0).toUpperCase() + word.slice(1)
+                            : word
+                        )
+                        .join(" ");
+
+                      return (
+                        <MenuItem key={key} value={value}>
+                          {text}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Box>
