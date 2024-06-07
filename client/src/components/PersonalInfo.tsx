@@ -69,7 +69,6 @@ export const PersonalInfo = ({
     setIsSaving(true);
 
     try {
-      console.log("Saving trainee data:", editedData);
       await saveTraineeData(editedData);
       setIsEditing(false);
     } catch (error) {

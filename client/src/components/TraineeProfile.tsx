@@ -2,7 +2,13 @@
 import { useState } from "react";
 import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import { Trainee, TraineeProfileProps } from "../types";
+import {
+  TraineeContactInfo,
+  TraineeEducationInfo,
+  TraineeEmploymentInfo,
+  TraineePersonalInfo,
+  TraineeProfileProps,
+} from "../types";
 import axios from "axios";
 import {
   ContactInfo,
@@ -53,7 +59,13 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     setActiveTab(tab);
   };
 
-  const saveTraineeData = async (editedData: Partial<Trainee>) => {
+  const saveTraineeData = async (
+    editedData:
+      | TraineePersonalInfo
+      | TraineeContactInfo
+      | TraineeEducationInfo
+      | TraineeEmploymentInfo
+  ) => {
     console.log("Saving trainee data", editedData);
     try {
       const response = await axios.patch(`/api/trainees/${id}`, editedData);
