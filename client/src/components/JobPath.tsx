@@ -1,8 +1,8 @@
 import { LearningStatusComponent } from ".";
-import { JobPath, JobPathComponentProps, LearningStatus } from "../types";
+import { JobPath, JobPathProps, LearningStatus } from "../types";
 import { Chip, Stack } from "@mui/material";
 
-export const JobPathComponent = ({ jobPath }: JobPathComponentProps) => {
+export const JobPathComponent = ({ jobPath }: JobPathProps) => {
   const jobChipColor = (status: JobPath) => {
     switch (status) {
       case JobPath.Searching:

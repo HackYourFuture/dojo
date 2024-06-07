@@ -1,9 +1,70 @@
 // enums
+export enum Gender {
+  Man = "man",
+  Woman = "woman",
+  NonBinary = "non-binary",
+  Other = "other",
+}
+
+export enum EnglishLevel {
+  NeedsWork = "needs-work",
+  Moderate = "moderate",
+  Good = "good",
+}
+
+export enum Background {
+  Refugee = "refugee",
+  FamilyReunification = "family-reunification",
+  PartnerOfSkilledMigrant = "partner-of-skilled-migrant",
+  VulnerableGroup = "vulnerable-group",
+  EUCitizen = "eu-citizen",
+}
+
+export enum EducationLevel {
+  None = "none",
+  HighSchool = "high-school",
+  Diploma = "diploma",
+  BachelorsDegree = "bachelors-degree",
+  MastersDegree = "masters-degree",
+}
+
+export enum ResidencyStatus {
+  FirstInterview = "first-interview",
+  SecondInterview = "second-interview",
+  Residency = "residency",
+  Citizenship = "citizenship",
+}
+
 export enum LearningStatus {
   Studying = "studying",
   Graduated = "graduated",
   OnHold = "on-hold",
   Quit = "quit",
+}
+
+export enum StrikeReason {
+  LastSubmission = "late-submission",
+  MissedSubmission = "missed-submission",
+  IncompleteSubmission = "incomplete-submission",
+  LateAttendance = "late-attendance",
+  Absence = "absence",
+  PendingFeedback = "pending-feedback",
+  Other = "other",
+}
+
+export enum QuitReason {
+  Technical = "technical",
+  SocialSkills = "social-skills",
+  Personal = "personal",
+  Withdrawn = "withdrawn",
+  MunicipalityOrMonetary = "municipality-or-monetary",
+  LeftNL = "left-nl",
+  Other = "other",
+}
+
+export enum EmploymentType {
+  Internship = "internship",
+  Job = "job",
 }
 
 export enum JobPath {
@@ -17,39 +78,54 @@ export enum JobPath {
   NoLongerHelping = "no-longer-helping",
 }
 
-export enum EmploymentType {
-  Internship = "internship",
-  Job = "job",
+export enum InteractionType {
+  Call = "call",
+  Feedback = "feedback",
+  TechHour = "tech-hour",
+  InPerson = "in-person",
+  Other = "other",
 }
 
-// interfaces
-export interface SearchResult {
-  id: number;
-  name: string;
+export enum TestResult {
+  Passed = "passed",
+  PassedWithWarning = "passed-with-warning",
+  Failed = "failed",
+  Disqualified = "disqualified",
 }
 
-export interface SearchResultsListComponentProps {
+export enum TestType {
+  Presentation = "presentation",
+  JavaScript = "javascript",
+  BrowsersInterview = "browsers-interview",
+  UsingApisInterview = "using-apis-interview",
+  NodeJS = "nodejs",
+  ReactInterview = "react-interview",
+  FinalProjectInterview = "final-project-interview",
+}
+
+// Props
+export interface SearchResultsListProps {
   results: string;
 }
 
-export interface SearchBarComponentProps {
+export interface SearchBarProps {
   data: Trainee;
 }
 
-export interface JobPathComponentProps {
+export interface JobPathProps {
   jobPath: JobPath
 }
 
-export interface LearningPathComponentProps {
+export interface LearningStatusProps {
   learningStatus: LearningStatus | undefined
 }
 
-export interface ProfileNavComponentProps {
+export interface ProfileNavProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
 }
 
-export interface TraineePageProps {
+export interface TraineeProfileProps {
   id: string;
 }
 
@@ -75,6 +151,12 @@ export interface EducationInfoProps {
 export interface EmploymentInfoProps {
   employmentData?: TraineeEmploymentInfo;
   saveTraineeData: (editedData: TraineeEmploymentInfo) => void;
+}
+
+// interfaces
+export interface SearchResult {
+  id: number;
+  name: string;
 }
 
 export interface Trainee {
@@ -157,7 +239,7 @@ export interface Strike {
 
 export interface Assignment {
   readonly _id: string;
-  createDate: Date;
+  createDate: string;
   type: string;
   status: string;
   content?: string;

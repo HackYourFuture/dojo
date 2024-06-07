@@ -1,9 +1,9 @@
 import { Chip } from "@mui/material";
-import { LearningPathComponentProps, LearningStatus } from "../types";
+import { LearningStatusProps, LearningStatus } from "../types";
 
 export const LearningStatusComponent = ({
   learningStatus,
-}: LearningPathComponentProps) => {
+}: LearningStatusProps) => {
   const chipColor = (status: LearningStatus | undefined) => {
     switch (status) {
       case LearningStatus.Studying:

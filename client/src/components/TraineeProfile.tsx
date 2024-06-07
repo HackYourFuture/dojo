@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import { Trainee, TraineePageProps } from "../types";
+import { Trainee, TraineeProfileProps } from "../types";
 import axios from "axios";
 import {
   ContactInfo,
@@ -15,7 +15,7 @@ import {
 } from ".";
 import MuiAlert from "@mui/material/Alert";
 
-export const TraineeProfile = ({ id }: TraineePageProps) => {
+export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
 
