@@ -1,27 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
-import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import {
-  TraineeContactInfo,
-  TraineeEducationInfo,
-  TraineeEmploymentInfo,
-  TraineePersonalInfo,
-  TraineeProfileProps,
-} from "../types";
-import axios from "axios";
-import {
+  ProfileNav,
+  PersonalInfo,
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
-  Loader,
-  PersonalInfo,
-  ProfileNav,
-  ProfileSidebar,
-} from ".";
+  ProfileSidebarComponent,
+} from "../components/index";
+import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
+import { Loader } from "../components/Loader";
+import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
+import { Trainee, TraineePageProps } from "../types";
+import axios from "axios";
+
 import MuiAlert from "@mui/material/Alert";
 
-export const TraineeProfile = ({ id }: TraineeProfileProps) => {
+export const TraineeProfile = ({id}: TraineePageProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
 
@@ -59,16 +54,13 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     setActiveTab(tab);
   };
 
-  const saveTraineeData = async (
-    editedData:
-      | TraineePersonalInfo
-      | TraineeContactInfo
-      | TraineeEducationInfo
-      | TraineeEmploymentInfo
-  ) => {
+  const saveTraineeData = async (editedData: Partial<Trainee>) => {
     console.log("Saving trainee data", editedData);
     try {
-      const response = await axios.patch(`/api/trainees/${id}`, editedData);
+      const response = await axios.patch(
+        `/api/trainees/${id}`,
+        editedData
+      );
       console.log("Trainee data saved successfully", response.data);
       setTraineeData(response.data);
       setSnackbarSeverity("success");
@@ -94,7 +86,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         color="black"
         style={{ overflowY: "auto" }}
       >
-        <ProfileSidebar traineeId={id} />
+        <ProfileSidebarComponent traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />

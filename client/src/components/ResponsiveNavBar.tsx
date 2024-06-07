@@ -1,21 +1,19 @@
 import * as React from "react";
-import HYFLogo from "../assets/HYF_logo.svg";
-import SearchIcon from "@mui/icons-material/Search";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import HYFLogo from "../assets/HYF_logo.svg";
+import Stack from "@mui/material/Stack";
+import SearchIcon from "@mui/icons-material/Search";
+import Container from "@mui/material/Container";
 import { useAuth } from "../hooks/useAuth";
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Toolbar,
-  Tooltip,
-} from "@mui/material";
 
 export const ResponsiveNavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(

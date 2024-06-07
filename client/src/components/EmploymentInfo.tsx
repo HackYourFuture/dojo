@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-import { EmploymentInfoProps, JobPath, TraineeEmploymentInfo } from "../types";
+import { EmploymentInfoProps, TraineeEmploymentInfo } from "../types";
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import LinkIcon from "@mui/icons-material/Link";
 
@@ -84,7 +84,7 @@ export const EmploymentInfo = ({
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: name === "date" ? new Date(value) : value,
+      [name]: value,
     }));
   };
 
@@ -96,17 +96,8 @@ export const EmploymentInfo = ({
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value === "true" ? true : value === "false" ? false : value,
+      [name]: value,
     }));
-  };
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
-    const formattedDate = new Date(date);
-    if (isNaN(formattedDate.getTime())) {
-      return date.toString();
-    }
-    return formattedDate.toISOString().split("T")[0];
   };
 
   return (
@@ -148,16 +139,14 @@ export const EmploymentInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value={JobPath.NotGraduated}>Not graduated</MenuItem>
-            <MenuItem value={JobPath.Searching}>Searching</MenuItem>
-            <MenuItem value={JobPath.Internship}>Internship</MenuItem>
-            <MenuItem value={JobPath.TechJob}>Tech job</MenuItem>
-            <MenuItem value={JobPath.NonTechJob}>Non tech job</MenuItem>
-            <MenuItem value={JobPath.NotSearching}>Not searching</MenuItem>
-            <MenuItem value={JobPath.OtherStudies}>Other studies</MenuItem>
-            <MenuItem value={JobPath.NoLongerHelping}>
-              No longer helping
-            </MenuItem>
+            <MenuItem value="not-graduated">Not graduated</MenuItem>
+            <MenuItem value="searching">Searching</MenuItem>
+            <MenuItem value="internship">Internship</MenuItem>
+            <MenuItem value="tech-job">Tech job</MenuItem>
+            <MenuItem value="non-tech-job">Non tech job</MenuItem>
+            <MenuItem value="not-searching">Not searching</MenuItem>
+            <MenuItem value="other-studies">Other studies</MenuItem>
+            <MenuItem value="no-longer-helping">No longer helping</MenuItem>
           </Select>
         </FormControl>
 
@@ -301,10 +290,10 @@ export const EmploymentInfo = ({
           }}
         >
           {editedFields?.employmentHistory.map((employmentHistory, index) => (
-            <React.Fragment key={employmentHistory._id}>
+            <React.Fragment key={employmentHistory.id}>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={formatDate(employmentHistory.startDate)}
+                secondaryAction={employmentHistory.startDate}
                 disablePadding
                 sx={{
                   paddingBottom: "16px",

@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-import {
-  EducationInfoProps,
-  Strike,
-  TraineeEducationInfo,
-  LearningStatus,
-  QuitReason,
-  StrikeReason,
-} from "../types";
+import { EducationInfoProps, Strike, TraineeEducationInfo } from "../types";
 import {
   Box,
   Button,
@@ -29,10 +22,10 @@ import {
   Fade,
   Backdrop,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { LoadingButton } from "@mui/lab";
 
 const NoIcon = () => null;
 
@@ -49,10 +42,10 @@ export const EducationInfo = ({
   const [isAddingStrike, setIsAddingStrike] = useState(false);
 
   const [strikeFields, setStrikeFields] = useState<Strike>({
-    _id: "",
-    date: new Date(),
+    id: "",
+    date: "",
     reporterID: "",
-    reason: StrikeReason.Other,
+    reason: "",
     comments: "",
   });
 
@@ -78,10 +71,10 @@ export const EducationInfo = ({
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
       setStrikeFields({
-        _id: "",
-        date: new Date(),
+        id: "",
+        date: "",
         reporterID: "",
-        reason: StrikeReason.Other,
+        reason: "",
         comments: "",
       });
     }
@@ -120,7 +113,7 @@ export const EducationInfo = ({
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: name === "date" ? new Date(value) : value,
+      [name]: value,
     }));
   };
 
@@ -132,7 +125,7 @@ export const EducationInfo = ({
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value === "true" ? true : value === "false" ? false : value,
+      [name]: value,
     }));
   };
 
@@ -146,20 +139,20 @@ export const EducationInfo = ({
     }
   };
 
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
-    const formattedDate = new Date(date);
-    if (isNaN(formattedDate.getTime())) {
-      return date.toString();
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
     }
-    return formattedDate.toISOString().split("T")[0];
+    return date.toISOString().split("T")[0];
   };
 
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setStrikeFields((prevStrike) => ({
       ...prevStrike,
-      [name]: name === "date" ? new Date(value) : value,
+      [name]: value,
     }));
   };
 
@@ -234,15 +227,15 @@ export const EducationInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value={LearningStatus.Studying}>Studying</MenuItem>
-            <MenuItem value={LearningStatus.Graduated}>Graduated</MenuItem>
-            <MenuItem value={LearningStatus.OnHold}>On hold</MenuItem>
-            <MenuItem value={LearningStatus.Quit}>Quit</MenuItem>
+            <MenuItem value="studying">Studying</MenuItem>
+            <MenuItem value="graduated">Graduated</MenuItem>
+            <MenuItem value="on-hold">On hold</MenuItem>
+            <MenuItem value="quit">Quit</MenuItem>
           </Select>
         </FormControl>
 
         {/* Quit date */}
-        {editedFields?.learningStatus === LearningStatus.Quit && (
+        {editedFields?.learningStatus === "quit" && (
           <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
             <TextField
               id={editedFields?.quitDate ? "quitDate" : "dateEmpty"}
@@ -259,7 +252,7 @@ export const EducationInfo = ({
         )}
 
         {/* Quit reason */}
-        {editedFields?.learningStatus === LearningStatus.Quit && (
+        {editedFields?.learningStatus === "quit" && (
           <FormControl
             variant={isEditing ? "outlined" : "standard"}
             sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
@@ -275,20 +268,20 @@ export const EducationInfo = ({
               startAdornment=" "
               onChange={handleSelectChange}
             >
-              <MenuItem value={QuitReason.Technical}>Technical</MenuItem>
-              <MenuItem value={QuitReason.SocialSkills}>Social skills</MenuItem>
-              <MenuItem value={QuitReason.Personal}>Personal</MenuItem>
-              <MenuItem value={QuitReason.MunicipalityOrMonetary}>
+              <MenuItem value="technical">Technical</MenuItem>
+              <MenuItem value="social-skills">Social skills</MenuItem>
+              <MenuItem value="personal">Personal</MenuItem>
+              <MenuItem value="municipality-or-monetary">
                 Municipality or monetary
               </MenuItem>
-              <MenuItem value={QuitReason.LeftNL}>Left NL</MenuItem>
-              <MenuItem value={QuitReason.Other}>Other</MenuItem>
+              <MenuItem value="left-nl">Left NL</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
             </Select>
           </FormControl>
         )}
 
         {/* Graduation date */}
-        {editedFields?.learningStatus === LearningStatus.Graduated && (
+        {editedFields?.learningStatus === "graduated" && (
           <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
             <TextField
               id={editedFields?.graduationDate ? "graduationDate" : "dateEmpty"}
@@ -369,10 +362,10 @@ export const EducationInfo = ({
           }}
         >
           {editedFields?.strikes.map((strike, index) => (
-            <React.Fragment key={strike._id}>
+            <React.Fragment key={strike.id}>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={formatDate(strike.date)}
+                secondaryAction={strike.date}
                 disablePadding
                 sx={{
                   paddingBottom: "16px",
@@ -431,7 +424,7 @@ export const EducationInfo = ({
                     name="date"
                     label="Date"
                     type="date"
-                    value={formatDate(strikeFields.date)}
+                    value={strikeFields.date}
                     InputLabelProps={{ shrink: true }}
                     onChange={handleStrikeChange}
                     fullWidth
@@ -447,23 +440,10 @@ export const EducationInfo = ({
                     startAdornment=" "
                     onChange={handleStrikeSelectChange}
                   >
-                    <MenuItem value={StrikeReason.LastSubmission}>
-                      Last submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.MissedSubmission}>
-                      Missed submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.IncompleteSubmission}>
-                      Incomplete submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.LateAttendance}>
-                      Late attendance
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.Absence}>Absence</MenuItem>
-                    <MenuItem value={StrikeReason.PendingFeedback}>
-                      Pending feedback
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.Other}>Other</MenuItem>
+                    <MenuItem value="assignment">Assignment</MenuItem>
+                    <MenuItem value="attendance">Attendance</MenuItem>
+                    <MenuItem value="preparation">Preparation</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
