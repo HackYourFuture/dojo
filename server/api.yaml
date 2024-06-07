@@ -546,8 +546,9 @@ components:
         gender:
           type: string
           enum:
-            - male
-            - female
+            - man
+            - woman
+            - non-binary
             - other
           example: male
         pronouns:
@@ -668,6 +669,7 @@ components:
             - technical
             - social-skills
             - personal
+            - withdrawn
             - municipality-or-monetary
             - left-nl
             - other
@@ -748,9 +750,12 @@ components:
         reason:
           type: string
           enum:
-            - assignment
-            - preparation
-            - attendance
+            - absence
+            - incomplete-submission
+            - late-attendance
+            - late-submission
+            - missed-submission
+            - pending-feedback
             - other
         comments: 
           type: string
@@ -761,6 +766,9 @@ components:
         - type
         - status
       properties:
+        id:
+          type: string
+          example: g5HQGuU8
         createDate:
           type: string
           format: date-time
@@ -794,6 +802,7 @@ components:
         type:
           type: string
           enum:
+            - presentation
             - javaScript
             - browsers-interview
             - using-apis-interview
@@ -856,20 +865,24 @@ components:
         - type
         - details
       properties:
+        id:
+          type: string
+          example: g5HQGuL8
+        date:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z 
         type:
           type: string
           enum:
             - call
             - feedback
             - tech-hour
+            - in-person
             - other
         reporterID:
           type: string
           example: 65ea2e1e696deb3b3ebff843
-        createDate:
-          type: string
-          format: date-time
-          example: 2024-01-01T00:00:00.000Z 
         details:
           type: string
 

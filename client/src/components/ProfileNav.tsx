@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import { ProfileNavComponentProps } from "../types";
+import { ProfileNavProps } from "../types";
 
-export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavComponentProps) => {
+export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
   return (
     <Box display="flex" color="black" sx={{ mx: 5, my: 1 }}>
       <Tabs
