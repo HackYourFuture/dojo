@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { TraineesRepository } from "../repositories";
 import {StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from "../services";
-import { ResponseError } from "../models";
+import { AuthenticatedUser, ResponseError, Strike } from "../models";
 import fs from 'fs';
 
 export interface TraineesControllerType {
@@ -9,9 +9,15 @@ export interface TraineesControllerType {
   createTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
+
   setProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
   getProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+  getStrikes(req: Request, res: Response, next: NextFunction): Promise<void>;
+  addStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
+  updateStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
+  deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 export class TraineesController implements TraineesControllerType {
@@ -197,6 +203,73 @@ export class TraineesController implements TraineesControllerType {
     await this.storageService.delete(`images/profile/${trainee.id}`);
     await this.storageService.delete(`images/profile/${trainee.id}_small`);
 
+    res.status(204).end();
+  }
+
+  async getStrikes(req: Request, res: Response, next: NextFunction) {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    try {
+      const strikes = await this.traineesRepository.getStrikes(trainee.id);
+      res.status(200).json(strikes);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async addStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    const { reason, date, comments } = req.body;
+    const user = res.locals.user as AuthenticatedUser;
+    const newStrike = { reason, date, comments, reporterID: user.id } as Strike;
+    try {
+      const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
+      res.status(201).json(strike);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async updateStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    const strikeToUpdate = trainee.educationInfo.strikes.find((strike) => strike.id === req.params.strikeId);
+    if(!strikeToUpdate) {
+      res.status(404).send(new ResponseError("Strike not found"));
+      return;
+    }
+
+    const user = res.locals.user as AuthenticatedUser;
+
+    strikeToUpdate.comments = req.body.comments;
+    strikeToUpdate.date = req.body.date;
+    strikeToUpdate.reason = req.body.reason;
+    strikeToUpdate.reporterID = user.id;
+
+    const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
+    res.status(200).json(updatedStrike);
+  }
+
+  async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+    await this.traineesRepository.deleteStrike(req.params.id, req.params.strikeId);
     res.status(204).end();
   }
 

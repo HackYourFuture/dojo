@@ -21,9 +21,9 @@ import {
   ResidencyStatus,
   TestResult,
   TestType,
-  WithMongoID
 } from "../models";
 import { genId } from "../utils/random";
+import { WithMongoID, jsonFormatting } from "../utils/database";
 
 const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
     firstName: { type: String, required: true, index: true },
@@ -165,13 +165,8 @@ TraineeSchema.virtual("displayName").get(function() {
   return `${name} ${lastName}`;
 });
 
-TraineeSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  minimize: false,
-  transform: (_, ret) => {
-    delete ret._id;
-  },
-});
+TraineeSchema.set("toJSON", jsonFormatting);
+StrikeSchema.set("toJSON", jsonFormatting);
+
 
 export { TraineeSchema };

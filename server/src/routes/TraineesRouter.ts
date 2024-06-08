@@ -24,6 +24,10 @@ export class TraineesRouter implements RouterType {
     router.put('/:id/profile-picture', this.traineesController.setProfilePicture.bind(this.traineesController));
     router.delete('/:id/profile-picture', this.traineesController.deleteProfilePicture.bind(this.traineesController));
 
+    router.get('/:id/strikes', this.traineesController.getStrikes.bind(this.traineesController));
+    router.post('/:id/strikes', this.traineesController.addStrike.bind(this.traineesController));
+    router.put('/:id/strikes/:strikeId', this.traineesController.updateStrike.bind(this.traineesController));
+    router.delete('/:id/strikes/:strikeId', this.traineesController.deleteStrike.bind(this.traineesController));
     return router;
   }
 }
