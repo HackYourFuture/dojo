@@ -127,7 +127,7 @@ export class TraineesController implements TraineesControllerType {
     }
     try {
       const stream = await this.storageService.download(key);
-      res.status(200);
+      res.status(200).contentType("image/jpeg");
       stream.pipe(res);
     } catch (error: any) {
       if(error.$metadata.httpStatusCode === 404) {
