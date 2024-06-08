@@ -103,7 +103,7 @@ export enum TestType {
 }
 
 export interface Trainee {
-  readonly _id: string;
+  readonly id: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   displayName: string;
@@ -143,7 +143,7 @@ export interface TraineePersonalInfo {
 }
 
 export interface Strike {
-  readonly _id: string;
+  readonly id: string;
   date: Date;
   reporterID: string;
   reason: StrikeReason;
@@ -151,7 +151,7 @@ export interface Strike {
 }
 
 export interface Test {
-  readonly _id: string;
+  readonly id: string;
   date: Date;
   type: TestType;
   grade?: number;
@@ -160,7 +160,7 @@ export interface Test {
 }
 
 export interface Assignment {
-  readonly _id: string;
+  readonly id: string;
   createDate: Date;
   type: string;
   status: string;
@@ -195,7 +195,7 @@ export interface TraineeEmploymentInfo {
 }
 
 export interface TraineeEmploymentHistory {
-  readonly _id: string;
+  readonly id: string;
   type: EmploymentType;
   companyName: string;
   role: string;
@@ -207,7 +207,7 @@ export interface TraineeEmploymentHistory {
 }
 
 export interface TraineeInteraction {
-  readonly _id: string;
+  readonly id: string;
   date: Date;
   type: InteractionType;
   reporterID: string;

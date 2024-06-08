@@ -1,5 +1,5 @@
 export interface User {
-  readonly _id: string;
+  readonly id: string;
   email: string;
   name: string;
   imageUrl?: string;
