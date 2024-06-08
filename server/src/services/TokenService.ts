@@ -7,15 +7,16 @@ export interface TokenServiceType {
 }
 
 export class TokenService implements TokenServiceType {
-  private secret: string;
+  private readonly secret: string;
+  private readonly expiration: string;
   private readonly ALGORITHM = "HS512";
-  private readonly EXPIRATION = "7d";
 
-  constructor(secret: string) {
+  constructor(secret: string, expirationInDays: number) {
     if (!secret || secret.length < 16) {
       throw new Error("JWT Secret is required");
     }
     this.secret = secret;
+    this.expiration = `${expirationInDays}d`;
   }
 
   generateAccessToken(user: User): string {
@@ -27,7 +28,7 @@ export class TokenService implements TokenServiceType {
     };
     return JWT.sign(plainObject, this.secret, {
       algorithm: this.ALGORITHM,
-      expiresIn: this.EXPIRATION,
+      expiresIn: this.expiration,
     });
   }
 
