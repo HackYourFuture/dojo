@@ -1,9 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
 import { Loader, TraineeProfile } from "../components";
+import { Alert, AlertTitle, Box } from "@mui/material";
 
 export const TraineePage = () => {
   const { traineeInfo } = useParams();

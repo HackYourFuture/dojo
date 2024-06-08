@@ -6,8 +6,8 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import swagger from "./api-docs/swagger";
 import mongoose from "mongoose";
-import { TraineesRouter, SearchRouter, AuthenticationRouter, GeographyRouter } from "./routes";
-import { TraineesController, SearchController, AuthenticationController, GeographyController } from "./controllers";
+import { TraineesRouter, SearchRouter, AuthenticationRouter, GeographyRouter, DashboardRouter } from "./routes";
+import { TraineesController, SearchController, AuthenticationController, GeographyController, DashboardController } from "./controllers";
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseTokenRepository, MongooseGeographyRepository } from "./repositories";
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from "./services";
 import { ResponseError } from "./models";
@@ -66,6 +66,7 @@ class Main {
     const traineeController = new TraineesController(traineesRepository, storageService, uploadService, imageService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
+    const dashboardController = new DashboardController();
 
     // Setup custom middlewares
     const authMiddleware = new AuthMiddleware(tokenService);
@@ -74,13 +75,15 @@ class Main {
     const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
     const traineeRouter = new TraineesRouter(traineeController, [authMiddleware]);
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
-    const geographyRouter = new GeographyRouter(geographyController);
+    const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
+    const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);
 
     // Define routes
     this.app.use("/api/auth", authenticationRouter.build());
     this.app.use("/api/trainees", traineeRouter.build());
     this.app.use("/api/search", searchRouter.build());
     this.app.use("/api/geo", geographyRouter.build());
+    this.app.use("/api/dashboard", dashboardRouter.build());
   
     // Not found handler for API
     this.app.use('/api', (req: Request, res: Response) => {

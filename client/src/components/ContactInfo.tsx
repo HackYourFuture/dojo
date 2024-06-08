@@ -15,8 +15,8 @@ import EmailIcon from "@mui/icons-material/EmailOutlined";
 import PhoneIcon from "@mui/icons-material/Phone";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import slackIcon from "../assets/slack.png";
 import LinkIcon from "@mui/icons-material/Link";
+import slackIcon from "../assets/slack.png";
 import { LoadingButton } from "@mui/lab";
 
 export const ContactInfo = ({
@@ -63,7 +63,6 @@ export const ContactInfo = ({
     setIsSaving(true);
 
     try {
-      console.log("Saving trainee data:", editedData);
       await saveTraineeData(editedData);
       setIsEditing(false);
     } catch (error) {

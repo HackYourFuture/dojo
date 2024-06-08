@@ -1,9 +1,8 @@
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import { JobPath, JobPathComponentProps, LearningStatus } from "../types";
-import { LearningStatusComponent } from "./LearningStatusComponent";
+import { LearningStatusComponent } from ".";
+import { JobPath, JobPathProps, LearningStatus } from "../types";
+import { Chip, Stack } from "@mui/material";
 
-export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
+export const JobPathComponent = ({ jobPath }: JobPathProps) => {
   const jobChipColor = (status: JobPath) => {
     switch (status) {
       case JobPath.Searching:
@@ -19,10 +18,13 @@ export const JobPathComponent = ({jobPath}: JobPathComponentProps) => {
         return "error";
     }
   };
-  
-  return(
-      <Stack direction="row" spacing={2} p={1}>
-      <LearningStatusComponent learningStatus={LearningStatus.Graduated}></LearningStatusComponent>        <Chip label={jobPath} color={jobChipColor(jobPath)} size="small"/>
-      </Stack>
+
+  return (
+    <Stack direction="row" spacing={2} p={1}>
+      <LearningStatusComponent
+        learningStatus={LearningStatus.Graduated}
+      ></LearningStatusComponent>{" "}
+      <Chip label={jobPath} color={jobChipColor(jobPath)} size="small" />
+    </Stack>
   );
 };

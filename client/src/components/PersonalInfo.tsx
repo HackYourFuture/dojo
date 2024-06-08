@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-
 import {
   Button,
   FormControl,
@@ -11,11 +9,19 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  Box,
 } from "@mui/material";
-import { PersonalInfoProps, TraineePersonalInfo } from "../types";
-import LoadingButton from "@mui/lab/LoadingButton";
-
+import {
+  PersonalInfoProps,
+  TraineePersonalInfo,
+  Gender,
+  EnglishLevel,
+  Background,
+  ResidencyStatus,
+  EducationLevel,
+} from "../types";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { LoadingButton } from "@mui/lab";
 
 const NoIcon = () => null;
 
@@ -63,7 +69,6 @@ export const PersonalInfo = ({
     setIsSaving(true);
 
     try {
-      console.log("Saving trainee data:", editedData);
       await saveTraineeData(editedData);
       setIsEditing(false);
     } catch (error) {
@@ -89,7 +94,7 @@ export const PersonalInfo = ({
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value,
+      [name]: value === "true" ? true : value === "false" ? false : value,
     }));
   };
 
@@ -179,10 +184,22 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="woman">Woman</MenuItem>
-            <MenuItem value="man">Man</MenuItem>
-            <MenuItem value="non-binary">Non binary</MenuItem>
-            <MenuItem value="other">Other</MenuItem>
+            {Object.entries(Gender).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
@@ -256,15 +273,22 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="eu-citizen">EU citizen</MenuItem>
-            <MenuItem value="family-reunification">
-              Family reunification
-            </MenuItem>
-            <MenuItem value="partner-of-skilled-migrant">
-              Partner of a skilled migrant
-            </MenuItem>
-            <MenuItem value="refugee">Refugee</MenuItem>
-            <MenuItem value="vulnerable-group">Vulnerable group</MenuItem>
+            {Object.entries(Background).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
       </div>
@@ -311,10 +335,22 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="first-interview">First interview</MenuItem>
-            <MenuItem value="second-interview">Second interview</MenuItem>
-            <MenuItem value="residency">Residency</MenuItem>
-            <MenuItem value="citizenship">Citizenship</MenuItem>
+            {Object.entries(ResidencyStatus).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
@@ -390,9 +426,22 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="needs-work">Needs work</MenuItem>
-            <MenuItem value="moderate">Moderate</MenuItem>
-            <MenuItem value="good">Good</MenuItem>
+            {Object.entries(EnglishLevel).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
@@ -441,11 +490,22 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="none">None</MenuItem>
-            <MenuItem value="high-school">High school</MenuItem>
-            <MenuItem value="diploma">Diploma</MenuItem>
-            <MenuItem value="bachelors-degree">Bachelors degree</MenuItem>
-            <MenuItem value="masters-degree">Masters degree</MenuItem>
+            {Object.entries(EducationLevel).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 

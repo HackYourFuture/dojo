@@ -1,4 +1,4 @@
-# Tip: Use https://editor.swagger.io/ to edit and preview this API specification
+# Tip: Use https://editor-next.swagger.io/ to edit and preview this API specification
 
 openapi: 3.0.3
 info:
@@ -22,6 +22,8 @@ tags:
   - name: trainees
     description: ''
   - name: geography
+    description: ''
+  - name: dashboard
     description: ''
 paths:
   /auth/login:
@@ -437,8 +439,43 @@ paths:
                     flag:
                       type: string
                       example: "🇳🇱"
-
-
+  /dashboard:
+      get:
+        tags:
+          - dashboard
+        summary: Get the data to display on the dashboard
+        description: ''
+        security:
+          - cookie_token:
+        responses:
+          200:
+            description: successful operation
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    demographics:
+                      type: object
+                      properties:
+                        genderDistribution:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
+                        countryOfOrigin:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
+                    program:
+                      properties:
+                        graduations:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
+                        employment:
+                          type: array
+                          items: 
+                            $ref: '#/components/schemas/DashboardData'
 
 components:
   schemas:
@@ -509,8 +546,9 @@ components:
         gender:
           type: string
           enum:
-            - male
-            - female
+            - man
+            - woman
+            - non-binary
             - other
           example: male
         pronouns:
@@ -631,6 +669,7 @@ components:
             - technical
             - social-skills
             - personal
+            - withdrawn
             - municipality-or-monetary
             - left-nl
             - other
@@ -711,9 +750,12 @@ components:
         reason:
           type: string
           enum:
-            - assignment
-            - preparation
-            - attendance
+            - absence
+            - incomplete-submission
+            - late-attendance
+            - late-submission
+            - missed-submission
+            - pending-feedback
             - other
         comments: 
           type: string
@@ -724,6 +766,9 @@ components:
         - type
         - status
       properties:
+        id:
+          type: string
+          example: g5HQGuU8
         createDate:
           type: string
           format: date-time
@@ -757,6 +802,7 @@ components:
         type:
           type: string
           enum:
+            - presentation
             - javaScript
             - browsers-interview
             - using-apis-interview
@@ -819,20 +865,24 @@ components:
         - type
         - details
       properties:
+        id:
+          type: string
+          example: g5HQGuL8
+        date:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z 
         type:
           type: string
           enum:
             - call
             - feedback
             - tech-hour
+            - in-person
             - other
         reporterID:
           type: string
           example: 65ea2e1e696deb3b3ebff843
-        createDate:
-          type: string
-          format: date-time
-          example: 2024-01-01T00:00:00.000Z 
         details:
           type: string
 
@@ -850,6 +900,18 @@ components:
         imageUrl: 
           type: string
           example: "https://images.example.com/image.png"
+
+    DashboardData:
+      type: object
+      properties:
+        label:
+          type: string
+        value: 
+          type: number
+          example: 42.12
+        percent: 
+          type: number
+          example: 58.1
 
     Error:
       type: object

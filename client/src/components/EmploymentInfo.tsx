@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
-import { EmploymentInfoProps, TraineeEmploymentInfo } from "../types";
+import { EmploymentInfoProps, JobPath, TraineeEmploymentInfo } from "../types";
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { LoadingButton } from "@mui/lab";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import LinkIcon from "@mui/icons-material/Link";
 
@@ -84,7 +84,7 @@ export const EmploymentInfo = ({
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value,
+      [name]: name === "date" ? new Date(value) : value,
     }));
   };
 
@@ -96,8 +96,17 @@ export const EmploymentInfo = ({
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value,
+      [name]: value === "true" ? true : value === "false" ? false : value,
     }));
+  };
+
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "";
+    const formattedDate = new Date(date);
+    if (isNaN(formattedDate.getTime())) {
+      return date.toString();
+    }
+    return formattedDate.toISOString().split("T")[0];
   };
 
   return (
@@ -139,14 +148,22 @@ export const EmploymentInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="not-graduated">Not graduated</MenuItem>
-            <MenuItem value="searching">Searching</MenuItem>
-            <MenuItem value="internship">Internship</MenuItem>
-            <MenuItem value="tech-job">Tech job</MenuItem>
-            <MenuItem value="non-tech-job">Non tech job</MenuItem>
-            <MenuItem value="not-searching">Not searching</MenuItem>
-            <MenuItem value="other-studies">Other studies</MenuItem>
-            <MenuItem value="no-longer-helping">No longer helping</MenuItem>
+            {Object.entries(JobPath).map(([key, value]) => {
+              const text = value
+                .split("-")
+                .map((word, index) =>
+                  index === 0
+                    ? word.charAt(0).toUpperCase() + word.slice(1)
+                    : word
+                )
+                .join(" ");
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
@@ -293,7 +310,7 @@ export const EmploymentInfo = ({
             <React.Fragment key={employmentHistory.id}>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={employmentHistory.startDate}
+                secondaryAction={formatDate(employmentHistory.startDate)}
                 disablePadding
                 sx={{
                   paddingBottom: "16px",
