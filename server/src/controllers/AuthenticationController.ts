@@ -17,17 +17,20 @@ export class AuthenticationController implements AuthenticationControllerType {
   private readonly tokenRepository: TokenRepository;
   private readonly googleOAuthService: GoogleOAuthServiceType;
   private readonly tokenService: TokenServiceType;
+  private readonly tokenExpirationInDays: number;
 
   constructor(
     userRepository: UserRepository,
     tokenRepository: TokenRepository,
     googleOAuthService: GoogleOAuthServiceType,
-    tokenService: TokenServiceType
+    tokenService: TokenServiceType,
+    tokenExpirationInDays: number
   ) {
     this.userRepository = userRepository;
     this.tokenRepository = tokenRepository;
     this.googleOAuthService = googleOAuthService;
     this.tokenService = tokenService;
+    this.tokenExpirationInDays = tokenExpirationInDays;
   }
 
   async login(req: Request, res: Response) {
@@ -75,7 +78,7 @@ export class AuthenticationController implements AuthenticationControllerType {
       httpOnly: true,
       secure: isSecure,
       sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * this.tokenExpirationInDays, 
     });
 
     res.status(200).json(user);
