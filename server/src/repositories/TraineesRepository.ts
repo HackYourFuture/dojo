@@ -70,7 +70,9 @@ export class MongooseTraineesRepository implements TraineesRepository {
   async getStrikes(traineeID: string): Promise<Strike[]> {
     const trainee = await this.TraineeModel
       .findById(traineeID)
-      .select("educationInfo.strikes");
+      .populate("educationInfo.strikes.reporter", "name email imageUrl")
+      .select("educationInfo.strikes")
+      .exec();
 
     if (!trainee) {
       throw new Error("Trainee not found");

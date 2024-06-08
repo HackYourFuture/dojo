@@ -230,7 +230,7 @@ export class TraineesController implements TraineesControllerType {
 
     const { reason, date, comments } = req.body;
     const user = res.locals.user as AuthenticatedUser;
-    const newStrike = { reason, date, comments, reporterID: user.id } as Strike;
+    const newStrike = { reason, date, comments, reporter: {id: user.id } } as Strike;
     try {
       const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
       res.status(201).json(strike);

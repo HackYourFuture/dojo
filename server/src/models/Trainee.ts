@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export enum Gender {
   Man = "man",
   Woman = "woman",
@@ -145,7 +147,7 @@ export interface TraineePersonalInfo {
 export interface Strike {
   readonly id: string;
   date: Date;
-  reporterID: string;
+  reporter: User;
   reason: StrikeReason;
   comments: string;
 }
