@@ -148,22 +148,16 @@ export const EmploymentInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            {Object.entries(JobPath).map(([key, value]) => {
-              const text = value
-                .split("-")
-                .map((word, index) =>
-                  index === 0
-                    ? word.charAt(0).toUpperCase() + word.slice(1)
-                    : word
-                )
-                .join(" ");
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
+            <MenuItem value={JobPath.NotGraduated}>Not graduated</MenuItem>
+            <MenuItem value={JobPath.Searching}>Searching</MenuItem>
+            <MenuItem value={JobPath.Internship}>Internship</MenuItem>
+            <MenuItem value={JobPath.TechJob}>Tech job</MenuItem>
+            <MenuItem value={JobPath.NonTechJob}>Non tech job</MenuItem>
+            <MenuItem value={JobPath.NotSearching}>Not searching</MenuItem>
+            <MenuItem value={JobPath.OtherStudies}>Other studies</MenuItem>
+            <MenuItem value={JobPath.NoLongerHelping}>
+              No longer helping
+            </MenuItem>
           </Select>
         </FormControl>
 
