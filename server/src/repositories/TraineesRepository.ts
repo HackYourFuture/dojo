@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Trainee, Strike } from "../models";
+import { Trainee, StrikeWithReporter, StrikeWithReporterID } from "../models";
 import { TraineeSchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
 import { WithMongoID } from "../utils/database";
@@ -13,11 +13,11 @@ export interface TraineesRepository {
   isEmailExists(email: string): Promise<boolean>;
   validateTrainee(trainee: Trainee): Promise<void>;
 
-  getStrikes(traineeID: string): Promise<Strike[]>;
-  addStrike(traineeID: string, strike: Strike): Promise<Strike>;
-  updateStrike(traineeID: string, strike: Strike): Promise<Strike>;
+  getStrikes(traineeID: string): Promise<StrikeWithReporter[]>;
+  addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
+  updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
   deleteStrike(traineeID: string, strikeID: string): Promise<void>;
-  validateStrike(strike: Strike): Promise<void>;
+  validateStrike(strike: StrikeWithReporterID): Promise<void>;
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
@@ -41,7 +41,9 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getTrainee(id: string): Promise<Trainee | null> {
-    return await this.TraineeModel.findById(id);
+    return await this.TraineeModel
+      .findById(id)
+      .populate("educationInfo.strikes.reporter", "name imageUrl");
   }
 
   async createTrainee(trainee: Trainee): Promise<Trainee> {
@@ -67,10 +69,10 @@ export class MongooseTraineesRepository implements TraineesRepository {
     await this.TraineeModel.validate(trainee);
   }
 
-  async getStrikes(traineeID: string): Promise<Strike[]> {
+  async getStrikes(traineeID: string): Promise<StrikeWithReporter[]> {
     const trainee = await this.TraineeModel
       .findById(traineeID)
-      .populate("educationInfo.strikes.reporter", "name email imageUrl")
+      .populate("educationInfo.strikes.reporter", "name imageUrl")
       .select("educationInfo.strikes")
       .exec();
 
@@ -81,33 +83,35 @@ export class MongooseTraineesRepository implements TraineesRepository {
     return trainee.educationInfo.strikes || [];
   }
 
-  async addStrike(traineeID: string, strike: Strike): Promise<Strike> {
+  async addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID },
       { $push: { "educationInfo.strikes": strike } },
       { new: true }
-    );
+    )
+    .populate("educationInfo.strikes.reporter", "name imageUrl");
 
     if (!updatedTrainee) {
       throw new Error("Trainee not found");
     }
 
-    return updatedTrainee.educationInfo.strikes.at(-1) as Strike;
+    return updatedTrainee.educationInfo.strikes.at(-1) as StrikeWithReporter;
   }
 
-  async updateStrike(traineeID: string, strike: Strike): Promise<Strike> {
-    const DBStrike: Strike & WithMongoID = { _id: strike.id, ...strike };
+  async updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
+    const DBStrike: StrikeWithReporterID & WithMongoID = { _id: strike.id, ...strike };
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID, "educationInfo.strikes._id": strike.id },
       { $set: { "educationInfo.strikes.$": DBStrike } }
-    );
+    )
+    .populate("educationInfo.strikes.reporter", "name imageUrl");
 
     if (!updatedTrainee) {
       throw new Error("Trainee not found");
     }
 
     console.log(updatedTrainee.educationInfo.strikes);
-    return updatedTrainee.educationInfo.strikes.find((strike) => (strike as Strike & WithMongoID)._id === DBStrike._id) as Strike;
+    return updatedTrainee.educationInfo.strikes.find((strike) => (strike as StrikeWithReporter & WithMongoID)._id === DBStrike._id) as StrikeWithReporter;
   }
 
   async deleteStrike(traineeID: string, strikeID: string): Promise<void> {
@@ -117,7 +121,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
     );
   }
 
-  async validateStrike(strike: Strike): Promise<void> {
+  async validateStrike(strike: StrikeWithReporterID): Promise<void> {
     
   }
 }

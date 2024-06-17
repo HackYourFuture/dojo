@@ -5,7 +5,7 @@ import {
   TraineePersonalInfo,
   TraineeEducationInfo,
   TraineeEmploymentInfo,
-  Strike,
+  StrikeWithReporterID,
   Assignment,
   Test,
   TraineeEmploymentHistory,
@@ -58,11 +58,11 @@ const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
   { _id: false }
 );
 
-const StrikeSchema = new Schema<Strike & WithMongoID>(
+const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>(
   {
     _id: { type: String, default: genId },
     date: { type: Date, required: true },
-    reporter: { type: String, required: true, ref: 'Users' },
+    reporterID: { type: String, required: true, ref: 'Users' },
     reason: { type: String, enum: Object.values(StrikeReason), required: true },
     comments: { type: String, required: true },
   },

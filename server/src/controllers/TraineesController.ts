@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { TraineesRepository } from "../repositories";
 import {StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from "../services";
-import { AuthenticatedUser, ResponseError, Strike } from "../models";
+import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from "../models";
 import fs from 'fs';
 
 export interface TraineesControllerType {
@@ -230,7 +230,8 @@ export class TraineesController implements TraineesControllerType {
 
     const { reason, date, comments } = req.body;
     const user = res.locals.user as AuthenticatedUser;
-    const newStrike = { reason, date, comments, reporter: {id: user.id } } as Strike;
+    const reporterID = req.body.reporterID || user.id;
+    const newStrike = { reason, date, comments, reporterID } as StrikeWithReporterID;
     try {
       const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
       res.status(201).json(strike);
@@ -252,15 +253,17 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
 
-    const user = res.locals.user as AuthenticatedUser;
+    // const user = res.locals.user as AuthenticatedUser;
 
-    strikeToUpdate.comments = req.body.comments;
-    strikeToUpdate.date = req.body.date;
-    strikeToUpdate.reason = req.body.reason;
-    strikeToUpdate.reporterID = user.id;
+    // strikeToUpdate.comments = req.body.comments;
+    // strikeToUpdate.date = req.body.date;
+    // strikeToUpdate.reason = req.body.reason;
+    // strikeToUpdate.reporterID = req.body.reporterID || user.id;
 
-    const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
-    res.status(200).json(updatedStrike);
+    // const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
+    // res.status(200).json(updatedStrike);
+    res.status(200).json({});
+
   }
 
   async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
