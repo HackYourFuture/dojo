@@ -184,22 +184,10 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            {Object.entries(Gender).map(([key, value]) => {
-              const text = value
-                .split("-")
-                .map((word, index) =>
-                  index === 0
-                    ? word.charAt(0).toUpperCase() + word.slice(1)
-                    : word
-                )
-                .join(" ");
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
+            <MenuItem value={Gender.Woman}>Woman</MenuItem>
+            <MenuItem value={Gender.Man}>Man</MenuItem>
+            <MenuItem value={Gender.NonBinary}>Non binary</MenuItem>
+            <MenuItem value={Gender.Other}>Other</MenuItem>
           </Select>
         </FormControl>
 
@@ -273,22 +261,17 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            {Object.entries(Background).map(([key, value]) => {
-              const text = value
-                .split("-")
-                .map((word, index) =>
-                  index === 0
-                    ? word.charAt(0).toUpperCase() + word.slice(1)
-                    : word
-                )
-                .join(" ");
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
+            <MenuItem value={Background.EUCitizen}>EU citizen</MenuItem>
+            <MenuItem value={Background.FamilyReunification}>
+              Family reunification
+            </MenuItem>
+            <MenuItem value={Background.PartnerOfSkilledMigrant}>
+              Partner of a skilled migrant
+            </MenuItem>
+            <MenuItem value={Background.Refugee}>Refugee</MenuItem>
+            <MenuItem value={Background.VulnerableGroup}>
+              Vulnerable group
+            </MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -335,22 +318,14 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            {Object.entries(ResidencyStatus).map(([key, value]) => {
-              const text = value
-                .split("-")
-                .map((word, index) =>
-                  index === 0
-                    ? word.charAt(0).toUpperCase() + word.slice(1)
-                    : word
-                )
-                .join(" ");
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
+            <MenuItem value={ResidencyStatus.FirstInterview}>
+              First interview
+            </MenuItem>
+            <MenuItem value={ResidencyStatus.SecondInterview}>
+              Second interview
+            </MenuItem>
+            <MenuItem value={ResidencyStatus.Residency}>Residency</MenuItem>
+            <MenuItem value={ResidencyStatus.Citizenship}>Citizenship</MenuItem>
           </Select>
         </FormControl>
 
@@ -426,22 +401,9 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            {Object.entries(EnglishLevel).map(([key, value]) => {
-              const text = value
-                .split("-")
-                .map((word, index) =>
-                  index === 0
-                    ? word.charAt(0).toUpperCase() + word.slice(1)
-                    : word
-                )
-                .join(" ");
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
+            <MenuItem value={EnglishLevel.NeedsWork}>Needs work</MenuItem>
+            <MenuItem value={EnglishLevel.Moderate}>Moderate</MenuItem>
+            <MenuItem value={EnglishLevel.Good}>Good</MenuItem>
           </Select>
         </FormControl>
 
@@ -490,22 +452,15 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            {Object.entries(EducationLevel).map(([key, value]) => {
-              const text = value
-                .split("-")
-                .map((word, index) =>
-                  index === 0
-                    ? word.charAt(0).toUpperCase() + word.slice(1)
-                    : word
-                )
-                .join(" ");
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
+            <MenuItem value={EducationLevel.None}>None</MenuItem>
+            <MenuItem value={EducationLevel.HighSchool}>High school</MenuItem>
+            <MenuItem value={EducationLevel.Diploma}>Diploma</MenuItem>
+            <MenuItem value={EducationLevel.BachelorsDegree}>
+              Bachelors degree
+            </MenuItem>
+            <MenuItem value={EducationLevel.MastersDegree}>
+              Masters degree
+            </MenuItem>
           </Select>
         </FormControl>
 

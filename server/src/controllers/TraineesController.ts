@@ -121,13 +121,13 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
 
-    let key = `images/profile/${trainee._id}`;
+    let key = `images/profile/${trainee.id}`;
     if(req.query.size === "small") {
       key += "_small";
     }
     try {
       const stream = await this.storageService.download(key);
-      res.status(200);
+      res.status(200).contentType("image/jpeg");
       stream.pipe(res);
     } catch (error: any) {
       if(error.$metadata.httpStatusCode === 404) {
@@ -177,15 +177,15 @@ export class TraineesController implements TraineesControllerType {
     // Upload image to storage
     const largeFileStream = fs.createReadStream(largeFilePath);
     const smallFileStream = fs.createReadStream(smallFilePath);
-    await this.storageService.upload(`images/profile/${trainee._id}`, largeFileStream);
-    await this.storageService.upload(`images/profile/${trainee._id}_small`, smallFileStream);
+    await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
+    await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
 
     // Cleanup
     fs.unlink(originalFilePath, (err) => { });
     fs.unlink(largeFilePath, (err) => { });
     fs.unlink(smallFilePath, (err) => { });
 
-    res.status(201).send({'imageUrl': `trainee/${trainee._id}/profile-picture`});
+    res.status(201).send({'imageUrl': `trainee/${trainee.id}/profile-picture`});
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
@@ -194,8 +194,8 @@ export class TraineesController implements TraineesControllerType {
       res.status(404).send(new ResponseError("Trainee not found"));
       return;
     }
-    await this.storageService.delete(`images/profile/${trainee._id}`);
-    await this.storageService.delete(`images/profile/${trainee._id}_small`);
+    await this.storageService.delete(`images/profile/${trainee.id}`);
+    await this.storageService.delete(`images/profile/${trainee.id}_small`);
 
     res.status(204).end();
   }

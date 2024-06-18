@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Trainee } from "../models";
+import { WithMongoID, Trainee } from "../models";
 import { TraineeSchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
 
@@ -14,10 +14,10 @@ export interface TraineesRepository {
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
-  private TraineeModel: mongoose.Model<Trainee>;
+  private TraineeModel: mongoose.Model<Trainee & WithMongoID>;
 
   constructor(db: mongoose.Connection) {
-    this.TraineeModel = db.model<Trainee>("Trainee", TraineeSchema);
+    this.TraineeModel = db.model<Trainee & WithMongoID>("Trainee", TraineeSchema);
   }
 
   async searchTrainees(keyword: string, limit: number): Promise<Trainee[]> {
@@ -46,7 +46,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async updateTrainee(trainee: Trainee): Promise<void> {
-    await this.TraineeModel.updateOne({ _id: trainee._id }, trainee);
+    await this.TraineeModel.updateOne({ _id: trainee.id }, trainee);
   }
 
   async isEmailExists(email: string): Promise<boolean> {

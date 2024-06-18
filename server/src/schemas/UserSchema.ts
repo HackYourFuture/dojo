@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
-import { User } from "../models";
+import { User, WithMongoID } from "../models";
 import { genId } from "../utils/random";
 
-const UserSchema: Schema = new Schema<User>({
+const UserSchema: Schema = new Schema<User & WithMongoID>({
   _id: { type: String, default: genId },
   name: { type: String, required: true },
   email: { type: String, required: true },

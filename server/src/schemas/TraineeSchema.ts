@@ -20,7 +20,8 @@ import {
   QuitReason,
   ResidencyStatus,
   TestResult,
-  TestType
+  TestType,
+  WithMongoID
 } from "../models";
 import { genId } from "../utils/random";
 
@@ -57,7 +58,7 @@ const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
   { _id: false }
 );
 
-const StrikeSchema = new Schema<Strike>(
+const StrikeSchema = new Schema<Strike & WithMongoID>(
   {
     _id: { type: String, default: genId },
     date: { type: Date, required: true },
@@ -67,7 +68,7 @@ const StrikeSchema = new Schema<Strike>(
   },
 );
 
-const AssignmentSchema = new Schema<Assignment>(
+const AssignmentSchema = new Schema<Assignment & WithMongoID>(
   {
     _id: { type: String, default: genId },
     createDate: { type: Date, required: true },
@@ -78,7 +79,7 @@ const AssignmentSchema = new Schema<Assignment>(
   },
 );
 
-const TestSchema = new Schema<Test>(
+const TestSchema = new Schema<Test & WithMongoID>(
   {
     _id: { type: String, default: genId },
     date: { type: Date, required: true },
@@ -106,7 +107,7 @@ const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
   { _id: false, minimize: false }
 );
 
-const TraineeEmploymentHistorySchema = new Schema<TraineeEmploymentHistory>(
+const TraineeEmploymentHistorySchema = new Schema<TraineeEmploymentHistory & WithMongoID>(
   {
     _id: { type: String, default: genId },
     type: { type: String, required: true, enum: Object.values(EmploymentType) },
@@ -139,7 +140,7 @@ const TraineeEmploymentInfoSchema = new Schema<TraineeEmploymentInfo>(
   { _id: false, minimize: false }
 );
 
-const TraineeSchema = new Schema<Trainee>(
+const TraineeSchema = new Schema<Trainee & WithMongoID>(
   {
     _id: { type: String, default: genId },
     personalInfo: { type: TraineePersonalInfoSchema, required: true },

@@ -43,9 +43,11 @@ class Main {
       throw new Error("Must connect to the database before setting up routes.");
     }
 
+    const tokenExpirationInDays = Number.parseInt(process.env.JWT_EXPIRATION_DAYS ?? "7");
+
     // Dependencies
     const googleOAuthService = new GoogleOAuthService();
-    const tokenService = new TokenService(process.env.JWT_SECRET ?? "");
+    const tokenService = new TokenService(process.env.JWT_SECRET ?? "", tokenExpirationInDays);
     const storageService = new StorageService(
       process.env.STORAGE_ENDPOINT ?? "",
       process.env.STORAGE_REGION ?? "", 
@@ -62,7 +64,7 @@ class Main {
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
     // setup controllers
-    const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService);
+    const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService, tokenExpirationInDays);
     const traineeController = new TraineesController(traineesRepository, storageService, uploadService, imageService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
