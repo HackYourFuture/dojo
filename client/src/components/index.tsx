@@ -1,5 +1,6 @@
 export * from "./Comment";
 export * from "./ContactInfo";
+export * from "./DashboardPieChart";
 export * from "./EducationInfo";
 export * from "./EmploymentInfo";
 export * from "./ErrorBox";
