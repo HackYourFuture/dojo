@@ -895,6 +895,7 @@ components:
           type: string
           enum:
             - call
+            - chat
             - feedback
             - tech-hour
             - in-person

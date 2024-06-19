@@ -80,6 +80,7 @@ export enum JobPath {
 
 export enum InteractionType {
   Call = "call",
+  Chat = "chat",
   Feedback = "feedback",
   TechHour = "tech-hour",
   InPerson = "in-person",
