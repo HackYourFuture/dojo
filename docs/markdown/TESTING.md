@@ -35,11 +35,19 @@ UAT testing was done per PR by Project team and Education Director to validate t
 
 ## Test Cases
 
-|   Test Case Description    |           Input Data           |           Expected Output            |                                                  Actual Output                                                  |
-| :------------------------: | :----------------------------: | :----------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
-| Verify login functionality | Click Login with Google button | Success login and render Search page | [<img src="../assets/login_result.png" style="max-width: 100%; max-height: 400px">](../assets/login_result.png) |
+| Test Case ID |      Test Case Description      |                          Input Data                          |                     Expected Output                     |                                          Actual Output                                          |
+| :----------: | :-----------------------------: | :----------------------------------------------------------: | :-----------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
+|     TC01     |    Redirection without login    |          Going to Home page (User is not logged in)          |                Redirection to Login Page                | [<img src="../assets/TC01.png" style="max-width: 100%; max-height: 400px">](../assets/TC01.png) |
+|     TC02     | Login with an unauthorized user | Click Login with Google button and enter unauthorized email  | Failure login with Error message and stay in Login page | [<img src="../assets/TC02.png" style="max-width: 100%; max-height: 400px">](../assets/TC02.png) |
+|     TC03     |  Login with an authorized user  | Click Login with Google button and enter an authorized email |        Success login and redirect to Search page        | [<img src="../assets/TC03.png" style="max-width: 100%; max-height: 400px">](../assets/TC03.png) |
 
 ## Test Results
+
+| Test Case ID |           Tester Name            | Test Status (Pass/Fail) |                    Defects/Issues Found                     |
+| :----------: | :------------------------------: | :---------------------: | :---------------------------------------------------------: |
+|     TC01     | Stas Seldin [Education Director] |          Pass           |                            None                             |
+|     TC02     | Stas Seldin [Education Director] |          Pass           | Email should be added to authorized emails list by director |
+|     TC03     | Stas Seldin [Education Director] |          Pass           | Email should be added to authorized emails list by director |
 
 ## Risk Assessment
 
