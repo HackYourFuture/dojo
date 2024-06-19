@@ -35,8 +35,8 @@ UAT testing was done per PR by Project team and Education Director to validate t
 
 ## Test Cases
 
-| Test Case Description | Input Data | Expected Output | Actual Output |
-| :-----: | :---: | :---: | :---: |
+|   Test Case Description    |           Input Data           |           Expected Output            |                                                  Actual Output                                                  |
+| :------------------------: | :----------------------------: | :----------------------------------: | :-------------------------------------------------------------------------------------------------------------: |
 | Verify login functionality | Click Login with Google button | Success login and render Search page | [<img src="../assets/login_result.png" style="max-width: 100%; max-height: 400px">](../assets/login_result.png) |
 
 ## Test Results
