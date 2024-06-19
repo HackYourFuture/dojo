@@ -34,6 +34,7 @@ export enum EmploymentType {
 
 export enum InteractionType {
   Call = "call",
+  Chat = "chat",
   Feedback = "feedback",
   TechHour = "tech-hour",
   InPerson = "in-person",
