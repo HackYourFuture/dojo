@@ -11,7 +11,7 @@ export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
   const piesData = [graduations, employment, genderDistribution, countryOfOrigin];
   const chartTitle = [
     'Graduation percentage',
-    'Graduates working in IT',
+    'Graduates working in Tech',
     'Gender distribution',
     'Country of origin',
   ];
