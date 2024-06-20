@@ -40,6 +40,9 @@ UAT testing was done per PR by Project team and Education Director to validate t
 |     TC01     |    Redirection without login    |          Going to Home page (User is not logged in)          |                Redirection to Login Page                | [<img src="../assets/TC01.png" style="max-width: 100%; max-height: 400px">](../assets/TC01.png) |
 |     TC02     | Login with an unauthorized user | Click Login with Google button and enter unauthorized email  | Failure login with Error message and stay in Login page | [<img src="../assets/TC02.png" style="max-width: 100%; max-height: 400px">](../assets/TC02.png) |
 |     TC03     |  Login with an authorized user  | Click Login with Google button and enter an authorized email |        Success login and redirect to Search page        | [<img src="../assets/TC03.png" style="max-width: 100%; max-height: 400px">](../assets/TC03.png) |
+|     TC04     |      Logout functionality       |    Open user menu from top-right and click Log out button    |   Successfully logged out and redirect to Login page    | [<img src="../assets/TC04.png" style="max-width: 100%; max-height: 400px">](../assets/TC04.png) |
+|     TC05     |  Searching for a user (random)  |        Type a name in search box (ex: Maher alarabi)         |                 No results found! alert                 | [<img src="../assets/TC05.png" style="max-width: 100%; max-height: 400px">](../assets/TC05.png) |
+|     TC06     |      Searching for a user       |            Type a name in search box (ex: jalal)             |               A list with founded results               | [<img src="../assets/TC06.png" style="max-width: 100%; max-height: 400px">](../assets/TC06.png) |
 
 ## Test Results
 
@@ -48,6 +51,9 @@ UAT testing was done per PR by Project team and Education Director to validate t
 |     TC01     | Stas Seldin [Education Director] |          Pass           |                            None                             |
 |     TC02     | Stas Seldin [Education Director] |          Pass           | Email should be added to authorized emails list by director |
 |     TC03     | Stas Seldin [Education Director] |          Pass           | Email should be added to authorized emails list by director |
+|     TC04     | Stas Seldin [Education Director] |          Pass           |                            None                             |
+|     TC05     | Stas Seldin [Education Director] |          Pass           |           Student should be registered in the DB            |
+|     TC06     | Stas Seldin [Education Director] |          Pass           |           Student should be registered in the DB            |
 
 ## Risk Assessment
 
@@ -64,3 +70,4 @@ UAT testing was done per PR by Project team and Education Director to validate t
 - Security Audits: Conduct periodic security audits and penetration testing.
 - Load Testing: Perform load and stress testing to ensure system stability under heavy load.
 - Compliance Checks: Regularly review and update the system to comply with data protection regulations.
+  </br>
