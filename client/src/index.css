@@ -24,7 +24,8 @@ body {
 }
 
 @media (prefers-color-scheme: light) {
-  body, :root {
+  body,
+  :root {
     color: #213547;
     background-color: #ffffff;
   }
