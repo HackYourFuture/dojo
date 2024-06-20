@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/nl';
 import { Container, Stack, Box, Button } from '@mui/material';
 
 export const DashboardPage = () => {
@@ -32,7 +33,7 @@ export const DashboardPage = () => {
     <Container fixed>
       <Box my={3} display="flex" alignItems="start" justifyContent="start" p={2}>
         <Stack direction="row" spacing={3}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
             <DatePicker
               label="Start date"
               value={startDate}
@@ -45,7 +46,7 @@ export const DashboardPage = () => {
             />
           </LocalizationProvider>
           <Button variant="contained" onClick={() => refetch()}>
-            Update
+            Apply
           </Button>
         </Stack>
       </Box>
