@@ -52,16 +52,20 @@ UAT testing was done per PR by Project team and Education Director to validate t
 
 ## Test Results
 
-| Test Case ID |           Tester Name            | Test Status (Pass/Fail) |                          Comments                           |
-| :----------: | :------------------------------: | :---------------------: | :---------------------------------------------------------: |
-|     TC01     | Stas Seldin [Education Director] |          Pass           |                            None                             |
-|     TC02     | Stas Seldin [Education Director] |          Pass           | Email should be added to authorized emails list by director |
-|     TC03     | Stas Seldin [Education Director] |          Pass           | Email should be added to authorized emails list by director |
-|     TC04     | Stas Seldin [Education Director] |          Pass           |                            None                             |
-|     TC05     | Stas Seldin [Education Director] |          Pass           |           Student should be registered in the DB            |
-|     TC06     | Stas Seldin [Education Director] |          Pass           |           Student should be registered in the DB            |
-|     TC07     | Stas Seldin [Education Director] |          Pass           |                            None                             |
-|     TC08     | Stas Seldin [Education Director] |          Pass           |                            None                             |
+| Test Case ID |           Tester Name            | Test Status (Pass/Fail) |                                        Comments                                        |
+| :----------: | :------------------------------: | :---------------------: | :------------------------------------------------------------------------------------: |
+|     TC01     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
+|     TC02     | Stas Seldin [Education Director] |          Pass           |              Email should be added to authorized emails list by director               |
+|     TC03     | Stas Seldin [Education Director] |          Pass           |              Email should be added to authorized emails list by director               |
+|     TC04     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
+|     TC05     | Stas Seldin [Education Director] |          Pass           |                         Student should be registered in the DB                         |
+|     TC06     | Stas Seldin [Education Director] |          Pass           |                         Student should be registered in the DB                         |
+|     TC07     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
+|     TC08     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
+|     TC09     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
+|     TC10     | Stas Seldin [Education Director] |          Pass           | Cancel editing fields will clear all edited fields and set values to the initial state |
+|     TC11     | Stas Seldin [Education Director] |          Pass           |  If any error happened during `Edit`, `Cancel`, `Save` an Error message will be shown  |
+|     TC12     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
 
 ## Risk Assessment
 
