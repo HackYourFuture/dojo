@@ -30,8 +30,8 @@ export class DashboardController implements DashboardControllerType {
           { label: "Not graduated", value: 20, percent: 20 },
         ],
         employment: [
-          { label: "Working in tech", value: 30, percent: 80 },
-          { label: "Not working in tech", value: 20, percent: 20 },
+          { label: "In tech", value: 30, percent: 80 },
+          { label: "Not in tech", value: 20, percent: 20 },
         ],
       },
     };
