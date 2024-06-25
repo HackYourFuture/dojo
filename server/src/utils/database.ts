@@ -8,6 +8,7 @@ export const jsonFormatting = {
   minimize: false,
   transform: (_: any, ret: any) => {
     delete ret._id;
+    delete ret.reporterID;
   },
 }
 

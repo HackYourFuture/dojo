@@ -247,23 +247,23 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
 
-    const strikeToUpdate = trainee.educationInfo.strikes.find((strike) => strike.id === req.params.strikeId);
-    if(!strikeToUpdate) {
+    const strike = trainee.educationInfo.strikes.find((strike) => strike.id === req.params.strikeId);
+    if(!strike) {
       res.status(404).send(new ResponseError("Strike not found"));
       return;
     }
 
-    // const user = res.locals.user as AuthenticatedUser;
+    const user = res.locals.user as AuthenticatedUser;
+    const strikeToUpdate: StrikeWithReporterID = {
+      id: req.params.strikeId,
+      reason: req.body.reason,
+      date: req.body.date,
+      comments: req.body.comments,
+      reporterID: req.body.reporterID || user.id
+    };
 
-    // strikeToUpdate.comments = req.body.comments;
-    // strikeToUpdate.date = req.body.date;
-    // strikeToUpdate.reason = req.body.reason;
-    // strikeToUpdate.reporterID = req.body.reporterID || user.id;
-
-    // const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
-    // res.status(200).json(updatedStrike);
-    res.status(200).json({});
-
+    const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
+    res.status(200).json(updatedStrike);
   }
 
   async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {

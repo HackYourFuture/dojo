@@ -20,7 +20,7 @@ interface Strike {
   comments: string;
 }
 
-// For API response with populate from DB
+// For presentation in the API response
 export interface StrikeWithReporter extends Strike {
   reporter: StrikeReporter;
 }

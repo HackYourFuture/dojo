@@ -62,7 +62,7 @@ const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>(
   {
     _id: { type: String, default: genId },
     date: { type: Date, required: true },
-    reporterID: { type: String, required: true, ref: 'Users' },
+    reporterID: { type: String, required: true, ref: 'Users', alias: 'reporter' },
     reason: { type: String, enum: Object.values(StrikeReason), required: true },
     comments: { type: String, required: true },
   },

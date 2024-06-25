@@ -43,7 +43,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   async getTrainee(id: string): Promise<Trainee | null> {
     return await this.TraineeModel
       .findById(id)
-      .populate("educationInfo.strikes.reporter", "name imageUrl");
+      .populate("educationInfo.strikes.reporterID", "name imageUrl");
   }
 
   async createTrainee(trainee: Trainee): Promise<Trainee> {
@@ -72,7 +72,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   async getStrikes(traineeID: string): Promise<StrikeWithReporter[]> {
     const trainee = await this.TraineeModel
       .findById(traineeID)
-      .populate("educationInfo.strikes.reporter", "name imageUrl")
+      .populate("educationInfo.strikes.reporterID", "name imageUrl")
       .select("educationInfo.strikes")
       .exec();
 
@@ -89,7 +89,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       { $push: { "educationInfo.strikes": strike } },
       { new: true }
     )
-    .populate("educationInfo.strikes.reporter", "name imageUrl");
+    .populate("educationInfo.strikes.reporterID", "name imageUrl");
 
     if (!updatedTrainee) {
       throw new Error("Trainee not found");
@@ -104,13 +104,12 @@ export class MongooseTraineesRepository implements TraineesRepository {
       { _id: traineeID, "educationInfo.strikes._id": strike.id },
       { $set: { "educationInfo.strikes.$": DBStrike } }
     )
-    .populate("educationInfo.strikes.reporter", "name imageUrl");
+    .populate("educationInfo.strikes.reporterID", "name imageUrl");
 
     if (!updatedTrainee) {
       throw new Error("Trainee not found");
     }
 
-    console.log(updatedTrainee.educationInfo.strikes);
     return updatedTrainee.educationInfo.strikes.find((strike) => (strike as StrikeWithReporter & WithMongoID)._id === DBStrike._id) as StrikeWithReporter;
   }
 
