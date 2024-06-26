@@ -11,7 +11,7 @@ Currently, two official plugins are available:
 
 In the client directory:
 
-1. Configure the server in `.env`
+1. Configure the client in `.env`
 2. Go to terminal and run:
 
 ```terminal
