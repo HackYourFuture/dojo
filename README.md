@@ -1,4 +1,4 @@
-# dojo
+# Dojo
 
 ## Overview
 
