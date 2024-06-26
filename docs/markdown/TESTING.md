@@ -49,23 +49,33 @@ UAT testing was done per PR by Project team and Education Director to validate t
 |     TC10     |     Trainee Personal tab - Cancel functionality      |                        Edit some trainee info and click 'Cancel' button                         | Inputs will be back to `readonly` view and the edited fields will be back to origin state (before editing)  | [<img src="../assets/TC10.png" style="max-width: 100%; max-height: 400px">](../assets/TC10.png) |
 |     TC11     | Trainee Personal tab - Edit functionality with error | Click 'Edit profile' button, edit some trainee info and click 'Save' button (Network has error) |                   Show 'Error saving trainee data' error message and stay in `Edit` mode                    | [<img src="../assets/TC11.png" style="max-width: 100%; max-height: 400px">](../assets/TC11.png) |
 |     TC12     |      Trainee Personal tab - Save functionality       |                      Edit some trainee info again and click 'Save' button                       | Show 'Trainee data saved successfully' message and turn to `readonly` mode (PS: Only sending edited fields) | [<img src="../assets/TC12.png" style="max-width: 100%; max-height: 400px">](../assets/TC12.png) |
+|     TC13     |                 Trainee Contact tab                  |                           Click 'Contact' tab from the profile Navbar                           |                                     Redirecting to Trainee Contact page                                     | [<img src="../assets/TC13.png" style="max-width: 100%; max-height: 400px">](../assets/TC13.png) |
+|     TC14     |             Trainee Contact tab - Email              |                         Click `link` icon on the right of 'Email' field                         |                                            Open New Email window                                            | [<img src="../assets/TC14.png" style="max-width: 100%; max-height: 400px">](../assets/TC14.png) |
+|     TC15     |             Trainee Contact tab - Slack              |                       Click `link` icon on the right of 'Slack ID' field                        |                                            Open New Slack window                                            | [<img src="../assets/TC15.png" style="max-width: 100%; max-height: 400px">](../assets/TC15.png) |
+|     TC16     |             Trainee Contact tab - Github             |                     Click `link` icon on the right of 'Github Handle' field                     |                                Open Trainee Github profile page in a new tab                                | [<img src="../assets/TC16.png" style="max-width: 100%; max-height: 400px">](../assets/TC16.png) |
+|     TC17     |            Trainee Contact tab - Linkedin            |                       Click `link` icon on the right of 'Linkedin' field                        |                               Open Trainee Linkedin profile page in a new tab                               | [<img src="../assets/TC17.png" style="max-width: 100%; max-height: 400px">](../assets/TC17.png) |
 
 ## Test Results
 
-| Test Case ID |           Tester Name            | Test Status (Pass/Fail) |                                        Comments                                        |
-| :----------: | :------------------------------: | :---------------------: | :------------------------------------------------------------------------------------: |
-|     TC01     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
-|     TC02     | Stas Seldin [Education Director] |          Pass           |              Email should be added to authorized emails list by director               |
-|     TC03     | Stas Seldin [Education Director] |          Pass           |              Email should be added to authorized emails list by director               |
-|     TC04     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
-|     TC05     | Stas Seldin [Education Director] |          Pass           |                         Student should be registered in the DB                         |
-|     TC06     | Stas Seldin [Education Director] |          Pass           |                         Student should be registered in the DB                         |
-|     TC07     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
-|     TC08     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
-|     TC09     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
-|     TC10     | Stas Seldin [Education Director] |          Pass           | Cancel editing fields will clear all edited fields and set values to the initial state |
-|     TC11     | Stas Seldin [Education Director] |          Pass           |  If any error happened during `Edit`, `Cancel`, `Save` an Error message will be shown  |
-|     TC12     | Stas Seldin [Education Director] |          Pass           |                                          None                                          |
+| Test Case ID |           Tester Name            | Test Status (Pass/Fail) |                                                   Comments                                                    |
+| :----------: | :------------------------------: | :---------------------: | :-----------------------------------------------------------------------------------------------------------: |
+|     TC01     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC02     | Stas Seldin [Education Director] |          Pass           |                          Email should be added to authorized emails list by director                          |
+|     TC03     | Stas Seldin [Education Director] |          Pass           |                          Email should be added to authorized emails list by director                          |
+|     TC04     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC05     | Stas Seldin [Education Director] |          Pass           |                                    Student should be registered in the DB                                     |
+|     TC06     | Stas Seldin [Education Director] |          Pass           |                                    Student should be registered in the DB                                     |
+|     TC07     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC08     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC09     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC10     | Stas Seldin [Education Director] |          Pass           |            Cancel editing fields will clear all edited fields and set values to the initial state             |
+|     TC11     | Stas Seldin [Education Director] |          Pass           |             If any error happened during `Edit`, `Cancel`, `Save` an Error message will be shown              |
+|     TC12     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC13     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC14     | Stas Seldin [Education Director] |          Pass           |     If trainee 'Email' field has a value, the `link` icon will be shown otherwise the icon will be hidden     |
+|     TC15     | Stas Seldin [Education Director] |          Pass           |   If trainee 'Slack ID' field has a value, the `link` icon will be shown otherwise the icon will be hidden    |
+|     TC16     | Stas Seldin [Education Director] |          Pass           | If trainee 'Github Handle' field has a value, the `link` icon will be shown otherwise the icon will be hidden |
+|     TC17     | Stas Seldin [Education Director] |          Pass           |   If trainee 'Linkedin' field has a value, the `link` icon will be shown otherwise the icon will be hidden    |
 
 ## Risk Assessment
 
