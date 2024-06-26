@@ -79,10 +79,10 @@ Ensure you have the following installed:
    ```
 
 4. Setup and start backend server:
-   Follow [the steps](server/README.md)
+   Follow [these steps](server/README.md)
 
 5. Start the frontend development server:
-   Follow [the steps](client/README.md)
+   Follow [these steps](client/README.md)
 
 ## Usage
 
