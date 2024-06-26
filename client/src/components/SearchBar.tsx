@@ -1,5 +1,5 @@
-import { TextField, Box, InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { TextField, Box, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SearchBar = ({ data }: any) => {
@@ -8,7 +8,7 @@ export const SearchBar = ({ data }: any) => {
   };
 
   return (
-    <Box sx={{ display: "flex", width: 1 }}>
+    <Box sx={{ display: 'flex', width: 1 }}>
       <TextField
         variant="outlined"
         placeholder="Search trainee..."

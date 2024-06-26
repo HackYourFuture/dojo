@@ -1,13 +1,13 @@
-import { SearchResult, SearchResultsListProps } from "../types";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
-import { useDebounce } from "../hooks/useDebounce";
-import AlertTitle from "@mui/material/AlertTitle";
-import { Link } from "react-router-dom";
-import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import { SearchResult, SearchResultsListProps } from '../types';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
+import { useDebounce } from '../hooks/useDebounce';
+import AlertTitle from '@mui/material/AlertTitle';
+import { Link } from 'react-router-dom';
+import { List, ListItem, ListItemButton, ListItemIcon } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 
 export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   // You can change search debounce time using this hook.
@@ -19,7 +19,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
 
   if (isLoading || isFetching) {
     return (
-      <Box p={4} sx={{ display: "flex" }}>
+      <Box p={4} sx={{ display: 'flex' }}>
         <CircularProgress />
       </Box>
     );
@@ -27,7 +27,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
 
   if (isError && error instanceof Error) {
     return (
-      <Box p={4} sx={{ width: "100%" }}>
+      <Box p={4} sx={{ width: '100%' }}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
           {error.message}
@@ -39,12 +39,12 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
         maxHeight: 300,
-        bgcolor: "background.paper",
-        overflowY: "scroll",
-        boxShadow: "0px 0px 8px #ccc",
-        borderRadius: "10px",
+        bgcolor: 'background.paper',
+        overflowY: 'scroll',
+        boxShadow: '0px 0px 8px #ccc',
+        borderRadius: '10px',
       }}
     >
       {data.length ? (
@@ -53,13 +53,11 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
             return (
               <ListItem disablePadding key={trainee.id}>
                 <Link
-                  to={`/trainee/${trainee.name.replace(/ /g, "-")}_${
-                    trainee.id
-                  }`}
+                  to={`/trainee/${trainee.name.replace(/ /g, '-')}_${trainee.id}`}
                   style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    width: "100%",
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    width: '100%',
                   }}
                 >
                   <ListItemButton key={trainee.id}>
@@ -74,7 +72,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
           })}
         </List>
       ) : (
-        <Alert severity="info" sx={{ bgcolor: "background.paper" }}>
+        <Alert severity="info" sx={{ bgcolor: 'background.paper' }}>
           No results found!
         </Alert>
       )}

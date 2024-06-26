@@ -8,24 +8,19 @@ import {
   Link,
   Stack,
   TextField,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { ContactInfoProps, TraineeContactInfo } from "../types";
-import EmailIcon from "@mui/icons-material/EmailOutlined";
-import PhoneIcon from "@mui/icons-material/Phone";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import LinkIcon from "@mui/icons-material/Link";
-import slackIcon from "../assets/slack.png";
-import { LoadingButton } from "@mui/lab";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { ContactInfoProps, TraineeContactInfo } from '../types';
+import EmailIcon from '@mui/icons-material/EmailOutlined';
+import PhoneIcon from '@mui/icons-material/Phone';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LinkIcon from '@mui/icons-material/Link';
+import slackIcon from '../assets/slack.png';
+import { LoadingButton } from '@mui/lab';
 
-export const ContactInfo = ({
-  contactData,
-  saveTraineeData,
-}: ContactInfoProps) => {
-  const [editedFields, setEditedFields] = useState<TraineeContactInfo>(
-    contactData!
-  );
+export const ContactInfo = ({ contactData, saveTraineeData }: ContactInfoProps) => {
+  const [editedFields, setEditedFields] = useState<TraineeContactInfo>(contactData!);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -66,7 +61,7 @@ export const ContactInfo = ({
       await saveTraineeData(editedData);
       setIsEditing(false);
     } catch (error) {
-      console.error("Error saving trainee data:", error);
+      console.error('Error saving trainee data:', error);
     } finally {
       setIsSaving(false);
     }
@@ -82,7 +77,7 @@ export const ContactInfo = ({
 
   return (
     <Box display="flex" flexDirection="column" gap={4} padding="24px">
-      <Box width={"100%"} display="flex" justifyContent={"end"}>
+      <Box width={'100%'} display="flex" justifyContent={'end'}>
         <Stack direction="row" spacing={2}>
           <LoadingButton
             color="primary"
@@ -90,26 +85,26 @@ export const ContactInfo = ({
             loading={isSaving}
             variant="contained"
           >
-            <span>{isEditing ? "Save" : "Edit profile"}</span>
+            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
           </LoadingButton>
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Email */}
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <EmailIcon sx={{ color: "action.active", mr: 1 }} />
+          <EmailIcon sx={{ color: 'action.active', mr: 1 }} />
           <FormControl
             sx={{
               mx: 2,
               my: 2,
-              width: "80ch",
-              gap: "2rem",
+              width: '80ch',
+              gap: '2rem',
             }}
           >
             <TextField
@@ -117,14 +112,14 @@ export const ContactInfo = ({
               name="email"
               label="Email"
               type="email"
-              value={editedFields?.email || ""}
+              value={editedFields?.email || ''}
               InputProps={{
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
                     {!isEditing && editedFields?.email && (
-                      <Link href={"mailto:" + editedFields?.email}>
-                        <LinkIcon sx={{ color: "action.active" }} />
+                      <Link href={'mailto:' + editedFields?.email}>
+                        <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}
                   </InputAdornment>
@@ -133,7 +128,7 @@ export const ContactInfo = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>
@@ -142,8 +137,8 @@ export const ContactInfo = ({
         {/* Slack */}
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           <Icon sx={{ mr: 1 }}>
@@ -153,8 +148,8 @@ export const ContactInfo = ({
             sx={{
               mx: 2,
               my: 2,
-              width: "80ch",
-              gap: "2rem",
+              width: '80ch',
+              gap: '2rem',
             }}
           >
             <TextField
@@ -163,7 +158,7 @@ export const ContactInfo = ({
               label="Slack ID"
               type="text"
               placeholder="Format: UXXXXXXXXXX"
-              value={editedFields?.slackId || ""}
+              value={editedFields?.slackId || ''}
               InputProps={{
                 readOnly: isEditing ? false : true,
                 endAdornment: (
@@ -172,7 +167,7 @@ export const ContactInfo = ({
                       <Link
                         href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}
                       >
-                        <LinkIcon sx={{ color: "action.active" }} />
+                        <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}
                   </InputAdornment>
@@ -181,7 +176,7 @@ export const ContactInfo = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>
@@ -190,17 +185,17 @@ export const ContactInfo = ({
         {/* Phone */}
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <PhoneIcon sx={{ color: "action.active", mr: 1 }} />
+          <PhoneIcon sx={{ color: 'action.active', mr: 1 }} />
           <FormControl
             sx={{
               mx: 2,
               my: 2,
-              width: "80ch",
-              gap: "2rem",
+              width: '80ch',
+              gap: '2rem',
             }}
           >
             <TextField
@@ -208,14 +203,14 @@ export const ContactInfo = ({
               name="phone"
               label="Phone"
               type="tel"
-              value={editedFields?.phone || ""}
+              value={editedFields?.phone || ''}
               InputProps={{
                 readOnly: isEditing ? false : true,
               }}
               InputLabelProps={{
                 shrink: true,
               }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>
@@ -224,17 +219,17 @@ export const ContactInfo = ({
         {/* Github Handle */}
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <GitHubIcon sx={{ color: "action.active", mr: 1 }} />
+          <GitHubIcon sx={{ color: 'action.active', mr: 1 }} />
           <FormControl
             sx={{
               mx: 2,
               my: 2,
-              width: "80ch",
-              gap: "2rem",
+              width: '80ch',
+              gap: '2rem',
             }}
           >
             <TextField
@@ -242,19 +237,17 @@ export const ContactInfo = ({
               name="githubHandle"
               label="Github Handle"
               type="text"
-              value={editedFields?.githubHandle || ""}
+              value={editedFields?.githubHandle || ''}
               InputProps={{
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
                     {!isEditing && editedFields?.githubHandle && (
                       <Link
-                        href={
-                          "https://github.com/" + editedFields?.githubHandle
-                        }
+                        href={'https://github.com/' + editedFields?.githubHandle}
                         target="_blank"
                       >
-                        <LinkIcon sx={{ color: "action.active" }} />
+                        <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}
                   </InputAdornment>
@@ -263,7 +256,7 @@ export const ContactInfo = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>
@@ -272,17 +265,17 @@ export const ContactInfo = ({
         {/* Linkedin */}
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          <LinkedInIcon sx={{ color: "action.active", mr: 1 }} />
+          <LinkedInIcon sx={{ color: 'action.active', mr: 1 }} />
           <FormControl
             sx={{
               mx: 2,
               my: 2,
-              width: "80ch",
-              gap: "2rem",
+              width: '80ch',
+              gap: '2rem',
             }}
           >
             <TextField
@@ -290,14 +283,14 @@ export const ContactInfo = ({
               name="linkedin"
               label="Linkedin"
               type="url"
-              value={editedFields?.linkedin || ""}
+              value={editedFields?.linkedin || ''}
               InputProps={{
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
                     {!isEditing && editedFields?.linkedin && (
                       <Link href={editedFields?.linkedin} target="_blank">
-                        <LinkIcon sx={{ color: "action.active" }} />
+                        <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}
                   </InputAdornment>
@@ -306,7 +299,7 @@ export const ContactInfo = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>

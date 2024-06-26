@@ -1,16 +1,16 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useLocalStorage } from "./useLocalStorage";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-import { Loader } from "../components";
-import axios from "axios";
+import { createContext, useContext, useMemo, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useLocalStorage } from './useLocalStorage';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { Loader } from '../components';
+import axios from 'axios';
 
 export const ApiContext = createContext<any | null>(null);
 
 export const ApiProvider = () => {
-  const [user, setUser] = useLocalStorage("user", null);
+  const [user, setUser] = useLocalStorage('user', null);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -19,15 +19,15 @@ export const ApiProvider = () => {
       try {
         setLoading(true);
 
-        await axios.post("/api/auth/login", { token: response.access_token });
-        const { data } = await axios.get("/api/auth/session");
+        await axios.post('/api/auth/login', { token: response.access_token });
+        const { data } = await axios.get('/api/auth/session');
         if (data) {
-          console.log("Successfully logged in!", data);
+          console.log('Successfully logged in!', data);
           setUser(data);
-          navigate("/", { replace: true });
+          navigate('/', { replace: true });
         }
       } catch (error: any) {
-        console.log("Error logging in:", error);
+        console.log('Error logging in:', error);
         setErrorMessage(
           `Error code: ${error.response?.status} ${error.response?.data?.error}`
         );
@@ -37,8 +37,8 @@ export const ApiProvider = () => {
       }
     },
     onError: (error) => {
-      console.log("Login Failed:", error);
-      setErrorMessage(error.error_description || "An error occurred");
+      console.log('Login Failed:', error);
+      setErrorMessage(error.error_description || 'An error occurred');
     },
   });
 
@@ -47,13 +47,13 @@ export const ApiProvider = () => {
     try {
       setLoading(true);
 
-      await axios.post("/api/auth/logout");
+      await axios.post('/api/auth/logout');
       googleLogout();
       setUser(null);
-      console.log("Successfully logged out!");
-      navigate("/", { replace: true });
+      console.log('Successfully logged out!');
+      navigate('/', { replace: true });
     } catch (error: any) {
-      console.log("Error logging out:", error);
+      console.log('Error logging out:', error);
       setErrorMessage(
         `Error code: ${error.response?.status} ${error.response?.data?.error}`
       );

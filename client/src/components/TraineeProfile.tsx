@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
-import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
-import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
+import { useState } from 'react';
+import { Alert, AlertTitle, Box, Snackbar } from '@mui/material';
+import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
 import {
   TraineeContactInfo,
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
   TraineeProfileProps,
-} from "../types";
-import axios from "axios";
+} from '../types';
+import axios from 'axios';
 import {
   ContactInfo,
   EducationInfo,
@@ -18,23 +18,22 @@ import {
   PersonalInfo,
   ProfileNav,
   ProfileSidebar,
-} from ".";
-import MuiAlert from "@mui/material/Alert";
+} from '.';
+import MuiAlert from '@mui/material/Alert';
 
 export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
-  const [activeTab, setActiveTab] = useState("personal");
+  const [activeTab, setActiveTab] = useState('personal');
 
-  const { isLoading, isError, data, error, isFetching } =
-    useTraineeInfoData(id);
+  const { isLoading, isError, data, error, isFetching } = useTraineeInfoData(id);
 
   const [traineeData, setTraineeData] = useState(data && data);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success'
   );
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -46,7 +45,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   if (isError && error instanceof Error) {
     return (
-      <Box p={8} sx={{ width: "100%" }}>
+      <Box p={8} sx={{ width: '100%' }}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
           {error.message}
@@ -66,17 +65,17 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
       | TraineeEducationInfo
       | TraineeEmploymentInfo
   ) => {
-    console.log("Saving trainee data", editedData);
+    console.log('Saving trainee data', editedData);
     try {
       const response = await axios.patch(`/api/trainees/${id}`, editedData);
-      console.log("Trainee data saved successfully", response.data);
+      console.log('Trainee data saved successfully', response.data);
       setTraineeData(response.data);
-      setSnackbarSeverity("success");
-      setSnackbarMessage("Trainee data saved successfully");
+      setSnackbarSeverity('success');
+      setSnackbarMessage('Trainee data saved successfully');
     } catch (error: any) {
-      console.error("There was a problem saving trainee data:", error.message);
-      setSnackbarSeverity("error");
-      setSnackbarMessage("Error saving trainee data");
+      console.error('There was a problem saving trainee data:', error.message);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error saving trainee data');
       throw error;
     } finally {
       setSnackbarOpen(true);
@@ -84,7 +83,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   };
 
   return (
-    <div style={{ display: "flex", background: "#fff" }}>
+    <div style={{ display: 'flex', background: '#fff' }}>
       <Box
         width="40%"
         position="sticky"
@@ -92,7 +91,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         left={0}
         height="100%"
         color="black"
-        style={{ overflowY: "auto" }}
+        style={{ overflowY: 'auto' }}
       >
         <ProfileSidebar traineeId={id} />
       </Box>
@@ -102,7 +101,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
           open={snackbarOpen}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
           <MuiAlert
             elevation={6}
@@ -113,25 +112,25 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
             {snackbarMessage}
           </MuiAlert>
         </Snackbar>
-        {activeTab === "personal" && (
+        {activeTab === 'personal' && (
           <PersonalInfo
             traineeData={traineeData && traineeData.personalInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === "contact" && (
+        {activeTab === 'contact' && (
           <ContactInfo
             contactData={traineeData && traineeData.contactInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === "education" && (
+        {activeTab === 'education' && (
           <EducationInfo
             educationData={traineeData && traineeData.educationInfo}
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === "employment" && (
+        {activeTab === 'employment' && (
           <EmploymentInfo
             employmentData={traineeData && traineeData.employmentInfo}
             saveTraineeData={saveTraineeData}

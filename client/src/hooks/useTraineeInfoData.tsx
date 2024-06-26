@@ -1,10 +1,10 @@
-import { useQuery } from "react-query";
-import axios from "axios";
-import { Trainee } from "../types";
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { Trainee } from '../types';
 
 export const useTraineeInfoData = (traineeId: string) => {
   return useQuery<Trainee, Error>(
-    ["traineeInfo", traineeId],
+    ['traineeInfo', traineeId],
     async () => {
       const { data } = await axios.get<Trainee>(`/api/trainees/${traineeId}`);
       return data;

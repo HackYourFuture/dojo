@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom";
-import { ResponsiveNavBar } from "../components";
-import { QueryClientProvider, QueryClient } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { Outlet } from 'react-router-dom';
+import { ResponsiveNavBar } from '../components';
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const queryClient = new QueryClient();
 

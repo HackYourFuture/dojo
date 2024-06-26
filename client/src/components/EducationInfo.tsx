@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   EducationInfoProps,
   Strike,
@@ -7,7 +7,7 @@ import {
   LearningStatus,
   QuitReason,
   StrikeReason,
-} from "../types";
+} from '../types';
 import {
   Box,
   Button,
@@ -28,32 +28,27 @@ import {
   Modal,
   Fade,
   Backdrop,
-} from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import AddIcon from "@mui/icons-material/Add";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { LoadingButton } from "@mui/lab";
+} from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import AddIcon from '@mui/icons-material/Add';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { LoadingButton } from '@mui/lab';
 
 const NoIcon = () => null;
 
-export const EducationInfo = ({
-  educationData,
-  saveTraineeData,
-}: EducationInfoProps) => {
-  const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(
-    educationData!
-  );
+export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoProps) => {
+  const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(educationData!);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isAddingStrike, setIsAddingStrike] = useState(false);
 
   const [strikeFields, setStrikeFields] = useState<Strike>({
-    id: "",
+    id: '',
     date: new Date(),
-    reporterID: "",
+    reporterID: '',
     reason: StrikeReason.Other,
-    comments: "",
+    comments: '',
   });
 
   useEffect(() => {
@@ -78,11 +73,11 @@ export const EducationInfo = ({
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
       setStrikeFields({
-        id: "",
+        id: '',
         date: new Date(),
-        reporterID: "",
+        reporterID: '',
         reason: StrikeReason.Other,
-        comments: "",
+        comments: '',
       });
     }
     setIsAddingStrike(false);
@@ -110,7 +105,7 @@ export const EducationInfo = ({
       await saveTraineeData(editedData);
       setIsEditing(false);
     } catch (error) {
-      console.error("Error saving trainee data:", error);
+      console.error('Error saving trainee data:', error);
     } finally {
       setIsSaving(false);
     }
@@ -120,19 +115,17 @@ export const EducationInfo = ({
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: name === "date" ? new Date(value) : value,
+      [name]: name === 'date' ? new Date(value) : value,
     }));
   };
 
   const handleSelectChange = (
-    event: SelectChangeEvent<
-      string | boolean | { name?: string; value: ReactNode }
-    >
+    event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>
   ) => {
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value === "true" ? true : value === "false" ? false : value,
+      [name]: value === 'true' ? true : value === 'false' ? false : value,
     }));
   };
 
@@ -147,19 +140,19 @@ export const EducationInfo = ({
   };
 
   const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
+    if (!date) return '';
     const formattedDate = new Date(date);
     if (isNaN(formattedDate.getTime())) {
       return date.toString();
     }
-    return formattedDate.toISOString().split("T")[0];
+    return formattedDate.toISOString().split('T')[0];
   };
 
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setStrikeFields((prevStrike) => ({
       ...prevStrike,
-      [name]: name === "date" ? new Date(value) : value,
+      [name]: name === 'date' ? new Date(value) : value,
     }));
   };
 
@@ -175,14 +168,8 @@ export const EducationInfo = ({
   const handleAddStrike = async () => {};
 
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      flexWrap="wrap"
-      gap={4}
-      padding="24px"
-    >
-      <Box width={"100%"} display="flex" justifyContent={"end"}>
+    <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
+      <Box width={'100%'} display="flex" justifyContent={'end'}>
         <Stack direction="row" spacing={2}>
           <LoadingButton
             color="primary"
@@ -190,45 +177,45 @@ export const EducationInfo = ({
             loading={isSaving}
             variant="contained"
           >
-            <span>{isEditing ? "Save" : "Edit profile"}</span>
+            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
           </LoadingButton>
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Cohort */}
-        <FormControl sx={{ mx: 2, my: 1, width: "11ch", gap: "2rem" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
           <TextField
             id="currentCohort"
             name="currentCohort"
             label="Cohort"
-            value={editedFields?.currentCohort || ""}
+            value={editedFields?.currentCohort || ''}
             InputProps={{
               readOnly: isEditing ? false : true,
-              inputMode: "numeric",
+              inputMode: 'numeric',
             }}
             inputProps={{
-              pattern: "[0-9]*",
+              pattern: '[0-9]*',
               maxLength: 3,
             }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleNumericChange}
           />
         </FormControl>
 
         {/* Learning status */}
         <FormControl
-          variant={isEditing ? "outlined" : "standard"}
-          sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
+          variant={isEditing ? 'outlined' : 'standard'}
+          sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}
         >
           <InputLabel htmlFor="learningStatus">Learning status</InputLabel>
           <Select
             name="learningStatus"
             id="learningStatus"
             label="Learning status"
-            value={editedFields?.learningStatus || ""}
+            value={editedFields?.learningStatus || ''}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
@@ -238,21 +225,35 @@ export const EducationInfo = ({
             <MenuItem value={LearningStatus.Graduated}>Graduated</MenuItem>
             <MenuItem value={LearningStatus.OnHold}>On hold</MenuItem>
             <MenuItem value={LearningStatus.Quit}>Quit</MenuItem>
+            {Object.entries(LearningStatus).map(([key, value]) => {
+              const text = value
+                .split('-')
+                .map((word, index) =>
+                  index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word
+                )
+                .join(' ');
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
         {/* Quit date */}
         {editedFields?.learningStatus === LearningStatus.Quit && (
-          <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
+          <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
             <TextField
-              id={editedFields?.quitDate ? "quitDate" : "dateEmpty"}
+              id={editedFields?.quitDate ? 'quitDate' : 'dateEmpty'}
               name="quitDate"
               label="Quit date"
               type="date"
               value={formatDate(editedFields?.quitDate)}
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>
@@ -261,15 +262,15 @@ export const EducationInfo = ({
         {/* Quit reason */}
         {editedFields?.learningStatus === LearningStatus.Quit && (
           <FormControl
-            variant={isEditing ? "outlined" : "standard"}
-            sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}
           >
             <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
             <Select
               name="quitReason"
               id="quitReason"
               label="Quit reason"
-              value={editedFields?.quitReason || ""}
+              value={editedFields?.quitReason || ''}
               inputProps={{ readOnly: isEditing ? false : true }}
               IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
               startAdornment=" "
@@ -284,67 +285,81 @@ export const EducationInfo = ({
               <MenuItem value={QuitReason.LeftNL}>Left NL</MenuItem>
               <MenuItem value={QuitReason.Withdrawn}>Withdrawn</MenuItem>
               <MenuItem value={QuitReason.Other}>Other</MenuItem>
+              {Object.entries(QuitReason).map(([key, value]) => {
+                const text = value
+                  .split('-')
+                  .map((word, index) =>
+                    index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word
+                  )
+                  .join(' ');
+
+                return (
+                  <MenuItem key={key} value={value}>
+                    {text}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         )}
 
         {/* Graduation date */}
         {editedFields?.learningStatus === LearningStatus.Graduated && (
-          <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
+          <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
             <TextField
-              id={editedFields?.graduationDate ? "graduationDate" : "dateEmpty"}
+              id={editedFields?.graduationDate ? 'graduationDate' : 'dateEmpty'}
               name="graduationDate"
               label="Graduation date"
               type="date"
               value={formatDate(editedFields?.graduationDate)}
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
-              variant={isEditing ? "outlined" : "standard"}
+              variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleChange}
             />
           </FormControl>
         )}
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Start Cohort */}
-        <FormControl sx={{ mx: 2, my: 1, width: "11ch", gap: "2rem" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
           <TextField
             id="startCohort"
             name="startCohort"
             label="Start cohort"
-            value={editedFields?.startCohort || ""}
+            value={editedFields?.startCohort || ''}
             InputProps={{
               readOnly: isEditing ? false : true,
-              inputMode: "numeric",
+              inputMode: 'numeric',
             }}
             inputProps={{
-              pattern: "[0-9]*",
+              pattern: '[0-9]*',
               maxLength: 3,
             }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleNumericChange}
           />
         </FormControl>
 
         {/* Start date */}
-        <FormControl sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
           <TextField
-            id={editedFields?.startDate ? "startDate" : "dateEmpty"}
+            id={editedFields?.startDate ? 'startDate' : 'dateEmpty'}
             name="startDate"
             label="Start date"
             type="date"
             value={formatDate(editedFields?.startDate)}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: "50%" }}>
+      <div style={{ width: '50%' }}>
         {/* Strikes */}
         <Box
           display="flex"
@@ -365,8 +380,8 @@ export const EducationInfo = ({
 
         <List
           sx={{
-            width: "100%",
-            bgcolor: "background.paper",
+            width: '100%',
+            bgcolor: 'background.paper',
           }}
         >
           {editedFields?.strikes.map((strike, index) => (
@@ -376,7 +391,7 @@ export const EducationInfo = ({
                 secondaryAction={formatDate(strike.date)}
                 disablePadding
                 sx={{
-                  paddingBottom: "16px",
+                  paddingBottom: '16px',
                 }}
               >
                 <ListItemAvatar>
@@ -384,13 +399,10 @@ export const EducationInfo = ({
                     <HighlightOffIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText
-                  primary={strike.reason}
-                  secondary={strike.comments}
-                />
+                <ListItemText primary={strike.reason} secondary={strike.comments} />
               </ListItem>
               {index < editedFields?.strikes.length - 1 && (
-                <Divider sx={{ color: "black" }} component="li" />
+                <Divider sx={{ color: 'black' }} component="li" />
               )}
             </React.Fragment>
           ))}
@@ -412,12 +424,12 @@ export const EducationInfo = ({
               flexDirection="column"
               gap={2}
               sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
                 width: 400,
-                bgcolor: "background.paper",
+                bgcolor: 'background.paper',
                 boxShadow: 24,
                 p: 4,
               }}
@@ -428,7 +440,7 @@ export const EducationInfo = ({
               <Box display="flex" flexDirection="row" gap={2}>
                 <FormControl fullWidth>
                   <TextField
-                    id={strikeFields?.date ? "date" : "dateEmpty"}
+                    id={strikeFields?.date ? 'date' : 'dateEmpty'}
                     name="date"
                     label="Date"
                     type="date"
@@ -465,6 +477,22 @@ export const EducationInfo = ({
                       Pending feedback
                     </MenuItem>
                     <MenuItem value={StrikeReason.Other}>Other</MenuItem>
+                    {Object.entries(StrikeReason).map(([key, value]) => {
+                      const text = value
+                        .split('-')
+                        .map((word, index) =>
+                          index === 0
+                            ? word.charAt(0).toUpperCase() + word.slice(1)
+                            : word
+                        )
+                        .join(' ');
+
+                      return (
+                        <MenuItem key={key} value={value}>
+                          {text}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Box>
@@ -485,11 +513,7 @@ export const EducationInfo = ({
                 <Button variant="contained" onClick={handleAddStrike} fullWidth>
                   Add Strike
                 </Button>
-                <Button
-                  variant="outlined"
-                  onClick={handleCancelOpenStrike}
-                  fullWidth
-                >
+                <Button variant="outlined" onClick={handleCancelOpenStrike} fullWidth>
                   Cancel
                 </Button>
               </Box>
@@ -498,19 +522,19 @@ export const EducationInfo = ({
         </Modal>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Comments */}
-        <FormControl sx={{ mx: 2, width: "81ch" }}>
+        <FormControl sx={{ mx: 2, width: '81ch' }}>
           <TextField
             id="comments"
             name="comments"
             label="Comments"
             type="text"
             multiline
-            value={editedFields?.comments || ""}
+            value={editedFields?.comments || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>

@@ -1,8 +1,8 @@
-import * as React from "react";
-import HYFLogo from "../assets/HYF_logo.svg";
-import SearchIcon from "@mui/icons-material/Search";
-import MenuIcon from "@mui/icons-material/Menu";
-import { useAuth } from "../hooks/useAuth";
+import * as React from 'react';
+import HYFLogo from '../assets/HYF_logo.svg';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useAuth } from '../hooks/useAuth';
 import {
   AppBar,
   Avatar,
@@ -15,15 +15,11 @@ import {
   Stack,
   Toolbar,
   Tooltip,
-} from "@mui/material";
+} from '@mui/material';
 
 export const ResponsiveNavBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const { logout } = useAuth();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -44,7 +40,7 @@ export const ResponsiveNavBar = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: "black" }}>
+      <AppBar position="static" sx={{ bgcolor: 'black' }}>
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box component="div">
@@ -56,36 +52,34 @@ export const ResponsiveNavBar = () => {
               />
             </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Stack direction="row" spacing={2}>
                 <Button
                   key="Home"
                   href={`/home`}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Home
                 </Button>
                 <Button
                   key="Cohorts"
                   href={`/cohorts`}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Cohorts
                 </Button>
                 <Button
                   key="Dashboard"
                   href={`/dashboard`}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Dashboard
                 </Button>
               </Stack>
             </Box>
 
-            <Box
-              sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-            ></Box>
-            <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
                 aria-label="menu of current user"
@@ -101,27 +95,27 @@ export const ResponsiveNavBar = () => {
                 id="main-menu-appbar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
+                  vertical: 'bottom',
+                  horizontal: 'right',
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
                 sx={{
-                  display: { xs: "block", md: "none" },
+                  display: { xs: 'block', md: 'none' },
                 }}
               >
                 <MenuItem key="Home">
                   <Button
                     href={`/home`}
                     sx={{
-                      color: "inherit",
-                      display: "block",
-                      textAlign: "center",
+                      color: 'inherit',
+                      display: 'block',
+                      textAlign: 'center',
                     }}
                   >
                     Home
@@ -131,9 +125,9 @@ export const ResponsiveNavBar = () => {
                   <Button
                     href={`/cohorts`}
                     sx={{
-                      color: "inherit",
-                      display: "block",
-                      textAlign: "center",
+                      color: 'inherit',
+                      display: 'block',
+                      textAlign: 'center',
                     }}
                   >
                     Cohorts
@@ -143,9 +137,9 @@ export const ResponsiveNavBar = () => {
                   <Button
                     href={`/dashboard`}
                     sx={{
-                      color: "inherit",
-                      display: "block",
-                      textAlign: "center",
+                      color: 'inherit',
+                      display: 'block',
+                      textAlign: 'center',
                     }}
                   >
                     Dashboard
@@ -169,17 +163,17 @@ export const ResponsiveNavBar = () => {
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: "45px" }}
+                sx={{ mt: '45px' }}
                 id="user-menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+                  vertical: 'top',
+                  horizontal: 'right',
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}

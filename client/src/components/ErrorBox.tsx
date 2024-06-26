@@ -1,4 +1,4 @@
-import { Alert } from "@mui/material";
+import { Alert } from '@mui/material';
 
 export interface ErrorBoxProps {
   errorMessage: string;
@@ -9,10 +9,10 @@ export const ErrorBox = (props: ErrorBoxProps) => {
     <Alert
       severity="error"
       sx={{
-        marginY: "24px",
-        marginX: "auto",
-        width: "40%",
-        wordBreak: "break-word",
+        marginY: '24px',
+        marginX: 'auto',
+        width: '40%',
+        wordBreak: 'break-word',
       }}
     >
       <p>{props.errorMessage}</p>
