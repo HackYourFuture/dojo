@@ -24,6 +24,7 @@ body {
 }
 
 @media (prefers-color-scheme: light) {
+  body,
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -38,7 +39,6 @@ body {
   border: 0;
   box-sizing: border-box;
 }
-
 
 .login-container {
   padding-top: 20vh;
@@ -57,7 +57,7 @@ body {
   margin-bottom: 50px;
 }
 
-.login-button{
+.login-button {
   min-width: 400px;
 }
 
@@ -96,6 +96,6 @@ body {
   align-items: center;
 }
 
-#dateEmpty[type=date]::-webkit-datetime-edit {
+#dateEmpty[type='date']::-webkit-datetime-edit {
   display: none;
 }

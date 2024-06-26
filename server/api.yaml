@@ -447,6 +447,25 @@ paths:
         description: ''
         security:
           - cookie_token:
+        parameters:
+        - name: startDate
+          in: query
+          description: Include all trainees who started the program on or after startDate
+          required: true
+          schema:
+            type: string
+            format: date-time
+            example: '2024-01-01'
+
+        - name: endDate
+          in: query
+          description: Include all trainees who started the program before or on endDate
+          required: true
+          schema:
+            type: string
+            format: date-time
+            example: '2025-01-01'
+
         responses:
           200:
             description: successful operation
@@ -658,11 +677,11 @@ components:
         startDate:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z
+          example: 2024-01-01
         graduationDate:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z  
+          example: 2024-01-01  
         quitReason:
           type: string
           enum:
@@ -676,7 +695,7 @@ components:
         quitDate:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z  
+          example: 2024-01-01
         strikes:
           type: array
           items:
@@ -846,11 +865,11 @@ components:
         startDate:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z
+          example: 2024-01-01
         endDate:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z  
+          example: 2024-01-01 
         feeCollected:
           type: boolean
         feeAmount:
@@ -876,6 +895,7 @@ components:
           type: string
           enum:
             - call
+            - chat
             - feedback
             - tech-hour
             - in-person

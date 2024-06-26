@@ -80,6 +80,7 @@ export enum JobPath {
 
 export enum InteractionType {
   Call = "call",
+  Chat = "chat",
   Feedback = "feedback",
   TechHour = "tech-hour",
   InPerson = "in-person",
@@ -113,11 +114,11 @@ export interface SearchBarProps {
 }
 
 export interface JobPathProps {
-  jobPath: JobPath
+  jobPath: JobPath;
 }
 
 export interface LearningStatusProps {
-  learningStatus: LearningStatus | undefined
+  learningStatus: LearningStatus | undefined;
 }
 
 export interface ProfileNavProps {
@@ -151,6 +152,10 @@ export interface EducationInfoProps {
 export interface EmploymentInfoProps {
   employmentData?: TraineeEmploymentInfo;
   saveTraineeData: (editedData: TraineeEmploymentInfo) => void;
+}
+
+export interface DashboardPieChartProps {
+  chartData: DashboardData;
 }
 
 // interfaces
@@ -269,4 +274,25 @@ export interface TraineeInteraction {
   type: InteractionType;
   reporterID: string;
   details: string;
+}
+
+export interface ChartData {
+  label: string;
+  value: number;
+  percent: number;
+}
+
+export interface Demographics {
+  genderDistribution: ChartData[];
+  countryOfOrigin: ChartData[];
+}
+
+export interface Program {
+  graduations: ChartData[];
+  employment: ChartData[];
+}
+
+export interface DashboardData {
+  demographics: Demographics;
+  program: Program;
 }
