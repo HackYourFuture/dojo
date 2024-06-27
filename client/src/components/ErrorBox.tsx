@@ -1,9 +1,12 @@
-import { Alert } from "@mui/material";
+import { Alert, AlertTitle } from "@mui/material";
 
 export interface ErrorBoxProps {
   errorMessage: string;
 }
 
+/**
+ * Component to display a error state / Alert MUI component when status isError.
+ */
 export const ErrorBox = (props: ErrorBoxProps) => {
   return (
     <Alert
@@ -15,6 +18,7 @@ export const ErrorBox = (props: ErrorBoxProps) => {
         wordBreak: "break-word",
       }}
     >
+      <AlertTitle>Error</AlertTitle>
       <p>{props.errorMessage}</p>
     </Alert>
   );

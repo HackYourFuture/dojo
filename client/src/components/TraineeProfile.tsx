@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
+import { Box, Snackbar } from "@mui/material";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import {
   TraineeContactInfo,
@@ -14,6 +14,7 @@ import {
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
+  ErrorBox,
   Loader,
   PersonalInfo,
   ProfileNav,
@@ -21,6 +22,12 @@ import {
 } from ".";
 import MuiAlert from "@mui/material/Alert";
 
+/**
+ * Component for showing profile page tab and content.
+ *
+ * @param {string} id trainee id.
+ * @returns {ReactNode} A React element that renders profile page tabs and sidebar.
+ */
 export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState("personal");
@@ -45,20 +52,23 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   }
 
   if (isError && error instanceof Error) {
-    return (
-      <Box p={8} sx={{ width: "100%" }}>
-        <Alert severity="error">
-          <AlertTitle>Error</AlertTitle>
-          {error.message}
-        </Alert>
-      </Box>
-    );
+    return <ErrorBox errorMessage={error.message} />;
   }
 
+  /**
+   * Function to navigate to active tab.
+   * 
+   * @param {string} tab active tab to open.
+   */
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
 
+  /**
+   * Function to save trainee info after add/edit.
+   * 
+   * @param {Object} editedData Object with added/edited trainee info.
+   */
   const saveTraineeData = async (
     editedData:
       | TraineePersonalInfo

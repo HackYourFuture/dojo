@@ -25,6 +25,14 @@ import LinkIcon from "@mui/icons-material/Link";
 
 const NoIcon = () => null;
 
+
+/**
+ * Component for displaying trainee profile data on the employment information tab.
+ *
+ * @param {TraineeEmploymentInfo} employmentData trainee employment information.
+ * @param {TraineeEmploymentInfo} saveTraineeData callback to save edited trainee employment information.
+ * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
+ */
 export const EmploymentInfo = ({
   employmentData,
   saveTraineeData,
@@ -41,10 +49,16 @@ export const EmploymentInfo = ({
       setEditedFields(employmentData as TraineeEmploymentInfo);
   }, [employmentData]);
 
+  /**
+   * Function to enable edit mode when edit button is clicked.
+   */
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  /**
+   * Function to set editing mode to `false` when cancel button is clicked.
+   */
   const handleCancelClick = () => {
     if (employmentData) {
       setEditedFields(employmentData);
@@ -52,6 +66,9 @@ export const EmploymentInfo = ({
     setIsEditing(false);
   };
 
+  /**
+   * Function to handel the saving logic after clicking the save button.
+   */
   const handleSaveClick = async () => {
     if (!editedFields || !employmentData) return;
 
@@ -80,6 +97,10 @@ export const EmploymentInfo = ({
     }
   };
 
+  /**
+   * Function to handel the the save button logic after editing text fields.
+   * @param {HTMLInputElement} e the event received from the text fields after editing.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
@@ -88,6 +109,10 @@ export const EmploymentInfo = ({
     }));
   };
 
+  /**
+   * Function to handel the gender selection values.
+   * @param {SelectChangeEvent} event the event received from select component change.
+   */
   const handleSelectChange = (
     event: SelectChangeEvent<
       string | boolean | { name?: string; value: ReactNode }
@@ -100,6 +125,10 @@ export const EmploymentInfo = ({
     }));
   };
 
+  /**
+   * Function to format date value.
+   * @param {Date | undefined} date date value selected.
+   */
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
     const formattedDate = new Date(date);

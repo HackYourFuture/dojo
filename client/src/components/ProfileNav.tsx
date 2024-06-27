@@ -1,6 +1,13 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import { ProfileNavProps } from "../types";
 
+/**
+ * Component for navigating between trainee profile page tabs.
+ *
+ * @param {string} activeTab trainee id.
+ * @param {string} onTabChange callback for when tab is changed.
+ * @returns {ReactNode} A React element that renders trainee profile page tabs and active tab logic.
+ */
 export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
   return (
     <Box display="flex" color="black" sx={{ mx: 5, my: 1 }}>
