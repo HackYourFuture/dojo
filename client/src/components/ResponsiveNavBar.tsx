@@ -33,6 +33,7 @@ export const ResponsiveNavBar = () => {
 
   /**
    * Function to handel opening the navigation burger menu onClick event.
+   * 
    * @param {HTMLElement} event the click event coming form user.
    */
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -48,6 +49,7 @@ export const ResponsiveNavBar = () => {
 
   /**
    * Function to handel opening the login menu onClick event.
+   * 
    * @param {HTMLElement} event the click event coming form user.
    */
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {

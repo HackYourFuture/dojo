@@ -96,6 +96,7 @@ export const PersonalInfo = ({
 
   /**
    * Function to handel the the save button logic after editing text fields.
+   * 
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,6 +109,7 @@ export const PersonalInfo = ({
 
   /**
    * Function to handel the gender selection values.
+   * 
    * @param {SelectChangeEvent} event the event received from select component change.
    */
   const handleSelectChange = (

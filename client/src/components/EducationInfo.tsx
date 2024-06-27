@@ -140,6 +140,7 @@ export const EducationInfo = ({
 
   /**
    * Function to handel the the save button logic after editing text fields.
+   * 
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,6 +153,7 @@ export const EducationInfo = ({
 
   /**
    * Function to handel the gender selection values.
+   * 
    * @param {SelectChangeEvent} event the event received from select component change.
    */
   const handleSelectChange = (
@@ -181,6 +183,7 @@ export const EducationInfo = ({
 
   /**
    * Function to format date value.
+   * 
    * @param {Date | undefined} date date value selected.
    */
   const formatDate = (date: Date | undefined) => {

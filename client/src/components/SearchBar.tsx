@@ -12,6 +12,7 @@ export const SearchBar = ({ data }: any) => {
 
   /**
    * Function to set the value for search text field onChange event.
+   * 
    * @param {string} value value entered to searchbox text field.
    */
   const handleChange = (value: string) => {
