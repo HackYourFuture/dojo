@@ -70,6 +70,8 @@ UAT testing was done per PR by Project team and Education Director to validate t
 |     TC31     |                  Main Navbar - Search page                  |                             Click 'search' icon from the main Navbar on top-right                             |                                         Redirecting to Search page                                          | [<img src="../assets/TC31.png" style="max-width: 100%; max-height: 400px">](../assets/TC31.png) |
 |     TC32     |                   Main Navbar - User menu                   |                              Click 'user' icon from the main Navbar on top-right                              |                      Open a user menu dropdown with 'Login' and 'Log out' button items                      | [<img src="../assets/TC32.png" style="max-width: 100%; max-height: 400px">](../assets/TC32.png) |
 |     TC33     |                   User menu - Login Page                    |                    Open user menu from the main Navbar on top-right and click Login button                    |                                          Redirecting to Login page                                          | [<img src="../assets/TC33.png" style="max-width: 100%; max-height: 400px">](../assets/TC33.png) |
+|     TC34     |                       Dashboard page                        |                             Click 'Dashboard' button from the main Navbar on top                              |                Redirecting to Dashboard page and shows date range selector with 4 pie charts                | [<img src="../assets/TC34.png" style="max-width: 100%; max-height: 400px">](../assets/TC34.png) |
+|     TC35     |              Dashboard page update charts data              |            Change date range by clicking on calendar icon on date inputs then click 'Apply' button            |                                   Updating the charts with relevent data                                    | [<img src="../assets/TC35.png" style="max-width: 100%; max-height: 400px">](../assets/TC35.png) |
 
 ## Test Results
 
@@ -108,6 +110,8 @@ UAT testing was done per PR by Project team and Education Director to validate t
 |     TC31     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
 |     TC32     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
 |     TC33     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC34     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+|     TC35     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
 
 ## Risk Assessment
 
