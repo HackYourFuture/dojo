@@ -8,6 +8,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/nl';
 import { Container, Stack, Box, Button } from '@mui/material';
 
+/**
+ * Component for displaying the dashboard page elements.
+ *
+ * @returns {ReactNode} A React element that renders date range to select and pie chart component.
+ */
 export const DashboardPage = () => {
   const today = new Date();
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs(today));

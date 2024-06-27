@@ -3,6 +3,9 @@ import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
 import { Loader, TraineeProfile } from '../components';
 import { Alert, AlertTitle, Box } from '@mui/material';
 
+/**
+ * Component for displaying the trainee profile page sidebar and tabs.
+ */
 export const TraineePage = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split('_');
