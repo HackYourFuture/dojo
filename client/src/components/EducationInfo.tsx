@@ -92,7 +92,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function to cancel strikes.
+   * Function to cancel adding strikes.
    */
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
