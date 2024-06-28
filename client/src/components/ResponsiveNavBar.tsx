@@ -57,7 +57,7 @@ export const ResponsiveNavBar = () => {
   };
 
   /**
-   * Function to handel closing the login menu onClick event.
+   * Function to handel closing the user menu onClick event.
    */
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
