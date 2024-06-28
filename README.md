@@ -88,7 +88,7 @@ Ensure you have the following installed:
 
 1. Navigate to `http://localhost:5173` in your browser.
 2. Log in with your HackYourFuture google account.
-3. Search for a student to track student progress, contact information, manage attendance and assignments, and check employment status/history.
+3. Search for a trainee to track trainee progress, contact information, manage attendance and assignments, and check employment status/history.
 4. Use the dashboard to check reports about graduation percentage, country of origin, ...etc.
 
 ## Project Structure
