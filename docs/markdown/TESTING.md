@@ -12,7 +12,7 @@ The implementation will be in stages:
 2. Unit tests for the most common flows.
 3. All other low priority unit tests.
 
-We will use the popular [Jest] (https://jestjs.io/) library to implement unit tests.
+We will use the popular [Jest](https://jestjs.io/) library to implement unit tests.
 
 ### Integration testing
 
