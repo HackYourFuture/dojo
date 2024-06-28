@@ -39,7 +39,7 @@ UAT testing was done per PR by Project team and Education Director to validate t
 | :----------: | :---------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
 |     TC01     |                  Redirection without login                  |                                  Going to Home page (User is not logged in)                                   |                                          Redirection to Login Page                                          | [<img src="../assets/TC01.png" style="max-width: 100%; max-height: 400px">](../assets/TC01.png) |
 |     TC02     |               Login with an unauthorized user               |                          Click Login with Google button and enter unauthorized email                          |                           Failure login with Error message and stay in Login page                           | [<img src="../assets/TC02.png" style="max-width: 100%; max-height: 400px">](../assets/TC02.png) |
-|     TC03     |                Login with an authorized user                |                         Click Login with Google button and select an authorized email                          |                                  Success login and redirect to Search page                                  | [<img src="../assets/TC03.png" style="max-width: 100%; max-height: 400px">](../assets/TC03.png) |
+|     TC03     |                Login with an authorized user                |                         Click Login with Google button and select an authorized email                         |                                  Success login and redirect to Search page                                  | [<img src="../assets/TC03.png" style="max-width: 100%; max-height: 400px">](../assets/TC03.png) |
 |     TC04     |                    Logout functionality                     |                            Open user menu from top-right and click Log out button                             |                             Successfully logged out and redirect to Login page                              | [<img src="../assets/TC04.png" style="max-width: 100%; max-height: 400px">](../assets/TC04.png) |
 |     TC05     |                Searching for a user (random)                |                                 Type a name in search box (ex: Maher alarabi)                                 |                                  No results found! (in search result list)                                  | [<img src="../assets/TC05.png" style="max-width: 100%; max-height: 400px">](../assets/TC05.png) |
 |     TC06     |                    Searching for a user                     |                                     Type a name in search box (ex: jalal)                                     |                                         A list with founded results                                         | [<img src="../assets/TC06.png" style="max-width: 100%; max-height: 400px">](../assets/TC06.png) |
@@ -75,43 +75,43 @@ UAT testing was done per PR by Project team and Education Director to validate t
 
 ## Test Results
 
-| Test Case ID |           Tester Name            | Test Status (Pass/Fail) |                                                   Comments                                                    |
-| :----------: | :------------------------------: | :---------------------: | :-----------------------------------------------------------------------------------------------------------: |
-|     TC01     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC02     | Stas Seldin [Education Director] |          Pass           |                          Email should be added to authorized emails list by director                          |
-|     TC03     | Stas Seldin [Education Director] |          Pass           |                          Email should be added to authorized emails list by director                          |
-|     TC04     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC05     | Stas Seldin [Education Director] |          Pass           |                                    Student should be registered in the DB                                     |
-|     TC06     | Stas Seldin [Education Director] |          Pass           |                                    Student should be registered in the DB                                     |
-|     TC07     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC08     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC09     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC10     | Stas Seldin [Education Director] |          Pass           |            Cancel editing fields will clear all edited fields and set values to the initial state             |
-|     TC11     | Stas Seldin [Education Director] |          Pass           |             If any error happened during `Edit`, `Cancel`, `Save` an Error message will be shown              |
-|     TC12     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC13     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC14     | Stas Seldin [Education Director] |          Pass           |     If trainee 'Email' field has a value, the `link` icon will be shown otherwise the icon will be hidden     |
-|     TC15     | Stas Seldin [Education Director] |          Pass           |   If trainee 'Slack ID' field has a value, the `link` icon will be shown otherwise the icon will be hidden    |
-|     TC16     | Stas Seldin [Education Director] |          Pass           | If trainee 'Github Handle' field has a value, the `link` icon will be shown otherwise the icon will be hidden |
-|     TC17     | Stas Seldin [Education Director] |          Pass           |   If trainee 'Linkedin' field has a value, the `link` icon will be shown otherwise the icon will be hidden    |
-|     TC18     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC19     | Stas Seldin [Education Director] |          Pass           |                      'Cohort' and 'Start cohort' fields accept only numbers, not letters                      |
-|     TC20     | Stas Seldin [Education Director] |          Pass           |                  'Graduation date' input will only appear if Learning status is 'Graduated'                   |
-|     TC21     | Stas Seldin [Education Director] |          Pass           |              'Quit date' and 'Quit reason' inputs will only appear if Learning status is 'Quit'               |
-|     TC22     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC23     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC24     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC25     | Stas Seldin [Education Director] |          Pass           |                                   CV input is a link to where CV is stored                                    |
-|     TC26     | Stas Seldin [Education Director] |          Pass           |            Cancel editing fields will clear all edited fields and set values to the initial state             |
-|     TC27     | Stas Seldin [Education Director] |          Pass           |      If trainee 'CV' field has a value, the `link` icon will be shown otherwise the icon will be hidden       |
-|     TC28     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC29     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC30     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC31     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC32     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC33     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC34     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
-|     TC35     | Stas Seldin [Education Director] |          Pass           |                                                     None                                                      |
+| Test Case ID |    Tester Name     | Test Status (Pass/Fail) |                                                   Comments                                                    |
+| :----------: | :----------------: | :---------------------: | :-----------------------------------------------------------------------------------------------------------: |
+|     TC01     | Education Director |          Pass           |                                                     None                                                      |
+|     TC02     | Education Director |          Pass           |                          Email should be added to authorized emails list by director                          |
+|     TC03     | Education Director |          Pass           |                          Email should be added to authorized emails list by director                          |
+|     TC04     | Education Director |          Pass           |                                                     None                                                      |
+|     TC05     | Education Director |          Pass           |                                    Student should be registered in the DB                                     |
+|     TC06     | Education Director |          Pass           |                                    Student should be registered in the DB                                     |
+|     TC07     | Education Director |          Pass           |                                                     None                                                      |
+|     TC08     | Education Director |          Pass           |                                                     None                                                      |
+|     TC09     | Education Director |          Pass           |                                                     None                                                      |
+|     TC10     | Education Director |          Pass           |            Cancel editing fields will clear all edited fields and set values to the initial state             |
+|     TC11     | Education Director |          Pass           |             If any error happened during `Edit`, `Cancel`, `Save` an Error message will be shown              |
+|     TC12     | Education Director |          Pass           |                                                     None                                                      |
+|     TC13     | Education Director |          Pass           |                                                     None                                                      |
+|     TC14     | Education Director |          Pass           |     If trainee 'Email' field has a value, the `link` icon will be shown otherwise the icon will be hidden     |
+|     TC15     | Education Director |          Pass           |   If trainee 'Slack ID' field has a value, the `link` icon will be shown otherwise the icon will be hidden    |
+|     TC16     | Education Director |          Pass           | If trainee 'Github Handle' field has a value, the `link` icon will be shown otherwise the icon will be hidden |
+|     TC17     | Education Director |          Pass           |   If trainee 'Linkedin' field has a value, the `link` icon will be shown otherwise the icon will be hidden    |
+|     TC18     | Education Director |          Pass           |                                                     None                                                      |
+|     TC19     | Education Director |          Pass           |                      'Cohort' and 'Start cohort' fields accept only numbers, not letters                      |
+|     TC20     | Education Director |          Pass           |                  'Graduation date' input will only appear if Learning status is 'Graduated'                   |
+|     TC21     | Education Director |          Pass           |              'Quit date' and 'Quit reason' inputs will only appear if Learning status is 'Quit'               |
+|     TC22     | Education Director |          Pass           |                                                     None                                                      |
+|     TC23     | Education Director |          Pass           |                                                     None                                                      |
+|     TC24     | Education Director |          Pass           |                                                     None                                                      |
+|     TC25     | Education Director |          Pass           |                                   CV input is a link to where CV is stored                                    |
+|     TC26     | Education Director |          Pass           |            Cancel editing fields will clear all edited fields and set values to the initial state             |
+|     TC27     | Education Director |          Pass           |      If trainee 'CV' field has a value, the `link` icon will be shown otherwise the icon will be hidden       |
+|     TC28     | Education Director |          Pass           |                                                     None                                                      |
+|     TC29     | Education Director |          Pass           |                                                     None                                                      |
+|     TC30     | Education Director |          Pass           |                                                     None                                                      |
+|     TC31     | Education Director |          Pass           |                                                     None                                                      |
+|     TC32     | Education Director |          Pass           |                                                     None                                                      |
+|     TC33     | Education Director |          Pass           |                                                     None                                                      |
+|     TC34     | Education Director |          Pass           |                                                     None                                                      |
+|     TC35     | Education Director |          Pass           |                                                     None                                                      |
 
 ## Risk Assessment
 
