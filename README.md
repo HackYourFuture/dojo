@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dojo is an automated portal designed to track HYF students progress, performance, attendance, assignments, graduation status, and other relevant data, facilitating efficient management of students information.
+Dojo is HackYourFuture's in-house management tool designed to track HackYourFuture trainee progress, performance, attendance, assignments, graduation status, and other relevant data, facilitating efficient management of trainees information.
 
 ## Table of contents
 
