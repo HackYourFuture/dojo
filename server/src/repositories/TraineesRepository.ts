@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import { WithMongoID, Trainee } from "../models";
+import { Trainee, StrikeWithReporter, StrikeWithReporterID } from "../models";
 import { TraineeSchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
+import { WithMongoID } from "../utils/database";
 
 export interface TraineesRepository {
   searchTrainees(keyword: string, limit: number): Promise<Trainee[]>;
@@ -11,10 +12,16 @@ export interface TraineesRepository {
   updateTrainee(trainee: Trainee): Promise<void>;
   isEmailExists(email: string): Promise<boolean>;
   validateTrainee(trainee: Trainee): Promise<void>;
+
+  getStrikes(traineeID: string): Promise<StrikeWithReporter[]>;
+  addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
+  updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
+  deleteStrike(traineeID: string, strikeID: string): Promise<void>;
+  validateStrike(strike: StrikeWithReporterID): Promise<void>;
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
-  private TraineeModel: mongoose.Model<Trainee & WithMongoID>;
+  private readonly TraineeModel: mongoose.Model<Trainee & WithMongoID>;
 
   constructor(db: mongoose.Connection) {
     this.TraineeModel = db.model<Trainee & WithMongoID>("Trainee", TraineeSchema);
@@ -34,7 +41,9 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getTrainee(id: string): Promise<Trainee | null> {
-    return await this.TraineeModel.findById(id);
+    return await this.TraineeModel
+      .findById(id)
+      .populate("educationInfo.strikes.reporterID", "name imageUrl");
   }
 
   async createTrainee(trainee: Trainee): Promise<Trainee> {
@@ -58,5 +67,60 @@ export class MongooseTraineesRepository implements TraineesRepository {
 
   async validateTrainee(trainee: Trainee): Promise<void> {
     await this.TraineeModel.validate(trainee);
+  }
+
+  async getStrikes(traineeID: string): Promise<StrikeWithReporter[]> {
+    const trainee = await this.TraineeModel
+      .findById(traineeID)
+      .populate("educationInfo.strikes.reporterID", "name imageUrl")
+      .select("educationInfo.strikes")
+      .exec();
+
+    if (!trainee) {
+      throw new Error("Trainee not found");
+    }
+
+    return trainee.educationInfo.strikes || [];
+  }
+
+  async addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
+    const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID },
+      { $push: { "educationInfo.strikes": strike } },
+      { new: true }
+    )
+    .populate("educationInfo.strikes.reporterID", "name imageUrl");
+
+    if (!updatedTrainee) {
+      throw new Error("Trainee not found");
+    }
+
+    return updatedTrainee.educationInfo.strikes.at(-1) as StrikeWithReporter;
+  }
+
+  async updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
+    const DBStrike: StrikeWithReporterID & WithMongoID = { _id: strike.id, ...strike };
+    const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID, "educationInfo.strikes._id": strike.id },
+      { $set: { "educationInfo.strikes.$": DBStrike } }
+    )
+    .populate("educationInfo.strikes.reporterID", "name imageUrl");
+
+    if (!updatedTrainee) {
+      throw new Error("Trainee not found");
+    }
+
+    return updatedTrainee.educationInfo.strikes.find((strike) => (strike as StrikeWithReporter & WithMongoID)._id === DBStrike._id) as StrikeWithReporter;
+  }
+
+  async deleteStrike(traineeID: string, strikeID: string): Promise<void> {
+    await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID },
+      { $pull: { "educationInfo.strikes": { _id: strikeID } } }
+    );
+  }
+
+  async validateStrike(strike: StrikeWithReporterID): Promise<void> {
+    
   }
 }

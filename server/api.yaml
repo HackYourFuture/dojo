@@ -370,6 +370,116 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /trainees/{id}/strikes:
+    get:
+      tags:
+        - trainees
+      summary: Fetch all strikes of a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StrikeWithReporter'
+    post:
+      tags:
+        - trainees
+      summary: Create new strike
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrikeWithReporterID'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrikeWithReporter'
+
+  /trainees/{id}/strikes/{strikeID}:
+    put:
+      tags:
+        - trainees
+      summary: Update existing strike
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: strikeID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrikeWithReporterID'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrikeWithReporter'
+    delete:
+      tags:
+        - trainees
+      summary: Delete existing strike
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: strikeID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        204:
+          description: successful operation
+
   /geo/cities:
     get:
       tags:
@@ -699,7 +809,7 @@ components:
         strikes:
           type: array
           items:
-            $ref: '#/components/schemas/Strike'
+            $ref: '#/components/schemas/StrikeWithReporter'
         assignments:
           type: array
           items:
@@ -753,7 +863,6 @@ components:
       required:
         - date
         - reason
-        - reporterID
         - comments
       properties:
         id:
@@ -762,10 +871,7 @@ components:
         date:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z   
-        reporterID:
-          type: string
-          example: g4G3dc4d
+          example: 2024-01-01T00:00:00.000Z
         reason:
           type: string
           enum:
@@ -778,7 +884,31 @@ components:
             - other
         comments: 
           type: string
-          
+
+    StrikeWithReporter:
+      allOf:
+        - $ref: '#/components/schemas/Strike'
+        - type: object
+          required:
+            - reporter
+          properties: 
+            reporter:
+              type: object
+              properties:
+                name:
+                  type: string
+                imageUrl:
+                  type: string
+
+    StrikeWithReporterID:
+      allOf:
+        - $ref: '#/components/schemas/Strike'
+        - type: object
+          properties: 
+            reporterID:
+              type: string
+              example: g5HQGuL8
+
     Assignment:
       type: object
       required:

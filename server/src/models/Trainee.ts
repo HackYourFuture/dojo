@@ -1,3 +1,5 @@
+import { StrikeWithReporter } from "./Strike";
+
 export enum Gender {
   Man = "man",
   Woman = "woman",
@@ -38,16 +40,6 @@ export enum InteractionType {
   Feedback = "feedback",
   TechHour = "tech-hour",
   InPerson = "in-person",
-  Other = "other",
-}
-
-export enum StrikeReason {
-  LastSubmission = "late-submission",
-  MissedSubmission = "missed-submission",
-  IncompleteSubmission = "incomplete-submission",
-  LateAttendance = "late-attendance",
-  Absence = "absence",
-  PendingFeedback= "pending-feedback",
   Other = "other",
 }
 
@@ -143,14 +135,6 @@ export interface TraineePersonalInfo {
   comments?: string;
 }
 
-export interface Strike {
-  readonly id: string;
-  date: Date;
-  reporterID: string;
-  reason: StrikeReason;
-  comments: string;
-}
-
 export interface Test {
   readonly id: string;
   date: Date;
@@ -177,7 +161,7 @@ export interface TraineeEducationInfo {
   graduationDate?: Date;
   quitReason?: QuitReason;
   quitDate?: Date;
-  strikes: Strike[];
+  strikes: StrikeWithReporter[];
   assignments: Assignment[];
   tests: Test[];
   comments?: string;
