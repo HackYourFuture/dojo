@@ -108,7 +108,7 @@ export const PersonalInfo = ({
   };
 
   /**
-   * Function to handel the gender selection values.
+   * Function to handel changing select fields with edited data.
    * 
    * @param {SelectChangeEvent} event the event received from select component change.
    */
