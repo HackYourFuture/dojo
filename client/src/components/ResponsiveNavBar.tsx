@@ -48,7 +48,7 @@ export const ResponsiveNavBar = () => {
   };
 
   /**
-   * Function to handel opening the login menu onClick event.
+   * Function to handel opening the user menu onClick event.
    * 
    * @param {HTMLElement} event the click event coming form user.
    */
