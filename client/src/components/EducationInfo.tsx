@@ -92,7 +92,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function to cancel strikes.
+   * Function to cancel adding strikes.
    */
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
@@ -139,7 +139,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function to handel the the save button logic after editing text fields.
+   * Function to handel the changing text fields with edited data.
    * 
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
@@ -152,7 +152,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function to handel the gender selection values.
+   * Function to handel changing select fields with edited data.
    * 
    * @param {SelectChangeEvent} event the event received from select component change.
    */
@@ -169,7 +169,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function for converting numeric values from onChange event.
+   * Function for converting numeric values from textFields with ‘type=number’
    */
   const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

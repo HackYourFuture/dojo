@@ -5,7 +5,7 @@ export interface ErrorBoxProps {
 }
 
 /**
- * Component to display a error state / Alert MUI component when status isError.
+ * Component to display a error state / Alert MUI component when status is ‘isError’.
  */
 export const ErrorBox = (props: ErrorBoxProps) => {
   return (
