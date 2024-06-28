@@ -139,7 +139,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function to handel the the save button logic after editing text fields.
+   * Function to handel the changing text fields with edited data.
    * 
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
