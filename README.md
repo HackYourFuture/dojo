@@ -40,6 +40,7 @@ This project is built using the MERN stack.
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![Nodemon](https://img.shields.io/badge/NODEMON-%23323330.svg?style=for-the-badge&logo=nodemon&logoColor=%BBDEAD)
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
 
 ## Getting Started
 
@@ -63,10 +64,7 @@ Ensure you have the following installed:
 2. Install dependencies for both server and client:
 
    ```bash
-   cd server
-   npm install
-   cd ../client
-   npm install
+   npm run setup
    ```
 
 3. Set up environment variables:
@@ -95,16 +93,16 @@ Ensure you have the following installed:
 
 ### Server (Backend)
 
-- `scripts/`: Entry point for the backend server.
+- `scripts/`: Contains helper utilities for auxiliary software.
 - `src/`: Contains the following folders:
 - `api-docs/`: Swagger api documentation.
 - `controllers/`: Logic for handling requests and responses.
 - `middleware/`: Custom middleware for authentication and validation.
 - `models/`: Mongoose models for database schemas.
-- `repositories/`:
+- `repositories/`: Components that are responsible for accessing the DB.
 - `routes/`: Contains Express routes for various functionalities.
 - `schemas/`: Contains the structure and property of the schemas in DB.
-- `services/`: Services logic.
+- `services/`: Contains services logic and accessing external APIs (e.g., Google and Slack).
 - `utils/`: Reusable helper functions and logic.
 
 ### Client (Frontend)
