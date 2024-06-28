@@ -16,7 +16,7 @@ We will use the popular [Jest](https://jestjs.io/) library to implement unit tes
 
 ### Integration testing
 
-In the future, automated tests can be implemented with [cypress].
+In the future, automated tests can be implemented with [cypress](https://www.cypress.io/).
 The tests will run on a fixed cadence and report any issues.
 
 Having automated tests has potential to greatly improve the quality of the application.
