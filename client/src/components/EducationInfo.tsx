@@ -169,7 +169,7 @@ export const EducationInfo = ({
   };
 
   /**
-   * Function for converting numeric values from onChange event.
+   * Function for converting numeric values from textFields with ‘type=number’
    */
   const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
