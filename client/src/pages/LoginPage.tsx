@@ -3,6 +3,9 @@ import { useAuth } from "../hooks/useAuth";
 import { ErrorBox } from "../components";
 import { Button, Stack } from "@mui/material";
 
+/**
+ * Component for displaying the login page elements.
+ */
 export const LoginPage = () => {
   const { login, errorMessage } = useAuth();
   return (

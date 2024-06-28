@@ -36,6 +36,13 @@ import { LoadingButton } from "@mui/lab";
 
 const NoIcon = () => null;
 
+/**
+ * Component for displaying trainee profile data on the education information tab.
+ *
+ * @param {TraineeEducationInfo} educationData trainee education information.
+ * @param {TraineeEducationInfo} saveTraineeData callback to save edited trainee education information.
+ * @returns {ReactNode} A React element that renders trainee education information with view, add, and edit logic.
+ */
 export const EducationInfo = ({
   educationData,
   saveTraineeData,
@@ -60,10 +67,16 @@ export const EducationInfo = ({
     if (educationData) setEditedFields(educationData as TraineeEducationInfo);
   }, [educationData]);
 
+  /**
+   * Function to enable edit mode when edit button is clicked.
+   */
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  /**
+   * Function to set editing mode to `false` when cancel button is clicked.
+   */
   const handleCancelClick = () => {
     if (educationData) {
       setEditedFields(educationData);
@@ -71,10 +84,16 @@ export const EducationInfo = ({
     setIsEditing(false);
   };
 
+  /**
+   * Function to enable adding strikes.
+   */
   const handleOpenStrike = () => {
     setIsAddingStrike(true);
   };
 
+  /**
+   * Function to cancel adding strikes.
+   */
   const handleCancelOpenStrike = () => {
     if (educationData?.strikes) {
       setStrikeFields({
@@ -88,6 +107,9 @@ export const EducationInfo = ({
     setIsAddingStrike(false);
   };
 
+  /**
+   * Function to handel the saving logic after clicking the save button.
+   */
   const handleSaveClick = async () => {
     if (!editedFields || !educationData) return;
 
@@ -116,6 +138,11 @@ export const EducationInfo = ({
     }
   };
 
+  /**
+   * Function to handel the changing text fields with edited data.
+   * 
+   * @param {HTMLInputElement} e the event received from the text fields after editing.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
@@ -124,6 +151,11 @@ export const EducationInfo = ({
     }));
   };
 
+  /**
+   * Function to handel changing select fields with edited data.
+   * 
+   * @param {SelectChangeEvent} event the event received from select component change.
+   */
   const handleSelectChange = (
     event: SelectChangeEvent<
       string | boolean | { name?: string; value: ReactNode }
@@ -136,6 +168,9 @@ export const EducationInfo = ({
     }));
   };
 
+  /**
+   * Function for converting numeric values from textFields with ‘type=number’
+   */
   const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (/^\d*$/.test(value)) {
@@ -146,6 +181,11 @@ export const EducationInfo = ({
     }
   };
 
+  /**
+   * Function to format date value.
+   * 
+   * @param {Date | undefined} date date value selected.
+   */
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
     const formattedDate = new Date(date);

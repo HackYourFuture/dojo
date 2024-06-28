@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
+/**
+ * A React hook that gets auth key name form browser's local storage.
+ *
+ * @param {string} keyName
+ * @param {any} defaultValue
+ */
 export const useLocalStorage = (keyName: string, defaultValue: any) => {
   const [storedValue, setStoredValue] = useState(() => {
     try {

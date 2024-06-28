@@ -17,6 +17,11 @@ import {
   Tooltip,
 } from "@mui/material";
 
+/**
+ * Component for displaying a responsive navigation menu to all pages.
+ *
+ * @returns {ReactNode} A React element that renders a nav bar to each page and a burger menu on smaller screens.
+ */
 export const ResponsiveNavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -26,18 +31,34 @@ export const ResponsiveNavBar = () => {
   );
   const { logout } = useAuth();
 
+  /**
+   * Function to handel opening the navigation burger menu onClick event.
+   * 
+   * @param {HTMLElement} event the click event coming form user.
+   */
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
+  /**
+   * Function to handel closing the navigation burger menu onClick event.
+   */
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
+  /**
+   * Function to handel opening the user menu onClick event.
+   * 
+   * @param {HTMLElement} event the click event coming form user.
+   */
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
+  /**
+   * Function to handel closing the user menu onClick event.
+   */
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };

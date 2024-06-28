@@ -2,6 +2,11 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { SearchResult } from "../types";
 
+/**
+ * A React Query hook that fetches trainee search results form api.
+ *
+ * @param {string} search search keyword 
+ */
 export const useTraineeSearchData = (search: string) => {
   return useQuery(
     ["search-results", search],

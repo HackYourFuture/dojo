@@ -1,5 +1,8 @@
 import { Box, CircularProgress } from "@mui/material";
 
+/**
+ * Component to display a loading indicator / CircularProgress MUI component when status isLoading.
+ */
 export const Loader = () => {
   return (
     <Box

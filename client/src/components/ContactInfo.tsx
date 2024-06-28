@@ -19,6 +19,13 @@ import LinkIcon from "@mui/icons-material/Link";
 import slackIcon from "../assets/slack.png";
 import { LoadingButton } from "@mui/lab";
 
+/**
+ * Component for displaying contact information in trainee profile data on the contact tab.
+ *
+ * @param {TraineeContactInfo} contactData trainee contact information.
+ * @param {TraineeContactInfo} saveTraineeData callback to save edited trainee contact information.
+ * @returns {ReactNode} A React element that renders trainee contact information with view, add, and edit logic.
+ */
 export const ContactInfo = ({
   contactData,
   saveTraineeData,
@@ -33,10 +40,16 @@ export const ContactInfo = ({
     if (contactData) setEditedFields(contactData as TraineeContactInfo);
   }, [contactData]);
 
+  /**
+   * Function to enable edit mode when edit button is clicked.
+   */
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  /**
+   * Function to set editing mode to `false` when cancel button is clicked.
+   */
   const handleCancelClick = () => {
     if (contactData) {
       setEditedFields(contactData);
@@ -44,6 +57,9 @@ export const ContactInfo = ({
     setIsEditing(false);
   };
 
+  /**
+   * Function to handel the saving logic after clicking the save button.
+   */
   const handleSaveClick = async () => {
     if (!editedFields || !contactData) return;
 
@@ -72,6 +88,11 @@ export const ContactInfo = ({
     }
   };
 
+  /**
+   * Function to handel changing text fields with edited data.
+   * 
+   * @param {HTMLInputElement} e the event received from the text fields after editing.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({

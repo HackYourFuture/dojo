@@ -4,6 +4,12 @@ import { MakeOptional } from '@mui/x-date-pickers/internals';
 import { Stack, Box, Typography } from '@mui/material';
 import { ChartData, DashboardPieChartProps } from '../types';
 
+/**
+ * Component for showing pie charts in the Dashboard page.
+ *
+ * @param {DashboardData} chartData The data to display in the pie charts.
+ * @returns {ReactNode} A React element that renders a stack of pie chart with chartData.
+ */
 export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
   const { countryOfOrigin, genderDistribution } = chartData.demographics;
   const { employment, graduations } = chartData.program;

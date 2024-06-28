@@ -25,6 +25,13 @@ import { LoadingButton } from "@mui/lab";
 
 const NoIcon = () => null;
 
+/**
+ * Component for displaying trainee profile data on the personal information tab.
+ *
+ * @param {TraineePersonalInfo} traineeData trainee personal information.
+ * @param {TraineePersonalInfo} saveTraineeData callback to save edited trainee personal information.
+ * @returns {ReactNode} A React element that renders trainee personal information with view, add, and edit logic.
+ */
 export const PersonalInfo = ({
   traineeData,
   saveTraineeData,
@@ -39,10 +46,16 @@ export const PersonalInfo = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  /**
+   * Function to enable edit mode when edit button is clicked.
+   */
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  /**
+   * Function to set editing mode to `false` when cancel button is clicked.
+   */
   const handleCancelClick = () => {
     if (traineeData) {
       setEditedFields(traineeData);
@@ -50,6 +63,9 @@ export const PersonalInfo = ({
     setIsEditing(false);
   };
 
+  /**
+   * Function to handel the saving logic after clicking the save button.
+   */
   const handleSaveClick = async () => {
     if (!editedFields || !traineeData) return;
 
@@ -78,6 +94,11 @@ export const PersonalInfo = ({
     }
   };
 
+  /**
+   * Function to handel changing text fields with edited data.
+   * 
+   * @param {HTMLInputElement} e the event received from the text fields after editing.
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
@@ -86,6 +107,11 @@ export const PersonalInfo = ({
     }));
   };
 
+  /**
+   * Function to handel changing select fields with edited data.
+   * 
+   * @param {SelectChangeEvent} event the event received from select component change.
+   */
   const handleSelectChange = (
     event: SelectChangeEvent<
       string | boolean | { name?: string; value: ReactNode }

@@ -1,6 +1,4 @@
 import {
-  Alert,
-  AlertTitle,
   Avatar,
   Box,
   IconButton,
@@ -12,8 +10,14 @@ import githubLogo from "../assets/github.png";
 import LinkedInLogo from "../assets/LinkedIn_logo.png";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import { LearningStatus, ProfileSidebarProps } from "../types";
-import { JobPathComponent, LearningStatusComponent, Loader } from ".";
+import { SidebarJobPath, SidebarLearningStatus, Loader, ErrorBox } from ".";
 
+/**
+ * Component for showing profile page sidebar and sidebar data.
+ *
+ * @param {string} traineeId trainee id.
+ * @returns {ReactNode} A React element that renders profile page sidebar information and profile image.
+ */
 export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   const { isLoading, isError, data, error, isFetching } =
     useTraineeInfoData(traineeId);
@@ -28,14 +32,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   }
 
   if (isError && error instanceof Error) {
-    return (
-      <Box p={8} sx={{ width: "100%" }}>
-        <Alert severity="error">
-          <AlertTitle>Error</AlertTitle>
-          {error.message}
-        </Alert>
-      </Box>
-    );
+    return <ErrorBox errorMessage={error.message} />;
   }
 
   return (
@@ -76,13 +73,13 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         </Typography>
         {/* Learning Status */}
         {data?.educationInfo?.learningStatus === LearningStatus.Graduated ? (
-          <JobPathComponent
+          <SidebarJobPath
             jobPath={data?.employmentInfo?.jobPath}
-          ></JobPathComponent>
+          ></SidebarJobPath>
         ) : (
-          <LearningStatusComponent
+          <SidebarLearningStatus
             learningStatus={data?.educationInfo?.learningStatus}
-          ></LearningStatusComponent>
+          ></SidebarLearningStatus>
         )}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
