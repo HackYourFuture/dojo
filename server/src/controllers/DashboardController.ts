@@ -4,9 +4,17 @@ export interface DashboardControllerType {
   getDashboard(req: Request, res: Response): Promise<void>;
 }
 
+/**
+ * A class provides methods for handling dashboard operations.
+ *
+ * @class
+ * */
 export class DashboardController implements DashboardControllerType {
   constructor() {}
-
+  
+  /**
+   * Retrieve the dashboard data.
+   */
   async getDashboard(req: Request, res: Response) {
     const response = {
       demographics: {

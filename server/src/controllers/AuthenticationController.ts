@@ -12,6 +12,12 @@ export interface AuthenticationControllerType {
 
 export const TOKEN_COOKIE_NAME = "dojo_token";
 
+/**
+ * A class provides methods for handling user authentication,
+ * including login, logout, and session retrieval.
+ *
+ * @class
+ * */
 export class AuthenticationController implements AuthenticationControllerType {
   private readonly userRepository: UserRepository;
   private readonly tokenRepository: TokenRepository;
