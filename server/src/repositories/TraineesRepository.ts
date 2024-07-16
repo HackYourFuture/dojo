@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
-import { Trainee, StrikeWithReporter, StrikeWithReporterID } from "../models";
+import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason } from "../models";
 import { TraineeSchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
 import { WithMongoID } from "../utils/database";
+import { UserRepository } from "./UserRepository";
 
 export interface TraineesRepository {
   searchTrainees(keyword: string, limit: number): Promise<Trainee[]>;
@@ -22,9 +23,11 @@ export interface TraineesRepository {
 
 export class MongooseTraineesRepository implements TraineesRepository {
   private readonly TraineeModel: mongoose.Model<Trainee & WithMongoID>;
+  private readonly userRepository: UserRepository;
 
-  constructor(db: mongoose.Connection) {
+  constructor(db: mongoose.Connection, userRepository: UserRepository) {
     this.TraineeModel = db.model<Trainee & WithMongoID>("Trainee", TraineeSchema);
+    this.userRepository = userRepository;
   }
 
   async searchTrainees(keyword: string, limit: number): Promise<Trainee[]> {
@@ -121,6 +124,23 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async validateStrike(strike: StrikeWithReporterID): Promise<void> {
-    
+    if(!strike.date) {
+      throw new Error("Strike date is required");
+    }
+    if(!strike.reporterID) {
+      throw new Error("Strike reporter ID is required");
+    }
+    if(!strike.reason) {
+      throw new Error("Strike reason is required");
+    }
+    if(!Object.values(StrikeReason).includes(strike.reason)) {
+      throw new Error("Unknown strike reason");
+    }
+    if(!strike.comments) {
+      throw new Error("Strike comments are required");
+    }
+    if(await this.userRepository.findUserByID(strike.reporterID) === null) {
+      throw new Error("Invalid strike reporter ID");
+    }
   }
 }

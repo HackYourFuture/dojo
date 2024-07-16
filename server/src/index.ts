@@ -58,8 +58,8 @@ class Main {
     const uploadService = new UploadService(path.join(__dirname,'../temp'));
     uploadService.cleanupTempFiles();
     const imageService = new ImageService();
-    const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
+    const traineesRepository = new MongooseTraineesRepository(this.db, userRepository);
     const tokenRepository = new MongooseTokenRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
