@@ -232,6 +232,15 @@ export class TraineesController implements TraineesControllerType {
     const user = res.locals.user as AuthenticatedUser;
     const reporterID = req.body.reporterID || user.id;
     const newStrike = { reason, date, comments, reporterID } as StrikeWithReporterID;
+
+    // Validate new strike model before creation
+    try {
+      await this.traineesRepository.validateStrike(newStrike);
+    } catch (error: any) {
+      res.status(400).send(new ResponseError(error.message));
+      return;
+    }
+
     try {
       const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
       res.status(201).json(strike);
@@ -262,8 +271,21 @@ export class TraineesController implements TraineesControllerType {
       reporterID: req.body.reporterID || user.id
     };
 
-    const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
-    res.status(200).json(updatedStrike);
+    // Validate new strike model after applying the changes
+    try {
+      await this.traineesRepository.validateStrike(strikeToUpdate);
+    } catch (error: any) {
+      res.status(400).send(new ResponseError(error.message));
+      return;
+    }
+
+    try {
+      const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
+      res.status(200).json(updatedStrike);
+    } catch (error: any) {
+      next(error);
+      return;
+    }
   }
 
   async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -272,8 +294,13 @@ export class TraineesController implements TraineesControllerType {
       res.status(404).send(new ResponseError("Trainee not found"));
       return;
     }
-    await this.traineesRepository.deleteStrike(req.params.id, req.params.strikeId);
-    res.status(204).end();
+    try {
+      await this.traineesRepository.deleteStrike(req.params.id, req.params.strikeId);
+      res.status(204).end();
+    } catch (error: any) {
+      next(error);
+      return;
+    }
   }
 
   // This function updates the destination object with the source object.
