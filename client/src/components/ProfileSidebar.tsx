@@ -69,7 +69,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         </Typography>
         {/* Pronouns */}
         <Typography variant="body1" color="text.secondary">
-          {data?.personalInfo?.pronouns?.toLowerCase()}
+          {data?.personalInfo?.pronouns}
         </Typography>
         {/* Learning Status */}
         {data?.educationInfo?.learningStatus === LearningStatus.Graduated ? (
@@ -83,7 +83,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         )}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
-          Cohort {data?.educationInfo?.currentCohort || "Not assigned"}
+          Cohort {data?.educationInfo?.currentCohort || "not assigned"}
         </Typography>
       </Stack>
 
