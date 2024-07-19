@@ -133,7 +133,7 @@ export class TraineesController implements TraineesControllerType {
     }
     try {
       const stream = await this.storageService.download(key);
-      res.status(200).contentType("image/jpeg");
+      res.status(200).contentType("image/png");
       stream.pipe(res);
     } catch (error: any) {
       if(error.$metadata.httpStatusCode === 404) {
@@ -176,22 +176,34 @@ export class TraineesController implements TraineesControllerType {
       await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
     } catch (error: any) {
       next(error);
-      console.error(error);
       return;
     }
 
     // Upload image to storage
-    const largeFileStream = fs.createReadStream(largeFilePath);
-    const smallFileStream = fs.createReadStream(smallFilePath);
-    await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
-    await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
+    const baseURL = process.env.BASE_URL ?? "";
+    const imageURL = new URL(`api/trainees/${trainee.id}/profile-picture`, baseURL).href; 
+
+    try {
+      // Upload images to storage
+      const largeFileStream = fs.createReadStream(largeFilePath);
+      const smallFileStream = fs.createReadStream(smallFilePath);
+      await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
+      await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
+
+      // update the trainee object with the new image URL
+      trainee.personalInfo.imageUrl = imageURL
+      this.traineesRepository.updateTrainee(trainee);
+    } catch (error: any) {
+      next(error);
+      return;
+    }
 
     // Cleanup
     fs.unlink(originalFilePath, (err) => { });
     fs.unlink(largeFilePath, (err) => { });
     fs.unlink(smallFilePath, (err) => { });
 
-    res.status(201).send({'imageUrl': `trainee/${trainee.id}/profile-picture`});
+    res.status(201).send({'imageUrl': imageURL, 'thumbnailUrl': imageURL + "?size=small"});
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
@@ -200,8 +212,17 @@ export class TraineesController implements TraineesControllerType {
       res.status(404).send(new ResponseError("Trainee not found"));
       return;
     }
-    await this.storageService.delete(`images/profile/${trainee.id}`);
-    await this.storageService.delete(`images/profile/${trainee.id}_small`);
+    try {
+      await this.storageService.delete(`images/profile/${trainee.id}`);
+      await this.storageService.delete(`images/profile/${trainee.id}_small`);
+      
+      // update the trainee object with the new image URL
+      trainee.personalInfo.imageUrl = undefined
+      this.traineesRepository.updateTrainee(trainee);
+    } catch (error: any) {
+      next(error);
+      return;
+    }
 
     res.status(204).end();
   }

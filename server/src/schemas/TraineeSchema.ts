@@ -29,6 +29,7 @@ const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
     firstName: { type: String, required: true, index: true },
     lastName: { type: String, required: true, index: true },
     preferredName: { type: String, required: false, index: true, default: null },
+    imageUrl: { type: String, required: false, default: null },
     gender: { type: String, required: true, enum: Object.values(Gender) },
     pronouns: { type: String, required: false, default: null },
     location: { type: String, required: false, default: null },
