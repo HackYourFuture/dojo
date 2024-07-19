@@ -233,7 +233,6 @@ export const PersonalInfo = ({
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem>-</MenuItem>
             <MenuItem value="He/him">He/him</MenuItem>
             <MenuItem value="She/her">She/her</MenuItem>
             <MenuItem value="They/them">They/them</MenuItem>
