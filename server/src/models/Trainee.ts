@@ -119,6 +119,7 @@ export interface TraineePersonalInfo {
   firstName: string;
   lastName: string;
   preferredName?: string;
+  imageUrl?: string;
   gender: Gender;
   pronouns?: string;
   location?: string;

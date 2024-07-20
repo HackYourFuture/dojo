@@ -23,7 +23,6 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   const { isLoading, isError, data, error, isFetching } =
     useTraineeInfoData(traineeId);
 
-  const profileImgSrc = `/api/trainees/${traineeId}/profile-picture`;
   const slackId = data?.contactInfo?.slackId;
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;
@@ -53,7 +52,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         <Avatar
           variant="square"
           sx={{ width: '100%', height: '100%' }}
-          src={profileImgSrc}
+          src={data?.personalInfo?.imageUrl}
           alt={data?.displayName}
         />
       </Box>
