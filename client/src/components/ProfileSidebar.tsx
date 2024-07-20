@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   IconButton,
+  Link,
   Stack,
   Typography,
 } from "@mui/material";
@@ -90,44 +91,37 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
       {/* social media contact info */}
       <div style={{ display: "flex", justifyContent: "center", gap: "16px" }}>
         {slackId && (
-          <IconButton
-            aria-label="Slack Id"
-            onClick={() =>
-              window.open(`slack://user?team=TOEJTTUQ87&ID/${slackId}`)
-            }
-          >
-            <img
-              src={slackLogo}
-              alt="Slack"
-              width="32"
-              height="32"
-              style={{ borderRadius: "50%" }}
-            />
-          </IconButton>
+          <Link href={`slack://user?team=T0EJTUQ87&id=${slackId}`}>
+            <IconButton aria-label="Slack Id">
+              <img
+                src={slackLogo}
+                alt="Slack"
+                width="32"
+                height="32"
+                style={{ borderRadius: "50%" }}
+              />
+            </IconButton>
+          </Link>
         )}
         {githubHandle && (
-          <IconButton
-            aria-label="GitHub handel"
-            onClick={() => window.open(`https://github.com/${githubHandle}`)}
-          >
-            <img
-              src={githubLogo}
-              alt="GitHub"
-              width="32"
-              height="32"
-              style={{ borderRadius: "50%" }}
-            />
-          </IconButton>
+           <Link href={`https://github.com/${githubHandle}`} target="_blank" rel="noopener">
+            <IconButton aria-label="GitHub handel">
+              <img
+                src={githubLogo}
+                alt="GitHub"
+                width="32"
+                height="32"
+                style={{ borderRadius: "50%" }}
+              />
+            </IconButton>
+          </Link>
         )}
         {linkedIn && (
-          <IconButton
-            aria-label="LinkedIn URL"
-            onClick={() =>
-              window.open(`https://www.linkedin.com/in/${linkedIn}`)
-            }
-          >
-            <img src={LinkedInLogo} alt="GitHub" width="32" height="32" />
-          </IconButton>
+          <Link href={linkedIn} target="_blank" rel="noopener">
+            <IconButton aria-label="LinkedIn URL">
+              <img src={LinkedInLogo} alt="LinkedIn" width="32" height="32" />
+            </IconButton>
+          </Link>
         )}
       </div>
     </Box>
