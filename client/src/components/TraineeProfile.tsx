@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Snackbar } from "@mui/material";
 import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
 import {
@@ -55,6 +55,10 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     return <ErrorBox errorMessage={error.message} />;
   }
 
+  useEffect(() => {
+    document.title = `${traineeData?.displayName} | Dojo`;
+  }, [traineeData]);
+  
   /**
    * Function to navigate to active tab.
    * 
