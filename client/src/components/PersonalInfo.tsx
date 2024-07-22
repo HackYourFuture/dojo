@@ -152,7 +152,7 @@ export const PersonalInfo = ({
           <TextField
             id="firstName"
             name="firstName"
-            label="First Name"
+            label="First name"
             type="text"
             value={editedFields?.firstName || ""}
             InputProps={{ readOnly: isEditing ? false : true }}
@@ -167,7 +167,7 @@ export const PersonalInfo = ({
           <TextField
             id="lastName"
             name="lastName"
-            label="Last Name"
+            label="Last name"
             type="text"
             value={editedFields?.lastName || ""}
             InputProps={{ readOnly: isEditing ? false : true }}
@@ -182,7 +182,7 @@ export const PersonalInfo = ({
           <TextField
             id="preferredName"
             name="preferredName"
-            label="Preferred Name"
+            label="Preferred name"
             type="text"
             value={editedFields?.preferredName || ""}
             InputProps={{ readOnly: isEditing ? false : true }}
@@ -263,7 +263,7 @@ export const PersonalInfo = ({
           <TextField
             id="countryOfOrigin"
             name="countryOfOrigin"
-            label="Country of Origin"
+            label="Country of origin"
             type="text"
             value={editedFields?.countryOfOrigin || ""}
             InputProps={{ readOnly: isEditing ? false : true }}
@@ -310,11 +310,11 @@ export const PersonalInfo = ({
           variant={isEditing ? "outlined" : "standard"}
           sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}
         >
-          <InputLabel htmlFor="hasWorkPermit">Work Permit</InputLabel>
+          <InputLabel htmlFor="hasWorkPermit">Work permit</InputLabel>
           <Select
             name="hasWorkPermit"
             id="hasWorkPermit"
-            label="Work Permit"
+            label="Work permit"
             value={
               editedFields?.hasWorkPermit == null
                 ? ""
@@ -335,11 +335,11 @@ export const PersonalInfo = ({
           variant={isEditing ? "outlined" : "standard"}
           sx={{ mx: 2, my: 1, width: "24ch", gap: "2rem" }}
         >
-          <InputLabel htmlFor="residencyStatus">Residency Status</InputLabel>
+          <InputLabel htmlFor="residencyStatus">Residency status</InputLabel>
           <Select
             name="residencyStatus"
             id="residencyStatus"
-            label="Residency Status"
+            label="Residency status"
             value={editedFields?.residencyStatus || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
@@ -363,12 +363,12 @@ export const PersonalInfo = ({
           sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}
         >
           <InputLabel htmlFor="receivesSocialBenefits">
-            Social Benefits
+            Uitkering
           </InputLabel>
           <Select
             name="receivesSocialBenefits"
             id="receivesSocialBenefits"
-            label="Social Benefits"
+            label="Uitkering"
             value={
               editedFields?.receivesSocialBenefits == null
                 ? ""
@@ -390,12 +390,12 @@ export const PersonalInfo = ({
           sx={{ mx: 2, my: 1, width: "16ch", gap: "2rem" }}
         >
           <InputLabel htmlFor="caseManagerUrging">
-            Case Manager Urging
+            Case manager urging
           </InputLabel>
           <Select
             name="caseManagerUrging"
             id="caseManagerUrging"
-            label="Case Manager Urging"
+            label="Case manager urging"
             value={
               editedFields?.caseManagerUrging == null
                 ? ""
@@ -418,11 +418,11 @@ export const PersonalInfo = ({
           variant={isEditing ? "outlined" : "standard"}
           sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
         >
-          <InputLabel htmlFor="englishLevel">English Level</InputLabel>
+          <InputLabel htmlFor="englishLevel">English level</InputLabel>
           <Select
             name="englishLevel"
             id="englishLevel"
-            label="English Level"
+            label="English level"
             value={editedFields?.englishLevel || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
@@ -441,12 +441,12 @@ export const PersonalInfo = ({
           sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
         >
           <InputLabel htmlFor="professionalDutch">
-            Professional Dutch
+            Professional dutch
           </InputLabel>
           <Select
             name="professionalDutch"
             id="professionalDutch"
-            label="Professional Dutch"
+            label="Professional dutch"
             value={
               editedFields?.professionalDutch == null
                 ? ""
@@ -469,11 +469,11 @@ export const PersonalInfo = ({
           variant={isEditing ? "outlined" : "standard"}
           sx={{ mx: 2, my: 1, width: "25ch", gap: "2rem" }}
         >
-          <InputLabel htmlFor="educationLevel">Education Level</InputLabel>
+          <InputLabel htmlFor="educationLevel">Education level</InputLabel>
           <Select
             name="educationLevel"
             id="educationLevel"
-            label="Education Level"
+            label="Education level"
             value={editedFields?.educationLevel || ""}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
@@ -497,7 +497,7 @@ export const PersonalInfo = ({
           <TextField
             id="educationBackground"
             name="educationBackground"
-            label="Education Background"
+            label="Education background"
             type="text"
             value={editedFields?.educationBackground || ""}
             InputProps={{ readOnly: isEditing ? false : true }}

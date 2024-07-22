@@ -26,6 +26,7 @@ export const SearchBar = ({ data }: any) => {
         placeholder="Search trainee..."
         fullWidth
         autoFocus
+        autoComplete='off'
         onChange={(e) => handleChange(e.target.value)}
         InputProps={{
           startAdornment: (
