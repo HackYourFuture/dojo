@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason } from "../models";
+import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason, LearningStatus } from "../models";
 import { TraineeSchema } from "../schemas";
 import { escapeStringRegexp } from "../utils/string";
 import { WithMongoID } from "../utils/database";
@@ -7,6 +7,11 @@ import { UserRepository } from "./UserRepository";
 
 export interface TraineesRepository {
   searchTrainees(keyword: string, limit: number): Promise<Trainee[]>;
+  getTraineesByCohort(
+    fromCohort: number | undefined,
+    toCohort: number | undefined, 
+    includeNullCohort: boolean
+  ): Promise<Trainee[]>;
   getTrainee(id: string): Promise<Trainee | null>;
   createTrainee(trainee: Trainee): Promise<Trainee>;
   deleteTrainee(id: string): Promise<void>;
@@ -41,6 +46,22 @@ export class MongooseTraineesRepository implements TraineesRepository {
     })
       .limit(limit)
       .sort({ updatedAt: -1 });
+  }
+
+  async getTraineesByCohort(
+      fromCohort: number | undefined, 
+      toCohort: number | undefined, 
+      includeNullCohort: boolean = false
+    ): Promise<Trainee[]> {
+
+    let condition: any = { "educationInfo.currentCohort": { $gte: fromCohort ?? 0, $lte: toCohort ?? 999 } };
+    if (includeNullCohort) {
+      condition = { $or: [condition, { "educationInfo.currentCohort": null }] };
+    }
+    return await this.TraineeModel.find(condition)
+      .where("educationInfo.learningStatus").ne(LearningStatus.Quit)
+      .sort({ "educationInfo.currentCohort": 1 })
+      .exec();
   }
 
   async getTrainee(id: string): Promise<Trainee | null> {
