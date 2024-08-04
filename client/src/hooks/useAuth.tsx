@@ -15,11 +15,12 @@ export const ApiProvider = () => {
   const navigate = useNavigate();
 
   const login = useGoogleLogin({
+    flow: 'auth-code',
     onSuccess: async (response) => {
       try {
         setLoading(true);
 
-        await axios.post("/api/auth/login", { token: response.access_token });
+        await axios.post("/api/auth/login", { authCode: response.code });
         const { data } = await axios.get("/api/auth/session");
         if (data) {
           console.log("Successfully logged in!", data);
