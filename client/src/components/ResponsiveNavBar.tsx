@@ -16,6 +16,7 @@ import {
   Toolbar,
   Tooltip,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Component for displaying a responsive navigation menu to all pages.
@@ -31,6 +32,7 @@ export const ResponsiveNavBar = () => {
   );
   const { logout } = useAuth();
 
+  const navigate = useNavigate();
   /**
    * Function to handel opening the navigation burger menu onClick event.
    * 
@@ -81,21 +83,21 @@ export const ResponsiveNavBar = () => {
               <Stack direction="row" spacing={2}>
                 <Button
                   key="Home"
-                  href={`/home`}
+                  onClick={() => navigate("/home")}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Home
                 </Button>
                 <Button
                   key="Cohorts"
-                  href={`/cohorts`}
+                  onClick={() => navigate("/cohorts")}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Cohorts
                 </Button>
                 <Button
                   key="Dashboard"
-                  href={`/dashboard`}
+                  onClick={() => navigate("/dashboard")}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Dashboard
@@ -138,7 +140,7 @@ export const ResponsiveNavBar = () => {
               >
                 <MenuItem key="Home">
                   <Button
-                    href={`/home`}
+                    onClick={() => navigate("/home")}
                     sx={{
                       color: "inherit",
                       display: "block",
@@ -150,7 +152,7 @@ export const ResponsiveNavBar = () => {
                 </MenuItem>
                 <MenuItem key="Cohorts">
                   <Button
-                    href={`/cohorts`}
+                    onClick={() => navigate("/cohorts")}
                     sx={{
                       color: "inherit",
                       display: "block",
@@ -162,7 +164,7 @@ export const ResponsiveNavBar = () => {
                 </MenuItem>
                 <MenuItem key="Dashboard">
                   <Button
-                    href={`/dashboard`}
+                    onClick={() => navigate("/dashboard")}
                     sx={{
                       color: "inherit",
                       display: "block",
@@ -177,7 +179,7 @@ export const ResponsiveNavBar = () => {
 
             <Box sx={{ flexGrow: 0 }}>
               <IconButton
-                href={`/search`}
+                onClick={() => navigate("/search")}
                 size="large"
                 aria-label="search"
                 color="inherit"
