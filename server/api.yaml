@@ -33,7 +33,7 @@ paths:
       tags:
         - Auth
       summary: Login to the system
-      description: The endpoint exchanges Google OAuth2 token for internal JWT token to be used for authenticated requests
+      description: The endpoint exchanges Google Auth response code for internal JWT token to be used for authenticated requests
       requestBody:
         description: ''
         content:
@@ -680,9 +680,9 @@ components:
     LoginRequest:
       type: object
       properties:
-        googleAccessToken:
+        authCode:
             type: string
-            example: a79.a0vvd52N38l_KtsEccaskw3Ec-i2J_h_Qn3jAsCt_iHr_CcHz_-PXzciv5RuGFm7qWAUxTfOMjvX6HjXuvjYFLiDLu2PyUeV7HBeq4TO2sFBjoeO456XQ8bCM5f44K3wCzSCau3uIrBAT9iU6agg4ggFsdqqrjZYTc4aCaYKAQYSARISFQHGb2Mij1Yo8GFRSfE5gx_OH6kfgG0170
+            example: 4/0AnvDMrB6_8zVFU2GeTDALqZB_WDSYf6Zg8as7mAHQ84gJ5xrnwZA37Cz0tEned-MhPPn9w
 
     LoginResponse:
       type: object
