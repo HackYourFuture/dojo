@@ -4,8 +4,7 @@ import Alert from "@mui/material/Alert";
 import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
 import { useDebounce } from "../hooks/useDebounce";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { Loader } from "./Loader";
 import { ErrorBox } from "./ErrorBox";
 
@@ -62,9 +61,17 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
                 >
                   <ListItemButton key={trainee.id}>
                     <ListItemIcon>
-                      <PersonIcon />
+                      <Avatar 
+                        src={trainee.thumbnail ?? ""} 
+                        sx={{ width: 32, height: 32 }} 
+                        variant="rounded">
+                      </Avatar>
                     </ListItemIcon>
-                    {trainee.name}
+                    <ListItemText primary={trainee.name}></ListItemText>
+                    <ListItemText 
+                      secondary={trainee.cohort ? `Cohort ${trainee.cohort}` : 'No cohort'}
+                      sx={{ textAlign: 'right' }}>
+                    </ListItemText>
                   </ListItemButton>
                 </Link>
               </ListItem>
