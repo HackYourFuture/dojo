@@ -39,12 +39,12 @@ export class AuthenticationController implements AuthenticationControllerType {
     const authCode = req.body.authCode?.trim();
     const redirectURI = req.body.redirectURI?.trim();
     if (!authCode || !redirectURI) {
-      res.status(400).json(new ResponseError("Code and redirectURI are required"));
+      res.status(400).json(new ResponseError('Code and redirectURI are required'));
       return;
     }
 
     if (!this.isValidRedirectURI(redirectURI)) {
-      res.status(400).json(new ResponseError("Invalid redirectURI"));
+      res.status(400).json(new ResponseError('Invalid redirectURI'));
       return;
     }
 
@@ -103,12 +103,8 @@ export class AuthenticationController implements AuthenticationControllerType {
   }
 
   private isValidRedirectURI(redirectURI: string) {
-    const allowedHosts = [
-      "localhost",
-      "dojo-test.hackyourfuture.net",
-      "dojo.hackyourfuture.net"
-    ];
-    
+    const allowedHosts = ['localhost', 'dojo-test.hackyourfuture.net', 'dojo.hackyourfuture.net'];
+
     try {
       const url = new URL(redirectURI);
       return allowedHosts.includes(url.hostname);

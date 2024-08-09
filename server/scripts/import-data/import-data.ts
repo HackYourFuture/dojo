@@ -4,13 +4,13 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 
-const replaceBoolean = (str: string) =>  {
-  if(!str.trim()) {
+const replaceBoolean = (str: string) => {
+  if (!str.trim()) {
     return null;
   }
-  return str.trim().toLowerCase() === 'yes' ? true : false
+  return str.trim().toLowerCase() === 'yes' ? true : false;
 };
-const handleString = (str: string) => str.trim() === '' ? null : str.trim();
+const handleString = (str: string) => (str.trim() === '' ? null : str.trim());
 
 const extractData = (data: string) => {
   const rows = parse(data, {

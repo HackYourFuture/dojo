@@ -14,7 +14,7 @@ export interface GoogleOAuthServiceType {
 export class GoogleOAuthService {
   private readonly clientId: string;
   private readonly clientSecret: string;
-  
+
   constructor(clientId: string, clientSecret: string) {
     if (!clientId.trim()) {
       throw new Error('Missing required configuration: clientId');
@@ -59,7 +59,7 @@ export class GoogleOAuthService {
       client_id: this.clientId,
       client_secret: this.clientSecret,
       redirect_uri: redirectURI.trim(),
-      grant_type: "authorization_code",
+      grant_type: 'authorization_code',
     });
 
     const response = await fetch(URL, { method: 'POST', headers, body });
