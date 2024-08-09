@@ -162,6 +162,8 @@ export interface DashboardPieChartProps {
 export interface SearchResult {
   id: number;
   name: string;
+  thumbnail: string | null;
+  cohort: number | null;
 }
 
 export interface Trainee {
@@ -180,6 +182,7 @@ export interface TraineePersonalInfo {
   firstName: string;
   lastName: string;
   preferredName?: string;
+  imageUrl?: string;
   gender: Gender;
   pronouns?: string;
   location?: string;

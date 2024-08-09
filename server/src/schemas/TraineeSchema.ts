@@ -5,7 +5,7 @@ import {
   TraineePersonalInfo,
   TraineeEducationInfo,
   TraineeEmploymentInfo,
-  Strike,
+  StrikeWithReporterID,
   Assignment,
   Test,
   TraineeEmploymentHistory,
@@ -21,14 +21,15 @@ import {
   ResidencyStatus,
   TestResult,
   TestType,
-  WithMongoID
 } from "../models";
 import { genId } from "../utils/random";
+import { WithMongoID, jsonFormatting } from "../utils/database";
 
 const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
     firstName: { type: String, required: true, index: true },
     lastName: { type: String, required: true, index: true },
     preferredName: { type: String, required: false, index: true, default: null },
+    imageUrl: { type: String, required: false, default: null },
     gender: { type: String, required: true, enum: Object.values(Gender) },
     pronouns: { type: String, required: false, default: null },
     location: { type: String, required: false, default: null },
@@ -58,11 +59,11 @@ const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
   { _id: false }
 );
 
-const StrikeSchema = new Schema<Strike & WithMongoID>(
+const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>(
   {
     _id: { type: String, default: genId },
     date: { type: Date, required: true },
-    reporterID: { type: String, required: true, ref: 'User' },
+    reporterID: { type: String, required: true, ref: 'Users', alias: 'reporter' },
     reason: { type: String, enum: Object.values(StrikeReason), required: true },
     comments: { type: String, required: true },
   },
@@ -165,13 +166,8 @@ TraineeSchema.virtual("displayName").get(function() {
   return `${name} ${lastName}`;
 });
 
-TraineeSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  minimize: false,
-  transform: (_, ret) => {
-    delete ret._id;
-  },
-});
+TraineeSchema.set("toJSON", jsonFormatting);
+StrikeSchema.set("toJSON", jsonFormatting);
+
 
 export { TraineeSchema };

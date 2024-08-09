@@ -15,25 +15,48 @@ import {
   Stack,
   Toolbar,
   Tooltip,
-} from '@mui/material';
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
+/**
+ * Component for displaying a responsive navigation menu to all pages.
+ *
+ * @returns {ReactNode} A React element that renders a nav bar to each page and a burger menu on smaller screens.
+ */
 export const ResponsiveNavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const { logout } = useAuth();
 
+  const navigate = useNavigate();
+  /**
+   * Function to handel opening the navigation burger menu onClick event.
+   * 
+   * @param {HTMLElement} event the click event coming form user.
+   */
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
+  /**
+   * Function to handel closing the navigation burger menu onClick event.
+   */
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
+  /**
+   * Function to handel opening the user menu onClick event.
+   * 
+   * @param {HTMLElement} event the click event coming form user.
+   */
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
+  /**
+   * Function to handel closing the user menu onClick event.
+   */
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -56,22 +79,22 @@ export const ResponsiveNavBar = () => {
               <Stack direction="row" spacing={2}>
                 <Button
                   key="Home"
-                  href={`/home`}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  onClick={() => navigate("/home")}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Home
                 </Button>
                 <Button
                   key="Cohorts"
-                  href={`/cohorts`}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  onClick={() => navigate("/cohorts")}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Cohorts
                 </Button>
                 <Button
                   key="Dashboard"
-                  href={`/dashboard`}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  onClick={() => navigate("/dashboard")}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
                   Dashboard
                 </Button>
@@ -111,7 +134,7 @@ export const ResponsiveNavBar = () => {
               >
                 <MenuItem key="Home">
                   <Button
-                    href={`/home`}
+                    onClick={() => navigate("/home")}
                     sx={{
                       color: 'inherit',
                       display: 'block',
@@ -123,7 +146,7 @@ export const ResponsiveNavBar = () => {
                 </MenuItem>
                 <MenuItem key="Cohorts">
                   <Button
-                    href={`/cohorts`}
+                    onClick={() => navigate("/cohorts")}
                     sx={{
                       color: 'inherit',
                       display: 'block',
@@ -135,7 +158,7 @@ export const ResponsiveNavBar = () => {
                 </MenuItem>
                 <MenuItem key="Dashboard">
                   <Button
-                    href={`/dashboard`}
+                    onClick={() => navigate("/dashboard")}
                     sx={{
                       color: 'inherit',
                       display: 'block',
@@ -150,7 +173,7 @@ export const ResponsiveNavBar = () => {
 
             <Box sx={{ flexGrow: 0 }}>
               <IconButton
-                href={`/search`}
+                onClick={() => navigate("/search")}
                 size="large"
                 aria-label="search"
                 color="inherit"

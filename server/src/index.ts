@@ -7,11 +7,12 @@ import cookieParser from "cookie-parser";
 import swagger from "./api-docs/swagger";
 import mongoose from "mongoose";
 import { TraineesRouter, SearchRouter, AuthenticationRouter, GeographyRouter, DashboardRouter } from "./routes";
-import { TraineesController, SearchController, AuthenticationController, GeographyController, DashboardController } from "./controllers";
-import { MongooseTraineesRepository, MongooseUserRepository, MongooseTokenRepository, MongooseGeographyRepository } from "./repositories";
+import { TraineesController, SearchController, AuthenticationController, GeographyController, DashboardController, CohortsController } from "./controllers";
+import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from "./repositories";
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from "./services";
 import { ResponseError } from "./models";
 import AuthMiddleware from "./middlewares/AuthMiddleware";
+import { CohortsRouter } from "./routes/CohortsRouter";
 
 class Main {
   private readonly app: express.Application;
@@ -46,7 +47,11 @@ class Main {
     const tokenExpirationInDays = Number.parseInt(process.env.JWT_EXPIRATION_DAYS ?? "7");
 
     // Dependencies
-    const googleOAuthService = new GoogleOAuthService();
+    const googleOAuthService = new GoogleOAuthService(
+      process.env.GOOGLE_OAUTH_CLIENTID ?? "",
+      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? "",
+      process.env.BASE_URL ?? ""
+    );
     const tokenService = new TokenService(process.env.JWT_SECRET ?? "", tokenExpirationInDays);
     const storageService = new StorageService(
       process.env.STORAGE_ENDPOINT ?? "",
@@ -58,17 +63,17 @@ class Main {
     const uploadService = new UploadService(path.join(__dirname,'../temp'));
     uploadService.cleanupTempFiles();
     const imageService = new ImageService();
-    const traineesRepository = new MongooseTraineesRepository(this.db);
     const userRepository = new MongooseUserRepository(this.db); 
-    const tokenRepository = new MongooseTokenRepository(this.db);
+    const traineesRepository = new MongooseTraineesRepository(this.db, userRepository);
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
     // setup controllers
-    const authenticationController = new AuthenticationController(userRepository, tokenRepository, googleOAuthService, tokenService, tokenExpirationInDays);
+    const authenticationController = new AuthenticationController(userRepository, googleOAuthService, tokenService, tokenExpirationInDays);
     const traineeController = new TraineesController(traineesRepository, storageService, uploadService, imageService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
+    const cohortsController = new CohortsController(traineesRepository);
 
     // Setup custom middlewares
     const authMiddleware = new AuthMiddleware(tokenService);
@@ -79,6 +84,7 @@ class Main {
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
     const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
     const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);
+    const cohortsRouter = new CohortsRouter(cohortsController, [authMiddleware]);
 
     // Define routes
     this.app.use("/api/auth", authenticationRouter.build());
@@ -86,6 +92,7 @@ class Main {
     this.app.use("/api/search", searchRouter.build());
     this.app.use("/api/geo", geographyRouter.build());
     this.app.use("/api/dashboard", dashboardRouter.build());
+    this.app.use("/api/cohorts", cohortsRouter.build());
   
     // Not found handler for API
     this.app.use('/api', (req: Request, res: Response) => {

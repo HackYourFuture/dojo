@@ -15,23 +15,25 @@ servers:
   - url: https://dojo-test.hackyourfuture.net/api/
     description: Test server
 tags:
-  - name: auth
+  - name: Auth
     description: ''
-  - name: search
+  - name: Search
     description: ''
-  - name: trainees
+  - name: Trainees
     description: ''
-  - name: geography
+  - name: Cohorts
     description: ''
-  - name: dashboard
+  - name: Geography
+    description: ''
+  - name: Dashboard
     description: ''
 paths:
   /auth/login:
     post:
       tags:
-        - auth
+        - Auth
       summary: Login to the system
-      description: The endpoint exchanges Google OAuth2 token for internal JWT token to be used for authenticated requests
+      description: The endpoint exchanges Google Auth response code for internal JWT token to be used for authenticated requests
       requestBody:
         description: ''
         content:
@@ -60,7 +62,7 @@ paths:
   /auth/session:
     get:
       tags:
-        - auth
+        - Auth
       summary: Get current logged in user info
       description: This endpoint returns the currently authenticated user. It extracts and verifies the session token.
       security:
@@ -81,7 +83,7 @@ paths:
   /auth/logout:
     post:
       tags:
-        - auth
+        - Auth
       summary: Logout from the system
       description: The endpoint removes the session token from the cookies.
       security:
@@ -99,7 +101,7 @@ paths:
   /search:
     get:
       tags:
-        - search
+        - Search
       summary: Find trainees
       description:  Find trainees by a keyword. The search will try to match the first name, last name or email.
       security:
@@ -147,10 +149,11 @@ paths:
 
         '400':
           description: Missing query
+   
   /trainees:
     post:
       tags:
-        - trainees
+        - Trainees
       summary: Create new profile
       description: ''
       security:
@@ -171,7 +174,7 @@ paths:
   /trainees/{id}:
     get:
       tags:
-        - trainees
+        - Trainees
       summary: Fetch information about a trainee
       description: ''
       security:
@@ -200,7 +203,7 @@ paths:
 
     patch:
       tags:
-        - trainees
+        - Trainees
       summary: Update trainee information
       description: ''
       security:
@@ -234,7 +237,7 @@ paths:
                 
     delete:
       tags:
-        - trainees
+        - Trainees
       summary: Delete trainee from the system
       description: ''
       security:
@@ -261,7 +264,7 @@ paths:
   /trainees/{id}/profile-picture:
     get:
       tags:
-        - trainees
+        - Trainees
       summary: Fetch the profile picture of a trainee
       description: ''
       security:
@@ -299,7 +302,7 @@ paths:
 
     put:
       tags:
-        - trainees
+        - Trainees
       summary: Upload new profile picture of a given trainee
       description: > 
        Accepts only images. The new image will override the old image.
@@ -346,7 +349,7 @@ paths:
                 
     delete:
       tags:
-        - trainees
+        - Trainees
       summary: Delete profile picture of a given trainee
       description: ''
       security:
@@ -370,10 +373,186 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /trainees/{id}/strikes:
+    get:
+      tags:
+        - Trainees
+      summary: Fetch all strikes of a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StrikeWithReporter'
+    post:
+      tags:
+        - Trainees
+      summary: Create new strike
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrikeWithReporterID'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrikeWithReporter'
+
+  /trainees/{id}/strikes/{strikeID}:
+    put:
+      tags:
+        - Trainees
+      summary: Update existing strike
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: strikeID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrikeWithReporterID'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrikeWithReporter'
+    delete:
+      tags:
+        - Trainees
+      summary: Delete existing strike
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: strikeID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        204:
+          description: successful operation
+
+  /cohorts:
+    get:
+      tags:
+        - Cohorts
+      summary: Fetch a list of cohorts with their trainees
+      description: Returns a list of cohorts for a specified range.
+      security:
+        - cookie_token:
+      parameters:
+        - name: start
+          in: query
+          description: "Lower range of the cohort. Default: 0"
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 999
+        - name: end
+          in: query
+          description: "Upper range of the cohort. Default: 999"
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 999
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    cohort:
+                      type: number
+                    trainees:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          thumbnailURL:
+                            type: string
+                          displayName:
+                            type: string
+                          location:
+                            type: string
+                          hasWorkPermit:
+                            type: boolean
+                          email:
+                            type: string
+                          slackID:
+                            type: string
+                          githubHandle:
+                            type: string
+                          linkedIn:
+                            type: string
+                          learningStatus:
+                            $ref: '#/components/schemas/LearningStatus'
+                          jobPath:
+                            $ref: '#/components/schemas/JobPath'
+                          strikes:
+                            type: number
+
   /geo/cities:
     get:
       tags:
-        - geography
+        - Geography
       summary: Get list of cities
       description:  Find cities by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
       security:
@@ -405,7 +584,7 @@ paths:
   /geo/countries:
     get:
       tags:
-        - geography
+        - Geography
       summary: Get list of countries
       description:  Find countries by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
       security:
@@ -442,7 +621,7 @@ paths:
   /dashboard:
       get:
         tags:
-          - dashboard
+          - Dashboard
         summary: Get the data to display on the dashboard
         description: ''
         security:
@@ -501,9 +680,9 @@ components:
     LoginRequest:
       type: object
       properties:
-        googleAccessToken:
+        authCode:
             type: string
-            example: a79.a0vvd52N38l_KtsEccaskw3Ec-i2J_h_Qn3jAsCt_iHr_CcHz_-PXzciv5RuGFm7qWAUxTfOMjvX6HjXuvjYFLiDLu2PyUeV7HBeq4TO2sFBjoeO456XQ8bCM5f44K3wCzSCau3uIrBAT9iU6agg4ggFsdqqrjZYTc4aCaYKAQYSARISFQHGb2Mij1Yo8GFRSfE5gx_OH6kfgG0170
+            example: 4/0AnvDMrB6_8zVFU2GeTDALqZB_WDSYf6Zg8as7mAHQ84gJ5xrnwZA37Cz0tEned-MhPPn9w
 
     LoginResponse:
       type: object
@@ -569,7 +748,6 @@ components:
             - woman
             - non-binary
             - other
-          example: male
         pronouns:
           type: string
           example: He/His
@@ -667,13 +845,7 @@ components:
           minimum: 0
           maximum: 999
         learningStatus:
-          type: string
-          enum:
-            - studying
-            - graduated
-            - on-hold
-            - quit
-          example: studying
+          $ref: '#/components/schemas/LearningStatus'
         startDate:
           type: string
           format: date-time
@@ -699,7 +871,7 @@ components:
         strikes:
           type: array
           items:
-            $ref: '#/components/schemas/Strike'
+            $ref: '#/components/schemas/StrikeWithReporter'
         assignments:
           type: array
           items:
@@ -717,16 +889,7 @@ components:
         - jobPath
       properties:
         jobPath:
-          type: string
-          enum:
-            - not-graduated
-            - searching
-            - internship
-            - tech-job
-            - non-tech-job
-            - not-searching
-            - other-studies
-            - no-longer-helping
+          $ref: '#/components/schemas/JobPath'
         cvURL:
           type: string
           example: https://example.com/cv.pdf
@@ -753,7 +916,6 @@ components:
       required:
         - date
         - reason
-        - reporterID
         - comments
       properties:
         id:
@@ -762,10 +924,7 @@ components:
         date:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z   
-        reporterID:
-          type: string
-          example: g4G3dc4d
+          example: 2024-01-01T00:00:00.000Z
         reason:
           type: string
           enum:
@@ -778,7 +937,31 @@ components:
             - other
         comments: 
           type: string
-          
+
+    StrikeWithReporter:
+      allOf:
+        - $ref: '#/components/schemas/Strike'
+        - type: object
+          required:
+            - reporter
+          properties: 
+            reporter:
+              type: object
+              properties:
+                name:
+                  type: string
+                imageUrl:
+                  type: string
+
+    StrikeWithReporterID:
+      allOf:
+        - $ref: '#/components/schemas/Strike'
+        - type: object
+          properties: 
+            reporterID:
+              type: string
+              example: g5HQGuL8
+
     Assignment:
       type: object
       required:
@@ -905,6 +1088,28 @@ components:
           example: 65ea2e1e696deb3b3ebff843
         details:
           type: string
+
+    LearningStatus:
+      type: string
+      enum:
+        - studying
+        - graduated
+        - on-hold
+        - quit
+      example: studying | graduated | on-hold | quit
+
+    JobPath:
+      type: string
+      enum:
+        - not-graduated
+        - searching
+        - internship
+        - tech-job
+        - non-tech-job
+        - not-searching
+        - other-studies
+        - no-longer-helping
+      example: not-graduated
 
     User:
       type: object

@@ -5,6 +5,9 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 
 const queryClient = new QueryClient();
 
+/**
+ * The main root element where we display the navigation and routes.
+ */
 export default function Root() {
   return (
     <>

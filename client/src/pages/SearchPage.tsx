@@ -3,6 +3,9 @@ import { SearchBar, SearchResultsList } from '../components';
 import HYFLogo from '../assets/HYF_logo.svg';
 import { Box } from '@mui/material';
 
+/**
+ * Component for displaying the home page / search page elements.
+ */
 export const SearchPage = () => {
   const [results, setResults] = useState('');
 

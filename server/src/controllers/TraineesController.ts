@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { TraineesRepository } from "../repositories";
 import {StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from "../services";
-import { ResponseError } from "../models";
+import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from "../models";
 import fs from 'fs';
 
 export interface TraineesControllerType {
@@ -9,9 +9,15 @@ export interface TraineesControllerType {
   createTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
+
   setProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
   getProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+  getStrikes(req: Request, res: Response, next: NextFunction): Promise<void>;
+  addStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
+  updateStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
+  deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 export class TraineesController implements TraineesControllerType {
@@ -127,7 +133,7 @@ export class TraineesController implements TraineesControllerType {
     }
     try {
       const stream = await this.storageService.download(key);
-      res.status(200).contentType("image/jpeg");
+      res.status(200).contentType("image/png");
       stream.pipe(res);
     } catch (error: any) {
       if(error.$metadata.httpStatusCode === 404) {
@@ -170,22 +176,34 @@ export class TraineesController implements TraineesControllerType {
       await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
     } catch (error: any) {
       next(error);
-      console.error(error);
       return;
     }
 
     // Upload image to storage
-    const largeFileStream = fs.createReadStream(largeFilePath);
-    const smallFileStream = fs.createReadStream(smallFilePath);
-    await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
-    await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
+    const baseURL = process.env.BASE_URL ?? "";
+    const imageURL = new URL(`api/trainees/${trainee.id}/profile-picture`, baseURL).href; 
+
+    try {
+      // Upload images to storage
+      const largeFileStream = fs.createReadStream(largeFilePath);
+      const smallFileStream = fs.createReadStream(smallFilePath);
+      await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
+      await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
+
+      // update the trainee object with the new image URL
+      trainee.personalInfo.imageUrl = imageURL
+      this.traineesRepository.updateTrainee(trainee);
+    } catch (error: any) {
+      next(error);
+      return;
+    }
 
     // Cleanup
     fs.unlink(originalFilePath, (err) => { });
     fs.unlink(largeFilePath, (err) => { });
     fs.unlink(smallFilePath, (err) => { });
 
-    res.status(201).send({'imageUrl': `trainee/${trainee.id}/profile-picture`});
+    res.status(201).send({'imageUrl': imageURL, 'thumbnailUrl': imageURL + "?size=small"});
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
@@ -194,10 +212,116 @@ export class TraineesController implements TraineesControllerType {
       res.status(404).send(new ResponseError("Trainee not found"));
       return;
     }
-    await this.storageService.delete(`images/profile/${trainee.id}`);
-    await this.storageService.delete(`images/profile/${trainee.id}_small`);
+    try {
+      await this.storageService.delete(`images/profile/${trainee.id}`);
+      await this.storageService.delete(`images/profile/${trainee.id}_small`);
+      
+      // update the trainee object with the new image URL
+      trainee.personalInfo.imageUrl = undefined
+      this.traineesRepository.updateTrainee(trainee);
+    } catch (error: any) {
+      next(error);
+      return;
+    }
 
     res.status(204).end();
+  }
+
+  async getStrikes(req: Request, res: Response, next: NextFunction) {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    try {
+      const strikes = await this.traineesRepository.getStrikes(trainee.id);
+      res.status(200).json(strikes);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async addStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    const { reason, date, comments } = req.body;
+    const user = res.locals.user as AuthenticatedUser;
+    const reporterID = req.body.reporterID || user.id;
+    const newStrike = { reason, date, comments, reporterID } as StrikeWithReporterID;
+
+    // Validate new strike model before creation
+    try {
+      await this.traineesRepository.validateStrike(newStrike);
+    } catch (error: any) {
+      res.status(400).send(new ResponseError(error.message));
+      return;
+    }
+
+    try {
+      const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
+      res.status(201).json(strike);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+
+  async updateStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+
+    const strike = trainee.educationInfo.strikes.find((strike) => strike.id === req.params.strikeId);
+    if(!strike) {
+      res.status(404).send(new ResponseError("Strike not found"));
+      return;
+    }
+
+    const user = res.locals.user as AuthenticatedUser;
+    const strikeToUpdate: StrikeWithReporterID = {
+      id: req.params.strikeId,
+      reason: req.body.reason,
+      date: req.body.date,
+      comments: req.body.comments,
+      reporterID: req.body.reporterID || user.id
+    };
+
+    // Validate new strike model after applying the changes
+    try {
+      await this.traineesRepository.validateStrike(strikeToUpdate);
+    } catch (error: any) {
+      res.status(400).send(new ResponseError(error.message));
+      return;
+    }
+
+    try {
+      const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
+      res.status(200).json(updatedStrike);
+    } catch (error: any) {
+      next(error);
+      return;
+    }
+  }
+
+  async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    if (!trainee) {
+      res.status(404).send(new ResponseError("Trainee not found"));
+      return;
+    }
+    try {
+      await this.traineesRepository.deleteStrike(req.params.id, req.params.strikeId);
+      res.status(204).end();
+    } catch (error: any) {
+      next(error);
+      return;
+    }
   }
 
   // This function updates the destination object with the source object.

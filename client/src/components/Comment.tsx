@@ -2,6 +2,11 @@ import { Typography, Button, Box } from '@mui/material';
 import CommentImg from '../assets/comment.png';
 
 // change later with real data
+
+/**
+ * Component for displaying comment section in the trainee profile page.
+ * @returns {ReactNode} A React element that renders comment section view and logic.
+ */
 export const Comment = () => {
   return (
     <div>

@@ -1,23 +1,27 @@
 import {
-  Alert,
-  AlertTitle,
   Avatar,
   Box,
   IconButton,
+  Link,
   Stack,
   Typography,
-} from '@mui/material';
-import slackLogo from '../assets/slack.png';
-import githubLogo from '../assets/github.png';
-import LinkedInLogo from '../assets/LinkedIn_logo.png';
-import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
-import { LearningStatus, ProfileSidebarProps } from '../types';
-import { SidebarJobPath, SidebarLearningStatus, Loader } from '.';
+} from "@mui/material";
+import slackLogo from "../assets/slack.png";
+import githubLogo from "../assets/github.png";
+import LinkedInLogo from "../assets/LinkedIn_logo.png";
+import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
+import { LearningStatus, ProfileSidebarProps } from "../types";
+import { SidebarJobPath, SidebarLearningStatus, Loader, ErrorBox } from ".";
 
+/**
+ * Component for showing profile page sidebar and sidebar data.
+ *
+ * @param {string} traineeId trainee id.
+ * @returns {ReactNode} A React element that renders profile page sidebar information and profile image.
+ */
 export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   const { isLoading, isError, data, error, isFetching } = useTraineeInfoData(traineeId);
 
-  const profileImgSrc = `/api/trainees/${traineeId}/profile-picture`;
   const slackId = data?.contactInfo?.slackId;
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;
@@ -27,14 +31,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   }
 
   if (isError && error instanceof Error) {
-    return (
-      <Box p={8} sx={{ width: '100%' }}>
-        <Alert severity="error">
-          <AlertTitle>Error</AlertTitle>
-          {error.message}
-        </Alert>
-      </Box>
-    );
+    return <ErrorBox errorMessage={error.message} />;
   }
 
   return (
@@ -54,7 +51,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         <Avatar
           variant="square"
           sx={{ width: '100%', height: '100%' }}
-          src={profileImgSrc}
+          src={data?.personalInfo?.imageUrl}
           alt={data?.displayName}
         />
       </Box>
@@ -66,11 +63,13 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         </Typography>
         {/* Pronouns */}
         <Typography variant="body1" color="text.secondary">
-          {data?.personalInfo?.pronouns?.toLowerCase()}
+          {data?.personalInfo?.pronouns}
         </Typography>
         {/* Learning Status */}
         {data?.educationInfo?.learningStatus === LearningStatus.Graduated ? (
-          <SidebarJobPath jobPath={data?.employmentInfo?.jobPath}></SidebarJobPath>
+          <SidebarJobPath
+            jobPath={data?.employmentInfo?.jobPath}
+          ></SidebarJobPath>
         ) : (
           <SidebarLearningStatus
             learningStatus={data?.educationInfo?.learningStatus}
@@ -78,47 +77,44 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         )}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
-          Cohort {data?.educationInfo?.currentCohort || 'Not assigned'}
+          Cohort {data?.educationInfo?.currentCohort || "not assigned"}
         </Typography>
       </Stack>
 
       {/* social media contact info */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
         {slackId && (
-          <IconButton
-            aria-label="Slack Id"
-            onClick={() => window.open(`slack://user?team=TOEJTTUQ87&ID/${slackId}`)}
-          >
-            <img
-              src={slackLogo}
-              alt="Slack"
-              width="32"
-              height="32"
-              style={{ borderRadius: '50%' }}
-            />
-          </IconButton>
+          <Link href={`slack://user?team=T0EJTUQ87&id=${slackId}`}>
+            <IconButton aria-label="Slack Id">
+              <img
+                src={slackLogo}
+                alt="Slack"
+                width="32"
+                height="32"
+                style={{ borderRadius: "50%" }}
+              />
+            </IconButton>
+          </Link>
         )}
         {githubHandle && (
-          <IconButton
-            aria-label="GitHub handel"
-            onClick={() => window.open(`https://github.com/${githubHandle}`)}
-          >
-            <img
-              src={githubLogo}
-              alt="GitHub"
-              width="32"
-              height="32"
-              style={{ borderRadius: '50%' }}
-            />
-          </IconButton>
+           <Link href={`https://github.com/${githubHandle}`} target="_blank" rel="noopener">
+            <IconButton aria-label="GitHub handel">
+              <img
+                src={githubLogo}
+                alt="GitHub"
+                width="32"
+                height="32"
+                style={{ borderRadius: "50%" }}
+              />
+            </IconButton>
+          </Link>
         )}
         {linkedIn && (
-          <IconButton
-            aria-label="LinkedIn URL"
-            onClick={() => window.open(`https://www.linkedin.com/in/${linkedIn}`)}
-          >
-            <img src={LinkedInLogo} alt="GitHub" width="32" height="32" />
-          </IconButton>
+          <Link href={linkedIn} target="_blank" rel="noopener">
+            <IconButton aria-label="LinkedIn URL">
+              <img src={LinkedInLogo} alt="LinkedIn" width="32" height="32" />
+            </IconButton>
+          </Link>
         )}
       </div>
     </Box>

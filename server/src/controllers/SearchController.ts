@@ -13,6 +13,8 @@ interface SearchHits {
 interface SearchResult {
   id: string;
   name: string;
+  thumbnail: string | null;
+  cohort: number | null;
 }
 
 export interface SearchControllerType {
@@ -32,10 +34,14 @@ export class SearchController implements SearchControllerType {
 
     const searchQuery: string = (req.query.q as string) ?? "";
     const trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
-    const results = trainees.map(trainee => ({
-      id: trainee.id,
-      name: `${trainee.displayName}`,
-    }));
+    const results = trainees.map(trainee => {
+      return {
+        id: trainee.id,
+        name: `${trainee.displayName}`,
+        thumbnail: trainee.personalInfo.imageUrl ? `${trainee.personalInfo.imageUrl}?size=small` : null,
+        cohort: trainee.educationInfo.currentCohort ?? null,
+      };
+    });
 
     const response: SearchResponse = {
       hits: {
