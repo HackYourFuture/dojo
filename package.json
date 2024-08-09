@@ -4,7 +4,9 @@
   "description": "",
   "main": "",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "^3.3.2"
+  },
   "scripts": {
     "build": "npm run build:client && npm run build:server",
     "build:client": "cd client && npm run build",
@@ -14,7 +16,8 @@
     "setup:server": "cd server && npm run setup && cd ..",
     "start": "cd server && npm start",
     "heroku-prebuild": "npm run setup",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "format": "prettier --write ./**/**/**/*.{tsx,css,ts,md} --config ./.prettierrc"
   },
   "author": "HackYourFuture",
   "license": "ISC",
