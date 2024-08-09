@@ -7,7 +7,7 @@ export interface GoogleOAuthUserInfo {
 
 export interface GoogleOAuthServiceType {
   getUserInfo(accessToken: string): Promise<GoogleOAuthUserInfo>;
-  exchangeAuthCodeForToken(code: string): Promise<string>;
+  exchangeAuthCodeForToken(code: string, redirectURI: string): Promise<string>;
   revokeToken(accessToken: string): Promise<void>;
 }
 
@@ -15,22 +15,17 @@ export class GoogleOAuthService {
 
   private readonly clientId: string;
   private readonly clientSecret: string;
-  private readonly redirectUri: string;
   
-  constructor(clientId: string, clientSecret: string, redirectUri: string) {
+  constructor(clientId: string, clientSecret: string) {
     if (!clientId.trim()) {
       throw new Error("Missing required configuration: clientId");
     }
     if (!clientId.trim()) {
       throw new Error("Missing required configuration: clientSecret");
     }
-    if (!clientId.trim()) {
-      throw new Error("Missing required configuration: redirectUri");
-    }
 
     this.clientId = clientId.trim();
     this.clientSecret = clientSecret.trim();
-    this.redirectUri = redirectUri.trim();
   }
 
   async getUserInfo(accessToken: string): Promise<GoogleOAuthUserInfo> {
@@ -54,7 +49,7 @@ export class GoogleOAuthService {
     };
   }
 
-  async exchangeAuthCodeForToken(code: string): Promise<string> {
+  async exchangeAuthCodeForToken(code: string, redirectURI: string): Promise<string> {
     // https://developers.google.com/identity/protocols/oauth2/web-server#exchange-authorization-code
     const URL = "https://oauth2.googleapis.com/token";
     const headers = {
@@ -64,7 +59,7 @@ export class GoogleOAuthService {
       code,
       client_id: this.clientId,
       client_secret: this.clientSecret,
-      redirect_uri: this.redirectUri,
+      redirect_uri: redirectURI.trim(),
       grant_type: "authorization_code",
     });
 
