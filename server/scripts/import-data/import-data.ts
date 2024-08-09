@@ -4,8 +4,13 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 
-const replaceBoolean = (str: string) => (str.toLowerCase() === 'yes' ? true : false);
-const handleString = (str: string) => (str.trim() === '' ? null : str.trim());
+const replaceBoolean = (str: string) =>  {
+  if(!str.trim()) {
+    return null;
+  }
+  return str.trim().toLowerCase() === 'yes' ? true : false
+};
+const handleString = (str: string) => str.trim() === '' ? null : str.trim();
 
 const extractData = (data: string) => {
   const rows = parse(data, {
@@ -18,7 +23,7 @@ const extractData = (data: string) => {
         firstName: handleString(row['First Name*']),
         lastName: handleString(row['Last Name*']),
         preferredName: handleString(row['Preferred Name']),
-        gender: handleString(row['Gender*']),
+        gender: handleString(row['Gender']),
         pronouns: handleString(row['Pronouns']),
         location: handleString(row['Location']),
         countryOfOrigin: handleString(row['Country of Origin']),
@@ -34,7 +39,7 @@ const extractData = (data: string) => {
         comments: handleString(row['Comments - Personal']),
       },
       contactInfo: {
-        email: handleString(row['Email*']),
+        email: handleString(row['Email*'].toLowerCase()),
         githubHandle: handleString(row['GitHub Handle']),
         slackId: handleString(row['Slack ID']),
         phone: handleString(row['Phone Number']),

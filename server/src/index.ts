@@ -57,9 +57,8 @@ class Main {
 
     // Dependencies
     const googleOAuthService = new GoogleOAuthService(
-      process.env.GOOGLE_OAUTH_CLIENTID ?? '',
-      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? '',
-      process.env.BASE_URL ?? ''
+      process.env.GOOGLE_OAUTH_CLIENTID ?? "",
+      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? "",
     );
     const tokenService = new TokenService(process.env.JWT_SECRET ?? '', tokenExpirationInDays);
     const storageService = new StorageService(
