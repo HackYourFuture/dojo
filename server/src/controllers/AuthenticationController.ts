@@ -37,8 +37,14 @@ export class AuthenticationController implements AuthenticationControllerType {
 
   async login(req: Request, res: Response) {
     const authCode = req.body.authCode?.trim();
-    if (!authCode) {
-      res.status(400).json(new ResponseError("Code is required"));
+    const redirectURI = req.body.redirectURI?.trim();
+    if (!authCode || !redirectURI) {
+      res.status(400).json(new ResponseError("Code and redirectURI are required"));
+      return;
+    }
+
+    if (!this.isValidRedirectURI(redirectURI)) {
+      res.status(400).json(new ResponseError("Invalid redirectURI"));
       return;
     }
 
@@ -46,7 +52,7 @@ export class AuthenticationController implements AuthenticationControllerType {
     let oauthUser: GoogleOAuthUserInfo;
     try {
       // 1. Exchange authentication code for access token
-      let googleAccessToken = await this.googleOAuthService.exchangeAuthCodeForToken(authCode);
+      let googleAccessToken = await this.googleOAuthService.exchangeAuthCodeForToken(authCode, redirectURI);
 
       // 2. Get user info from Google
       oauthUser = await this.googleOAuthService.getUserInfo(googleAccessToken);
@@ -94,5 +100,20 @@ export class AuthenticationController implements AuthenticationControllerType {
   async logout(req: Request, res: Response): Promise<void> {
     res.clearCookie(TOKEN_COOKIE_NAME);
     res.status(204).end();
+  }
+
+  private isValidRedirectURI(redirectURI: string) {
+    const allowedHosts = [
+      "localhost",
+      "dojo-test.hackyourfuture.net",
+      "dojo.hackyourfuture.net"
+    ];
+    
+    try {
+      const url = new URL(redirectURI);
+      return allowedHosts.includes(url.hostname);
+    } catch (error) {
+      return false;
+    }
   }
 }

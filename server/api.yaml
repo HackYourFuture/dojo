@@ -683,6 +683,10 @@ components:
         authCode:
             type: string
             example: 4/0AnvDMrB6_8zVFU2GeTDALqZB_WDSYf6Zg8as7mAHQ84gJ5xrnwZA37Cz0tEned-MhPPn9w
+        redirectURI:
+            type: string
+            description: 'The callback URI that was used in the Google Auth request. It should match the base URL of the frontend'
+            example: http://localhost:5142
 
     LoginResponse:
       type: object

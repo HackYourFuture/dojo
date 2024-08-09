@@ -19,8 +19,10 @@ export const ApiProvider = () => {
     onSuccess: async (response) => {
       try {
         setLoading(true);
-
-        await axios.post("/api/auth/login", { authCode: response.code });
+        await axios.post("/api/auth/login", { 
+          authCode: response.code, 
+          redirectURI: new URL(window.location.href).origin
+        });
         const { data } = await axios.get("/api/auth/session");
         if (data) {
           console.log("Successfully logged in!", data);
