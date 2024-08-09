@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose';
 import {
   Trainee,
   TraineeContactInfo,
@@ -21,11 +21,12 @@ import {
   ResidencyStatus,
   TestResult,
   TestType,
-} from "../models";
-import { genId } from "../utils/random";
-import { WithMongoID, jsonFormatting } from "../utils/database";
+} from '../models';
+import { genId } from '../utils/random';
+import { WithMongoID, jsonFormatting } from '../utils/database';
 
-const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
+const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>(
+  {
     firstName: { type: String, required: true, index: true },
     lastName: { type: String, required: true, index: true },
     preferredName: { type: String, required: false, index: true, default: null },
@@ -43,15 +44,15 @@ const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>({
     caseManagerUrging: { type: Boolean, required: false, default: null },
     educationLevel: { type: String, required: false, enum: Object.values(EducationLevel), default: null },
     educationBackground: { type: String, required: false, default: null },
-    comments: { type: String, required: false, default: null},
+    comments: { type: String, required: false, default: null },
   },
   { _id: false }
 );
 
 const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
   {
-    slackId: { type: String, required: false, default: null, match: /^U[A-Z0-9]{8,10}$/},
-    email: { type: String, required: true, index: true, unique: true, match: /@/},
+    slackId: { type: String, required: false, default: null, match: /^U[A-Z0-9]{8,10}$/ },
+    email: { type: String, required: true, index: true, unique: true, match: /@/ },
     phone: { type: String, required: false, default: null },
     githubHandle: { type: String, required: false, index: true, default: null },
     linkedin: { type: String, required: false, default: null },
@@ -59,51 +60,50 @@ const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
   { _id: false }
 );
 
-const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>(
-  {
-    _id: { type: String, default: genId },
-    date: { type: Date, required: true },
-    reporterID: { type: String, required: true, ref: 'Users', alias: 'reporter' },
-    reason: { type: String, enum: Object.values(StrikeReason), required: true },
-    comments: { type: String, required: true },
-  },
-);
+const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>({
+  _id: { type: String, default: genId },
+  date: { type: Date, required: true },
+  reporterID: { type: String, required: true, ref: 'Users', alias: 'reporter' },
+  reason: { type: String, enum: Object.values(StrikeReason), required: true },
+  comments: { type: String, required: true },
+});
 
-const AssignmentSchema = new Schema<Assignment & WithMongoID>(
-  {
-    _id: { type: String, default: genId },
-    createDate: { type: Date, required: true },
-    type: { type: String, required: true },
-    status: { type: String, required: true },
-    content: { type: String, required: false },
-    comments: { type: String, required: false },
-  },
-);
+const AssignmentSchema = new Schema<Assignment & WithMongoID>({
+  _id: { type: String, default: genId },
+  createDate: { type: Date, required: true },
+  type: { type: String, required: true },
+  status: { type: String, required: true },
+  content: { type: String, required: false },
+  comments: { type: String, required: false },
+});
 
-const TestSchema = new Schema<Test & WithMongoID>(
-  {
-    _id: { type: String, default: genId },
-    date: { type: Date, required: true },
-    type: { type: String, required: true, enum: Object.values(TestType) },
-    grade: { type: Number, required: true },
-    result: { type: String, required: true, enum: Object.values(TestResult)},
-    comments: { type: String, required: false, default: null},
-  },
-);
+const TestSchema = new Schema<Test & WithMongoID>({
+  _id: { type: String, default: genId },
+  date: { type: Date, required: true },
+  type: { type: String, required: true, enum: Object.values(TestType) },
+  grade: { type: Number, required: true },
+  result: { type: String, required: true, enum: Object.values(TestResult) },
+  comments: { type: String, required: false, default: null },
+});
 
 const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
   {
-    startCohort: { type: Number, required: true, min: 0, max: 999},
-    currentCohort: { type: Number, required: false, default: null, min: 0, max: 999},
-    learningStatus: { type: String, required: true, enum: Object.values(LearningStatus), default: LearningStatus.Studying },
-    startDate: { type: Date, required: false, default: null},
+    startCohort: { type: Number, required: true, min: 0, max: 999 },
+    currentCohort: { type: Number, required: false, default: null, min: 0, max: 999 },
+    learningStatus: {
+      type: String,
+      required: true,
+      enum: Object.values(LearningStatus),
+      default: LearningStatus.Studying,
+    },
+    startDate: { type: Date, required: false, default: null },
     graduationDate: { type: Date, required: false, default: null },
     quitReason: { type: String, required: false, enum: Object.values(QuitReason), default: null },
     quitDate: { type: Date, required: false, default: null },
     strikes: [StrikeSchema],
     assignments: [AssignmentSchema],
     tests: [TestSchema],
-    comments: { type: String, required: false, default: null},
+    comments: { type: String, required: false, default: null },
   },
   { _id: false, minimize: false }
 );
@@ -116,7 +116,7 @@ const TraineeEmploymentHistorySchema = new Schema<TraineeEmploymentHistory & Wit
     role: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: false, default: null },
-    feeCollected: { type: Boolean, required: false , default: null},
+    feeCollected: { type: Boolean, required: false, default: null },
     feeAmount: { type: Number, required: false, default: null },
     comments: { type: String, required: false, default: null },
   },
@@ -157,17 +157,16 @@ const TraineeSchema = new Schema<Trainee & WithMongoID>(
       default: {},
     },
   },
-  { timestamps: true, minimize: false },
+  { timestamps: true, minimize: false }
 );
 
-TraineeSchema.virtual("displayName").get(function() {
+TraineeSchema.virtual('displayName').get(function () {
   const { preferredName, firstName, lastName } = this.personalInfo;
   const name: string = preferredName ? preferredName : firstName;
   return `${name} ${lastName}`;
 });
 
-TraineeSchema.set("toJSON", jsonFormatting);
-StrikeSchema.set("toJSON", jsonFormatting);
-
+TraineeSchema.set('toJSON', jsonFormatting);
+StrikeSchema.set('toJSON', jsonFormatting);
 
 export { TraineeSchema };

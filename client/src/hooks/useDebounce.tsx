@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 /**
  * A React hook that sets a timeout as a debounce time for the search box when typing.
  *
- * @param {any} value value coming form search 
+ * @param {any} value value coming form search
  * @param {number} delay the number of ms to delay
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

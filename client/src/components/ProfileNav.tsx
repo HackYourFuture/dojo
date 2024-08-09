@@ -1,5 +1,5 @@
-import { Box, Tab, Tabs } from "@mui/material";
-import { ProfileNavProps } from "../types";
+import { Box, Tab, Tabs } from '@mui/material';
+import { ProfileNavProps } from '../types';
 
 /**
  * Component for navigating between trainee profile page tabs.

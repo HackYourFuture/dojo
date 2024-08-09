@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { TraineesRepository } from "../repositories";
-import {StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from "../services";
-import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from "../models";
+import { Request, Response, NextFunction } from 'express';
+import { TraineesRepository } from '../repositories';
+import { StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from '../services';
+import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../models';
 import fs from 'fs';
 
 export interface TraineesControllerType {
@@ -26,7 +26,7 @@ export class TraineesController implements TraineesControllerType {
   private readonly uploadService: UploadServiceType;
   private readonly imageService: ImageServiceType;
   constructor(
-    traineesRepository: TraineesRepository, 
+    traineesRepository: TraineesRepository,
     storageService: StorageServiceType,
     uploadService: UploadServiceType,
     imageService: ImageServiceType
@@ -42,7 +42,7 @@ export class TraineesController implements TraineesControllerType {
     try {
       const trainee = await this.traineesRepository.getTrainee(traineeId);
       if (!trainee) {
-        res.status(404).json({ error: "Trainee was not found" });
+        res.status(404).json({ error: 'Trainee was not found' });
         return;
       }
       res.status(200).json(trainee);
@@ -92,7 +92,7 @@ export class TraineesController implements TraineesControllerType {
   async updateTrainee(req: Request, res: Response, next: NextFunction) {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
@@ -117,27 +117,27 @@ export class TraineesController implements TraineesControllerType {
   }
 
   async deleteTrainee(req: Request, res: Response, next: NextFunction) {
-    res.status(500).send("Not implemented");
+    res.status(500).send('Not implemented');
   }
 
   async getProfilePicture(req: Request, res: Response, next: NextFunction) {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
     let key = `images/profile/${trainee.id}`;
-    if(req.query.size === "small") {
-      key += "_small";
+    if (req.query.size === 'small') {
+      key += '_small';
     }
     try {
       const stream = await this.storageService.download(key);
-      res.status(200).contentType("image/png");
+      res.status(200).contentType('image/png');
       stream.pipe(res);
     } catch (error: any) {
-      if(error.$metadata.httpStatusCode === 404) {
-        res.status(404).send(new ResponseError("Profile picture does not exist"));
+      if (error.$metadata.httpStatusCode === 404) {
+        res.status(404).send(new ResponseError('Profile picture does not exist'));
         return;
       }
       next(error);
@@ -147,13 +147,13 @@ export class TraineesController implements TraineesControllerType {
   async setProfilePicture(req: Request, res: Response, next: NextFunction) {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
     // Handle file upload.
     try {
-      await this.uploadService.uploadImage(req, res, "profilePicture");
+      await this.uploadService.uploadImage(req, res, 'profilePicture');
     } catch (error: any) {
       if (error instanceof UploadServiceError) {
         res.status(400).send(new ResponseError(error.message));
@@ -163,14 +163,14 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
     if (!req.file?.path) {
-      res.status(500).send(new ResponseError("No file was uploaded"));
+      res.status(500).send(new ResponseError('No file was uploaded'));
       return;
     }
 
     // Resize image to reduce file size and create a smaller version
     const originalFilePath = req.file.path;
-    const largeFilePath = originalFilePath + "_large";
-    const smallFilePath = originalFilePath + "_small";
+    const largeFilePath = originalFilePath + '_large';
+    const smallFilePath = originalFilePath + '_small';
     try {
       await this.imageService.resizeImage(originalFilePath, largeFilePath, 700, 700);
       await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
@@ -180,8 +180,8 @@ export class TraineesController implements TraineesControllerType {
     }
 
     // Upload image to storage
-    const baseURL = process.env.BASE_URL ?? "";
-    const imageURL = new URL(`api/trainees/${trainee.id}/profile-picture`, baseURL).href; 
+    const baseURL = process.env.BASE_URL ?? '';
+    const imageURL = new URL(`api/trainees/${trainee.id}/profile-picture`, baseURL).href;
 
     try {
       // Upload images to storage
@@ -191,7 +191,7 @@ export class TraineesController implements TraineesControllerType {
       await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
 
       // update the trainee object with the new image URL
-      trainee.personalInfo.imageUrl = imageURL
+      trainee.personalInfo.imageUrl = imageURL;
       this.traineesRepository.updateTrainee(trainee);
     } catch (error: any) {
       next(error);
@@ -199,25 +199,25 @@ export class TraineesController implements TraineesControllerType {
     }
 
     // Cleanup
-    fs.unlink(originalFilePath, (err) => { });
-    fs.unlink(largeFilePath, (err) => { });
-    fs.unlink(smallFilePath, (err) => { });
+    fs.unlink(originalFilePath, (err) => {});
+    fs.unlink(largeFilePath, (err) => {});
+    fs.unlink(smallFilePath, (err) => {});
 
-    res.status(201).send({'imageUrl': imageURL, 'thumbnailUrl': imageURL + "?size=small"});
+    res.status(201).send({ imageUrl: imageURL, thumbnailUrl: imageURL + '?size=small' });
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
     try {
       await this.storageService.delete(`images/profile/${trainee.id}`);
       await this.storageService.delete(`images/profile/${trainee.id}_small`);
-      
+
       // update the trainee object with the new image URL
-      trainee.personalInfo.imageUrl = undefined
+      trainee.personalInfo.imageUrl = undefined;
       this.traineesRepository.updateTrainee(trainee);
     } catch (error: any) {
       next(error);
@@ -230,7 +230,7 @@ export class TraineesController implements TraineesControllerType {
   async getStrikes(req: Request, res: Response, next: NextFunction) {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
@@ -245,7 +245,7 @@ export class TraineesController implements TraineesControllerType {
   async addStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
@@ -273,13 +273,13 @@ export class TraineesController implements TraineesControllerType {
   async updateStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
     const strike = trainee.educationInfo.strikes.find((strike) => strike.id === req.params.strikeId);
-    if(!strike) {
-      res.status(404).send(new ResponseError("Strike not found"));
+    if (!strike) {
+      res.status(404).send(new ResponseError('Strike not found'));
       return;
     }
 
@@ -289,7 +289,7 @@ export class TraineesController implements TraineesControllerType {
       reason: req.body.reason,
       date: req.body.date,
       comments: req.body.comments,
-      reporterID: req.body.reporterID || user.id
+      reporterID: req.body.reporterID || user.id,
     };
 
     // Validate new strike model after applying the changes
@@ -312,7 +312,7 @@ export class TraineesController implements TraineesControllerType {
   async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
-      res.status(404).send(new ResponseError("Trainee not found"));
+      res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
     try {
@@ -336,7 +336,7 @@ export class TraineesController implements TraineesControllerType {
       if (Array.isArray(source[key]) || !(key in destination)) {
         continue;
       }
-      if (typeof source[key] === "object" && source[key] !== null) {
+      if (typeof source[key] === 'object' && source[key] !== null) {
         this.applyObjectUpdate(source[key], destination[key], nestLevel + 1);
         continue;
       }

@@ -1,12 +1,12 @@
-import { SearchResult, SearchResultsListProps } from "../types";
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
-import { useDebounce } from "../hooks/useDebounce";
-import { Link } from "react-router-dom";
-import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { Loader } from "./Loader";
-import { ErrorBox } from "./ErrorBox";
+import { SearchResult, SearchResultsListProps } from '../types';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
+import { useDebounce } from '../hooks/useDebounce';
+import { Link } from 'react-router-dom';
+import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Loader } from './Loader';
+import { ErrorBox } from './ErrorBox';
 
 /**
  * Component for showing a list of trainee search results with links.
@@ -22,8 +22,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   /**
    * React Query hook to fetch matching trainees with a debounce time.
    */
-  const { isLoading, data, isError, error, isFetching } =
-    useTraineeSearchData(debouncedSearchTerm);
+  const { isLoading, data, isError, error, isFetching } = useTraineeSearchData(debouncedSearchTerm);
 
   if (isLoading || isFetching) {
     return <Loader />;
@@ -36,12 +35,12 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
         maxHeight: 300,
-        bgcolor: "background.paper",
-        overflowY: "scroll",
-        boxShadow: "0px 0px 8px #ccc",
-        borderRadius: "10px",
+        bgcolor: 'background.paper',
+        overflowY: 'scroll',
+        boxShadow: '0px 0px 8px #ccc',
+        borderRadius: '10px',
       }}
     >
       {data.length ? (
@@ -50,28 +49,22 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
             return (
               <ListItem disablePadding key={trainee.id}>
                 <Link
-                  to={`/trainee/${trainee.name.replace(/ /g, "-")}_${
-                    trainee.id
-                  }`}
+                  to={`/trainee/${trainee.name.replace(/ /g, '-')}_${trainee.id}`}
                   style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    width: "100%",
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    width: '100%',
                   }}
                 >
                   <ListItemButton key={trainee.id}>
                     <ListItemIcon>
-                      <Avatar 
-                        src={trainee.thumbnail ?? ""} 
-                        sx={{ width: 32, height: 32 }} 
-                        variant="rounded">
-                      </Avatar>
+                      <Avatar src={trainee.thumbnail ?? ''} sx={{ width: 32, height: 32 }} variant="rounded"></Avatar>
                     </ListItemIcon>
                     <ListItemText primary={trainee.name}></ListItemText>
-                    <ListItemText 
+                    <ListItemText
                       secondary={trainee.cohort ? `Cohort ${trainee.cohort}` : 'No cohort'}
-                      sx={{ textAlign: 'right' }}>
-                    </ListItemText>
+                      sx={{ textAlign: 'right' }}
+                    ></ListItemText>
                   </ListItemButton>
                 </Link>
               </ListItem>
@@ -79,7 +72,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
           })}
         </List>
       ) : (
-        <Alert severity="info" sx={{ bgcolor: "background.paper" }}>
+        <Alert severity="info" sx={{ bgcolor: 'background.paper' }}>
           No results found!
         </Alert>
       )}

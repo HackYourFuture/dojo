@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState } from 'react';
 
 /**
  * A React hook that gets auth key name form browser's local storage.

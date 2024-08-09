@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import { Box, Snackbar } from "@mui/material";
-import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
+import { useEffect, useState } from 'react';
+import { Box, Snackbar } from '@mui/material';
+import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
 import {
   TraineeContactInfo,
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
   TraineeProfileProps,
-} from "../types";
-import axios from "axios";
+} from '../types';
+import axios from 'axios';
 import {
   ContactInfo,
   EducationInfo,
@@ -19,8 +19,8 @@ import {
   PersonalInfo,
   ProfileNav,
   ProfileSidebar,
-} from ".";
-import MuiAlert from "@mui/material/Alert";
+} from '.';
+import MuiAlert from '@mui/material/Alert';
 
 /**
  * Component for showing profile page tab and content.
@@ -30,18 +30,15 @@ import MuiAlert from "@mui/material/Alert";
  */
 export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
-  const [activeTab, setActiveTab] = useState("personal");
+  const [activeTab, setActiveTab] = useState('personal');
 
-  const { isLoading, isError, data, error, isFetching } =
-    useTraineeInfoData(id);
+  const { isLoading, isError, data, error, isFetching } = useTraineeInfoData(id);
 
   const [traineeData, setTraineeData] = useState(data && data);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
-    "success"
-  );
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -58,10 +55,10 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   useEffect(() => {
     document.title = `${traineeData?.displayName} | Dojo`;
   }, [traineeData]);
-  
+
   /**
    * Function to navigate to active tab.
-   * 
+   *
    * @param {string} tab active tab to open.
    */
   const handleTabChange = (tab: string) => {
@@ -70,27 +67,23 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   /**
    * Function to save trainee info after add/edit.
-   * 
+   *
    * @param {Object} editedData Object with added/edited trainee info.
    */
   const saveTraineeData = async (
-    editedData:
-      | TraineePersonalInfo
-      | TraineeContactInfo
-      | TraineeEducationInfo
-      | TraineeEmploymentInfo
+    editedData: TraineePersonalInfo | TraineeContactInfo | TraineeEducationInfo | TraineeEmploymentInfo
   ) => {
-    console.log("Saving trainee data", editedData);
+    console.log('Saving trainee data', editedData);
     try {
       const response = await axios.patch(`/api/trainees/${id}`, editedData);
-      console.log("Trainee data saved successfully", response.data);
+      console.log('Trainee data saved successfully', response.data);
       setTraineeData(response.data);
-      setSnackbarSeverity("success");
-      setSnackbarMessage("Trainee data saved successfully");
+      setSnackbarSeverity('success');
+      setSnackbarMessage('Trainee data saved successfully');
     } catch (error: any) {
-      console.error("There was a problem saving trainee data:", error.message);
-      setSnackbarSeverity("error");
-      setSnackbarMessage("Error saving trainee data");
+      console.error('There was a problem saving trainee data:', error.message);
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error saving trainee data');
       throw error;
     } finally {
       setSnackbarOpen(true);
@@ -98,16 +91,8 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   };
 
   return (
-    <div style={{ display: "flex", background: "#fff" }}>
-      <Box
-        width="40%"
-        position="sticky"
-        top={0}
-        left={0}
-        height="100%"
-        color="black"
-        style={{ overflowY: "auto" }}
-      >
+    <div style={{ display: 'flex', background: '#fff' }}>
+      <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
         <ProfileSidebar traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
@@ -116,36 +101,22 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
           open={snackbarOpen}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleSnackbarClose}
-            severity={snackbarSeverity}
-          >
+          <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={snackbarSeverity}>
             {snackbarMessage}
           </MuiAlert>
         </Snackbar>
-        {activeTab === "personal" && (
-          <PersonalInfo
-            traineeData={traineeData && traineeData.personalInfo}
-            saveTraineeData={saveTraineeData}
-          />
+        {activeTab === 'personal' && (
+          <PersonalInfo traineeData={traineeData && traineeData.personalInfo} saveTraineeData={saveTraineeData} />
         )}
-        {activeTab === "contact" && (
-          <ContactInfo
-            contactData={traineeData && traineeData.contactInfo}
-            saveTraineeData={saveTraineeData}
-          />
+        {activeTab === 'contact' && (
+          <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={saveTraineeData} />
         )}
-        {activeTab === "education" && (
-          <EducationInfo
-            educationData={traineeData && traineeData.educationInfo}
-            saveTraineeData={saveTraineeData}
-          />
+        {activeTab === 'education' && (
+          <EducationInfo educationData={traineeData && traineeData.educationInfo} saveTraineeData={saveTraineeData} />
         )}
-        {activeTab === "employment" && (
+        {activeTab === 'employment' && (
           <EmploymentInfo
             employmentData={traineeData && traineeData.employmentInfo}
             saveTraineeData={saveTraineeData}

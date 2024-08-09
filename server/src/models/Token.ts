@@ -1,5 +1,5 @@
 export enum TokenType {
-  GoogleAccessTokenHash = "google_access_token_hash"
+  GoogleAccessTokenHash = 'google_access_token_hash',
 }
 
 export interface Token {

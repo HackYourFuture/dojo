@@ -1,10 +1,10 @@
-import { Schema } from "mongoose";
-import { Token, TokenType } from "../models";
+import { Schema } from 'mongoose';
+import { Token, TokenType } from '../models';
 
 const ONE_WEEK = 7 * 24 * 60 * 60;
 
 const TokenSchema: Schema = new Schema<Token>({
-  createdAt: { type: Date, expires: ONE_WEEK }, 
+  createdAt: { type: Date, expires: ONE_WEEK },
   type: {
     type: String,
     required: true,

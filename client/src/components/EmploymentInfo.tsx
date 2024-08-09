@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from "react";
-import { EmploymentInfoProps, JobPath, TraineeEmploymentInfo } from "../types";
+import React, { ReactNode, useEffect, useState } from 'react';
+import { EmploymentInfoProps, JobPath, TraineeEmploymentInfo } from '../types';
 import {
   Box,
   Button,
@@ -18,13 +18,12 @@ import {
   ListItem,
   ListItemText,
   Divider,
-} from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import LinkIcon from "@mui/icons-material/Link";
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import LinkIcon from '@mui/icons-material/Link';
 
 const NoIcon = () => null;
-
 
 /**
  * Component for displaying trainee profile data on the employment information tab.
@@ -33,20 +32,14 @@ const NoIcon = () => null;
  * @param {TraineeEmploymentInfo} saveTraineeData callback to save edited trainee employment information.
  * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
  */
-export const EmploymentInfo = ({
-  employmentData,
-  saveTraineeData,
-}: EmploymentInfoProps) => {
-  const [editedFields, setEditedFields] = useState<TraineeEmploymentInfo>(
-    employmentData!
-  );
+export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentInfoProps) => {
+  const [editedFields, setEditedFields] = useState<TraineeEmploymentInfo>(employmentData!);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (employmentData)
-      setEditedFields(employmentData as TraineeEmploymentInfo);
+    if (employmentData) setEditedFields(employmentData as TraineeEmploymentInfo);
   }, [employmentData]);
 
   /**
@@ -91,7 +84,7 @@ export const EmploymentInfo = ({
       await saveTraineeData(editedData);
       setIsEditing(false);
     } catch (error) {
-      console.error("Error saving trainee data:", error);
+      console.error('Error saving trainee data:', error);
     } finally {
       setIsSaving(false);
     }
@@ -99,57 +92,47 @@ export const EmploymentInfo = ({
 
   /**
    * Function to handel changing text fields with edited data.
-   * 
+   *
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: name === "date" ? new Date(value) : value,
+      [name]: name === 'date' ? new Date(value) : value,
     }));
   };
 
   /**
    * Function to handel changing select fields with edited data.
-   * 
+   *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
-  const handleSelectChange = (
-    event: SelectChangeEvent<
-      string | boolean | { name?: string; value: ReactNode }
-    >
-  ) => {
+  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
-      [name]: value === "true" ? true : value === "false" ? false : value,
+      [name]: value === 'true' ? true : value === 'false' ? false : value,
     }));
   };
 
   /**
    * Function to format date value.
-   * 
+   *
    * @param {Date | undefined} date date value selected.
    */
   const formatDate = (date: Date | undefined) => {
-    if (!date) return "";
+    if (!date) return '';
     const formattedDate = new Date(date);
     if (isNaN(formattedDate.getTime())) {
       return date.toString();
     }
-    return formattedDate.toISOString().split("T")[0];
+    return formattedDate.toISOString().split('T')[0];
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      flexWrap="wrap"
-      gap={4}
-      padding="24px"
-    >
-      <Box width={"100%"} display="flex" justifyContent={"end"}>
+    <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
+      <Box width={'100%'} display="flex" justifyContent={'end'}>
         <Stack direction="row" spacing={2}>
           <LoadingButton
             color="primary"
@@ -157,24 +140,21 @@ export const EmploymentInfo = ({
             loading={isSaving}
             variant="contained"
           >
-            <span>{isEditing ? "Save" : "Edit profile"}</span>
+            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
           </LoadingButton>
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Job path */}
-        <FormControl
-          variant={isEditing ? "outlined" : "standard"}
-          sx={{ mx: 2, my: 1, width: "20ch", gap: "2rem" }}
-        >
+        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
           <InputLabel htmlFor="jobPath">Job path</InputLabel>
           <Select
             name="jobPath"
             id="jobPath"
             label="Job path"
-            value={editedFields?.jobPath || ""}
+            value={editedFields?.jobPath || ''}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
@@ -187,27 +167,37 @@ export const EmploymentInfo = ({
             <MenuItem value={JobPath.NonTechJob}>Non tech job</MenuItem>
             <MenuItem value={JobPath.NotSearching}>Not searching</MenuItem>
             <MenuItem value={JobPath.OtherStudies}>Other studies</MenuItem>
-            <MenuItem value={JobPath.NoLongerHelping}>
-              No longer helping
-            </MenuItem>
+            <MenuItem value={JobPath.NoLongerHelping}>No longer helping</MenuItem>
+            {Object.entries(JobPath).map(([key, value]) => {
+              const text = value
+                .split('-')
+                .map((word, index) => (index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
+                .join(' ');
+
+              return (
+                <MenuItem key={key} value={value}>
+                  {text}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
 
         {/* CV */}
-        <FormControl sx={{ mx: 2, my: 1, width: "30ch", gap: "2rem" }}>
+        <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
           <TextField
             id="cvURL"
             name="cvURL"
             label="CV"
             type="url"
-            value={editedFields?.cvURL || ""}
+            value={editedFields?.cvURL || ''}
             InputProps={{
               readOnly: isEditing ? false : true,
               endAdornment: (
                 <InputAdornment position="start">
                   {!isEditing && editedFields?.cvURL && (
                     <Link href={editedFields?.cvURL} target="_blank">
-                      <LinkIcon sx={{ color: "action.active" }} />
+                      <LinkIcon sx={{ color: 'action.active' }} />
                     </Link>
                   )}
                 </InputAdornment>
@@ -216,75 +206,68 @@ export const EmploymentInfo = ({
             InputLabelProps={{
               shrink: true,
             }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Availability */}
-        <FormControl sx={{ mx: 2, width: "30ch" }}>
+        <FormControl sx={{ mx: 2, width: '30ch' }}>
           <TextField
             id="availability"
             name="availability"
             label="Availability"
             type="text"
-            value={editedFields?.availability || ""}
+            value={editedFields?.availability || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Preferred role */}
-        <FormControl sx={{ mx: 2, width: "30ch" }}>
+        <FormControl sx={{ mx: 2, width: '30ch' }}>
           <TextField
             id="preferredRole"
             name="preferredRole"
             label="Preferred role"
             type="text"
-            value={editedFields?.preferredRole || ""}
+            value={editedFields?.preferredRole || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>
 
         {/* Preferred location */}
-        <FormControl sx={{ mx: 2, width: "30ch" }}>
+        <FormControl sx={{ mx: 2, width: '30ch' }}>
           <TextField
             id="preferredLocation"
             name="preferredLocation"
             label="Preferred location"
             type="text"
-            value={editedFields?.preferredLocation || ""}
+            value={editedFields?.preferredLocation || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>
 
         {/* Driving license */}
-        <FormControl
-          variant={isEditing ? "outlined" : "standard"}
-          sx={{ mx: 2, width: "14ch" }}
-        >
+        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, width: '14ch' }}>
           <InputLabel htmlFor="drivingLicense">Driving license</InputLabel>
           <Select
             name="drivingLicense"
             id="drivingLicense"
             label="Driving license"
-            value={
-              editedFields?.drivingLicense == null
-                ? ""
-                : editedFields?.drivingLicense
-            }
+            value={editedFields?.drivingLicense == null ? '' : editedFields?.drivingLicense}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
@@ -296,31 +279,26 @@ export const EmploymentInfo = ({
         </FormControl>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Extra technologies */}
-        <FormControl sx={{ mx: 2, width: "30ch" }}>
+        <FormControl sx={{ mx: 2, width: '30ch' }}>
           <TextField
             id="extraTechnologies"
             name="extraTechnologies"
             label="Extra technologies"
             type="text"
-            value={editedFields?.extraTechnologies || ""}
+            value={editedFields?.extraTechnologies || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Employment history */}
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" color="black" padding="16px">
             Employment history ({editedFields?.employmentHistory.length || 0})
           </Typography>
@@ -328,8 +306,8 @@ export const EmploymentInfo = ({
 
         <List
           sx={{
-            width: "100%",
-            bgcolor: "background.paper",
+            width: '100%',
+            bgcolor: 'background.paper',
           }}
         >
           {editedFields?.employmentHistory.map((employmentHistory, index) => (
@@ -339,7 +317,7 @@ export const EmploymentInfo = ({
                 secondaryAction={formatDate(employmentHistory.startDate)}
                 disablePadding
                 sx={{
-                  paddingBottom: "16px",
+                  paddingBottom: '16px',
                 }}
               >
                 <ListItemText
@@ -347,27 +325,25 @@ export const EmploymentInfo = ({
                   secondary={employmentHistory.comments}
                 />
               </ListItem>
-              {index < editedFields?.employmentHistory.length - 1 && (
-                <Divider sx={{ color: "black" }} component="li" />
-              )}
+              {index < editedFields?.employmentHistory.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
             </React.Fragment>
           ))}
         </List>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div style={{ width: '100%' }}>
         {/* Comments */}
-        <FormControl sx={{ mx: 2, width: "81ch" }}>
+        <FormControl sx={{ mx: 2, width: '81ch' }}>
           <TextField
             id="comments"
             name="comments"
             label="Comments"
             type="text"
             multiline
-            value={editedFields?.comments || ""}
+            value={editedFields?.comments || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
-            variant={isEditing ? "outlined" : "standard"}
+            variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleChange}
           />
         </FormControl>

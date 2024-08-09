@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { TraineesRepository } from "../repositories";
-import { Trainee } from "../models";
+import { Request, Response } from 'express';
+import { TraineesRepository } from '../repositories';
+import { Trainee } from '../models';
 
 interface Cohort {
   cohort: number | null;
@@ -42,14 +42,14 @@ export class CohortsController implements CohortsControllerType {
     const trainees = await this.traineesRepository.getTraineesByCohort(start, end, true);
 
     // Group trainees by cohort
-    const cohortDictionary = Object.groupBy(trainees, (trainee) => `${trainee.educationInfo.currentCohort}` );
+    const cohortDictionary = Object.groupBy(trainees, (trainee) => `${trainee.educationInfo.currentCohort}`);
 
     // Convert dictionary to array of cohorts
     const result: Cohort[] = Object.entries(cohortDictionary).map(([cohortNumber, trainees]) => {
       return {
         cohort: Number.parseInt(cohortNumber) || null,
-        trainees: (trainees ?? []).map(this.getTraineeSummary)
-      }
+        trainees: (trainees ?? []).map(this.getTraineeSummary),
+      };
     });
     res.status(200).json(result);
   }
@@ -68,7 +68,7 @@ export class CohortsController implements CohortsControllerType {
       linkedIn: trainee.contactInfo.linkedin,
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
-      strikes: trainee.educationInfo.strikes.length
-    }
+      strikes: trainee.educationInfo.strikes.length,
+    };
   }
 }

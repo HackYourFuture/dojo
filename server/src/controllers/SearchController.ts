@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { TraineesRepository } from "../repositories";
+import { Request, Response } from 'express';
+import { TraineesRepository } from '../repositories';
 
 interface SearchResponse {
   hits: SearchHits;
@@ -32,9 +32,9 @@ export class SearchController implements SearchControllerType {
     const inputLimit = Number(req.query.limit) || 20;
     const limit = Math.min(inputLimit, maxAllowedLimit);
 
-    const searchQuery: string = (req.query.q as string) ?? "";
+    const searchQuery: string = (req.query.q as string) ?? '';
     const trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
-    const results = trainees.map(trainee => {
+    const results = trainees.map((trainee) => {
       return {
         id: trainee.id,
         name: `${trainee.displayName}`,

@@ -4,13 +4,13 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 
-const replaceBoolean = (str: string) =>  {
-  if(!str.trim()) {
+const replaceBoolean = (str: string) => {
+  if (!str.trim()) {
     return null;
   }
-  return str.trim().toLowerCase() === 'yes' ? true : false
+  return str.trim().toLowerCase() === 'yes' ? true : false;
 };
-const handleString = (str: string) => str.trim() === '' ? null : str.trim();
+const handleString = (str: string) => (str.trim() === '' ? null : str.trim());
 
 const extractData = (data: string) => {
   const rows = parse(data, {
@@ -64,8 +64,8 @@ const extractData = (data: string) => {
         preferredLocation: handleString(row['Preferred Location']),
         extraTechnologies: handleString(row['Extra Technologies']),
         comments: handleString(row['Comments - Employment']),
-      }
-    }
+      },
+    };
   });
 };
 
@@ -73,17 +73,17 @@ const main = async () => {
   const filePath = process.argv[2];
   const fileData = fs.readFileSync(filePath, 'utf8');
   const trainees = extractData(fileData);
-  for(const trainee of trainees) {
+  for (const trainee of trainees) {
     try {
       const newId = await postTrainee(trainee);
       console.log(`✅ ${newId} ${trainee.personalInfo.firstName} ${trainee.personalInfo.lastName}`);
     } catch (error: any) {
       console.log(`❌ ${trainee.personalInfo.firstName} ${trainee.personalInfo.lastName}`);
-      console.log(`    ${error}`)
+      console.log(`    ${error}`);
     }
   }
-  
-  console.log("Done!");
+
+  console.log('Done!');
 };
 
 const postTrainee = async (trainee: any): Promise<string> => {
@@ -96,20 +96,19 @@ const postTrainee = async (trainee: any): Promise<string> => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TOKEN}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       body: JSON.stringify(trainee),
     });
     body = await response.json();
   } catch (error: any) {
     throw new Error(`${error.message}`);
-  };
+  }
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status} ${body.error ?? ''}`);
   }
   return body.id;
 };
-
 
 main().then().catch(console.error);
