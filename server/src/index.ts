@@ -1,3 +1,15 @@
+import * as Sentry from '@sentry/node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
+Sentry.init({
+  dsn: 'https://05a4e8032c979ef9b85a1771795bb098@o4507747676848128.ingest.de.sentry.io/4507747681370192',
+  integrations: [nodeProfilingIntegration()],
+  // Performance Monitoring
+  tracesSampleRate: 1.0, //  Capture 100% of the transactions
+
+  // Set sampling rate for profiling - this is relative to tracesSampleRate
+  profilesSampleRate: 1.0,
+});
+
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -57,8 +69,8 @@ class Main {
 
     // Dependencies
     const googleOAuthService = new GoogleOAuthService(
-      process.env.GOOGLE_OAUTH_CLIENTID ?? "",
-      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? "",
+      process.env.GOOGLE_OAUTH_CLIENTID ?? '',
+      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? ''
     );
     const tokenService = new TokenService(process.env.JWT_SECRET ?? '', tokenExpirationInDays);
     const storageService = new StorageService(
@@ -116,6 +128,8 @@ class Main {
     if (this.isProduction) {
       this.setupClientMiddleware();
     }
+
+    Sentry.setupExpressErrorHandler(this.app);
 
     // Global error handler
     this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {

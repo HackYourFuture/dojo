@@ -28,6 +28,7 @@ export class SearchController implements SearchControllerType {
   }
 
   async search(req: Request, res: Response) {
+    throw new Error('Not implemented');
     const maxAllowedLimit = 50;
     const inputLimit = Number(req.query.limit) || 20;
     const limit = Math.min(inputLimit, maxAllowedLimit);

@@ -22,6 +22,6 @@
   "author": "HackYourFuture",
   "license": "ISC",
   "engines": {
-    "node": "20.x"
-  }  
+    "node": "22.x"
+  }
 }
