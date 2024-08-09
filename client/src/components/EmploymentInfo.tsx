@@ -25,7 +25,6 @@ import LinkIcon from '@mui/icons-material/Link';
 
 const NoIcon = () => null;
 
-
 /**
  * Component for displaying trainee profile data on the employment information tab.
  *
@@ -98,7 +97,7 @@ export const EmploymentInfo = ({
 
   /**
    * Function to handel changing text fields with edited data.
-   * 
+   *
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +110,7 @@ export const EmploymentInfo = ({
 
   /**
    * Function to handel changing select fields with edited data.
-   * 
+   *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
   const handleSelectChange = (
@@ -126,7 +125,7 @@ export const EmploymentInfo = ({
 
   /**
    * Function to format date value.
-   * 
+   *
    * @param {Date | undefined} date date value selected.
    */
   const formatDate = (date: Date | undefined) => {

@@ -15,8 +15,8 @@ import {
   Stack,
   Toolbar,
   Tooltip,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * Component for displaying a responsive navigation menu to all pages.
@@ -31,7 +31,7 @@ export const ResponsiveNavBar = () => {
   const navigate = useNavigate();
   /**
    * Function to handel opening the navigation burger menu onClick event.
-   * 
+   *
    * @param {HTMLElement} event the click event coming form user.
    */
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,7 +47,7 @@ export const ResponsiveNavBar = () => {
 
   /**
    * Function to handel opening the user menu onClick event.
-   * 
+   *
    * @param {HTMLElement} event the click event coming form user.
    */
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -79,22 +79,22 @@ export const ResponsiveNavBar = () => {
               <Stack direction="row" spacing={2}>
                 <Button
                   key="Home"
-                  onClick={() => navigate("/home")}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  onClick={() => navigate('/home')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Home
                 </Button>
                 <Button
                   key="Cohorts"
-                  onClick={() => navigate("/cohorts")}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  onClick={() => navigate('/cohorts')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Cohorts
                 </Button>
                 <Button
                   key="Dashboard"
-                  onClick={() => navigate("/dashboard")}
-                  sx={{ my: 2, color: "white", display: "block" }}
+                  onClick={() => navigate('/dashboard')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Dashboard
                 </Button>
@@ -134,7 +134,7 @@ export const ResponsiveNavBar = () => {
               >
                 <MenuItem key="Home">
                   <Button
-                    onClick={() => navigate("/home")}
+                    onClick={() => navigate('/home')}
                     sx={{
                       color: 'inherit',
                       display: 'block',
@@ -146,7 +146,7 @@ export const ResponsiveNavBar = () => {
                 </MenuItem>
                 <MenuItem key="Cohorts">
                   <Button
-                    onClick={() => navigate("/cohorts")}
+                    onClick={() => navigate('/cohorts')}
                     sx={{
                       color: 'inherit',
                       display: 'block',
@@ -158,7 +158,7 @@ export const ResponsiveNavBar = () => {
                 </MenuItem>
                 <MenuItem key="Dashboard">
                   <Button
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate('/dashboard')}
                     sx={{
                       color: 'inherit',
                       display: 'block',
@@ -173,7 +173,7 @@ export const ResponsiveNavBar = () => {
 
             <Box sx={{ flexGrow: 0 }}>
               <IconButton
-                onClick={() => navigate("/search")}
+                onClick={() => navigate('/search')}
                 size="large"
                 aria-label="search"
                 color="inherit"

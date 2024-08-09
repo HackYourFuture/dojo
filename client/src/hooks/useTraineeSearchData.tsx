@@ -5,7 +5,7 @@ import { SearchResult } from '../types';
 /**
  * A React Query hook that fetches trainee search results form api.
  *
- * @param {string} search search keyword 
+ * @param {string} search search keyword
  */
 export const useTraineeSearchData = (search: string) => {
   return useQuery(

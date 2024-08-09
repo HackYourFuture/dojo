@@ -1,17 +1,10 @@
-import {
-  Avatar,
-  Box,
-  IconButton,
-  Link,
-  Stack,
-  Typography,
-} from "@mui/material";
-import slackLogo from "../assets/slack.png";
-import githubLogo from "../assets/github.png";
-import LinkedInLogo from "../assets/LinkedIn_logo.png";
-import { useTraineeInfoData } from "../hooks/useTraineeInfoData";
-import { LearningStatus, ProfileSidebarProps } from "../types";
-import { SidebarJobPath, SidebarLearningStatus, Loader, ErrorBox } from ".";
+import { Avatar, Box, IconButton, Link, Stack, Typography } from '@mui/material';
+import slackLogo from '../assets/slack.png';
+import githubLogo from '../assets/github.png';
+import LinkedInLogo from '../assets/LinkedIn_logo.png';
+import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
+import { LearningStatus, ProfileSidebarProps } from '../types';
+import { SidebarJobPath, SidebarLearningStatus, Loader, ErrorBox } from '.';
 
 /**
  * Component for showing profile page sidebar and sidebar data.
@@ -67,9 +60,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         </Typography>
         {/* Learning Status */}
         {data?.educationInfo?.learningStatus === LearningStatus.Graduated ? (
-          <SidebarJobPath
-            jobPath={data?.employmentInfo?.jobPath}
-          ></SidebarJobPath>
+          <SidebarJobPath jobPath={data?.employmentInfo?.jobPath}></SidebarJobPath>
         ) : (
           <SidebarLearningStatus
             learningStatus={data?.educationInfo?.learningStatus}
@@ -77,7 +68,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         )}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
-          Cohort {data?.educationInfo?.currentCohort || "not assigned"}
+          Cohort {data?.educationInfo?.currentCohort || 'not assigned'}
         </Typography>
       </Stack>
 
@@ -91,20 +82,24 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
                 alt="Slack"
                 width="32"
                 height="32"
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: '50%' }}
               />
             </IconButton>
           </Link>
         )}
         {githubHandle && (
-           <Link href={`https://github.com/${githubHandle}`} target="_blank" rel="noopener">
+          <Link
+            href={`https://github.com/${githubHandle}`}
+            target="_blank"
+            rel="noopener"
+          >
             <IconButton aria-label="GitHub handel">
               <img
                 src={githubLogo}
                 alt="GitHub"
                 width="32"
                 height="32"
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: '50%' }}
               />
             </IconButton>
           </Link>

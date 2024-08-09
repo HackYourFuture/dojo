@@ -1,4 +1,4 @@
-import { Alert, AlertTitle } from "@mui/material";
+import { Alert, AlertTitle } from '@mui/material';
 
 export interface ErrorBoxProps {
   errorMessage: string;

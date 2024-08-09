@@ -1,12 +1,19 @@
-import { SearchResult, SearchResultsListProps } from "../types";
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import { useTraineeSearchData } from "../hooks/useTraineeSearchData";
-import { useDebounce } from "../hooks/useDebounce";
-import { Link } from "react-router-dom";
-import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { Loader } from "./Loader";
-import { ErrorBox } from "./ErrorBox";
+import { SearchResult, SearchResultsListProps } from '../types';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
+import { useDebounce } from '../hooks/useDebounce';
+import { Link } from 'react-router-dom';
+import {
+  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+import { Loader } from './Loader';
+import { ErrorBox } from './ErrorBox';
 
 /**
  * Component for showing a list of trainee search results with links.
@@ -59,17 +66,19 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
                 >
                   <ListItemButton key={trainee.id}>
                     <ListItemIcon>
-                      <Avatar 
-                        src={trainee.thumbnail ?? ""} 
-                        sx={{ width: 32, height: 32 }} 
-                        variant="rounded">
-                      </Avatar>
+                      <Avatar
+                        src={trainee.thumbnail ?? ''}
+                        sx={{ width: 32, height: 32 }}
+                        variant="rounded"
+                      ></Avatar>
                     </ListItemIcon>
                     <ListItemText primary={trainee.name}></ListItemText>
-                    <ListItemText 
-                      secondary={trainee.cohort ? `Cohort ${trainee.cohort}` : 'No cohort'}
-                      sx={{ textAlign: 'right' }}>
-                    </ListItemText>
+                    <ListItemText
+                      secondary={
+                        trainee.cohort ? `Cohort ${trainee.cohort}` : 'No cohort'
+                      }
+                      sx={{ textAlign: 'right' }}
+                    ></ListItemText>
                   </ListItemButton>
                 </Link>
               </ListItem>

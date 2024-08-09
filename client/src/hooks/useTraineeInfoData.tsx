@@ -5,7 +5,7 @@ import { Trainee } from '../types';
 /**
  * A React Query hook that fetches trainee information data form api.
  *
- * @param {string} traineeId trainee id 
+ * @param {string} traineeId trainee id
  */
 export const useTraineeInfoData = (traineeId: string) => {
   return useQuery<Trainee, Error>(

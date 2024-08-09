@@ -9,10 +9,9 @@ import SearchIcon from '@mui/icons-material/Search';
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SearchBar = ({ data }: any) => {
-
   /**
    * Function to set the value for search text field onChange event.
-   * 
+   *
    * @param {string} value value entered to searchbox text field.
    */
   const handleChange = (value: string) => {
@@ -26,7 +25,7 @@ export const SearchBar = ({ data }: any) => {
         placeholder="Search trainee..."
         fullWidth
         autoFocus
-        autoComplete='off'
+        autoComplete="off"
         onChange={(e) => handleChange(e.target.value)}
         InputProps={{
           startAdornment: (
