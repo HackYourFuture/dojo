@@ -1,5 +1,5 @@
-import { Schema } from "mongoose";
-import { Country } from "../models/Country";
+import { Schema } from 'mongoose';
+import { Country } from '../models/Country';
 
 const CountrySchema: Schema = new Schema<Country>({
   _id: { type: String },

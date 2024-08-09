@@ -67,21 +67,12 @@ export const ResponsiveNavBar = () => {
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box component="div">
-              <img
-                src={HYFLogo}
-                height="60"
-                alt="HYF navbar logo"
-                className="hyf-navbar-logo-img"
-              />
+              <img src={HYFLogo} height="60" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
             </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Stack direction="row" spacing={2}>
-                <Button
-                  key="Home"
-                  onClick={() => navigate('/home')}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
+                <Button key="Home" onClick={() => navigate('/home')} sx={{ my: 2, color: 'white', display: 'block' }}>
                   Home
                 </Button>
                 <Button
@@ -172,12 +163,7 @@ export const ResponsiveNavBar = () => {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <IconButton
-                onClick={() => navigate('/search')}
-                size="large"
-                aria-label="search"
-                color="inherit"
-              >
+              <IconButton onClick={() => navigate('/search')} size="large" aria-label="search" color="inherit">
                 <SearchIcon />
               </IconButton>
               <Tooltip title="Open user menu">

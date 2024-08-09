@@ -8,16 +8,11 @@ import { DashboardData } from '../types';
  * @param {string | undefined} startDate
  * @param {string | undefined} endDate
  */
-export const useDashboardData = (
-  startDate: string | undefined,
-  endDate: string | undefined
-) => {
+export const useDashboardData = (startDate: string | undefined, endDate: string | undefined) => {
   return useQuery(
     ['DashboardInfo'],
     () => {
-      return axios.get<DashboardData>(
-        `/api/dashboard?startDate=${startDate}&endDate=${endDate}`
-      );
+      return axios.get<DashboardData>(`/api/dashboard?startDate=${startDate}&endDate=${endDate}`);
     },
     {
       select: ({ data }) => {

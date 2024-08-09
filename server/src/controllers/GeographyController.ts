@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { GeographyRepository } from "../repositories";
+import { Request, Response, NextFunction } from 'express';
+import { GeographyRepository } from '../repositories';
 
 export interface GeographyControllerType {
   getCountries(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -13,7 +13,7 @@ export class GeographyController implements GeographyControllerType {
   }
 
   async getCountries(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const query = req.query.q as string ?? "";
+    const query = (req.query.q as string) ?? '';
     const limit = Number.parseInt(req.query.limit as string) || null;
     try {
       const countries = await this.geographyRepository.searchCountry(query, limit);
@@ -27,11 +27,11 @@ export class GeographyController implements GeographyControllerType {
   }
 
   async getCities(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const query = req.query.q as string ?? "";
+    const query = (req.query.q as string) ?? '';
     const limit = Number.parseInt(req.query.limit as string) || null;
     try {
       const cities = await this.geographyRepository.searchCity(query, limit);
-      const jsonResponse = cities.map(city => city.name);
+      const jsonResponse = cities.map((city) => city.name);
       res.json(jsonResponse);
     } catch (error) {
       next(error);

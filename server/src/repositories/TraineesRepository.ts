@@ -1,15 +1,15 @@
-import mongoose from "mongoose";
-import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason, LearningStatus } from "../models";
-import { TraineeSchema } from "../schemas";
-import { escapeStringRegexp } from "../utils/string";
-import { WithMongoID } from "../utils/database";
-import { UserRepository } from "./UserRepository";
+import mongoose from 'mongoose';
+import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason, LearningStatus } from '../models';
+import { TraineeSchema } from '../schemas';
+import { escapeStringRegexp } from '../utils/string';
+import { WithMongoID } from '../utils/database';
+import { UserRepository } from './UserRepository';
 
 export interface TraineesRepository {
   searchTrainees(keyword: string, limit: number): Promise<Trainee[]>;
   getTraineesByCohort(
     fromCohort: number | undefined,
-    toCohort: number | undefined, 
+    toCohort: number | undefined,
     includeNullCohort: boolean
   ): Promise<Trainee[]>;
   getTrainee(id: string): Promise<Trainee | null>;
@@ -31,7 +31,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   private readonly userRepository: UserRepository;
 
   constructor(db: mongoose.Connection, userRepository: UserRepository) {
-    this.TraineeModel = db.model<Trainee & WithMongoID>("Trainee", TraineeSchema);
+    this.TraineeModel = db.model<Trainee & WithMongoID>('Trainee', TraineeSchema);
     this.userRepository = userRepository;
   }
 
@@ -39,9 +39,9 @@ export class MongooseTraineesRepository implements TraineesRepository {
     const escapedKeyword = escapeStringRegexp(keyword);
     return await this.TraineeModel.find({
       $or: [
-        { "personalInfo.firstName": { $regex: escapedKeyword, $options: "i" } },
-        { "personalInfo.lastName": { $regex: escapedKeyword, $options: "i" } },
-        { "contactInfo.email": { $regex: escapedKeyword, $options: "i" } },
+        { 'personalInfo.firstName': { $regex: escapedKeyword, $options: 'i' } },
+        { 'personalInfo.lastName': { $regex: escapedKeyword, $options: 'i' } },
+        { 'contactInfo.email': { $regex: escapedKeyword, $options: 'i' } },
       ],
     })
       .limit(limit)
@@ -49,25 +49,23 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getTraineesByCohort(
-      fromCohort: number | undefined, 
-      toCohort: number | undefined, 
-      includeNullCohort: boolean = false
-    ): Promise<Trainee[]> {
-
-    let condition: any = { "educationInfo.currentCohort": { $gte: fromCohort ?? 0, $lte: toCohort ?? 999 } };
+    fromCohort: number | undefined,
+    toCohort: number | undefined,
+    includeNullCohort: boolean = false
+  ): Promise<Trainee[]> {
+    let condition: any = { 'educationInfo.currentCohort': { $gte: fromCohort ?? 0, $lte: toCohort ?? 999 } };
     if (includeNullCohort) {
-      condition = { $or: [condition, { "educationInfo.currentCohort": null }] };
+      condition = { $or: [condition, { 'educationInfo.currentCohort': null }] };
     }
     return await this.TraineeModel.find(condition)
-      .where("educationInfo.learningStatus").ne(LearningStatus.Quit)
-      .sort({ "educationInfo.currentCohort": 1 })
+      .where('educationInfo.learningStatus')
+      .ne(LearningStatus.Quit)
+      .sort({ 'educationInfo.currentCohort': 1 })
       .exec();
   }
 
   async getTrainee(id: string): Promise<Trainee | null> {
-    return await this.TraineeModel
-      .findById(id)
-      .populate("educationInfo.strikes.reporterID", "name imageUrl");
+    return await this.TraineeModel.findById(id).populate('educationInfo.strikes.reporterID', 'name imageUrl');
   }
 
   async createTrainee(trainee: Trainee): Promise<Trainee> {
@@ -75,7 +73,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async deleteTrainee(id: string): Promise<void> {
-    throw new Error("Not implemented");
+    throw new Error('Not implemented');
   }
 
   async updateTrainee(trainee: Trainee): Promise<void> {
@@ -84,7 +82,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
 
   async isEmailExists(email: string): Promise<boolean> {
     const result = await this.TraineeModel.exists({
-      "contactInfo.email": email,
+      'contactInfo.email': email,
     });
     return result !== null;
   }
@@ -94,14 +92,13 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getStrikes(traineeID: string): Promise<StrikeWithReporter[]> {
-    const trainee = await this.TraineeModel
-      .findById(traineeID)
-      .populate("educationInfo.strikes.reporterID", "name imageUrl")
-      .select("educationInfo.strikes")
+    const trainee = await this.TraineeModel.findById(traineeID)
+      .populate('educationInfo.strikes.reporterID', 'name imageUrl')
+      .select('educationInfo.strikes')
       .exec();
 
     if (!trainee) {
-      throw new Error("Trainee not found");
+      throw new Error('Trainee not found');
     }
 
     return trainee.educationInfo.strikes || [];
@@ -110,13 +107,12 @@ export class MongooseTraineesRepository implements TraineesRepository {
   async addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID },
-      { $push: { "educationInfo.strikes": strike } },
+      { $push: { 'educationInfo.strikes': strike } },
       { new: true }
-    )
-    .populate("educationInfo.strikes.reporterID", "name imageUrl");
+    ).populate('educationInfo.strikes.reporterID', 'name imageUrl');
 
     if (!updatedTrainee) {
-      throw new Error("Trainee not found");
+      throw new Error('Trainee not found');
     }
 
     return updatedTrainee.educationInfo.strikes.at(-1) as StrikeWithReporter;
@@ -125,43 +121,44 @@ export class MongooseTraineesRepository implements TraineesRepository {
   async updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
     const DBStrike: StrikeWithReporterID & WithMongoID = { _id: strike.id, ...strike };
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
-      { _id: traineeID, "educationInfo.strikes._id": strike.id },
-      { $set: { "educationInfo.strikes.$": DBStrike } }
-    )
-    .populate("educationInfo.strikes.reporterID", "name imageUrl");
+      { _id: traineeID, 'educationInfo.strikes._id': strike.id },
+      { $set: { 'educationInfo.strikes.$': DBStrike } }
+    ).populate('educationInfo.strikes.reporterID', 'name imageUrl');
 
     if (!updatedTrainee) {
-      throw new Error("Trainee not found");
+      throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.educationInfo.strikes.find((strike) => (strike as StrikeWithReporter & WithMongoID)._id === DBStrike._id) as StrikeWithReporter;
+    return updatedTrainee.educationInfo.strikes.find(
+      (strike) => (strike as StrikeWithReporter & WithMongoID)._id === DBStrike._id
+    ) as StrikeWithReporter;
   }
 
   async deleteStrike(traineeID: string, strikeID: string): Promise<void> {
     await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID },
-      { $pull: { "educationInfo.strikes": { _id: strikeID } } }
+      { $pull: { 'educationInfo.strikes': { _id: strikeID } } }
     );
   }
 
   async validateStrike(strike: StrikeWithReporterID): Promise<void> {
-    if(!strike.date) {
-      throw new Error("Strike date is required");
+    if (!strike.date) {
+      throw new Error('Strike date is required');
     }
-    if(!strike.reporterID) {
-      throw new Error("Strike reporter ID is required");
+    if (!strike.reporterID) {
+      throw new Error('Strike reporter ID is required');
     }
-    if(!strike.reason) {
-      throw new Error("Strike reason is required");
+    if (!strike.reason) {
+      throw new Error('Strike reason is required');
     }
-    if(!Object.values(StrikeReason).includes(strike.reason)) {
-      throw new Error("Unknown strike reason");
+    if (!Object.values(StrikeReason).includes(strike.reason)) {
+      throw new Error('Unknown strike reason');
     }
-    if(!strike.comments) {
-      throw new Error("Strike comments are required");
+    if (!strike.comments) {
+      throw new Error('Strike comments are required');
     }
-    if(await this.userRepository.findUserByID(strike.reporterID) === null) {
-      throw new Error("Invalid strike reporter ID");
+    if ((await this.userRepository.findUserByID(strike.reporterID)) === null) {
+      throw new Error('Invalid strike reporter ID');
     }
   }
 }

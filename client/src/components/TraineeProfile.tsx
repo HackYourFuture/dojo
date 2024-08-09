@@ -37,9 +37,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   const [traineeData, setTraineeData] = useState(data && data);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
-    'success'
-  );
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleSnackbarClose = () => {
@@ -73,11 +71,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
    * @param {Object} editedData Object with added/edited trainee info.
    */
   const saveTraineeData = async (
-    editedData:
-      | TraineePersonalInfo
-      | TraineeContactInfo
-      | TraineeEducationInfo
-      | TraineeEmploymentInfo
+    editedData: TraineePersonalInfo | TraineeContactInfo | TraineeEducationInfo | TraineeEmploymentInfo
   ) => {
     console.log('Saving trainee data', editedData);
     try {
@@ -98,15 +92,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   return (
     <div style={{ display: 'flex', background: '#fff' }}>
-      <Box
-        width="40%"
-        position="sticky"
-        top={0}
-        left={0}
-        height="100%"
-        color="black"
-        style={{ overflowY: 'auto' }}
-      >
+      <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
         <ProfileSidebar traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
@@ -117,32 +103,18 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
           onClose={handleSnackbarClose}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleSnackbarClose}
-            severity={snackbarSeverity}
-          >
+          <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={snackbarSeverity}>
             {snackbarMessage}
           </MuiAlert>
         </Snackbar>
         {activeTab === 'personal' && (
-          <PersonalInfo
-            traineeData={traineeData && traineeData.personalInfo}
-            saveTraineeData={saveTraineeData}
-          />
+          <PersonalInfo traineeData={traineeData && traineeData.personalInfo} saveTraineeData={saveTraineeData} />
         )}
         {activeTab === 'contact' && (
-          <ContactInfo
-            contactData={traineeData && traineeData.contactInfo}
-            saveTraineeData={saveTraineeData}
-          />
+          <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={saveTraineeData} />
         )}
         {activeTab === 'education' && (
-          <EducationInfo
-            educationData={traineeData && traineeData.educationInfo}
-            saveTraineeData={saveTraineeData}
-          />
+          <EducationInfo educationData={traineeData && traineeData.educationInfo} saveTraineeData={saveTraineeData} />
         )}
         {activeTab === 'employment' && (
           <EmploymentInfo

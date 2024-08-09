@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { Token } from "../models";
-import { TokenSchema } from "../schemas";
+import mongoose from 'mongoose';
+import { Token } from '../models';
+import { TokenSchema } from '../schemas';
 
 export interface TokenRepository {
   addToken(token: Token): Promise<void>;
@@ -11,7 +11,7 @@ export class MongooseTokenRepository implements TokenRepository {
   private TokenModel: mongoose.Model<Token>;
 
   constructor(db: mongoose.Connection) {
-    this.TokenModel = db.model<Token>("Token", TokenSchema);
+    this.TokenModel = db.model<Token>('Token', TokenSchema);
   }
 
   async addToken(token: Token) {

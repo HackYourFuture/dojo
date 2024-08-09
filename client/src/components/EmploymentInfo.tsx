@@ -32,13 +32,8 @@ const NoIcon = () => null;
  * @param {TraineeEmploymentInfo} saveTraineeData callback to save edited trainee employment information.
  * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
  */
-export const EmploymentInfo = ({
-  employmentData,
-  saveTraineeData,
-}: EmploymentInfoProps) => {
-  const [editedFields, setEditedFields] = useState<TraineeEmploymentInfo>(
-    employmentData!
-  );
+export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentInfoProps) => {
+  const [editedFields, setEditedFields] = useState<TraineeEmploymentInfo>(employmentData!);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -113,9 +108,7 @@ export const EmploymentInfo = ({
    *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
-  const handleSelectChange = (
-    event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>
-  ) => {
+  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
@@ -155,10 +148,7 @@ export const EmploymentInfo = ({
 
       <div style={{ width: '100%' }}>
         {/* Job path */}
-        <FormControl
-          variant={isEditing ? 'outlined' : 'standard'}
-          sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}
-        >
+        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
           <InputLabel htmlFor="jobPath">Job path</InputLabel>
           <Select
             name="jobPath"
@@ -181,9 +171,7 @@ export const EmploymentInfo = ({
             {Object.entries(JobPath).map(([key, value]) => {
               const text = value
                 .split('-')
-                .map((word, index) =>
-                  index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word
-                )
+                .map((word, index) => (index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
                 .join(' ');
 
               return (
@@ -273,18 +261,13 @@ export const EmploymentInfo = ({
         </FormControl>
 
         {/* Driving license */}
-        <FormControl
-          variant={isEditing ? 'outlined' : 'standard'}
-          sx={{ mx: 2, width: '14ch' }}
-        >
+        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, width: '14ch' }}>
           <InputLabel htmlFor="drivingLicense">Driving license</InputLabel>
           <Select
             name="drivingLicense"
             id="drivingLicense"
             label="Driving license"
-            value={
-              editedFields?.drivingLicense == null ? '' : editedFields?.drivingLicense
-            }
+            value={editedFields?.drivingLicense == null ? '' : editedFields?.drivingLicense}
             inputProps={{ readOnly: isEditing ? false : true }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
@@ -315,12 +298,7 @@ export const EmploymentInfo = ({
 
       <div style={{ width: '100%' }}>
         {/* Employment history */}
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" color="black" padding="16px">
             Employment history ({editedFields?.employmentHistory.length || 0})
           </Typography>
@@ -347,9 +325,7 @@ export const EmploymentInfo = ({
                   secondary={employmentHistory.comments}
                 />
               </ListItem>
-              {index < editedFields?.employmentHistory.length - 1 && (
-                <Divider sx={{ color: 'black' }} component="li" />
-              )}
+              {index < editedFields?.employmentHistory.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
             </React.Fragment>
           ))}
         </List>

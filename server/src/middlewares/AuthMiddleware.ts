@@ -1,19 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
-import { ResponseError } from "../models";
-import { TOKEN_COOKIE_NAME } from "../controllers/AuthenticationController";
+import { ResponseError } from '../models';
+import { TOKEN_COOKIE_NAME } from '../controllers/AuthenticationController';
 import { TokenService } from '../services/TokenService';
 import Middleware from './Middleware';
 
-export default class AuthMiddleware implements Middleware{
+export default class AuthMiddleware implements Middleware {
   private readonly tokenService: TokenService;
   constructor(tokenService: TokenService) {
     this.tokenService = tokenService;
   }
 
   handle(req: Request, res: Response, next: NextFunction) {
-    const responseError = new ResponseError("Unauthorized");
+    const responseError = new ResponseError('Unauthorized');
     const token = this.getTokenFromRequest(req);
-    if(!token) {
+    if (!token) {
       res.status(401).json(responseError);
       return;
     }
@@ -28,9 +28,8 @@ export default class AuthMiddleware implements Middleware{
   }
 
   private getTokenFromRequest(req: Request): string | null {
-    const tokenFromAuthHeader = req.headers.authorization?.replace("Bearer ", "").trim();
+    const tokenFromAuthHeader = req.headers.authorization?.replace('Bearer ', '').trim();
     const tokenFromCookies = req.cookies[TOKEN_COOKIE_NAME] as string | undefined;
     return tokenFromAuthHeader ?? tokenFromCookies ?? null;
   }
 }
-

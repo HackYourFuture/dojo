@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { GoogleOAuthServiceType, GoogleOAuthUserInfo, TokenServiceType } from "../services";
-import { UserRepository } from "../repositories";
-import { ResponseError, AuthenticatedUser } from "../models";
+import { Request, Response } from 'express';
+import { GoogleOAuthServiceType, GoogleOAuthUserInfo, TokenServiceType } from '../services';
+import { UserRepository } from '../repositories';
+import { ResponseError, AuthenticatedUser } from '../models';
 
 export interface AuthenticationControllerType {
   login(req: Request, res: Response): Promise<void>;
@@ -9,7 +9,7 @@ export interface AuthenticationControllerType {
   getSession(req: Request, res: Response): Promise<void>;
 }
 
-export const TOKEN_COOKIE_NAME = "dojo_token";
+export const TOKEN_COOKIE_NAME = 'dojo_token';
 
 /**
  * A class provides methods for handling user authentication,
@@ -38,7 +38,7 @@ export class AuthenticationController implements AuthenticationControllerType {
   async login(req: Request, res: Response) {
     const authCode = req.body.authCode?.trim();
     if (!authCode) {
-      res.status(400).json(new ResponseError("Code is required"));
+      res.status(400).json(new ResponseError('Code is required'));
       return;
     }
 
@@ -50,27 +50,27 @@ export class AuthenticationController implements AuthenticationControllerType {
 
       // 2. Get user info from Google
       oauthUser = await this.googleOAuthService.getUserInfo(googleAccessToken);
-      
+
       // 3. Revoke Google OAuth token - we don't use it anymore.
       // Do not wait for the response. Continue with login process.
       this.googleOAuthService.revokeToken(googleAccessToken);
-      googleAccessToken = "";
-  
+      googleAccessToken = '';
+
       if (!oauthUser || !oauthUser.emailVerified) {
-        throw new Error("Could not verify user");
+        throw new Error('Could not verify user');
       }
     } catch (error) {
-      res.status(401).json(new ResponseError("Could not verify user"));
+      res.status(401).json(new ResponseError('Could not verify user'));
       return;
     }
-    
+
     // Check if the user is allowed to access to the system
     const user = await this.userRepository.findUserByEmail(oauthUser.email);
     if (!user || !user.isActive) {
-      res.status(403).json(new ResponseError("Not allowed to login"));
+      res.status(403).json(new ResponseError('Not allowed to login'));
       return;
     }
-    
+
     // Login Successful! Generate and send JWT token
     const jwtToken = this.tokenService.generateAccessToken(user);
 
@@ -80,7 +80,7 @@ export class AuthenticationController implements AuthenticationControllerType {
       httpOnly: true,
       secure: isSecure,
       sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24 * this.tokenExpirationInDays, 
+      maxAge: 1000 * 60 * 60 * 24 * this.tokenExpirationInDays,
     });
 
     res.status(200).json(user);

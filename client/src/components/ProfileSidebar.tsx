@@ -62,9 +62,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         {data?.educationInfo?.learningStatus === LearningStatus.Graduated ? (
           <SidebarJobPath jobPath={data?.employmentInfo?.jobPath}></SidebarJobPath>
         ) : (
-          <SidebarLearningStatus
-            learningStatus={data?.educationInfo?.learningStatus}
-          ></SidebarLearningStatus>
+          <SidebarLearningStatus learningStatus={data?.educationInfo?.learningStatus}></SidebarLearningStatus>
         )}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
@@ -77,30 +75,14 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         {slackId && (
           <Link href={`slack://user?team=T0EJTUQ87&id=${slackId}`}>
             <IconButton aria-label="Slack Id">
-              <img
-                src={slackLogo}
-                alt="Slack"
-                width="32"
-                height="32"
-                style={{ borderRadius: '50%' }}
-              />
+              <img src={slackLogo} alt="Slack" width="32" height="32" style={{ borderRadius: '50%' }} />
             </IconButton>
           </Link>
         )}
         {githubHandle && (
-          <Link
-            href={`https://github.com/${githubHandle}`}
-            target="_blank"
-            rel="noopener"
-          >
+          <Link href={`https://github.com/${githubHandle}`} target="_blank" rel="noopener">
             <IconButton aria-label="GitHub handel">
-              <img
-                src={githubLogo}
-                alt="GitHub"
-                width="32"
-                height="32"
-                style={{ borderRadius: '50%' }}
-              />
+              <img src={githubLogo} alt="GitHub" width="32" height="32" style={{ borderRadius: '50%' }} />
             </IconButton>
           </Link>
         )}

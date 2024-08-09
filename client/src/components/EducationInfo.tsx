@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from 'react';
-import {
-  EducationInfoProps,
-  Strike,
-  TraineeEducationInfo,
-  LearningStatus,
-  QuitReason,
-  StrikeReason,
-} from '../types';
+import { EducationInfoProps, Strike, TraineeEducationInfo, LearningStatus, QuitReason, StrikeReason } from '../types';
 import {
   Box,
   Button,
@@ -151,9 +144,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
    *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
-  const handleSelectChange = (
-    event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>
-  ) => {
+  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
     const { name, value } = event.target;
     setEditedFields((prevFields) => ({
       ...prevFields,
@@ -246,10 +237,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
         </FormControl>
 
         {/* Learning status */}
-        <FormControl
-          variant={isEditing ? 'outlined' : 'standard'}
-          sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}
-        >
+        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
           <InputLabel htmlFor="learningStatus">Learning status</InputLabel>
           <Select
             name="learningStatus"
@@ -287,10 +275,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
 
         {/* Quit reason */}
         {editedFields?.learningStatus === LearningStatus.Quit && (
-          <FormControl
-            variant={isEditing ? 'outlined' : 'standard'}
-            sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}
-          >
+          <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
             <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
             <Select
               name="quitReason"
@@ -305,9 +290,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
               <MenuItem value={QuitReason.Technical}>Technical</MenuItem>
               <MenuItem value={QuitReason.SocialSkills}>Social skills</MenuItem>
               <MenuItem value={QuitReason.Personal}>Personal</MenuItem>
-              <MenuItem value={QuitReason.MunicipalityOrMonetary}>
-                Municipality or monetary
-              </MenuItem>
+              <MenuItem value={QuitReason.MunicipalityOrMonetary}>Municipality or monetary</MenuItem>
               <MenuItem value={QuitReason.LeftNL}>Left NL</MenuItem>
               <MenuItem value={QuitReason.Withdrawn}>Withdrawn</MenuItem>
               <MenuItem value={QuitReason.Other}>Other</MenuItem>
@@ -373,12 +356,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
 
       <div style={{ width: '50%' }}>
         {/* Strikes */}
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" color="black" padding="16px">
             Strikes ({editedFields?.strikes.length || 0})
           </Typography>
@@ -413,9 +391,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
                 </ListItemAvatar>
                 <ListItemText primary={strike.reason} secondary={strike.comments} />
               </ListItem>
-              {index < editedFields?.strikes.length - 1 && (
-                <Divider sx={{ color: 'black' }} component="li" />
-              )}
+              {index < editedFields?.strikes.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
             </React.Fragment>
           ))}
         </List>
@@ -472,22 +448,12 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
                     startAdornment=" "
                     onChange={handleStrikeSelectChange}
                   >
-                    <MenuItem value={StrikeReason.LastSubmission}>
-                      Last submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.MissedSubmission}>
-                      Missed submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.IncompleteSubmission}>
-                      Incomplete submission
-                    </MenuItem>
-                    <MenuItem value={StrikeReason.LateAttendance}>
-                      Late attendance
-                    </MenuItem>
+                    <MenuItem value={StrikeReason.LastSubmission}>Last submission</MenuItem>
+                    <MenuItem value={StrikeReason.MissedSubmission}>Missed submission</MenuItem>
+                    <MenuItem value={StrikeReason.IncompleteSubmission}>Incomplete submission</MenuItem>
+                    <MenuItem value={StrikeReason.LateAttendance}>Late attendance</MenuItem>
                     <MenuItem value={StrikeReason.Absence}>Absence</MenuItem>
-                    <MenuItem value={StrikeReason.PendingFeedback}>
-                      Pending feedback
-                    </MenuItem>
+                    <MenuItem value={StrikeReason.PendingFeedback}>Pending feedback</MenuItem>
                     <MenuItem value={StrikeReason.Other}>Other</MenuItem>
                   </Select>
                 </FormControl>

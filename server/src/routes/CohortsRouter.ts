@@ -1,7 +1,7 @@
-import { Router } from "express";
-import RouterType from "./Router";
-import { CohortsControllerType } from "../controllers/CohortsController";
-import Middleware from "../middlewares/Middleware";
+import { Router } from 'express';
+import RouterType from './Router';
+import { CohortsControllerType } from '../controllers/CohortsController';
+import Middleware from '../middlewares/Middleware';
 
 export class CohortsRouter implements RouterType {
   private readonly cohortsController: CohortsControllerType;
@@ -14,8 +14,8 @@ export class CohortsRouter implements RouterType {
 
   build(): Router {
     const router = Router();
-    this.middlewares.forEach(middleware => router.use(middleware.handle.bind(middleware)));
-    router.get("/", this.cohortsController.getCohorts.bind(this.cohortsController));
+    this.middlewares.forEach((middleware) => router.use(middleware.handle.bind(middleware)));
+    router.get('/', this.cohortsController.getCohorts.bind(this.cohortsController));
     return router;
   }
 }

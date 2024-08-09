@@ -20,11 +20,7 @@ export const Comment = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img
-            src={CommentImg}
-            alt="Strike Icon"
-            style={{ width: '28px', height: '32px', marginRight: '8px' }}
-          />
+          <img src={CommentImg} alt="Strike Icon" style={{ width: '28px', height: '32px', marginRight: '8px' }} />
           <Typography variant="h6" color="white">
             Comments
           </Typography>
@@ -120,9 +116,7 @@ export const Comment = () => {
                 March 29, 2024
               </Typography>
             </div>
-            <Typography variant="body1">
-              This is another comment from Josephine.
-            </Typography>
+            <Typography variant="body1">This is another comment from Josephine.</Typography>
           </div>
         </div>
       </div>

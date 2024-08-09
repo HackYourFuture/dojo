@@ -1,11 +1,11 @@
 export enum StrikeReason {
-  LastSubmission = "late-submission",
-  MissedSubmission = "missed-submission",
-  IncompleteSubmission = "incomplete-submission",
-  LateAttendance = "late-attendance",
-  Absence = "absence",
-  PendingFeedback = "pending-feedback",
-  Other = "other",
+  LastSubmission = 'late-submission',
+  MissedSubmission = 'missed-submission',
+  IncompleteSubmission = 'incomplete-submission',
+  LateAttendance = 'late-attendance',
+  Absence = 'absence',
+  PendingFeedback = 'pending-feedback',
+  Other = 'other',
 }
 
 export interface StrikeReporter {
@@ -27,5 +27,5 @@ export interface StrikeWithReporter extends Strike {
 
 // For database storage
 export interface StrikeWithReporterID extends Strike {
-  reporterID: string
+  reporterID: string;
 }

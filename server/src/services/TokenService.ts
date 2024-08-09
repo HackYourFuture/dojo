@@ -1,5 +1,5 @@
-import { User, AuthenticatedUser } from "../models";
-import JWT from "jsonwebtoken";
+import { User, AuthenticatedUser } from '../models';
+import JWT from 'jsonwebtoken';
 
 export interface TokenServiceType {
   generateAccessToken(user: User): string;
@@ -9,11 +9,11 @@ export interface TokenServiceType {
 export class TokenService implements TokenServiceType {
   private readonly secret: string;
   private readonly expiration: string;
-  private readonly ALGORITHM = "HS512";
+  private readonly ALGORITHM = 'HS512';
 
   constructor(secret: string, expirationInDays: number) {
     if (!secret || secret.length < 16) {
-      throw new Error("JWT Secret is required");
+      throw new Error('JWT Secret is required');
     }
     this.secret = secret;
     this.expiration = `${expirationInDays}d`;

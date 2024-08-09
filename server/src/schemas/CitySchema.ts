@@ -1,8 +1,8 @@
-import { Schema } from "mongoose";
-import { City } from "../models/City";
+import { Schema } from 'mongoose';
+import { City } from '../models/City';
 
 const CitySchema: Schema = new Schema<City>({
-  name: { type: String, required: true, index: true  },
+  name: { type: String, required: true, index: true },
   alternateNames: { type: [String], required: true, index: true },
   coordinates: {
     lon: { type: Number, required: false },

@@ -29,9 +29,7 @@ export const ApiProvider = () => {
         }
       } catch (error: any) {
         console.log('Error logging in:', error);
-        setErrorMessage(
-          `Error code: ${error.response?.status} ${error.response?.data?.error}`
-        );
+        setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
         console.log(errorMessage);
       } finally {
         setLoading(false);
@@ -55,9 +53,7 @@ export const ApiProvider = () => {
       navigate('/', { replace: true });
     } catch (error: any) {
       console.log('Error logging out:', error);
-      setErrorMessage(
-        `Error code: ${error.response?.status} ${error.response?.data?.error}`
-      );
+      setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
       console.log(errorMessage);
     } finally {
       setLoading(false);
@@ -74,11 +70,7 @@ export const ApiProvider = () => {
     [user, errorMessage, login, logout]
   );
 
-  return (
-    <ApiContext.Provider value={value}>
-      {loading ? <Loader /> : <Outlet />}
-    </ApiContext.Provider>
-  );
+  return <ApiContext.Provider value={value}>{loading ? <Loader /> : <Outlet />}</ApiContext.Provider>;
 };
 
 export const useAuth = () => {

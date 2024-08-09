@@ -1,5 +1,5 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 export default interface RouterType {
-    build(): Router;
+  build(): Router;
 }

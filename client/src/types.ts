@@ -1,107 +1,107 @@
 // enums
 export enum Gender {
-  Man = "man",
-  Woman = "woman",
-  NonBinary = "non-binary",
-  Other = "other",
+  Man = 'man',
+  Woman = 'woman',
+  NonBinary = 'non-binary',
+  Other = 'other',
 }
 
 export enum EnglishLevel {
-  NeedsWork = "needs-work",
-  Moderate = "moderate",
-  Good = "good",
+  NeedsWork = 'needs-work',
+  Moderate = 'moderate',
+  Good = 'good',
 }
 
 export enum Background {
-  Refugee = "refugee",
-  FamilyReunification = "family-reunification",
-  PartnerOfSkilledMigrant = "partner-of-skilled-migrant",
-  VulnerableGroup = "vulnerable-group",
-  EUCitizen = "eu-citizen",
+  Refugee = 'refugee',
+  FamilyReunification = 'family-reunification',
+  PartnerOfSkilledMigrant = 'partner-of-skilled-migrant',
+  VulnerableGroup = 'vulnerable-group',
+  EUCitizen = 'eu-citizen',
 }
 
 export enum EducationLevel {
-  None = "none",
-  HighSchool = "high-school",
-  Diploma = "diploma",
-  BachelorsDegree = "bachelors-degree",
-  MastersDegree = "masters-degree",
+  None = 'none',
+  HighSchool = 'high-school',
+  Diploma = 'diploma',
+  BachelorsDegree = 'bachelors-degree',
+  MastersDegree = 'masters-degree',
 }
 
 export enum ResidencyStatus {
-  FirstInterview = "first-interview",
-  SecondInterview = "second-interview",
-  Residency = "residency",
-  Citizenship = "citizenship",
+  FirstInterview = 'first-interview',
+  SecondInterview = 'second-interview',
+  Residency = 'residency',
+  Citizenship = 'citizenship',
 }
 
 export enum LearningStatus {
-  Studying = "studying",
-  Graduated = "graduated",
-  OnHold = "on-hold",
-  Quit = "quit",
+  Studying = 'studying',
+  Graduated = 'graduated',
+  OnHold = 'on-hold',
+  Quit = 'quit',
 }
 
 export enum StrikeReason {
-  LastSubmission = "late-submission",
-  MissedSubmission = "missed-submission",
-  IncompleteSubmission = "incomplete-submission",
-  LateAttendance = "late-attendance",
-  Absence = "absence",
-  PendingFeedback = "pending-feedback",
-  Other = "other",
+  LastSubmission = 'late-submission',
+  MissedSubmission = 'missed-submission',
+  IncompleteSubmission = 'incomplete-submission',
+  LateAttendance = 'late-attendance',
+  Absence = 'absence',
+  PendingFeedback = 'pending-feedback',
+  Other = 'other',
 }
 
 export enum QuitReason {
-  Technical = "technical",
-  SocialSkills = "social-skills",
-  Personal = "personal",
-  Withdrawn = "withdrawn",
-  MunicipalityOrMonetary = "municipality-or-monetary",
-  LeftNL = "left-nl",
-  Other = "other",
+  Technical = 'technical',
+  SocialSkills = 'social-skills',
+  Personal = 'personal',
+  Withdrawn = 'withdrawn',
+  MunicipalityOrMonetary = 'municipality-or-monetary',
+  LeftNL = 'left-nl',
+  Other = 'other',
 }
 
 export enum EmploymentType {
-  Internship = "internship",
-  Job = "job",
+  Internship = 'internship',
+  Job = 'job',
 }
 
 export enum JobPath {
-  NotGraduated = "not-graduated",
-  Searching = "searching",
-  Internship = "internship",
-  TechJob = "tech-job",
-  NonTechJob = "non-tech-job",
-  NotSearching = "not-searching",
-  OtherStudies = "other-studies",
-  NoLongerHelping = "no-longer-helping",
+  NotGraduated = 'not-graduated',
+  Searching = 'searching',
+  Internship = 'internship',
+  TechJob = 'tech-job',
+  NonTechJob = 'non-tech-job',
+  NotSearching = 'not-searching',
+  OtherStudies = 'other-studies',
+  NoLongerHelping = 'no-longer-helping',
 }
 
 export enum InteractionType {
-  Call = "call",
-  Chat = "chat",
-  Feedback = "feedback",
-  TechHour = "tech-hour",
-  InPerson = "in-person",
-  Other = "other",
+  Call = 'call',
+  Chat = 'chat',
+  Feedback = 'feedback',
+  TechHour = 'tech-hour',
+  InPerson = 'in-person',
+  Other = 'other',
 }
 
 export enum TestResult {
-  Passed = "passed",
-  PassedWithWarning = "passed-with-warning",
-  Failed = "failed",
-  Disqualified = "disqualified",
+  Passed = 'passed',
+  PassedWithWarning = 'passed-with-warning',
+  Failed = 'failed',
+  Disqualified = 'disqualified',
 }
 
 export enum TestType {
-  Presentation = "presentation",
-  JavaScript = "javascript",
-  BrowsersInterview = "browsers-interview",
-  UsingApisInterview = "using-apis-interview",
-  NodeJS = "nodejs",
-  ReactInterview = "react-interview",
-  FinalProjectInterview = "final-project-interview",
+  Presentation = 'presentation',
+  JavaScript = 'javascript',
+  BrowsersInterview = 'browsers-interview',
+  UsingApisInterview = 'using-apis-interview',
+  NodeJS = 'nodejs',
+  ReactInterview = 'react-interview',
+  FinalProjectInterview = 'final-project-interview',
 }
 
 // Props

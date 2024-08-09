@@ -1,6 +1,6 @@
-import { S3Client, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { Upload } from "@aws-sdk/lib-storage";
-import stream from "stream";
+import { S3Client, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import stream from 'stream';
 
 export interface StorageServiceType {
   download(key: string): Promise<stream.Readable>;
@@ -8,25 +8,25 @@ export interface StorageServiceType {
   delete(key: string): Promise<void>;
 }
 
-export class StorageService implements StorageServiceType{
+export class StorageService implements StorageServiceType {
   private readonly s3Client: S3Client;
   private readonly bucketName: string;
-  
+
   constructor(endpoint: string, region: string, bucketName: string, accessKeyId: string, secretAccessKey: string) {
     if (!endpoint) {
-      throw new Error("Missing required configuration: endpoint");
+      throw new Error('Missing required configuration: endpoint');
     }
     if (!region) {
-      throw new Error("Missing required configuration: region");
+      throw new Error('Missing required configuration: region');
     }
     if (!bucketName) {
-      throw new Error("Missing required configuration: bucketName");
+      throw new Error('Missing required configuration: bucketName');
     }
     if (!accessKeyId) {
-      throw new Error("Missing required configuration: accessKeyId");
+      throw new Error('Missing required configuration: accessKeyId');
     }
     if (!secretAccessKey) {
-      throw new Error("Missing required configuration: secretAccessKey");
+      throw new Error('Missing required configuration: secretAccessKey');
     }
     this.bucketName = bucketName;
     this.s3Client = new S3Client({
@@ -35,7 +35,6 @@ export class StorageService implements StorageServiceType{
       region,
       credentials: { accessKeyId, secretAccessKey },
     });
-
   }
 
   async upload(key: string, input: stream.Readable) {
@@ -44,7 +43,7 @@ export class StorageService implements StorageServiceType{
       params: {
         Bucket: this.bucketName,
         Key: key,
-        ACL: "private",
+        ACL: 'private',
         Body: input,
       },
     });

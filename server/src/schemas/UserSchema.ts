@@ -1,7 +1,7 @@
-import { Schema } from "mongoose";
-import { User } from "../models";
-import { genId } from "../utils/random";
-import { WithMongoID, jsonFormatting } from "../utils/database";
+import { Schema } from 'mongoose';
+import { User } from '../models';
+import { genId } from '../utils/random';
+import { WithMongoID, jsonFormatting } from '../utils/database';
 
 const UserSchema: Schema = new Schema<User & WithMongoID>({
   _id: { type: String, default: genId },
@@ -11,7 +11,7 @@ const UserSchema: Schema = new Schema<User & WithMongoID>({
   isActive: { type: Boolean, required: true },
 });
 
-UserSchema.set("toJSON", jsonFormatting);
-UserSchema.set("toObject", jsonFormatting);
+UserSchema.set('toJSON', jsonFormatting);
+UserSchema.set('toObject', jsonFormatting);
 
 export { UserSchema };

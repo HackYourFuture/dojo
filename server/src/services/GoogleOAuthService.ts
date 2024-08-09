@@ -12,20 +12,19 @@ export interface GoogleOAuthServiceType {
 }
 
 export class GoogleOAuthService {
-
   private readonly clientId: string;
   private readonly clientSecret: string;
   private readonly redirectUri: string;
-  
+
   constructor(clientId: string, clientSecret: string, redirectUri: string) {
     if (!clientId.trim()) {
-      throw new Error("Missing required configuration: clientId");
+      throw new Error('Missing required configuration: clientId');
     }
     if (!clientId.trim()) {
-      throw new Error("Missing required configuration: clientSecret");
+      throw new Error('Missing required configuration: clientSecret');
     }
     if (!clientId.trim()) {
-      throw new Error("Missing required configuration: redirectUri");
+      throw new Error('Missing required configuration: redirectUri');
     }
 
     this.clientId = clientId.trim();
@@ -34,10 +33,10 @@ export class GoogleOAuthService {
   }
 
   async getUserInfo(accessToken: string): Promise<GoogleOAuthUserInfo> {
-    const URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+    const URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
     const headers = {
       Authorization: `Bearer ${accessToken}`,
-      Accept: "application/json",
+      Accept: 'application/json',
     };
     const response = await fetch(URL, { headers });
 
@@ -56,19 +55,19 @@ export class GoogleOAuthService {
 
   async exchangeAuthCodeForToken(code: string): Promise<string> {
     // https://developers.google.com/identity/protocols/oauth2/web-server#exchange-authorization-code
-    const URL = "https://oauth2.googleapis.com/token";
+    const URL = 'https://oauth2.googleapis.com/token';
     const headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
+      'Content-Type': 'application/x-www-form-urlencoded',
     };
     const body = new URLSearchParams({
       code,
       client_id: this.clientId,
       client_secret: this.clientSecret,
       redirect_uri: this.redirectUri,
-      grant_type: "authorization_code",
+      grant_type: 'authorization_code',
     });
 
-    const response = await fetch(URL, { method: "POST", headers, body });
+    const response = await fetch(URL, { method: 'POST', headers, body });
 
     if (!response.ok) {
       throw new Error(`Failed to Google OAuth exchange token: ${response.statusText}`);
@@ -77,18 +76,18 @@ export class GoogleOAuthService {
     const json: any = await response.json();
     return json.access_token;
   }
-  
+
   async revokeToken(accessToken: string): Promise<void> {
     // https://developers.google.com/identity/protocols/oauth2/web-server#tokenrevoke
-    const URL = "https://oauth2.googleapis.com/revoke";
+    const URL = 'https://oauth2.googleapis.com/revoke';
     const headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
+      'Content-Type': 'application/x-www-form-urlencoded',
     };
     const body = new URLSearchParams({
       token: accessToken,
     });
 
-    const response = await fetch(URL, { method: "POST", headers, body });
+    const response = await fetch(URL, { method: 'POST', headers, body });
     if (!response.ok) {
       throw new Error(`Failed to revoke Google OAuth token: ${response.statusText}`);
     }

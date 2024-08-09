@@ -39,16 +39,8 @@ export const DashboardPage = () => {
       <Box my={3} display="flex" alignItems="start" justifyContent="start" p={2}>
         <Stack direction="row" spacing={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
-            <DatePicker
-              label="Start date"
-              value={startDate}
-              onChange={(newValue) => setStartDate(newValue)}
-            />
-            <DatePicker
-              label="End date"
-              value={endDate}
-              onChange={(newValue) => setEndDate(newValue)}
-            />
+            <DatePicker label="Start date" value={startDate} onChange={(newValue) => setStartDate(newValue)} />
+            <DatePicker label="End date" value={endDate} onChange={(newValue) => setEndDate(newValue)} />
           </LocalizationProvider>
           <Button variant="contained" onClick={() => refetch()}>
             Apply

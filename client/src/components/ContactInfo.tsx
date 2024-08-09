@@ -1,14 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Box,
-  Button,
-  FormControl,
-  Icon,
-  InputAdornment,
-  Link,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Box, Button, FormControl, Icon, InputAdornment, Link, Stack, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ContactInfoProps, TraineeContactInfo } from '../types';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
@@ -185,9 +176,7 @@ export const ContactInfo = ({ contactData, saveTraineeData }: ContactInfoProps) 
                 endAdornment: (
                   <InputAdornment position="start">
                     {!isEditing && editedFields?.slackId && (
-                      <Link
-                        href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}
-                      >
+                      <Link href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}>
                         <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}
@@ -264,10 +253,7 @@ export const ContactInfo = ({ contactData, saveTraineeData }: ContactInfoProps) 
                 endAdornment: (
                   <InputAdornment position="start">
                     {!isEditing && editedFields?.githubHandle && (
-                      <Link
-                        href={'https://github.com/' + editedFields?.githubHandle}
-                        target="_blank"
-                      >
+                      <Link href={'https://github.com/' + editedFields?.githubHandle} target="_blank">
                         <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}

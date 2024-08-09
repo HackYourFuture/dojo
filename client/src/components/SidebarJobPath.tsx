@@ -30,9 +30,7 @@ export const SidebarJobPath = ({ jobPath }: JobPathProps) => {
 
   return (
     <Stack direction="row" spacing={2} p={1}>
-      <SidebarLearningStatus
-        learningStatus={LearningStatus.Graduated}
-      ></SidebarLearningStatus>{' '}
+      <SidebarLearningStatus learningStatus={LearningStatus.Graduated}></SidebarLearningStatus>{' '}
       <Chip label={jobPath} color={jobChipColor(jobPath)} size="small" />
     </Stack>
   );
