@@ -4,10 +4,11 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run sentry:sourcemaps",
     "dev": "nodemon -w src src/index.ts",
     "start": "tsc && node dist/index.js",
-    "setup": "npm install --include=dev"
+    "setup": "npm install --include=dev",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hackyourfuture-nl --project dojo-backend ./dist && sentry-cli sourcemaps upload --org hackyourfuture-nl --project dojo-backend ./dist"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +30,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.540.0",
     "@aws-sdk/lib-storage": "^3.540.0",
+    "@sentry/cli": "^2.33.1",
     "@sentry/node": "^8.25.0",
     "@sentry/profiling-node": "^8.25.0",
     "cookie-parser": "^1.4.6",

@@ -1,17 +1,11 @@
-import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
-Sentry.init({
-  dsn: 'https://05a4e8032c979ef9b85a1771795bb098@o4507747676848128.ingest.de.sentry.io/4507747681370192',
-  integrations: [nodeProfilingIntegration()],
-  // Performance Monitoring
-  tracesSampleRate: 1.0, //  Capture 100% of the transactions
+import dotenv from 'dotenv';
 
-  // Set sampling rate for profiling - this is relative to tracesSampleRate
-  profilesSampleRate: 1.0,
-});
+// Sentry must be initialized before importing express or other modules
+// https://docs.sentry.io/platforms/javascript/guides/express/#configure
+import { initializeSentry, setupSentry } from './monitoring/Sentry';
+initializeSentry();
 
 import express, { Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import helmet from 'helmet';
@@ -129,7 +123,8 @@ class Main {
       this.setupClientMiddleware();
     }
 
-    Sentry.setupExpressErrorHandler(this.app);
+    // Sentry must be setup after all routes but before the global error handler
+    setupSentry(this.app);
 
     // Global error handler
     this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
