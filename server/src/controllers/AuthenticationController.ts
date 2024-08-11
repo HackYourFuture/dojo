@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { GoogleOAuthServiceType, GoogleOAuthUserInfo, TokenServiceType } from '../services';
 import { UserRepository } from '../repositories';
 import { ResponseError, AuthenticatedUser } from '../models';
+import * as Sentry from '@sentry/node';
 
 export interface AuthenticationControllerType {
   login(req: Request, res: Response): Promise<void>;
@@ -63,10 +64,11 @@ export class AuthenticationController implements AuthenticationControllerType {
       googleAccessToken = '';
 
       if (!oauthUser || !oauthUser.emailVerified) {
-        throw new Error('Could not verify user');
+        throw new Error('Could not verify google auth code');
       }
     } catch (error) {
       res.status(401).json(new ResponseError('Could not verify user'));
+      Sentry.captureException(error);
       return;
     }
 
@@ -74,6 +76,8 @@ export class AuthenticationController implements AuthenticationControllerType {
     const user = await this.userRepository.findUserByEmail(oauthUser.email);
     if (!user || !user.isActive) {
       res.status(403).json(new ResponseError('Not allowed to login'));
+      Sentry.setUser({ email: oauthUser.email });
+      Sentry.captureMessage(`Attempt to login with unauthorized user`, 'warning');
       return;
     }
 

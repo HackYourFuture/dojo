@@ -24,7 +24,7 @@ import {
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from './services';
 import { ResponseError } from './models';
-import AuthMiddleware from './middlewares/AuthMiddleware';
+import { AuthMiddleware } from './middlewares';
 import { CohortsRouter } from './routes/CohortsRouter';
 
 class Main {
@@ -128,7 +128,6 @@ class Main {
 
     // Global error handler
     this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-      console.error(error);
       if (this.isProduction) {
         res.status(500).json(new ResponseError('Something broke!'));
       } else {

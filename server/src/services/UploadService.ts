@@ -2,6 +2,7 @@ import multer from 'multer';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import * as size from '../utils/fileSize';
+import * as Sentry from '@sentry/node';
 
 const IMAGE_MAX_SIZE = size.MB(10);
 type UploadFileFilter = (req: any, file: Express.Multer.File, callback: multer.FileFilterCallback) => void;
@@ -50,7 +51,7 @@ export class UploadService implements UploadServiceType {
     console.log(`Cleaning up temp directory: ${this.tempDir}`);
     fs.rm(this.tempDir, { recursive: true, force: true }, (error: any) => {
       if (error) {
-        console.error(error);
+        Sentry.captureException(error);
       }
     });
   }
