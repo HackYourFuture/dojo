@@ -1,5 +1,11 @@
-import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
+
+// Sentry must be initialized before importing express or other modules
+// https://docs.sentry.io/platforms/javascript/guides/express/#configure
+import { initializeSentry, setupSentry } from './monitoring/Sentry';
+initializeSentry();
+
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import path from 'path';
 import helmet from 'helmet';
@@ -57,8 +63,8 @@ class Main {
 
     // Dependencies
     const googleOAuthService = new GoogleOAuthService(
-      process.env.GOOGLE_OAUTH_CLIENTID ?? "",
-      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? "",
+      process.env.GOOGLE_OAUTH_CLIENTID ?? '',
+      process.env.GOOGLE_OAUTH_CLIENTSECRET ?? ''
     );
     const tokenService = new TokenService(process.env.JWT_SECRET ?? '', tokenExpirationInDays);
     const storageService = new StorageService(
@@ -116,6 +122,9 @@ class Main {
     if (this.isProduction) {
       this.setupClientMiddleware();
     }
+
+    // Sentry must be setup after all routes but before the global error handler
+    setupSentry(this.app);
 
     // Global error handler
     this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
