@@ -3,8 +3,9 @@ import { ResponseError } from '../models';
 import { TOKEN_COOKIE_NAME } from '../controllers/AuthenticationController';
 import { TokenService } from '../services/TokenService';
 import Middleware from './Middleware';
+import * as Sentry from '@sentry/node';
 
-export default class AuthMiddleware implements Middleware {
+export class AuthMiddleware implements Middleware {
   private readonly tokenService: TokenService;
   constructor(tokenService: TokenService) {
     this.tokenService = tokenService;
@@ -20,9 +21,11 @@ export default class AuthMiddleware implements Middleware {
     try {
       const user = this.tokenService.verifyAccessToken(token);
       res.locals.user = user;
+      Sentry.setUser({ id: user.id, email: user.email });
       next();
     } catch (error) {
       res.status(401).json(responseError);
+      Sentry.captureException(error);
       return;
     }
   }

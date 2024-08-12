@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { TraineesRepository } from '../repositories';
+import { Trainee } from '../models';
 
 interface SearchResponse {
   hits: SearchHits;
@@ -18,7 +19,7 @@ interface SearchResult {
 }
 
 export interface SearchControllerType {
-  search(req: Request, res: Response): Promise<void>;
+  search(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 export class SearchController implements SearchControllerType {
@@ -27,13 +28,19 @@ export class SearchController implements SearchControllerType {
     this.traineesRepository = traineesRepository;
   }
 
-  async search(req: Request, res: Response) {
+  async search(req: Request, res: Response, next: NextFunction) {
     const maxAllowedLimit = 50;
     const inputLimit = Number(req.query.limit) || 20;
     const limit = Math.min(inputLimit, maxAllowedLimit);
-
     const searchQuery: string = (req.query.q as string) ?? '';
-    const trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
+    let trainees: Trainee[];
+    try {
+      trainees = await this.traineesRepository.searchTrainees(searchQuery, limit);
+    } catch (error) {
+      next(error);
+      return;
+    }
+
     const results = trainees.map((trainee) => {
       return {
         id: trainee.id,

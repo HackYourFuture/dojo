@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../repositories';
 import { StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from '../services';
 import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../models';
+import * as Sentry from '@sentry/node';
 import fs from 'fs';
 
 export interface TraineesControllerType {
@@ -163,7 +164,7 @@ export class TraineesController implements TraineesControllerType {
       return;
     }
     if (!req.file?.path) {
-      res.status(500).send(new ResponseError('No file was uploaded'));
+      res.status(400).send(new ResponseError('No file was uploaded'));
       return;
     }
 
@@ -199,9 +200,15 @@ export class TraineesController implements TraineesControllerType {
     }
 
     // Cleanup
-    fs.unlink(originalFilePath, (err) => {});
-    fs.unlink(largeFilePath, (err) => {});
-    fs.unlink(smallFilePath, (err) => {});
+    fs.unlink(originalFilePath, (error) => {
+      Sentry.captureException(error);
+    });
+    fs.unlink(largeFilePath, (error) => {
+      Sentry.captureException(error);
+    });
+    fs.unlink(smallFilePath, (error) => {
+      Sentry.captureException(error);
+    });
 
     res.status(201).send({ imageUrl: imageURL, thumbnailUrl: imageURL + '?size=small' });
   }
