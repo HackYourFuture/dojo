@@ -168,18 +168,6 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
             <MenuItem value={JobPath.NotSearching}>Not searching</MenuItem>
             <MenuItem value={JobPath.OtherStudies}>Other studies</MenuItem>
             <MenuItem value={JobPath.NoLongerHelping}>No longer helping</MenuItem>
-            {Object.entries(JobPath).map(([key, value]) => {
-              const text = value
-                .split('-')
-                .map((word, index) => (index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word))
-                .join(' ');
-
-              return (
-                <MenuItem key={key} value={value}>
-                  {text}
-                </MenuItem>
-              );
-            })}
           </Select>
         </FormControl>
 
