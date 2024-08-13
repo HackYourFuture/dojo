@@ -201,13 +201,19 @@ export class TraineesController implements TraineesControllerType {
 
     // Cleanup
     fs.unlink(originalFilePath, (error) => {
-      Sentry.captureException(error);
+      if (error) {
+        Sentry.captureException(error);
+      }
     });
     fs.unlink(largeFilePath, (error) => {
-      Sentry.captureException(error);
+      if (error) {
+        Sentry.captureException(error);
+      }
     });
     fs.unlink(smallFilePath, (error) => {
-      Sentry.captureException(error);
+      if (error) {
+        Sentry.captureException(error);
+      }
     });
 
     res.status(201).send({ imageUrl: imageURL, thumbnailUrl: imageURL + '?size=small' });
