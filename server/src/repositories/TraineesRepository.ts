@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
 import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason, LearningStatus } from '../models';
 import { TraineeSchema } from '../schemas';
-import { escapeStringRegexp } from '../utils/string';
 import { WithMongoID } from '../utils/database';
 import { UserRepository } from './UserRepository';
 
 export interface TraineesRepository {
-  searchTrainees(keyword: string, limit: number): Promise<Trainee[]>;
+  getAllTrainees(): Promise<Trainee[]>;
   getTraineesByCohort(
     fromCohort: number | undefined,
     toCohort: number | undefined,
@@ -35,17 +34,8 @@ export class MongooseTraineesRepository implements TraineesRepository {
     this.userRepository = userRepository;
   }
 
-  async searchTrainees(keyword: string, limit: number): Promise<Trainee[]> {
-    const escapedKeyword = escapeStringRegexp(keyword);
-    return await this.TraineeModel.find({
-      $or: [
-        { 'personalInfo.firstName': { $regex: escapedKeyword, $options: 'i' } },
-        { 'personalInfo.lastName': { $regex: escapedKeyword, $options: 'i' } },
-        { 'contactInfo.email': { $regex: escapedKeyword, $options: 'i' } },
-      ],
-    })
-      .limit(limit)
-      .sort({ updatedAt: -1 });
+  async getAllTrainees(): Promise<Trainee[]> {
+    return await this.TraineeModel.find().exec();
   }
 
   async getTraineesByCohort(
