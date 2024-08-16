@@ -1,12 +1,12 @@
-import { SearchResult, SearchResultsListProps } from '../types';
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
-import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
-import { useDebounce } from '../hooks/useDebounce';
-import { Link } from 'react-router-dom';
 import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { Loader } from './Loader';
+import { SearchResult, SearchResultsListProps } from '../types';
+
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import { ErrorBox } from './ErrorBox';
+import { Link } from 'react-router-dom';
+import { Loader } from './Loader';
+import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
 
 /**
  * Component for showing a list of trainee search results with links.
@@ -14,17 +14,13 @@ import { ErrorBox } from './ErrorBox';
  * @param {string} results search value.
  * @returns {ReactNode} A React element that renders a list of matching trainee names list as a clickable link.
  */
-export const SearchResultsList = ({ results }: SearchResultsListProps) => {
-  // You can change search debounce time using this hook.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const debouncedSearchTerm: any = useDebounce(results, 400);
-
+export const SearchResultsList = ({ searchString }: SearchResultsListProps) => {
   /**
    * React Query hook to fetch matching trainees with a debounce time.
    */
-  const { isLoading, data, isError, error, isFetching } = useTraineeSearchData(debouncedSearchTerm);
+  const { isLoading, data, isError, error } = useTraineeSearchData(searchString);
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -43,7 +39,7 @@ export const SearchResultsList = ({ results }: SearchResultsListProps) => {
         borderRadius: '10px',
       }}
     >
-      {data.length ? (
+      {data?.length ? (
         <List>
           {data.map((trainee: SearchResult) => {
             return (

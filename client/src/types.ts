@@ -106,7 +106,7 @@ export enum TestType {
 
 // Props
 export interface SearchResultsListProps {
-  results: string;
+  searchString: string;
 }
 
 export interface SearchBarProps {

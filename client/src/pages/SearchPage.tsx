@@ -1,16 +1,17 @@
-import { useState } from 'react';
 import { SearchBar, SearchResultsList } from '../components';
-import HYFLogo from '../assets/HYF_logo.svg';
+
 import { Box } from '@mui/material';
+import HYFLogo from '../assets/HYF_logo.svg';
+import { useState } from 'react';
 
 /**
  * Component for displaying the home page / search page elements.
  */
 export const SearchPage = () => {
-  const [results, setResults] = useState('');
+  const [searchString, setSearchString] = useState('');
 
-  function handleDataFromChild(data: string) {
-    setResults(data);
+  function handleTextChange(text: string) {
+    setSearchString(text);
   }
 
   return (
@@ -19,8 +20,8 @@ export const SearchPage = () => {
         <Box sx={{ display: 'flex' }}>
           <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
         </Box>
-        <SearchBar data={handleDataFromChild} />
-        {results && <SearchResultsList results={results} />}
+        <SearchBar onTextChange={(text) => handleTextChange(text)} />
+        {searchString && <SearchResultsList searchString={searchString} />}
       </div>
     </div>
   );
