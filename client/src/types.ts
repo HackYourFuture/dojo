@@ -1,5 +1,3 @@
-import { AxiosError } from 'axios';
-
 // enums
 export enum Gender {
   Man = 'man',
