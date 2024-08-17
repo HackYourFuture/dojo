@@ -1,4 +1,4 @@
-import { SearchBar, SearchResultsList } from '../components';
+import { ErrorBox, SearchBar, SearchResultsList } from '../components';
 
 import { Box } from '@mui/material';
 import HYFLogo from '../assets/HYF_logo.svg';
@@ -13,7 +13,7 @@ export const SearchPage = () => {
   /**
    * React Query hook to fetch matching trainees with a debounce time.
    */
-  const { isLoading, data, isError, error, isFetching } = useTraineeSearchData(searchString);
+  const { isLoading, data, isError, error } = useTraineeSearchData(searchString);
 
   function handleTextChange(text: string) {
     setSearchString(text);
@@ -26,14 +26,10 @@ export const SearchPage = () => {
           <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
         </Box>
         <SearchBar onTextChange={(text) => handleTextChange(text)} />
-        {searchString && (
-          <SearchResultsList
-            searchString={searchString}
-            isLoading={isLoading && isFetching}
-            data={data || []}
-            isError={isError}
-            error={error}
-          />
+        {isError && error instanceof Error ? (
+          <ErrorBox errorMessage={error.message} />
+        ) : (
+          searchString && <SearchResultsList isLoading={isLoading} data={data || []} />
         )}
       </div>
     </div>

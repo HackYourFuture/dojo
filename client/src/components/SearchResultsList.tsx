@@ -3,10 +3,8 @@ import { SearchResult, SearchResultsListProps } from '../types';
 
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { ErrorBox } from './ErrorBox';
 import { Link } from 'react-router-dom';
 import { Loader } from './Loader';
-import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
 
 /**
  * Component for showing a list of trainee search results with links.
@@ -14,13 +12,9 @@ import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
  * @param {string} results search value.
  * @returns {ReactNode} A React element that renders a list of matching trainee names list as a clickable link.
  */
-export const SearchResultsList = ({ isLoading, data, isError, error }: SearchResultsListProps) => {
+export const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) => {
   if (isLoading) {
     return <Loader />;
-  }
-
-  if (isError && error instanceof Error) {
-    return <ErrorBox errorMessage={error.message} />;
   }
 
   return (

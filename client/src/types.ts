@@ -108,11 +108,8 @@ export enum TestType {
 
 // Props
 export interface SearchResultsListProps {
-  searchString: string;
   isLoading: boolean;
   data: SearchResult[];
-  isError: boolean;
-  error?: unknown;
 }
 
 export interface SearchBarProps {
