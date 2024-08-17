@@ -14,12 +14,7 @@ import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
  * @param {string} results search value.
  * @returns {ReactNode} A React element that renders a list of matching trainee names list as a clickable link.
  */
-export const SearchResultsList = ({ searchString }: SearchResultsListProps) => {
-  /**
-   * React Query hook to fetch matching trainees with a debounce time.
-   */
-  const { isLoading, data, isError, error } = useTraineeSearchData(searchString);
-
+export const SearchResultsList = ({ isLoading, data, isError, error }: SearchResultsListProps) => {
   if (isLoading) {
     return <Loader />;
   }

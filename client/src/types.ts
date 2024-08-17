@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 // enums
 export enum Gender {
   Man = 'man',
@@ -107,6 +109,10 @@ export enum TestType {
 // Props
 export interface SearchResultsListProps {
   searchString: string;
+  isLoading: boolean;
+  data: SearchResult[];
+  isError: boolean;
+  error?: unknown;
 }
 
 export interface SearchBarProps {

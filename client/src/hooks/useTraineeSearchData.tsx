@@ -15,8 +15,8 @@ export const useTraineeSearchData = (search: string) => {
     },
     {
       enabled: search.length > 1, // Query runs only if search string has more than 1 character
-      select: (data) => {
-        const trainees = data.data.hits.data.map((trainee: SearchResult) => trainee);
+      select: (response) => {
+        const trainees: SearchResult[] = response.data.hits.data.map((trainee: SearchResult) => trainee);
         return trainees;
       },
     }
