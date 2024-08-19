@@ -1,21 +1,37 @@
-import { TextField, Box, InputAdornment } from '@mui/material';
+import { Box, InputAdornment, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
+
 import SearchIcon from '@mui/icons-material/Search';
+import { useDebounce } from '../hooks/useDebounce';
 
 /**
- * Component for showing a list of trainee search results with links.
+ * Component for gathering the search value from the user.
  *
- * @param {any} data search value.
- * @returns {ReactNode} A React element that renders a list of matching trainee names list as a clickable link.
+ * @param {onTextChange} a callback that passes a string to the parent component.
+ * @returns {ReactNode} A React element that renders a search bar.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SearchBar = ({ data }: any) => {
+
+type SearchBarProps = {
+  onTextChange: (text: string) => void;
+};
+
+export const SearchBar = ({ onTextChange }: SearchBarProps) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  // You can change search debounce time using this hook.
+  const debouncedSearchTerm: string = useDebounce(searchTerm, 400);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      onTextChange(debouncedSearchTerm);
+    }
+  }, [debouncedSearchTerm]);
   /**
    * Function to set the value for search text field onChange event.
    *
    * @param {string} value value entered to searchbox text field.
    */
   const handleChange = (value: string) => {
-    data(value);
+    setSearchTerm(value);
   };
 
   return (
