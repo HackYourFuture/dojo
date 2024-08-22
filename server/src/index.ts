@@ -24,7 +24,7 @@ import {
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from './services';
 import { ResponseError } from './models';
-import { AuthMiddleware } from './middlewares';
+import { AuthMiddleware, IPGeoRestrictionMiddleware } from './middlewares';
 import { CohortsRouter } from './routes/CohortsRouter';
 
 class Main {
@@ -33,9 +33,14 @@ class Main {
   private db: mongoose.Connection | null = null;
   constructor() {
     this.app = express();
+    this.app.set('trust proxy', true);
   }
 
   setupMiddlewares() {
+    if (process.env.IP_GEOLOCATION_RESTRICTION_ENABLED?.toLowerCase() === 'true') {
+      const ipGeoRestrictionMiddleware = new IPGeoRestrictionMiddleware();
+      this.app.use(ipGeoRestrictionMiddleware.handle);
+    }
     if (process.env.ALLOW_CORS?.toLowerCase() === 'true') {
       this.app.use(cors());
     }
