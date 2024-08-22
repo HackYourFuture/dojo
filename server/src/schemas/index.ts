@@ -3,3 +3,4 @@ export * from './UserSchema';
 export * from './TraineeSchema';
 export * from './CitySchema';
 export * from './CountrySchema';
+export * from './IPGeolocationSchema';
