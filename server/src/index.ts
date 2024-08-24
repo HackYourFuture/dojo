@@ -138,7 +138,7 @@ class Main {
 
   async connectToDatabase() {
     const dbUrl: string = process.env.DB_URL ?? 'mongodb://localhost:27017/dojo';
-    this.db = (await mongoose.connect(dbUrl)).connection;
+    this.db = (await mongoose.connect(dbUrl, { enableUtf8Validation: true })).connection;
     console.log(`✅ Connected to database '${this.db.name}' on ${this.db.host}:${this.db.port}\n`);
   }
 
