@@ -1,7 +1,7 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import Root from './root';
 import { LoginPage, SearchPage, DashboardPage, CohortsPage, TraineePage } from '../pages';
-import { ApiProvider } from '../hooks/useAuth';
+import { ApiProvider } from '../hooks';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const router = createBrowserRouter([
