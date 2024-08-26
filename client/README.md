@@ -28,6 +28,7 @@ $ npm start
 - `assets/`: Contains all the assets and images used.
 - `components/`: Reusable UI components.
 - `hooks/`: API calls and data fetching logic.
+- `models/`: Contains TypeScript interfaces, types, and enums.
 - `pages/`: Main application pages (Login, Dashboard, TraineeProfile, etc.).
 - `routes/`: Contains Routes and navigating between different pages logic.
 - `styles/`: CSS and styling files.
