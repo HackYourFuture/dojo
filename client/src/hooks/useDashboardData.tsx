@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
-import { DashboardData } from '../types';
+import { DashboardData } from '../models';
 
 /**
  * A React Query hook that fetches dashboard data form api for specific dates.

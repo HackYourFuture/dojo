@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from 'react';
-import { EmploymentInfoProps, JobPath, TraineeEmploymentInfo } from '../types';
 import {
   Box,
   Button,
@@ -22,8 +21,14 @@ import {
 import { LoadingButton } from '@mui/lab';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LinkIcon from '@mui/icons-material/Link';
+import { JobPath, TraineeEmploymentInfo } from '../models';
 
 const NoIcon = () => null;
+
+interface EmploymentInfoProps {
+  employmentData?: TraineeEmploymentInfo;
+  saveTraineeData: (editedData: TraineeEmploymentInfo) => void;
+}
 
 /**
  * Component for displaying trainee profile data on the employment information tab.
