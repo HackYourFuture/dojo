@@ -59,6 +59,7 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     />
                   </TableCell>
                   <TableCell>
+                    {/* [TODO] Update with trainee.name once api is updated */}
                     <Link to={`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`}>
                       {trainee.displayName}
                     </Link>
