@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 
 import { Link } from 'react-router-dom';
-import { Cohort } from '../models';
+import { Cohort, LearningStatus } from '../models';
 import { SidebarJobPath, SidebarLearningStatus } from '.';
 import slackLogo from '../assets/slack.png';
 import gmailLogo from '../assets/gmail.png';
@@ -64,7 +64,7 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    {trainee.LearningStatus === 'graduated' ? (
+                    {trainee.LearningStatus === LearningStatus.Graduated ? (
                       <SidebarJobPath jobPath={trainee.JobPath}></SidebarJobPath>
                     ) : (
                       <SidebarLearningStatus learningStatus={trainee.LearningStatus}></SidebarLearningStatus>
