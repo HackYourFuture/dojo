@@ -12,9 +12,8 @@ import IconButton from '@mui/material/IconButton';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import LaunchIcon from '@mui/icons-material/Launch';
 
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Cohort, LearningStatus } from '../models';
 import { SidebarJobPath, SidebarLearningStatus } from '.';
 import slackLogo from '../assets/slack.png';
@@ -30,30 +29,47 @@ export interface CohortAccordionProps {
  * @returns {ReactNode} A React element that renders cohorts information in an accordion component.
  */
 export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
-  const expandFlag = cohortInfo.cohort ? true : false;
+  const expandFlag = cohortInfo.cohort !== null ? true : false;
 
+  const navigate = useNavigate();
+  const headerStyle = {
+    fontWeight: 'bold',
+  };
   return (
     <>
       <Accordion defaultExpanded={expandFlag}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {cohortInfo.cohort ? `Cohort ${cohortInfo.cohort}` : 'No cohort assigned'}
+          {cohortInfo.cohort !== null ? `Cohort ${cohortInfo.cohort}` : 'No cohort assigned'}
         </AccordionSummary>
         <AccordionDetails>
-          <Table sx={{ minWidth: 850 }} size="small" aria-label="cohorts table">
+          <Table size="small" aria-label="cohorts table">
             <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell width={130}>Name</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Work Permit</TableCell>
-                <TableCell>Strikes</TableCell>
+              <TableRow sx={headerStyle}>
+                <TableCell sx={headerStyle} width={50}></TableCell>
+                <TableCell sx={headerStyle} width={200}>
+                  Name
+                </TableCell>
+                <TableCell sx={headerStyle} width={200}>
+                  Status
+                </TableCell>
+                <TableCell sx={headerStyle}>Location</TableCell>
+                <TableCell sx={headerStyle} width={50}>
+                  Work Permit
+                </TableCell>
+                <TableCell sx={headerStyle} width={50}>
+                  Strikes
+                </TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {cohortInfo.trainees.map((trainee) => (
-                <TableRow key={trainee.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableRow
+                  key={trainee.id}
+                  hover
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+                  onClick={() => navigate(`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`)}
+                >
                   <TableCell component="th" scope="row">
                     <Avatar
                       alt={trainee.displayName}
@@ -61,15 +77,8 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                       variant="square"
                     />
                   </TableCell>
-                  <TableCell>
-                    <Link
-                      style={{ textDecoration: 'none', color: '#5495ff' }}
-                      to={`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`}
-                    >
-                      {trainee.displayName} <LaunchIcon sx={{ fontSize: 'small' }} />
-                    </Link>
-                  </TableCell>
-                  <TableCell>
+                  <TableCell>{trainee.displayName}</TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>
                     {trainee.LearningStatus === LearningStatus.Graduated ? (
                       <SidebarJobPath jobPath={trainee.JobPath}></SidebarJobPath>
                     ) : (
@@ -77,9 +86,9 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     )}
                   </TableCell>
                   <TableCell>{trainee.location}</TableCell>
-                  <TableCell>{trainee.hasWorkPermit ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{convertToString(trainee.hasWorkPermit)}</TableCell>
                   <TableCell>{trainee.strikes}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
                     <div>
                       {trainee.slackID && (
                         <IconButton aria-label="Slack Id" href={`slack://user?team=T0EJTUQ87&id=${trainee.slackID}`}>
@@ -92,12 +101,16 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                         </IconButton>
                       )}
                       {trainee.githubHandle && (
-                        <IconButton aria-label="GitHub handel" href={`https://github.com/${trainee.githubHandle}`}>
+                        <IconButton
+                          aria-label="GitHub handel"
+                          href={`https://github.com/${trainee.githubHandle}`}
+                          target="_blank"
+                        >
                           <GitHubIcon sx={{ color: 'action.active', mr: 1 }} />
                         </IconButton>
                       )}
                       {trainee.linkedIn && (
-                        <IconButton aria-label="LinkedIn URL" href={trainee.linkedIn}>
+                        <IconButton aria-label="LinkedIn URL" href={trainee.linkedIn} target="_blank">
                           <LinkedInIcon sx={{ color: 'action.active', mr: 1 }} />
                         </IconButton>
                       )}
@@ -111,4 +124,11 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
       </Accordion>
     </>
   );
+};
+
+const convertToString = (value: Boolean | null | undefined) => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  return value ? 'Yes' : 'No';
 };

@@ -15,6 +15,7 @@ export const useCohortsData = () => {
       select: ({ data }) => {
         return data;
       },
+      refetchOnWindowFocus: false, // Prevent refetching on window focus
     }
   );
 };

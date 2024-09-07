@@ -28,7 +28,6 @@ export const router = createBrowserRouter([
             path: '/cohorts',
             element: (
               <ProtectedRoute>
-                {' '}
                 <CohortsPage />
               </ProtectedRoute>
             ),
