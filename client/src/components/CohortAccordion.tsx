@@ -9,14 +9,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
+import EmailIcon from '@mui/icons-material/EmailOutlined';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 import { Link } from 'react-router-dom';
 import { Cohort, LearningStatus } from '../models';
 import { SidebarJobPath, SidebarLearningStatus } from '.';
 import slackLogo from '../assets/slack.png';
-import gmailLogo from '../assets/gmail.png';
-import githubLogo from '../assets/github.png';
-import LinkedInLogo from '../assets/LinkedIn_logo.png';
 
 export interface CohortAccordionProps {
   cohortInfo: Cohort;
@@ -34,9 +35,11 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
   return (
     <>
       <Accordion defaultExpanded={expandFlag}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>Cohort {cohortInfo.cohort}</AccordionSummary>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          {cohortInfo.cohort ? `Cohort ${cohortInfo.cohort}` : 'No cohort assigned'}
+        </AccordionSummary>
         <AccordionDetails>
-          <Table sx={{ minWidth: 850 }} aria-label="cohorts table">
+          <Table sx={{ minWidth: 850 }} size="small" aria-label="cohorts table">
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
@@ -59,8 +62,11 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Link to={`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`}>
-                      {trainee.displayName}
+                    <Link
+                      style={{ textDecoration: 'none', color: '#5495ff' }}
+                      to={`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`}
+                    >
+                      {trainee.displayName} <LaunchIcon sx={{ fontSize: 'small' }} />
                     </Link>
                   </TableCell>
                   <TableCell>
@@ -77,22 +83,22 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     <div>
                       {trainee.slackID && (
                         <IconButton aria-label="Slack Id" href={`slack://user?team=T0EJTUQ87&id=${trainee.slackID}`}>
-                          <img src={slackLogo} alt="Slack" width="32" height="32" style={{ borderRadius: '50%' }} />
+                          <img src={slackLogo} alt="Slack" width="27" height="27" style={{ borderRadius: '50%' }} />
                         </IconButton>
                       )}
                       {trainee.email && (
                         <IconButton aria-label="email" href={`mailto:${trainee.email}`}>
-                          <img src={gmailLogo} alt="Gmail" width="32" height="32" style={{ borderRadius: '50%' }} />
+                          <EmailIcon sx={{ color: 'action.active', mr: 1 }} />
                         </IconButton>
                       )}
                       {trainee.githubHandle && (
                         <IconButton aria-label="GitHub handel" href={`https://github.com/${trainee.githubHandle}`}>
-                          <img src={githubLogo} alt="GitHub" width="32" height="32" style={{ borderRadius: '50%' }} />
+                          <GitHubIcon sx={{ color: 'action.active', mr: 1 }} />
                         </IconButton>
                       )}
                       {trainee.linkedIn && (
                         <IconButton aria-label="LinkedIn URL" href={trainee.linkedIn}>
-                          <img src={LinkedInLogo} alt="LinkedIn" width="32" height="32" />
+                          <LinkedInIcon sx={{ color: 'action.active', mr: 1 }} />
                         </IconButton>
                       )}
                     </div>
