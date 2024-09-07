@@ -1,10 +1,14 @@
 import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { SearchResult, SearchResultsListProps } from '../types';
-
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 import { Loader } from './Loader';
+import { SearchResult } from '../models';
+
+interface SearchResultsListProps {
+  isLoading: boolean;
+  data: SearchResult[];
+}
 
 /**
  * Component for showing a list of trainee search results with links.

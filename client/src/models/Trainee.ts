@@ -104,69 +104,7 @@ export enum TestType {
   FinalProjectInterview = 'final-project-interview',
 }
 
-// Props
-export interface SearchResultsListProps {
-  isLoading: boolean;
-  data: SearchResult[];
-}
-
-export interface SearchBarProps {
-  data: Trainee;
-}
-
-export interface JobPathProps {
-  jobPath: JobPath;
-}
-
-export interface LearningStatusProps {
-  learningStatus: LearningStatus | undefined;
-}
-
-export interface ProfileNavProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-}
-
-export interface TraineeProfileProps {
-  id: string;
-}
-
-export interface ProfileSidebarProps {
-  traineeId: string;
-}
-
-export interface PersonalInfoProps {
-  traineeData?: TraineePersonalInfo;
-  saveTraineeData: (editedData: TraineePersonalInfo) => void;
-}
-
-export interface ContactInfoProps {
-  contactData?: TraineeContactInfo;
-  saveTraineeData: (editedData: TraineeContactInfo) => void;
-}
-
-export interface EducationInfoProps {
-  educationData?: TraineeEducationInfo;
-  saveTraineeData: (editedData: TraineeEducationInfo) => void;
-}
-
-export interface EmploymentInfoProps {
-  employmentData?: TraineeEmploymentInfo;
-  saveTraineeData: (editedData: TraineeEmploymentInfo) => void;
-}
-
-export interface DashboardPieChartProps {
-  chartData: DashboardData;
-}
-
 // interfaces
-export interface SearchResult {
-  id: number;
-  name: string;
-  thumbnail: string | null;
-  cohort: number | null;
-}
-
 export interface Trainee {
   readonly id: string;
   readonly createdAt: Date;
@@ -278,25 +216,4 @@ export interface TraineeInteraction {
   type: InteractionType;
   reporterID: string;
   details: string;
-}
-
-export interface ChartData {
-  label: string;
-  value: number;
-  percent: number;
-}
-
-export interface Demographics {
-  genderDistribution: ChartData[];
-  countryOfOrigin: ChartData[];
-}
-
-export interface Program {
-  graduations: ChartData[];
-  employment: ChartData[];
-}
-
-export interface DashboardData {
-  demographics: Demographics;
-  program: Program;
 }

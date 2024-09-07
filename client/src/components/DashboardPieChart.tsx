@@ -2,8 +2,11 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { PieValueType } from '@mui/x-charts';
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import { Stack, Box, Typography } from '@mui/material';
-import { ChartData, DashboardPieChartProps } from '../types';
+import { ChartData, DashboardData } from '../models';
 
+export interface DashboardPieChartProps {
+  chartData: DashboardData;
+}
 /**
  * Component for showing pie charts in the Dashboard page.
  *

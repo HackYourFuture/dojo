@@ -2,9 +2,13 @@ import { Avatar, Box, IconButton, Link, Stack, Typography } from '@mui/material'
 import slackLogo from '../assets/slack.png';
 import githubLogo from '../assets/github.png';
 import LinkedInLogo from '../assets/LinkedIn_logo.png';
-import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
-import { LearningStatus, ProfileSidebarProps } from '../types';
+import { useTraineeInfoData } from '../hooks';
 import { SidebarJobPath, SidebarLearningStatus, Loader, ErrorBox } from '.';
+import { LearningStatus } from '../models';
+
+interface ProfileSidebarProps {
+  traineeId: string;
+}
 
 /**
  * Component for showing profile page sidebar and sidebar data.

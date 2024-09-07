@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
-import { Trainee } from '../types';
+import { Trainee } from '../models';
 
 /**
  * A React Query hook that fetches trainee information data form api.

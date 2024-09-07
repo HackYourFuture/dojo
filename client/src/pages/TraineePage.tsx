@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
+import { useTraineeInfoData } from '../hooks';
 import { ErrorBox, Loader, TraineeProfile } from '../components';
 
 /**

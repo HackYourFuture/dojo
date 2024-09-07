@@ -11,19 +11,16 @@ import {
   Stack,
   Box,
 } from '@mui/material';
-import {
-  PersonalInfoProps,
-  TraineePersonalInfo,
-  Gender,
-  EnglishLevel,
-  Background,
-  ResidencyStatus,
-  EducationLevel,
-} from '../types';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { LoadingButton } from '@mui/lab';
+import { Background, EducationLevel, EnglishLevel, Gender, ResidencyStatus, TraineePersonalInfo } from '../models';
 
 const NoIcon = () => null;
+
+interface PersonalInfoProps {
+  traineeData?: TraineePersonalInfo;
+  saveTraineeData: (editedData: TraineePersonalInfo) => void;
+}
 
 /**
  * Component for displaying trainee profile data on the personal information tab.

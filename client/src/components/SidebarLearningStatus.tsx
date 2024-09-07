@@ -1,6 +1,9 @@
 import { Chip } from '@mui/material';
-import { LearningStatusProps, LearningStatus } from '../types';
+import { LearningStatus } from '../models';
 
+interface LearningStatusProps {
+  learningStatus: LearningStatus | string | undefined;
+}
 /**
  * Component for showing learning status chip on the sidebar for profile page.
  *
@@ -11,7 +14,7 @@ export const SidebarLearningStatus = ({ learningStatus }: LearningStatusProps) =
   /**
    * Function that returns color value attribute to MUI Chip component.
    */
-  const chipColor = (status: LearningStatus | undefined) => {
+  const chipColor = (status: LearningStatus | string | undefined) => {
     switch (status) {
       case LearningStatus.Studying:
         return 'primary';

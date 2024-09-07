@@ -1,3 +1,4 @@
+export * from './CohortAccordion';
 export * from './Comment';
 export * from './ContactInfo';
 export * from './DashboardPieChart';

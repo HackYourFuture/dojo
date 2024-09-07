@@ -1,6 +1,6 @@
-import { SearchResult } from '../types';
-import axios from 'axios';
 import { useQuery } from 'react-query';
+import axios from 'axios';
+import { SearchResult } from '../models';
 
 /**
  * A React Query hook that fetches trainee search results form api.

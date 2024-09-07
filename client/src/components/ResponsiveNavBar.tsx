@@ -2,7 +2,7 @@ import * as React from 'react';
 import HYFLogo from '../assets/HYF_logo.svg';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks';
 import {
   AppBar,
   Avatar,

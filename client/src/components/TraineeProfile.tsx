@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { Box, Snackbar } from '@mui/material';
-import { useTraineeInfoData } from '../hooks/useTraineeInfoData';
-import {
-  TraineeContactInfo,
-  TraineeEducationInfo,
-  TraineeEmploymentInfo,
-  TraineePersonalInfo,
-  TraineeProfileProps,
-} from '../types';
+import { useTraineeInfoData } from '../hooks';
 import axios from 'axios';
 import {
   ContactInfo,
@@ -21,6 +14,11 @@ import {
   ProfileSidebar,
 } from '.';
 import MuiAlert from '@mui/material/Alert';
+import { TraineeContactInfo, TraineeEducationInfo, TraineeEmploymentInfo, TraineePersonalInfo } from '../models';
+
+interface TraineeProfileProps {
+  id: string;
+}
 
 /**
  * Component for showing profile page tab and content.

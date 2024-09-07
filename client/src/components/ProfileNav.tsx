@@ -1,5 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
-import { ProfileNavProps } from '../types';
+
+interface ProfileNavProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
 
 /**
  * Component for navigating between trainee profile page tabs.

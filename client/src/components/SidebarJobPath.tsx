@@ -1,7 +1,10 @@
 import { SidebarLearningStatus } from '.';
-import { JobPath, JobPathProps, LearningStatus } from '../types';
 import { Chip, Stack } from '@mui/material';
+import { JobPath, LearningStatus } from '../models';
 
+interface JobPathProps {
+  jobPath: JobPath | string;
+}
 /**
  * Component for showing jobPath status chip on the sidebar for profile page.
  *
@@ -12,7 +15,7 @@ export const SidebarJobPath = ({ jobPath }: JobPathProps) => {
   /**
    * Function that returns color value attribute to MUI Chip component.
    */
-  const jobChipColor = (status: JobPath) => {
+  const jobChipColor = (status: JobPath | string) => {
     switch (status) {
       case JobPath.Searching:
         return 'primary';

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from 'react';
-import { EducationInfoProps, Strike, TraineeEducationInfo, LearningStatus, QuitReason, StrikeReason } from '../types';
 import {
   Box,
   Button,
@@ -26,8 +25,14 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { LoadingButton } from '@mui/lab';
+import { LearningStatus, QuitReason, Strike, StrikeReason, TraineeEducationInfo } from '../models';
 
 const NoIcon = () => null;
+
+interface EducationInfoProps {
+  educationData?: TraineeEducationInfo;
+  saveTraineeData: (editedData: TraineeEducationInfo) => void;
+}
 
 /**
  * Component for displaying trainee profile data on the education information tab.
