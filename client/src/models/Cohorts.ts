@@ -1,3 +1,5 @@
+import { LearningStatus } from './Trainee';
+
 export interface Cohort {
   cohort: number | null;
   trainees: TraineeSummary[];
@@ -13,7 +15,7 @@ export interface TraineeSummary {
   slackID?: string;
   githubHandle?: string;
   linkedIn?: string;
-  LearningStatus: string;
+  LearningStatus: LearningStatus;
   JobPath: string;
   strikes: number;
 }

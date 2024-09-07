@@ -31,10 +31,29 @@ export const SidebarJobPath = ({ jobPath }: JobPathProps) => {
     }
   };
 
+  const chipLabel = (status: JobPath | string) => {
+    switch (status) {
+      case JobPath.Searching:
+        return 'Searching';
+      case JobPath.Internship:
+        return 'Internship';
+      case JobPath.TechJob:
+        return 'Tech job';
+      case JobPath.NotSearching:
+        return 'Not searching';
+      case JobPath.NonTechJob:
+        return 'Non-tech Job';
+      case JobPath.OtherStudies:
+        return 'Other studies';
+      case JobPath.NoLongerHelping:
+        return 'No longer helping';
+    }
+  };
+
   return (
     <Stack direction="row" spacing={1} p={0}>
       <SidebarLearningStatus learningStatus={LearningStatus.Graduated}></SidebarLearningStatus>{' '}
-      <Chip label={jobPath} color={jobChipColor(jobPath)} size="small" />
+      <Chip label={chipLabel(jobPath)} color={jobChipColor(jobPath)} size="small" />
     </Stack>
   );
 };
