@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason, LearningStatus } from '../models';
+import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason } from '../models';
 import { TraineeSchema } from '../schemas';
 import { WithMongoID } from '../utils/database';
 import { UserRepository } from './UserRepository';
@@ -49,7 +49,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
     }
     return await this.TraineeModel.find(condition)
       .where('educationInfo.learningStatus')
-      .ne(LearningStatus.Quit)
       .sort({ 'educationInfo.currentCohort': 1 })
       .exec();
   }

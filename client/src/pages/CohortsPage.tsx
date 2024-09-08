@@ -11,7 +11,6 @@ import Stack from '@mui/material/Stack';
  */
 export const CohortsPage = () => {
   const { isLoading, isError, data, error, isFetching } = useCohortsData();
-
   if (isLoading || isFetching) {
     return <Loader />;
   }
@@ -23,12 +22,10 @@ export const CohortsPage = () => {
   return (
     <Container fixed>
       <Box p={2}>
-        <Typography variant="h3" gutterBottom>
-          <b>Cohort Overview</b>
-        </Typography>
+        <Typography variant="h4">Cohorts Overview</Typography>
         <Box display="flex" alignItems="start" justifyContent="start" p={2}>
           <Stack direction="column" spacing={2}>
-            {data?.map((cohort: Cohort, index: number) => (
+            {data?.sort(compareCohort).map((cohort: Cohort, index: number) => (
               <div key={index}>
                 <CohortAccordion cohortInfo={cohort}></CohortAccordion>
               </div>
@@ -38,4 +35,11 @@ export const CohortsPage = () => {
       </Box>
     </Container>
   );
+};
+
+const compareCohort = (a: Cohort, b: Cohort) => {
+  // Sort by cohort number, descending. Put cohorts with no number on the top.
+  const cohortA = a.cohort ?? Number.MAX_SAFE_INTEGER;
+  const cohortB = b.cohort ?? Number.MAX_SAFE_INTEGER;
+  return cohortB - cohortA;
 };
