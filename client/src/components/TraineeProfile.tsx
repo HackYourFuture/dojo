@@ -7,6 +7,7 @@ import {
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
+  InteractionsInfo,
   ErrorBox,
   Loader,
   PersonalInfo,
@@ -118,6 +119,10 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
           <EmploymentInfo
             employmentData={traineeData && traineeData.employmentInfo}
             saveTraineeData={saveTraineeData}
+          />
+        )}
+        {activeTab === 'interactions' && (
+          <InteractionsInfo         
           />
         )}
       </Box>

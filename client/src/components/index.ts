@@ -1,6 +1,7 @@
 export * from './CohortAccordion';
 export * from './Comment';
 export * from './ContactInfo';
+export * from './InteractionsInfo';
 export * from './DashboardPieChart';
 export * from './EducationInfo';
 export * from './EmploymentInfo';
