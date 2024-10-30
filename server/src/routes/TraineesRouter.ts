@@ -28,6 +28,17 @@ export class TraineesRouter implements RouterType {
     router.post('/:id/strikes', this.traineesController.addStrike.bind(this.traineesController));
     router.put('/:id/strikes/:strikeId', this.traineesController.updateStrike.bind(this.traineesController));
     router.delete('/:id/strikes/:strikeId', this.traineesController.deleteStrike.bind(this.traineesController));
+
+    router.get('/:id/interactions', this.traineesController.getInteractions.bind(this.traineesController));
+    router.post('/:id/interactions', this.traineesController.addInteraction.bind(this.traineesController));
+    router.put(
+      '/:id/interactions/:interactionID',
+      this.traineesController.updateInteraction.bind(this.traineesController)
+    );
+    router.delete(
+      '/:id/interactions/:interactionID',
+      this.traineesController.deleteInteraction.bind(this.traineesController)
+    );
     return router;
   }
 }
