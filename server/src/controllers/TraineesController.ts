@@ -19,6 +19,11 @@ export interface TraineesControllerType {
   addStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+  getInteractions(req: Request, res: Response, next: NextFunction): Promise<void>;
+  addInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
+  updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
+  deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 export class TraineesController implements TraineesControllerType {
@@ -335,6 +340,19 @@ export class TraineesController implements TraineesControllerType {
       next(error);
       return;
     }
+  }
+
+  async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
+    res.status(500).send(new ResponseError('Not implemented'));
+  }
+  async addInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
+    res.status(500).send(new ResponseError('Not implemented'));
+  }
+  async updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
+    res.status(500).send(new ResponseError('Not implemented'));
+  }
+  async deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
+    res.status(500).send(new ResponseError('Not implemented'));
   }
 
   // This function updates the destination object with the source object.
