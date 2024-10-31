@@ -25,6 +25,7 @@ export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
         <Tab label="Contact" value="contact" />
         <Tab label="Education" value="education" />
         <Tab label="Employment" value="employment" />
+        <Tab label="Interactions" value="interactions" />
       </Tabs>
     </Box>
   );
