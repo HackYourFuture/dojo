@@ -867,7 +867,7 @@ components:
         interactions:
           type: array
           items:
-            $ref: '#/components/schemas/TraineeInteraction'
+            $ref: '#/components/schemas/InteractionWithReporter'
           
     TraineePersonalInfo:
       type: object
