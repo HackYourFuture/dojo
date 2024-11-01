@@ -214,6 +214,7 @@ export interface TraineeInteraction {
   readonly id: string;
   date: Date;
   type: InteractionType;
+  title: string;
   reporterID: string;
   details: string;
 }
