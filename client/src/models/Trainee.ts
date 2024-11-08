@@ -78,14 +78,14 @@ export enum JobPath {
   NoLongerHelping = 'no-longer-helping',
 }
 
-export enum InteractionType {
-  Call = 'call',
-  Chat = 'chat',
-  Feedback = 'feedback',
-  TechHour = 'tech-hour',
-  InPerson = 'in-person',
-  Other = 'other',
-}
+// export enum InteractionType {
+//   Call = 'call',
+//   Chat = 'chat',
+//   Feedback = 'feedback',
+//   TechHour = 'tech-hour',
+//   InPerson = 'in-person',
+//   Other = 'other',
+// }
 
 export enum TestResult {
   Passed = 'passed',
@@ -210,11 +210,36 @@ export interface TraineeEmploymentHistory {
   comments?: string;
 }
 
+// export interface TraineeInteraction {
+//   readonly id: string;
+//   date: Date;
+//   type: InteractionType;
+//   title: string;
+//   reporterID: string;
+//   details: string;
+// }
+
+
+export interface Reporter {
+  name: string;
+  imageUrl: string;
+}
+
+
+export enum InteractionType {
+  Call = 'call',
+  Chat = 'chat',
+  Feedback = 'feedback',
+  TechHour = 'tech-hour',
+  InPerson = 'in-person',
+  Other = 'other',
+}
+
 export interface TraineeInteraction {
   readonly id: string;
   date: Date;
-  type: InteractionType;
+  type: InteractionType[];
   title: string;
-  reporterID: string;
+  reporter: Reporter[];
   details: string;
 }

@@ -11,36 +11,60 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material';
-import { TraineeInteraction, InteractionType } from '../models';
+import { Trainee, TraineeInteraction, InteractionType } from '../models';
 import { grey } from '@mui/material/colors';
 
-export const InteractionsInfo = () => {
-  const [interactions, setInteractions] = useState<TraineeInteraction[]>([]);
+interface InteractionsInfoProps {
+    traineeId?: string;
+  }
+   
+export const InteractionsInfo = ({ Trainee }: InteractionsInfoProps) => {
+    const [interactions, setInteractions] = useState<TraineeInteraction[]>([]);
+
 
   // State for form fields
   const [date, setDate] = useState<Date>(new Date());
-  const [type, setType] = useState<InteractionType | ''>('');
+  const [type, setType] = useState<InteractionType | null>(null);
   const [reporterID, setReporterID] = useState<string>('');
   const [details, setDetails] = useState<string>('');
   const [title, setTitle] = useState<string>('');
 
+    // helper function to check if obligatory fields are full
+
+  // Function to validate fields
+  const validateFields = () => {
+    if (!type && !details) {
+      alert('Please add type and details.');
+      return false;
+    } else if (!type) {
+      alert('Please add type.');
+      return false;
+    } else if (!details) {
+      alert('Please add details.');
+      return false;
+    }
+    return true;
+  };
+
   // Function to handle form submission
   const handleAddInteraction = async () => {
-    const newInteraction: TraineeInteraction = {
-      id: Date.now().toString(), // Using a timestamp as a unique ID
-      date: date,
-      type: type,
-      title: title,
-      reporterID: reporterID,
-      details: details,
-    };
+    if (!validateFields()) return;
+    
+  const newInteraction: TraineeInteraction = {
+    id: Date.now().toString(), // Using a timestamp as a unique ID
+    date: date,
+    type: type,
+    title: title,
+    reporterID: reporterID,
+    details: details,
+  };
 
     await sendInteractionToAPI(newInteraction);
     setInteractions((prevInteractions) => [...prevInteractions, newInteraction]);
 
     // Clear form fields after submission
     setDate(new Date());
-    setType('');
+    setType(InteractionType.Call);
     setReporterID('');
     setDetails('');
     setTitle('');
@@ -83,7 +107,7 @@ export const InteractionsInfo = () => {
 
   return (
     <Box>
-      <Typography sx={{ color: grey['A700'], mt: '60px', mb: '15px', ml: '7.5%' }}>Add New Interaction</Typography>
+      <Typography sx={{ color: grey['A700'], mt: '30px', mb: '30px', ml: '7.5%' }}>Add New Interaction</Typography>
 
       <Box style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
         <Box style={{ alignItems: 'center', width: '85%' }}>
@@ -160,7 +184,6 @@ export const InteractionsInfo = () => {
               <Box key={interaction.id} sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <Typography variant="body2">
-                    {' '}
                     <strong>Date:</strong> {interaction.date.toLocaleDateString()}
                   </Typography>
                 </Box>
@@ -193,3 +216,4 @@ export const InteractionsInfo = () => {
     </Box>
   );
 };
+

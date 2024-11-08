@@ -121,7 +121,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
             saveTraineeData={saveTraineeData}
           />
         )}
-        {activeTab === 'interactions' && <InteractionsInfo />}
+        {activeTab === 'interactions' && <InteractionsInfo traineeId={id} />}
       </Box>
     </div>
   );
