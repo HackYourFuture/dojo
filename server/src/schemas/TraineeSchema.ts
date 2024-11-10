@@ -21,6 +21,8 @@ import {
   ResidencyStatus,
   TestResult,
   TestType,
+  InteractionWithReporterID,
+  InteractionType,
 } from '../models';
 import { genId } from '../utils/random';
 import { WithMongoID, jsonFormatting } from '../utils/database';
@@ -66,6 +68,15 @@ const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>({
   reporterID: { type: String, required: true, ref: 'Users', alias: 'reporter' },
   reason: { type: String, enum: Object.values(StrikeReason), required: true },
   comments: { type: String, required: true },
+});
+
+const InteractionSchema = new Schema<InteractionWithReporterID & WithMongoID>({
+  _id: { type: String, default: genId },
+  date: { type: Date, required: true },
+  reporterID: { type: String, required: true, ref: 'Users', alias: 'reporter' },
+  type: { type: String, enum: Object.values(InteractionType), required: true },
+  title: { type: String, required: false },
+  details: { type: String, required: true },
 });
 
 const AssignmentSchema = new Schema<Assignment & WithMongoID>({
@@ -156,6 +167,7 @@ const TraineeSchema = new Schema<Trainee & WithMongoID>(
       required: true,
       default: {},
     },
+    interactions: [InteractionSchema],
   },
   { timestamps: true, minimize: false }
 );
