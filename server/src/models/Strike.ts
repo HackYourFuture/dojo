@@ -1,3 +1,5 @@
+import { DisplayUser } from './User';
+
 export enum StrikeReason {
   LastSubmission = 'late-submission',
   MissedSubmission = 'missed-submission',
@@ -8,11 +10,6 @@ export enum StrikeReason {
   Other = 'other',
 }
 
-export interface StrikeReporter {
-  readonly name: string;
-  readonly imageUrl?: string;
-}
-
 interface Strike {
   readonly id: string;
   date: Date;
@@ -21,11 +18,7 @@ interface Strike {
 }
 
 // For presentation in the API response
-export interface StrikeWithReporter extends Strike {
-  reporter: StrikeReporter;
-}
+export type StrikeWithReporter = Strike & { reporter: DisplayUser };
 
 // For database storage
-export interface StrikeWithReporterID extends Strike {
-  reporterID: string;
-}
+export type StrikeWithReporterID = Strike & { reporterID: string };

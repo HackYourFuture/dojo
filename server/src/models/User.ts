@@ -12,3 +12,8 @@ export interface AuthenticatedUser {
   readonly name: string;
   readonly imageUrl?: string;
 }
+
+export interface DisplayUser {
+  readonly name: string;
+  readonly imageUrl?: string;
+}

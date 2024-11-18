@@ -1,3 +1,4 @@
+import { InteractionWithReporter } from './Interaction';
 import { StrikeWithReporter } from './Strike';
 
 export enum Gender {
@@ -32,15 +33,6 @@ export enum EducationLevel {
 export enum EmploymentType {
   Internship = 'internship',
   Job = 'job',
-}
-
-export enum InteractionType {
-  Call = 'call',
-  Chat = 'chat',
-  Feedback = 'feedback',
-  TechHour = 'tech-hour',
-  InPerson = 'in-person',
-  Other = 'other',
 }
 
 export enum QuitReason {
@@ -104,7 +96,7 @@ export interface Trainee {
   contactInfo: TraineeContactInfo;
   educationInfo: TraineeEducationInfo;
   employmentInfo: TraineeEmploymentInfo;
-  interactions: TraineeInteraction[];
+  interactions: InteractionWithReporter[];
 }
 
 export interface TraineeContactInfo {
@@ -190,12 +182,4 @@ export interface TraineeEmploymentHistory {
   feeCollected: boolean;
   feeAmount?: number;
   comments?: string;
-}
-
-export interface TraineeInteraction {
-  readonly id: string;
-  date: Date;
-  type: InteractionType;
-  reporterID: string;
-  details: string;
 }

@@ -3,6 +3,7 @@ import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason } from 
 import { TraineeSchema } from '../schemas';
 import { WithMongoID } from '../utils/database';
 import { UserRepository } from './UserRepository';
+import { InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
 
 export interface TraineesRepository {
   getAllTrainees(): Promise<Trainee[]>;
@@ -23,6 +24,12 @@ export interface TraineesRepository {
   updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
   deleteStrike(traineeID: string, strikeID: string): Promise<void>;
   validateStrike(strike: StrikeWithReporterID): Promise<void>;
+
+  getInteractions(traineeID: string): Promise<InteractionWithReporter[]>;
+  addInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter>;
+  updateInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter>;
+  deleteInteraction(traineeID: string, strikeID: string): Promise<void>;
+  validateInteraction(strike: InteractionWithReporterID): Promise<void>;
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
@@ -149,5 +156,21 @@ export class MongooseTraineesRepository implements TraineesRepository {
     if ((await this.userRepository.findUserByID(strike.reporterID)) === null) {
       throw new Error('Invalid strike reporter ID');
     }
+  }
+
+  async getInteractions(traineeID: string): Promise<InteractionWithReporter[]> {
+    return [];
+  }
+  async addInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter> {
+    throw new Error('Not implemented');
+  }
+  async updateInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter> {
+    throw new Error('Not implemented');
+  }
+  async deleteInteraction(traineeID: string, strikeID: string): Promise<void> {
+    throw new Error('Not implemented');
+  }
+  async validateInteraction(strike: InteractionWithReporterID): Promise<void> {
+    throw new Error('Not implemented');
   }
 }
