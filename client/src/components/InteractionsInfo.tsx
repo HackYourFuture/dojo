@@ -11,16 +11,18 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material';
-import { Trainee, TraineeInteraction, InteractionType } from '../models';
+import { TraineeInteraction, InteractionType } from '../models';
 import { grey } from '@mui/material/colors';
+import { useInteractionsData } from '../hooks/useInteractionsData';
 
 interface InteractionsInfoProps {
     traineeId?: string;
   }
    
-export const InteractionsInfo = ({ Trainee }: InteractionsInfoProps) => {
-    const [interactions, setInteractions] = useState<TraineeInteraction[]>([]);
-
+export const InteractionsInfo = ({ traineeId }: InteractionsInfoProps) => {
+  const [interactions, setInteractions] = useState<TraineeInteraction[]>([]);
+  // const { isLoading, isError, data, error, isFetching } = useInteractionsData(traineeId);
+  // console.log('data: ', data);
 
   // State for form fields
   const [date, setDate] = useState<Date>(new Date());
@@ -86,7 +88,9 @@ export const InteractionsInfo = ({ Trainee }: InteractionsInfoProps) => {
     }
   };
 
+
   // Function to fetch interactions from the API
+
   const fetchInteractions = async () => {
     try {
       const response = await fetch('/api/trainees/{id}/interactions');
@@ -114,6 +118,7 @@ export const InteractionsInfo = ({ Trainee }: InteractionsInfoProps) => {
           <FormControl variant={'outlined'} style={{ width: '18%', marginBottom: '15px', marginRight: '2%' }}>
             <InputLabel>Type</InputLabel>
             <Select label="Type" value={type} onChange={(e) => setType(e.target.value as InteractionType)}>
+              <MenuItem value=''>Call</MenuItem>
               <MenuItem value={InteractionType.Call}>Call</MenuItem>
               <MenuItem value={InteractionType.Chat}>Chat</MenuItem>
               <MenuItem value={InteractionType.Feedback}>Feedback</MenuItem>
