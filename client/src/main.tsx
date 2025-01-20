@@ -1,13 +1,15 @@
+import './styles/index.css';
+// When using TypeScript 4.x and above
+import '@mui/lab/themeAugmentation';
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import CssBaseline from '@mui/material/CssBaseline';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import './styles/index.css';
 import { router } from './routes';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-// When using TypeScript 4.x and above
-import '@mui/lab/themeAugmentation';
 
 const theme = createTheme({
   typography: {
@@ -21,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_CLIENTID}>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <RouterProvider router={router} />
       </ThemeProvider>
     </GoogleOAuthProvider>
