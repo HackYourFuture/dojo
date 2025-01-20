@@ -1,31 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
 import {
+  Avatar,
+  Backdrop,
   Box,
   Button,
+  Divider,
+  Fade,
   FormControl,
   InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   MenuItem,
+  Modal,
   Select,
   SelectChangeEvent,
   Stack,
   TextField,
   Typography,
-  List,
-  ListItem,
-  Divider,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Modal,
-  Fade,
-  Backdrop,
 } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { LearningStatus, QuitReason, Strike, StrikeReason, TraineeEducationInfo } from '../../models';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ReactNode, useEffect, useState } from 'react';
+
 import AddIcon from '@mui/icons-material/Add';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { LoadingButton } from '@mui/lab';
-import { LearningStatus, QuitReason, Strike, StrikeReason, TraineeEducationInfo } from '../models';
 
 const NoIcon = () => null;
 
