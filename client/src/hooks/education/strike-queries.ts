@@ -1,5 +1,3 @@
-// TODO: Move to another folder
-
 import { Strike } from '../../models';
 import axios from 'axios';
 import { useMutation } from 'react-query';

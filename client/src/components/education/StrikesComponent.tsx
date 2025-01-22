@@ -17,7 +17,7 @@ import { AddStrikeModal } from './AddStrikeModal';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
 import { formatDate } from './EducationInfo';
-import { useAddStrike } from './queries';
+import { useAddStrike } from '../../hooks/education/strike-queries';
 
 interface StrikesProps {
   traineeId: string;
