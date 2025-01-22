@@ -9,7 +9,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { LearningStatus, QuitReason, Strike, StrikeReason, TraineeEducationInfo } from '../../models';
+import { LearningStatus, QuitReason, TraineeEducationInfo } from '../../models';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from 'react';
 
@@ -20,6 +20,7 @@ import { StrikesComponent } from './StrikesComponent';
 const NoIcon = () => null;
 
 interface EducationInfoProps {
+  traineeId: string;
   educationData?: TraineeEducationInfo;
   saveTraineeData: (editedData: TraineeEducationInfo) => void;
 }
@@ -31,7 +32,7 @@ interface EducationInfoProps {
  * @param {TraineeEducationInfo} saveTraineeData callback to save edited trainee education information.
  * @returns {ReactNode} A React element that renders trainee education information with view, add, and edit logic.
  */
-export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoProps) => {
+export const EducationInfo = ({ traineeId, educationData, saveTraineeData }: EducationInfoProps) => {
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(educationData!);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -284,7 +285,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
         </FormControl>
       </div>
 
-      <StrikesComponent strikes={editedFields?.strikes} />
+      <StrikesComponent traineeId={traineeId} strikes={editedFields?.strikes} />
 
       <div style={{ width: '100%' }}>
         {/* Comments */}

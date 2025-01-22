@@ -17,16 +17,25 @@ import { AddStrikeModal } from './AddStrikeModal';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
 import { formatDate } from './EducationInfo';
+import { useAddStrike } from './queries';
 
 interface StrikesProps {
+  traineeId: string;
   strikes: Strike[];
 }
-export const StrikesComponent = ({ strikes }: StrikesProps) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+// TODO: Put traineeId in a context
+export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const { mutate, isLoading, error } = useAddStrike(traineeId);
 
   // TODO: Add patching strike functionality when the API is ready.
   const handleAddStrike = async (strike: Strike) => {
-    console.log('hi, i want to add the followig strike: ', strike);
+    mutate(strike, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+      },
+    });
   };
 
   /**
@@ -64,7 +73,6 @@ export const StrikesComponent = ({ strikes }: StrikesProps) => {
         }}
       >
         {strikes.map((strike: Strike, index: number) => {
-          console.log(strike);
           return (
             <Box sx={{ backgroundColor: 'aliceblue' }} key={strike.id}>
               <ListItem
@@ -88,7 +96,13 @@ export const StrikesComponent = ({ strikes }: StrikesProps) => {
         })}
       </List>
 
-      <AddStrikeModal open={isModalOpen} onClose={closeModal} onConfirm={handleAddStrike} />
+      <AddStrikeModal
+        isLoading={isLoading}
+        error={error instanceof Error ? error.message : ''}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={handleAddStrike}
+      />
     </div>
   );
 };

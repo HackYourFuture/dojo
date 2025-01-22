@@ -1,4 +1,5 @@
 import {
+  Alert,
   Backdrop,
   Box,
   Button,
@@ -13,16 +14,19 @@ import {
 } from '@mui/material';
 import { Strike, StrikeReason } from '../../models';
 
+import { LoadingButton } from '@mui/lab';
 import { formatDate } from './EducationInfo';
 import { useState } from 'react';
 
 interface AddStrikeModalProps {
-  open: boolean;
+  isOpen: boolean;
+  error: string;
+  isLoading: boolean;
   onClose: () => void;
   onConfirm: (strike: Strike) => void;
 }
 
-export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps) => {
+export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }: AddStrikeModalProps) => {
   const [strikeFields, setStrikeFields] = useState<Strike>({
     id: '',
     date: new Date(),
@@ -31,7 +35,9 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
     comments: '',
   });
 
-  const handleClose = () => {
+  const [commentsRequiredError, setCommentsRequiredError] = useState(false);
+
+  const resetForm = () => {
     setStrikeFields({
       id: '',
       date: new Date(),
@@ -39,6 +45,11 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
       reason: StrikeReason.Other,
       comments: '',
     });
+    setCommentsRequiredError(false);
+  };
+
+  const handleClose = () => {
+    resetForm();
     onClose();
   };
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,12 +63,19 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
   };
 
   const onClickAddStrike = () => {
+    if (!strikeFields.comments) {
+      setCommentsRequiredError(true);
+      return;
+    }
     onConfirm(strikeFields);
+    resetForm();
   };
 
   //TODO: Add text validation
   const onChangeComments = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCommentsRequiredError(false);
     const { name, value } = e.target;
+
     setStrikeFields((prevStrike) => ({
       ...prevStrike,
       [name]: value,
@@ -66,14 +84,14 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
 
   return (
     <Modal
-      open={open}
+      open={isOpen}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
         timeout: 500,
       }}
     >
-      <Fade in={open}>
+      <Fade in={isOpen}>
         <Box
           component="form"
           display="flex"
@@ -96,6 +114,7 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
               <TextField
+                disabled={isLoading}
                 id={strikeFields?.date ? 'date' : 'dateEmpty'}
                 name="date"
                 label="Date"
@@ -109,6 +128,7 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
             <FormControl fullWidth>
               <InputLabel htmlFor="reason">Reason</InputLabel>
               <Select
+                disabled={isLoading}
                 name="reason"
                 id="reason"
                 label="Reason"
@@ -128,22 +148,34 @@ export const AddStrikeModal = ({ open, onClose, onConfirm }: AddStrikeModalProps
           </Box>
           <FormControl fullWidth>
             <TextField
+              required
+              disabled={isLoading}
               id="comments"
               name="comments"
               label="Comments"
               type="text"
               multiline
+              error={commentsRequiredError}
+              helperText={commentsRequiredError ? 'Comments are required' : ''}
               value={strikeFields.comments}
               InputLabelProps={{ shrink: true }}
               onChange={onChangeComments}
               fullWidth
             />
           </FormControl>
+          {error && <Alert severity="error">{error}</Alert>}
+
           <Box display="flex" flexDirection="row" gap={2}>
-            <Button variant="contained" onClick={onClickAddStrike} fullWidth>
+            <LoadingButton
+              loading={isLoading}
+              disabled={isLoading}
+              variant="contained"
+              onClick={onClickAddStrike}
+              fullWidth
+            >
               Add Strike
-            </Button>
-            <Button variant="outlined" onClick={handleClose} fullWidth>
+            </LoadingButton>
+            <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>
           </Box>
