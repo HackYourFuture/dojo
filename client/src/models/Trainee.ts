@@ -238,8 +238,8 @@ export enum InteractionType {
 export interface TraineeInteraction {
   readonly id: string;
   date: Date;
-  type: InteractionType[];
+  type: InteractionType;
   title: string;
-  reporter: Reporter[];
+  reporter: Reporter;
   details: string;
 }

@@ -483,6 +483,146 @@ paths:
         204:
           description: successful operation
 
+  /trainees/{id}/interactions:
+    get:
+      tags:
+        - Trainees
+      summary: Fetch all interactions of a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InteractionWithReporter'
+    post:
+      tags:
+        - Trainees
+      summary: Create new interaction
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InteractionWithReporterID'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InteractionWithReporter'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /trainees/{id}/interactions/{interactionID}:
+    put:
+      tags:
+        - Trainees
+      summary: Update existing interaction details
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: interactionID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InteractionWithReporterID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InteractionWithReporter'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee or interaction was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Trainees
+      summary: Delete existing interaction
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: interactionID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        '204':
+          description: successful operation
+        '404':
+          description: Trainee or interaction was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /cohorts:
     get:
       tags:
@@ -727,7 +867,7 @@ components:
         interactions:
           type: array
           items:
-            $ref: '#/components/schemas/TraineeInteraction'
+            $ref: '#/components/schemas/InteractionWithReporter'
           
     TraineePersonalInfo:
       type: object
@@ -960,6 +1100,58 @@ components:
     StrikeWithReporterID:
       allOf:
         - $ref: '#/components/schemas/Strike'
+        - type: object
+          properties: 
+            reporterID:
+              type: string
+              example: g5HQGuL8
+
+    Interaction:
+      type: object
+      required:
+        - date
+        - type
+        - details
+      properties:
+        id:
+          type: string
+          example: g5HQGuL8
+        date:
+          type: string
+          format: date-time
+          example: 2024-01-01T00:00:00.000Z
+        type:
+          type: string
+          enum:
+            - call
+            - chat
+            - feedback
+            - in-person
+            - tech-hour
+            - other
+        title: 
+          type: string
+        details: 
+          type: string
+
+    InteractionWithReporter:
+      allOf:
+        - $ref: '#/components/schemas/Interaction'
+        - type: object
+          required:
+            - reporter
+          properties: 
+            reporter:
+              type: object
+              properties:
+                name:
+                  type: string
+                imageUrl:
+                  type: string
+
+    InteractionWithReporterID:
+      allOf:
+        - $ref: '#/components/schemas/Interaction'
         - type: object
           properties: 
             reporterID:
