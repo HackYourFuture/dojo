@@ -10,7 +10,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import { AddStrikeModal } from './AddStrikeModal';
@@ -18,6 +17,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
 import { formatDate } from './EducationInfo';
 import { useAddStrike } from '../../hooks/education/strike-queries';
+import { useState } from 'react';
 
 interface StrikesProps {
   traineeId: string;

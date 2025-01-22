@@ -9,6 +9,7 @@ import {
   MenuItem,
   Modal,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material';
@@ -59,6 +60,14 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
     setStrikeFields((prevStrike) => ({
       ...prevStrike,
       [name]: name === 'date' ? new Date(value) : value,
+    }));
+  };
+
+  const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setStrikeFields((prevStrike) => ({
+      ...prevStrike,
+      [name]: value,
     }));
   };
 
@@ -134,7 +143,7 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
                 label="Reason"
                 value={strikeFields.reason}
                 startAdornment=" "
-                onChange={handleStrikeChange}
+                onChange={handleStrikeSelectChange}
               >
                 <MenuItem value={StrikeReason.LastSubmission}>Last submission</MenuItem>
                 <MenuItem value={StrikeReason.MissedSubmission}>Missed submission</MenuItem>
