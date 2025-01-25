@@ -3,7 +3,7 @@ import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason } from 
 import { TraineeSchema } from '../schemas';
 import { WithMongoID } from '../utils/database';
 import { UserRepository } from './UserRepository';
-import { InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
+import { InteractionType, InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
 
 export interface TraineesRepository {
   getAllTrainees(): Promise<Trainee[]>;
@@ -26,10 +26,10 @@ export interface TraineesRepository {
   validateStrike(strike: StrikeWithReporterID): Promise<void>;
 
   getInteractions(traineeID: string): Promise<InteractionWithReporter[]>;
-  addInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter>;
-  updateInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter>;
-  deleteInteraction(traineeID: string, strikeID: string): Promise<void>;
-  validateInteraction(strike: InteractionWithReporterID): Promise<void>;
+  addInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter>;
+  updateInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter>;
+  deleteInteraction(traineeID: string, interactionID: string): Promise<void>;
+  validateInteraction(interaction: InteractionWithReporterID): Promise<void>;
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
@@ -118,16 +118,15 @@ export class MongooseTraineesRepository implements TraineesRepository {
     const DBStrike: StrikeWithReporterID & WithMongoID = { _id: strike.id, ...strike };
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID, 'educationInfo.strikes._id': strike.id },
-      { $set: { 'educationInfo.strikes.$': DBStrike } }
+      { $set: { 'educationInfo.strikes.$': DBStrike } },
+      { new: true }
     ).populate('educationInfo.strikes.reporterID', 'name imageUrl');
 
     if (!updatedTrainee) {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.educationInfo.strikes.find(
-      (strike) => (strike as StrikeWithReporter & WithMongoID)._id === DBStrike._id
-    ) as StrikeWithReporter;
+    return updatedTrainee.educationInfo.strikes.find((strike) => strike.id === DBStrike._id) as StrikeWithReporter;
   }
 
   async deleteStrike(traineeID: string, strikeID: string): Promise<void> {
@@ -159,18 +158,69 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async getInteractions(traineeID: string): Promise<InteractionWithReporter[]> {
-    return [];
+    const trainee = await this.TraineeModel.findById(traineeID)
+      .populate('interactions.reporterID', 'name imageUrl')
+      .select('interactions')
+      .exec();
+
+    if (!trainee) {
+      throw new Error('Trainee not found');
+    }
+
+    return trainee.interactions || [];
   }
-  async addInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter> {
-    throw new Error('Not implemented');
+
+  async addInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter> {
+    const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID },
+      { $push: { interactions: interaction } },
+      { new: true }
+    ).populate('interactions.reporterID', 'name imageUrl');
+
+    if (!updatedTrainee) {
+      throw new Error('Trainee not found');
+    }
+
+    return updatedTrainee.interactions.at(-1) as InteractionWithReporter;
   }
-  async updateInteraction(traineeID: string, strike: InteractionWithReporterID): Promise<InteractionWithReporter> {
-    throw new Error('Not implemented');
+
+  async updateInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter> {
+    const DBInteraction: InteractionWithReporterID & WithMongoID = { _id: interaction.id, ...interaction };
+    const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID, 'interactions._id': interaction.id },
+      { $set: { 'interactions.$': DBInteraction } },
+      { new: true }
+    ).populate('interactions.reporterID', 'name imageUrl');
+
+    if (!updatedTrainee) {
+      throw new Error('Interaction was not found');
+    }
+
+    console.log(updatedTrainee.interactions);
+    return updatedTrainee.interactions.find(
+      (interaction) => interaction.id === DBInteraction._id
+    ) as InteractionWithReporter;
   }
-  async deleteInteraction(traineeID: string, strikeID: string): Promise<void> {
-    throw new Error('Not implemented');
+
+  async deleteInteraction(traineeID: string, interactionID: string): Promise<void> {
+    await this.TraineeModel.findOneAndUpdate({ _id: traineeID }, { $pull: { interactions: { _id: interactionID } } });
   }
-  async validateInteraction(strike: InteractionWithReporterID): Promise<void> {
-    throw new Error('Not implemented');
+
+  async validateInteraction(interaction: InteractionWithReporterID): Promise<void> {
+    if (!interaction.date) {
+      throw new Error('Interaction date is required');
+    }
+    if (!interaction.reporterID) {
+      throw new Error('Interaction reporter ID is required');
+    }
+    if (!interaction.details) {
+      throw new Error('Interaction details are required');
+    }
+    if (!Object.values(InteractionType).includes(interaction.type)) {
+      throw new Error(`Unknown interaction type [${Object.values(InteractionType)}]`);
+    }
+    if ((await this.userRepository.findUserByID(interaction.reporterID)) === null) {
+      throw new Error('Unknown reporter ID');
+    }
   }
 }

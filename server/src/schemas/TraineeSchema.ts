@@ -180,6 +180,7 @@ TraineeSchema.virtual('displayName').get(function () {
 
 TraineeSchema.set('toJSON', jsonFormatting);
 StrikeSchema.set('toJSON', jsonFormatting);
+InteractionSchema.set('toJSON', jsonFormatting);
 TestSchema.set('toJSON', jsonFormatting);
 
 export { TraineeSchema };
