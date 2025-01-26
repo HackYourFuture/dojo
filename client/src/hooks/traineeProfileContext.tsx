@@ -7,7 +7,7 @@ type TraineeProfileContextType = {
 
 const TraineeProfileContext = createContext<TraineeProfileContextType>({
   traineeId: null,
-  setTraineeId: (id) => {},
+  setTraineeId: () => {},
 });
 
 export const TraineeProfileProvider = ({ id, children }: { id: string; children: React.ReactNode }) => {

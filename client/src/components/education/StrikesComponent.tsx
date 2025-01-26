@@ -1,39 +1,31 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, Stack, Typography } from '@mui/material';
+import { useAddStrike, useGetStrikes } from '../../hooks/education/strike-queries';
 
 import AddIcon from '@mui/icons-material/Add';
 import { AddStrikeModal } from './AddStrikeModal';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { Loader } from '../Loader';
 import { Strike } from '../../models';
-import { formatDate } from './EducationInfo';
-import { useAddStrike } from '../../hooks/education/strike-queries';
+import { StrikesList } from './StrikesList';
+import { useQueryClient } from 'react-query';
 import { useState } from 'react';
+import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
 
-interface StrikesProps {
-  traineeId: string;
-  strikes: Strike[];
-}
-
-// TODO: Put traineeId in a context
-export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
+export const StrikesComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { mutate, isLoading, error } = useAddStrike(traineeId);
+  const { traineeId } = useTraineeProfileContext();
 
-  // TODO: Add patching strike functionality when the API is ready.
+  const { mutate, isLoading, error } = useAddStrike(traineeId || '');
+
+  const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId || '');
+
+  const queryClient = useQueryClient();
+
   const handleAddStrike = async (strike: Strike) => {
     mutate(strike, {
       onSuccess: () => {
         setIsModalOpen(false);
+        // Refetch strikes after adding a new strike
+        queryClient.invalidateQueries(['strikes', traineeId]);
       },
     });
   };
@@ -56,7 +48,7 @@ export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
     <div style={{ width: '50%' }}>
       <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
         <Typography variant="h6" color="black" padding="16px">
-          Strikes ({strikes.length || 0})
+          Strikes ({strikes?.length || 0})
         </Typography>
 
         <Stack direction="row" spacing={2}>
@@ -66,36 +58,17 @@ export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
         </Stack>
       </Box>
 
-      <List
-        sx={{
-          width: '100%',
-          bgcolor: 'background.paper',
-        }}
-      >
-        {strikes.map((strike: Strike, index: number) => {
-          return (
-            <Box sx={{ backgroundColor: 'aliceblue' }} key={strike.id}>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={formatDate(strike.date)}
-                disablePadding
-                sx={{
-                  paddingBottom: '16px',
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <HighlightOffIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={strike.reason} secondary={strike.comments} />
-              </ListItem>
-              {index < strikes.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
-            </Box>
-          );
-        })}
-      </List>
-
+      {strikesError ? (
+        <Alert severity="error">
+          Oopsie! Something went wrong: {(strikesError as Error)?.message || 'Unknown error'}
+        </Alert>
+      ) : strikesLoading ? (
+        <Box height="200px">
+          <Loader />
+        </Box>
+      ) : (
+        <StrikesList strikes={strikes || []} />
+      )}
       <AddStrikeModal
         isLoading={isLoading}
         error={error instanceof Error ? error.message : ''}
