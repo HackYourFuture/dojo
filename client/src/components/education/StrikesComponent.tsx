@@ -74,7 +74,7 @@ export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
       >
         {strikes.map((strike: Strike, index: number) => {
           return (
-            <Box sx={{ backgroundColor: 'aliceblue' }} key={strike.id}>
+            <Box key={strike.id}>
               <ListItem
                 alignItems="flex-start"
                 secondaryAction={formatDate(strike.date)}

@@ -12,7 +12,6 @@ export const useTraineeInfoData = (traineeId: string) => {
     ['traineeInfo', traineeId],
     async () => {
       const { data } = await axios.get<Trainee>(`/api/trainees/${traineeId}`);
-      console.log('useTraineeInfoData', data);
 
       return data;
     },
