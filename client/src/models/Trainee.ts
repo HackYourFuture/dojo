@@ -154,7 +154,6 @@ export interface TraineeEducationInfo {
   graduationDate?: Date;
   quitReason?: QuitReason;
   quitDate?: Date;
-  strikes: Strike[];
   assignments: Assignment[];
   tests: Test[];
   comments?: string;

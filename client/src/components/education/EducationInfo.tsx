@@ -21,7 +21,6 @@ import { formatDate } from '../../helpers/dateHelper';
 const NoIcon = () => null;
 
 interface EducationInfoProps {
-  traineeId: string;
   educationData?: TraineeEducationInfo;
   saveTraineeData: (editedData: TraineeEducationInfo) => void;
 }
@@ -33,9 +32,8 @@ interface EducationInfoProps {
  * @param {TraineeEducationInfo} saveTraineeData callback to save edited trainee education information.
  * @returns {ReactNode} A React element that renders trainee education information with view, add, and edit logic.
  */
-export const EducationInfo = ({ traineeId, educationData, saveTraineeData }: EducationInfoProps) => {
+export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoProps) => {
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(educationData!);
-
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -145,7 +143,6 @@ export const EducationInfo = ({ traineeId, educationData, saveTraineeData }: Edu
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
-
       <div style={{ width: '100%' }}>
         {/* Cohort */}
         <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
@@ -247,7 +244,6 @@ export const EducationInfo = ({ traineeId, educationData, saveTraineeData }: Edu
           </FormControl>
         )}
       </div>
-
       <div style={{ width: '100%' }}>
         {/* Start Cohort */}
         <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
@@ -285,9 +281,7 @@ export const EducationInfo = ({ traineeId, educationData, saveTraineeData }: Edu
           />
         </FormControl>
       </div>
-
-      <StrikesComponent traineeId={traineeId} strikes={editedFields?.strikes} />
-
+      <StrikesComponent />
       <div style={{ width: '100%' }}>
         {/* Comments */}
         <FormControl sx={{ mx: 2, width: '81ch' }}>
