@@ -21,6 +21,8 @@ tags:
     description: ''
   - name: Trainees
     description: ''
+  - name: Trainee Education
+    description: 'Containes endpoints to manage Trainee education info such as strikes and tests.'
   - name: Cohorts
     description: ''
   - name: Geography
@@ -376,7 +378,7 @@ paths:
   /trainees/{id}/strikes:
     get:
       tags:
-        - Trainees
+        - Trainee Education
       summary: Fetch all strikes of a trainee
       description: ''
       security:
@@ -399,7 +401,7 @@ paths:
                   $ref: '#/components/schemas/StrikeWithReporter'
     post:
       tags:
-        - Trainees
+        - Trainee Education
       summary: Create new strike
       description: ''
       security:
@@ -428,7 +430,7 @@ paths:
   /trainees/{id}/strikes/{strikeID}:
     put:
       tags:
-        - Trainees
+        - Trainee Education
       summary: Update existing strike
       description: ''
       security:
@@ -461,7 +463,7 @@ paths:
                 $ref: '#/components/schemas/StrikeWithReporter'
     delete:
       tags:
-        - Trainees
+        - Trainee Education
       summary: Delete existing strike
       description: ''
       security:
@@ -618,6 +620,146 @@ paths:
           description: successful operation
         '404':
           description: Trainee or interaction was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /trainees/{id}/tests:
+    get:
+      tags:
+        - Trainee Education
+      summary: Fetch all the tests of a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Test'
+    post:
+      tags:
+        - Trainee Education
+      summary: Create a new test record
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Test'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Test'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /trainees/{id}/tests/{testID}:
+    put:
+      tags:
+        - Trainee Education
+      summary: Update existing test details
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: testID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Test'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Test'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee or interaction was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Trainee Education
+      summary: Delete existing test information
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: testID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        '204':
+          description: successful operation
+        '404':
+          description: Trainee or test was not found
           content:
             application/json:
               schema:
@@ -1186,7 +1328,7 @@ components:
     Test:
       type: object
       required:
-        - testDate
+        - date
         - type
         - result
       properties:
@@ -1196,7 +1338,7 @@ components:
         date:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z  
+          example: 2024-01-01
         type:
           type: string
           enum:
@@ -1207,7 +1349,7 @@ components:
             - nodejs
             - react-interview
             - final-project-interview
-        grade:
+        score:
           type: number
           example: 8.6
         result:
