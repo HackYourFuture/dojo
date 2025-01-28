@@ -177,6 +177,7 @@ export interface Strike {
   reporterID: string;
   reason: StrikeReason;
   comments: string;
+  reporter: Reporter;
 }
 
 export interface Assignment {
@@ -215,4 +216,10 @@ export interface TraineeInteraction {
   type: InteractionType;
   reporterID: string;
   details: string;
+}
+
+export interface Reporter {
+  id: string;
+  name: string;
+  imageUrl: string;
 }
