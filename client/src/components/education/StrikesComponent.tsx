@@ -32,7 +32,6 @@ export const StrikesComponent = () => {
 
   const onClickEdit = (id: string) => {
     const strike = strikes?.find((strike) => strike.id === id);
-    console.log(strike);
     setStrikeToEdit(strike || null);
     setIsModalOpen(true);
   };
@@ -47,7 +46,6 @@ export const StrikesComponent = () => {
   };
 
   const onConfirmEdit = (strike: Strike) => {
-    console.log(strike);
     editStrike(strike, {
       onSuccess: onSuccess,
       onError: (e) => {
