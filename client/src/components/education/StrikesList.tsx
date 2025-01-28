@@ -68,6 +68,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 disablePadding
                 sx={{
                   paddingBottom: '16px',
+                  bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
                 }}
               >
                 <ListItemAvatar>
@@ -80,7 +81,6 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 <ListItemText primary={strike.reason} secondary={strike.comments} />
                 {renderActions(strike.date, strike.id)}
               </ListItem>
-              {index < strikes.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
             </Box>
           );
         })
