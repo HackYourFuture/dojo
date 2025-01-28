@@ -61,7 +61,6 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
         </Typography>
       ) : (
         strikes.map((strike: Strike, index: number) => {
-          // TODO: Add avatar name
           return (
             <Box key={strike.id}>
               <ListItem
@@ -72,9 +71,11 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 }}
               >
                 <ListItemAvatar>
-                  <Avatar>
-                    <HighlightOffIcon />
-                  </Avatar>
+                  <Tooltip title={strike.reporter.name} placement="top">
+                    <Avatar src={strike.reporter.imageUrl}>
+                      <HighlightOffIcon />
+                    </Avatar>
+                  </Tooltip>
                 </ListItemAvatar>
                 <ListItemText primary={strike.reason} secondary={strike.comments} />
                 {renderActions(strike.date, strike.id)}
