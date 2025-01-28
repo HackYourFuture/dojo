@@ -1,19 +1,58 @@
-import { Avatar, Box, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
 import { formatDate } from './EducationInfo';
 
 interface StrikesListProps {
   strikes: Strike[];
+  onClickEdit: (id: string) => void;
+  onClickDelete: (id: string) => void;
 }
 
-export const StrikesList: React.FC<StrikesListProps> = ({ strikes }) => {
+export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, onClickDelete }) => {
+  const handleEdit = (id: string) => {
+    onClickEdit(id);
+  };
+  const handleDelete = (id: string) => {
+    onClickDelete(id);
+  };
+
+  const renderActions = (date: Date, id: string) => {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
+        <Typography sx={{ paddingRight: 2 }}>{formatDate(date)}</Typography>
+        <IconButton aria-label="edit" onClick={() => handleEdit(id)}>
+          <EditIcon />
+        </IconButton>
+        <IconButton aria-label="delete" onClick={() => handleDelete(id)}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
+    );
+  };
+
   return (
     <List
       sx={{
         width: '100%',
         bgcolor: 'background.paper',
+        maxHeight: 300,
+        overflow: 'auto',
+        scrollbarWidth: 'thin',
       }}
     >
       {strikes.length === 0 ? (
@@ -22,11 +61,11 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes }) => {
         </Typography>
       ) : (
         strikes.map((strike: Strike, index: number) => {
+          // TODO: Add avatar name
           return (
             <Box key={strike.id}>
               <ListItem
                 alignItems="flex-start"
-                secondaryAction={formatDate(strike.date)}
                 disablePadding
                 sx={{
                   paddingBottom: '16px',
@@ -38,6 +77,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes }) => {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={strike.reason} secondary={strike.comments} />
+                {renderActions(strike.date, strike.id)}
               </ListItem>
               {index < strikes.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
             </Box>
