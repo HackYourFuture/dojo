@@ -32,6 +32,20 @@ export const useGetStrikes = (traineeId: string) => {
   );
 };
 
+export const useDeleteStrike = (traineeId: string) => {
+  return useMutation((strikeId: string) => {
+    return axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
+  });
+};
+
+export const useEditStrike = (traineeId: string) => {
+  return useMutation((strike: Strike) => {
+    return axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike).catch((error) => {
+      throw new Error(error.response?.data?.error || 'Failed to edit strike');
+    });
+  });
+};
+
 const orderByDateDesc = (data: Strike[]): Strike[] => {
   return data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };

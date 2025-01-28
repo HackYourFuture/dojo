@@ -1,9 +1,8 @@
-import { Alert, Box, Button, Stack, Typography } from '@mui/material';
-import { useAddStrike, useGetStrikes } from '../../hooks/education/strike-queries';
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { useAddStrike, useDeleteStrike, useEditStrike, useGetStrikes } from '../../hooks/education/strike-queries';
 
 import AddIcon from '@mui/icons-material/Add';
 import { AddStrikeModal } from './AddStrikeModal';
-import { Loader } from '../Loader';
 import { Strike } from '../../models';
 import { StrikesList } from './StrikesList';
 import { useQueryClient } from 'react-query';
@@ -12,28 +11,61 @@ import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
 
 export const StrikesComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [modalError, setModalError] = useState<string>('');
+  const [strikeToEdit, setStrikeToEdit] = useState<Strike | null>(null);
   const { traineeId } = useTraineeProfileContext();
-
-  const { mutate, isLoading, error } = useAddStrike(traineeId || '');
-
-  const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId || '');
-
+  const { mutate: addStrike, isLoading: addStrikeLoading } = useAddStrike(traineeId);
+  const { mutate: deleteStrike, isLoading: deleteStrikeLoading, error: deleteStrikeError } = useDeleteStrike(traineeId);
+  const { mutate: editStrike, isLoading: editStrikeLoading } = useEditStrike(traineeId);
+  const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId);
   const queryClient = useQueryClient();
 
-  const handleAddStrike = async (strike: Strike) => {
-    mutate(strike, {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        // Refetch strikes after adding a new strike
-        queryClient.invalidateQueries(['strikes', traineeId]);
+  const onSuccess = () => {
+    setIsModalOpen(false);
+    queryClient.invalidateQueries(['strikes', traineeId]);
+  };
+
+  const getErrorMessage = (error: Error | unknown) => {
+    return (error as Error).message || 'Unknown error';
+  };
+
+  const onClickEdit = (id: string) => {
+    const strike = strikes?.find((strike) => strike.id === id);
+    console.log(strike);
+    setStrikeToEdit(strike || null);
+    setIsModalOpen(true);
+  };
+
+  const onConfirmAdd = async (strike: Strike) => {
+    addStrike(strike, {
+      onSuccess: onSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
       },
+    });
+  };
+
+  const onConfirmEdit = (strike: Strike) => {
+    console.log(strike);
+    editStrike(strike, {
+      onSuccess: onSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onConfirmDelete = (id: string) => {
+    deleteStrike(id, {
+      onSuccess: onSuccess,
     });
   };
 
   /**
    * Function to enable adding strikes.
    */
-  const handleOpenStrike = () => {
+  const onClickAdd = () => {
     setIsModalOpen(true);
   };
 
@@ -42,6 +74,8 @@ export const StrikesComponent = () => {
    */
   const closeModal = () => {
     setIsModalOpen(false);
+    setStrikeToEdit(null);
+    setModalError('');
   };
 
   return (
@@ -50,31 +84,32 @@ export const StrikesComponent = () => {
         <Typography variant="h6" color="black" padding="16px">
           Strikes ({strikes?.length || 0})
         </Typography>
-
         <Stack direction="row" spacing={2}>
-          <Button startIcon={<AddIcon />} onClick={handleOpenStrike}>
+          <Button startIcon={<AddIcon />} onClick={onClickAdd}>
             New strike
           </Button>
         </Stack>
       </Box>
 
-      {strikesError ? (
+      {strikesError || deleteStrikeError ? (
         <Alert severity="error">
-          Oopsie! Something went wrong: {(strikesError as Error)?.message || 'Unknown error'}
+          Oopsie! Something went wrong: {getErrorMessage(strikesError || deleteStrikeError)}
         </Alert>
-      ) : strikesLoading ? (
-        <Box height="200px">
-          <Loader />
+      ) : strikesLoading || deleteStrikeLoading ? (
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <CircularProgress />
         </Box>
       ) : (
-        <StrikesList strikes={strikes || []} />
+        <StrikesList strikes={strikes || []} onClickEdit={onClickEdit} onClickDelete={onConfirmDelete} />
       )}
       <AddStrikeModal
-        isLoading={isLoading}
-        error={error instanceof Error ? error.message : ''}
+        isLoading={addStrikeLoading || editStrikeLoading}
+        error={modalError}
         isOpen={isModalOpen}
         onClose={closeModal}
-        onConfirm={handleAddStrike}
+        onConfirmAdd={onConfirmAdd}
+        onConfirmEdit={onConfirmEdit}
+        strikeToEdit={strikeToEdit}
       />
     </div>
   );

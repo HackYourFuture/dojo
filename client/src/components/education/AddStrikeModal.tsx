@@ -14,20 +14,31 @@ import {
   Typography,
 } from '@mui/material';
 import { Strike, StrikeReason } from '../../models';
+import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../helpers/dateHelper';
-import { useState } from 'react';
 
+//TODO: rename to AddStrikeModal
 interface AddStrikeModalProps {
   isOpen: boolean;
   error: string;
   isLoading: boolean;
   onClose: () => void;
-  onConfirm: (strike: Strike) => void;
+  onConfirmAdd: (strike: Strike) => void;
+  onConfirmEdit: (strike: Strike) => void;
+  strikeToEdit: Strike | null;
 }
 
-export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }: AddStrikeModalProps) => {
+export const AddStrikeModal = ({
+  isOpen,
+  isLoading,
+  error,
+  onClose,
+  onConfirmAdd,
+  onConfirmEdit,
+  strikeToEdit,
+}: AddStrikeModalProps) => {
   const [strikeFields, setStrikeFields] = useState<Strike>({
     id: '',
     date: new Date(),
@@ -35,6 +46,15 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
     reason: StrikeReason.Other,
     comments: '',
   });
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (strikeToEdit) {
+      console.log('useEff', strikeToEdit);
+      setStrikeFields(strikeToEdit);
+      setIsEditing(true);
+    }
+  }, [strikeToEdit]);
 
   const [commentsRequiredError, setCommentsRequiredError] = useState(false);
 
@@ -50,13 +70,14 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
   };
 
   const handleClose = () => {
+    setIsEditing(false);
     resetForm();
     onClose();
   };
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setStrikeFields((prevStrike: Strike) => ({
+    setStrikeFields((prevStrike) => ({
       ...prevStrike,
       [name]: name === 'date' ? new Date(value) : value,
     }));
@@ -73,13 +94,14 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
     );
   };
 
-  const onClickAddStrike = () => {
+  const onConfirm = () => {
     if (!strikeFields.comments) {
       setCommentsRequiredError(true);
       return;
     }
-    onConfirm(strikeFields);
-    resetForm();
+
+    strikeToEdit ? onConfirmEdit(strikeFields) : onConfirmAdd(strikeFields);
+    handleClose();
   };
 
   //TODO: Add text validation
@@ -104,23 +126,23 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
     >
       <Fade in={isOpen}>
         <Box
+          minWidth={550}
           component="form"
           display="flex"
           flexDirection="column"
-          gap={2}
+          gap={3}
           sx={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 400,
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
           }}
         >
           <Typography variant="h6" mb={0.5}>
-            Adding a strike:
+            {isEditing ? 'Edit a strike' : 'Add a new strike'}
           </Typography>
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
@@ -160,12 +182,17 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
           <FormControl fullWidth>
             <TextField
               required
+              sx={{
+                lineHeight: 2,
+              }}
               disabled={isLoading}
               id="comments"
               name="comments"
               label="Comments"
               type="text"
               multiline
+              minRows={2}
+              maxRows={4}
               error={commentsRequiredError}
               helperText={commentsRequiredError ? 'Comments are required' : ''}
               value={strikeFields.comments}
@@ -177,14 +204,8 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
           {error && <Alert severity="error">{error}</Alert>}
 
           <Box display="flex" flexDirection="row" gap={2}>
-            <LoadingButton
-              loading={isLoading}
-              disabled={isLoading}
-              variant="contained"
-              onClick={onClickAddStrike}
-              fullWidth
-            >
-              Add Strike
+            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
+              {isEditing ? 'Edit' : 'Add'}
             </LoadingButton>
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
