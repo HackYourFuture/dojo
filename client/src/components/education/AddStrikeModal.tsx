@@ -16,7 +16,7 @@ import {
 import { Strike, StrikeReason } from '../../models';
 
 import { LoadingButton } from '@mui/lab';
-import { formatDate } from './EducationInfo';
+import { formatDate } from '../../helpers/dateHelper';
 import { useState } from 'react';
 
 interface AddStrikeModalProps {
@@ -56,8 +56,7 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    //@ts-ignore
-    setStrikeFields((prevStrike) => ({
+    setStrikeFields((prevStrike: Strike) => ({
       ...prevStrike,
       [name]: name === 'date' ? new Date(value) : value,
     }));
@@ -65,10 +64,13 @@ export const AddStrikeModal = ({ isOpen, isLoading, error, onClose, onConfirm }:
 
   const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
-    setStrikeFields((prevStrike) => ({
-      ...prevStrike,
-      [name]: value,
-    }));
+
+    setStrikeFields(
+      (prevStrike: Strike): Strike => ({
+        ...prevStrike,
+        [name]: value,
+      })
+    );
   };
 
   const onClickAddStrike = () => {
