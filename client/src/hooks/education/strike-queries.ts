@@ -16,6 +16,11 @@ export const useAddStrike = (traineeId: string) => {
   });
 };
 
+/**
+ * Hook to get the strikes of a trainee.
+ * @param {string} traineeId the id of the trainee to get the strikes from.
+ * @returns {UseQueryResult<Strike[], Error>} the strikes of the trainee.
+ */
 export const useGetStrikes = (traineeId: string) => {
   return useQuery(
     ['strikes', traineeId],
@@ -24,7 +29,7 @@ export const useGetStrikes = (traineeId: string) => {
     },
     {
       select: ({ data }) => {
-        return orderByDateDesc(data as Strike[]);
+        return orderStrikesByDateDesc(data as Strike[]);
       },
       enabled: !!traineeId,
       refetchOnWindowFocus: false,
@@ -32,12 +37,22 @@ export const useGetStrikes = (traineeId: string) => {
   );
 };
 
+/**
+ * Hook to delete a strike from a trainee.
+ * @param {string} traineeId the id of the trainee to delete the strike from.
+ * @param {string} strikeId the id of the strike to delete.
+ * */
+
 export const useDeleteStrike = (traineeId: string) => {
   return useMutation((strikeId: string) => {
     return axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
   });
 };
 
+/**
+ * Hook to edit a strike of a trainee.
+ * @param {string} traineeId the id of the trainee to edit the strike of.
+ */
 export const useEditStrike = (traineeId: string) => {
   return useMutation((strike: Strike) => {
     return axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike).catch((error) => {
@@ -46,6 +61,6 @@ export const useEditStrike = (traineeId: string) => {
   });
 };
 
-const orderByDateDesc = (data: Strike[]): Strike[] => {
+const orderStrikesByDateDesc = (data: Strike[]): Strike[] => {
   return data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };

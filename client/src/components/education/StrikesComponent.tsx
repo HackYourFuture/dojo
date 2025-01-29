@@ -2,9 +2,10 @@ import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/ma
 import { useAddStrike, useDeleteStrike, useEditStrike, useGetStrikes } from '../../hooks/education/strike-queries';
 
 import AddIcon from '@mui/icons-material/Add';
-import { AddStrikeModal } from './AddStrikeModal';
 import { Strike } from '../../models';
-import { formatDate } from '../../helpers/dateHelper';
+import { StrikeDetailsModal } from './StrikeDetailsModal';
+import { StrikesList } from './StrikesList';
+import { useQueryClient } from 'react-query';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
 
@@ -99,7 +100,7 @@ export const StrikesComponent = () => {
       ) : (
         <StrikesList strikes={strikes || []} onClickEdit={onClickEdit} onClickDelete={onConfirmDelete} />
       )}
-      <AddStrikeModal
+      <StrikeDetailsModal
         isLoading={addStrikeLoading || editStrikeLoading}
         error={modalError}
         isOpen={isModalOpen}

@@ -21,7 +21,7 @@ import { formatDate } from '../../helpers/dateHelper';
 import { useState } from 'react';
 
 //TODO: rename to AddStrikeModal
-interface AddStrikeModalProps {
+interface StrikeDetailsModalProps {
   isOpen: boolean;
   error: string;
   isLoading: boolean;
@@ -31,7 +31,7 @@ interface AddStrikeModalProps {
   strikeToEdit: Strike | null;
 }
 
-export const AddStrikeModal = ({
+export const StrikeDetailsModal = ({
   isOpen,
   isLoading,
   error,
@@ -39,7 +39,7 @@ export const AddStrikeModal = ({
   onConfirmAdd,
   onConfirmEdit,
   strikeToEdit,
-}: AddStrikeModalProps) => {
+}: StrikeDetailsModalProps) => {
   const [strikeFields, setStrikeFields] = useState<Strike>({
     id: '',
     date: new Date(),
