@@ -196,7 +196,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Interaction was not found');
     }
 
-    console.log(updatedTrainee.interactions);
     return updatedTrainee.interactions.find(
       (interaction) => interaction.id === DBInteraction._id
     ) as InteractionWithReporter;

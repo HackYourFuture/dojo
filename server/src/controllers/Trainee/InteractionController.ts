@@ -54,7 +54,6 @@ export class InteractionController implements InteractionControllerType {
       const interaction = await this.traineesRepository.addInteraction(req.params.id, newInteraction);
       res.status(201).json(interaction);
     } catch (error: any) {
-      console.log(error);
       next(error);
     }
   }
