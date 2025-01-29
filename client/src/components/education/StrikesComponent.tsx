@@ -4,8 +4,7 @@ import { useAddStrike, useDeleteStrike, useEditStrike, useGetStrikes } from '../
 import AddIcon from '@mui/icons-material/Add';
 import { AddStrikeModal } from './AddStrikeModal';
 import { Strike } from '../../models';
-import { StrikesList } from './StrikesList';
-import { useQueryClient } from 'react-query';
+import { formatDate } from '../../helpers/dateHelper';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
 

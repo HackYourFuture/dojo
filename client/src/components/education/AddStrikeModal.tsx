@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../helpers/dateHelper';
+import { useState } from 'react';
 
 //TODO: rename to AddStrikeModal
 interface AddStrikeModalProps {
@@ -77,7 +78,7 @@ export const AddStrikeModal = ({
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setStrikeFields((prevStrike) => ({
+    setStrikeFields((prevStrike: Strike) => ({
       ...prevStrike,
       [name]: name === 'date' ? new Date(value) : value,
     }));
