@@ -17,7 +17,7 @@ import { Strike, StrikeReason } from '../../models';
 import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
-import { formatDate } from './EducationInfo';
+import { formatDate } from '../../helpers/dateHelper';
 
 //TODO: rename to AddStrikeModal
 interface AddStrikeModalProps {
@@ -45,7 +45,7 @@ export const AddStrikeModal = ({
     reporterID: '',
     reason: StrikeReason.Other,
     comments: '',
-  });
+  } as Strike);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const AddStrikeModal = ({
       reporterID: '',
       reason: StrikeReason.Other,
       comments: '',
-    });
+    } as Strike);
     setCommentsRequiredError(false);
   };
 
@@ -77,7 +77,7 @@ export const AddStrikeModal = ({
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setStrikeFields((prevStrike) => ({
+    setStrikeFields((prevStrike: Strike) => ({
       ...prevStrike,
       [name]: name === 'date' ? new Date(value) : value,
     }));
@@ -85,10 +85,13 @@ export const AddStrikeModal = ({
 
   const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
-    setStrikeFields((prevStrike) => ({
-      ...prevStrike,
-      [name]: value,
-    }));
+
+    setStrikeFields(
+      (prevStrike: Strike): Strike => ({
+        ...prevStrike,
+        [name]: value,
+      })
+    );
   };
 
   const onConfirm = () => {

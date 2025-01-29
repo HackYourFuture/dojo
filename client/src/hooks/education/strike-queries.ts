@@ -3,6 +3,11 @@ import { useMutation, useQuery } from 'react-query';
 import { Strike } from '../../models';
 import axios from 'axios';
 
+/**
+ * Hook to add a strike to a trainee.
+ * @param {string} traineeId the id of the trainee to add the strike to.
+ * @param {Strike} strike the strike to add.
+ */
 export const useAddStrike = (traineeId: string) => {
   return useMutation((strike: Strike) => {
     return axios.post(`/api/trainees/${traineeId}/strikes`, strike).catch((error) => {
