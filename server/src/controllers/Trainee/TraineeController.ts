@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { TraineesRepository } from '../repositories';
-import { StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from '../services';
-import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../models';
+import { TraineesRepository } from '../../repositories';
+import { StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from '../../services';
+import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../../models';
 import * as Sentry from '@sentry/node';
 import fs from 'fs';
 
-export interface TraineesControllerType {
+export interface TraineeControllerType {
   getTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   createTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -19,14 +19,9 @@ export interface TraineesControllerType {
   addStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
-
-  getInteractions(req: Request, res: Response, next: NextFunction): Promise<void>;
-  addInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
-  updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
-  deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
-export class TraineesController implements TraineesControllerType {
+export class TraineeController implements TraineeControllerType {
   private readonly traineesRepository: TraineesRepository;
   private readonly storageService: StorageServiceType;
   private readonly uploadService: UploadServiceType;
@@ -340,19 +335,6 @@ export class TraineesController implements TraineesControllerType {
       next(error);
       return;
     }
-  }
-
-  async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
-    res.status(500).send(new ResponseError('Not implemented'));
-  }
-  async addInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    res.status(500).send(new ResponseError('Not implemented'));
-  }
-  async updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    res.status(500).send(new ResponseError('Not implemented'));
-  }
-  async deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    res.status(500).send(new ResponseError('Not implemented'));
   }
 
   // This function updates the destination object with the source object.
