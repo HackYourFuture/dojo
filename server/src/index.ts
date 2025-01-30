@@ -21,6 +21,7 @@ import {
   GeographyController,
   DashboardController,
   CohortsController,
+  TestController,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from './services';
@@ -91,6 +92,7 @@ class Main {
     );
     const traineeController = new TraineeController(traineesRepository, storageService, uploadService, imageService);
     const interactionController = new InteractionController(traineesRepository);
+    const testController = new TestController();
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
@@ -101,7 +103,9 @@ class Main {
 
     // Setup routers
     const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
-    const traineeRouter = new TraineesRouter(traineeController, interactionController, [authMiddleware]);
+    const traineeRouter = new TraineesRouter(traineeController, interactionController, testController, [
+      authMiddleware,
+    ]);
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
     const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
     const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);
