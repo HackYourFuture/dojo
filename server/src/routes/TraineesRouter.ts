@@ -1,20 +1,23 @@
 import { Router } from 'express';
 import RouterType from './Router';
-import { TraineeControllerType, InteractionControllerType } from '../controllers';
+import { TraineeControllerType, InteractionControllerType, TestControllerType } from '../controllers';
 import Middleware from '../middlewares/Middleware';
 
 export class TraineesRouter implements RouterType {
   private readonly traineeController: TraineeControllerType;
   private readonly interactionController: InteractionControllerType;
+  private readonly testController: TestControllerType;
   private readonly middlewares: Middleware[];
 
   constructor(
     traineesController: TraineeControllerType,
     interactionController: InteractionControllerType,
+    testController: TestControllerType,
     middlewares: Middleware[] = []
   ) {
     this.traineeController = traineesController;
     this.interactionController = interactionController;
+    this.testController = testController;
     this.middlewares = middlewares;
   }
 
@@ -45,6 +48,11 @@ export class TraineesRouter implements RouterType {
       '/:id/interactions/:interactionID',
       this.interactionController.deleteInteraction.bind(this.interactionController)
     );
+
+    router.get('/:id/tests', this.testController.getTests.bind(this.testController));
+    router.post('/:id/tests', this.testController.addTest.bind(this.testController));
+    router.put('/:id/tests/:testID', this.testController.updateTest.bind(this.testController));
+    router.delete('/:id/tests/:testID', this.testController.deleteTest.bind(this.testController));
     return router;
   }
 }
