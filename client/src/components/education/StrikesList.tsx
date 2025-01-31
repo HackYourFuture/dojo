@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Divider,
   IconButton,
   List,
   ListItem,
@@ -15,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
-import { formatDate } from './EducationInfo';
+import { formatDate } from '../../helpers/dateHelper';
 
 interface StrikesListProps {
   strikes: Strike[];
