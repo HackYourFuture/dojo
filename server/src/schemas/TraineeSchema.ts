@@ -92,7 +92,7 @@ const TestSchema = new Schema<Test & WithMongoID>({
   _id: { type: String, default: genId },
   date: { type: Date, required: true },
   type: { type: String, required: true, enum: Object.values(TestType) },
-  grade: { type: Number, required: true },
+  score: { type: Number, required: false, default: null },
   result: { type: String, required: true, enum: Object.values(TestResult) },
   comments: { type: String, required: false, default: null },
 });
@@ -180,5 +180,7 @@ TraineeSchema.virtual('displayName').get(function () {
 
 TraineeSchema.set('toJSON', jsonFormatting);
 StrikeSchema.set('toJSON', jsonFormatting);
+InteractionSchema.set('toJSON', jsonFormatting);
+TestSchema.set('toJSON', jsonFormatting);
 
 export { TraineeSchema };

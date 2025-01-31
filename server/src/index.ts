@@ -14,7 +14,8 @@ import swagger from './api-docs/swagger';
 import mongoose from 'mongoose';
 import { TraineesRouter, SearchRouter, AuthenticationRouter, GeographyRouter, DashboardRouter } from './routes';
 import {
-  TraineesController,
+  TraineeController,
+  InteractionController,
   SearchController,
   AuthenticationController,
   GeographyController,
@@ -88,7 +89,8 @@ class Main {
       tokenService,
       tokenExpirationInDays
     );
-    const traineeController = new TraineesController(traineesRepository, storageService, uploadService, imageService);
+    const traineeController = new TraineeController(traineesRepository, storageService, uploadService, imageService);
+    const interactionController = new InteractionController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
@@ -99,7 +101,7 @@ class Main {
 
     // Setup routers
     const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
-    const traineeRouter = new TraineesRouter(traineeController, [authMiddleware]);
+    const traineeRouter = new TraineesRouter(traineeController, interactionController, [authMiddleware]);
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
     const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
     const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);

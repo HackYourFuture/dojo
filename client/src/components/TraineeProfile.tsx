@@ -114,7 +114,11 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
           <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={saveTraineeData} />
         )}
         {activeTab === 'education' && (
-          <EducationInfo educationData={traineeData && traineeData.educationInfo} saveTraineeData={saveTraineeData} />
+          <EducationInfo
+            traineeId={id}
+            educationData={traineeData && traineeData.educationInfo}
+            saveTraineeData={saveTraineeData}
+          />
         )}
         {activeTab === 'employment' && (
           <EmploymentInfo

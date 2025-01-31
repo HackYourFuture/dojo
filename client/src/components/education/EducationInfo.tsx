@@ -21,6 +21,7 @@ import { formatDate } from '../../helpers/dateHelper';
 const NoIcon = () => null;
 
 interface EducationInfoProps {
+  traineeId: string;
   educationData?: TraineeEducationInfo;
   saveTraineeData: (editedData: TraineeEducationInfo) => void;
 }
@@ -32,7 +33,7 @@ interface EducationInfoProps {
  * @param {TraineeEducationInfo} saveTraineeData callback to save edited trainee education information.
  * @returns {ReactNode} A React element that renders trainee education information with view, add, and edit logic.
  */
-export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoProps) => {
+export const EducationInfo = ({ traineeId, educationData, saveTraineeData }: EducationInfoProps) => {
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(educationData!);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -302,5 +303,3 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
     </Box>
   );
 };
-
-// TODO: Extract to helper file
