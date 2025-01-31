@@ -194,7 +194,7 @@ export const StrikeDetailsModal = ({
           </FormControl>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box display="flex" flexDirection="row" gap={2}>
+          <Box display="flex" flexDirection="row" gap={2} alignSelf="flex-end">
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>
