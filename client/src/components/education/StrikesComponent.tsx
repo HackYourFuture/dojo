@@ -2,6 +2,7 @@ import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/ma
 import { useAddStrike, useDeleteStrike, useEditStrike, useGetStrikes } from '../../hooks/education/strike-queries';
 
 import AddIcon from '@mui/icons-material/Add';
+import { ConfirmationDialog } from '../ConfirmationDialog';
 import { Strike } from '../../models';
 import { StrikeDetailsModal } from './StrikeDetailsModal';
 import { StrikesList } from './StrikesList';
@@ -19,8 +20,11 @@ export const StrikesComponent = () => {
   const { mutate: deleteStrike, isLoading: deleteStrikeLoading, error: deleteStrikeError } = useDeleteStrike(traineeId);
   const { mutate: editStrike, isLoading: editStrikeLoading } = useEditStrike(traineeId);
   const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId);
-  const queryClient = useQueryClient();
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
+  const [idToDelete, setIdToDelete] = useState<string>('');
+  const queryClient = useQueryClient();
   const onSuccess = () => {
     setIsModalOpen(false);
     queryClient.invalidateQueries(['strikes', traineeId]);
@@ -33,10 +37,12 @@ export const StrikesComponent = () => {
   const onClickEdit = (id: string) => {
     const strike = strikes?.find((strike) => strike.id === id);
     setStrikeToEdit(strike || null);
+    setIsEditMode(true);
     setIsModalOpen(true);
   };
 
   const onConfirmAdd = async (strike: Strike) => {
+    setIsEditMode(false);
     addStrike(strike, {
       onSuccess: onSuccess,
       onError: (e) => {
@@ -54,10 +60,9 @@ export const StrikesComponent = () => {
     });
   };
 
-  const onConfirmDelete = (id: string) => {
-    deleteStrike(id, {
-      onSuccess: onSuccess,
-    });
+  const onClickDelete = (id: string) => {
+    setIdToDelete(id);
+    setIsConfirmationDialogOpen(true);
   };
 
   /**
@@ -76,39 +81,64 @@ export const StrikesComponent = () => {
     setModalError('');
   };
 
-  return (
-    <div style={{ width: '50%' }}>
-      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h6" color="black" padding="16px">
-          Strikes ({strikes?.length || 0})
-        </Typography>
-        <Stack direction="row" spacing={2}>
-          <Button startIcon={<AddIcon />} onClick={onClickAdd}>
-            New strike
-          </Button>
-        </Stack>
-      </Box>
+  const onCancelDelete = () => {
+    setIsConfirmationDialogOpen(false);
+  };
 
-      {strikesError || deleteStrikeError ? (
-        <Alert severity="error">
-          Oopsie! Something went wrong: {getErrorMessage(strikesError || deleteStrikeError)}
-        </Alert>
-      ) : strikesLoading || deleteStrikeLoading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <StrikesList strikes={strikes || []} onClickEdit={onClickEdit} onClickDelete={onConfirmDelete} />
-      )}
-      <StrikeDetailsModal
-        isLoading={addStrikeLoading || editStrikeLoading}
-        error={modalError}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirmAdd={onConfirmAdd}
-        onConfirmEdit={onConfirmEdit}
-        strikeToEdit={strikeToEdit}
+  const onConfirmDelete = () => {
+    deleteStrike(idToDelete, {
+      onSuccess: () => {
+        setIsConfirmationDialogOpen(false);
+        queryClient.invalidateQueries(['strikes', traineeId]);
+      },
+    });
+  };
+
+  return (
+    <>
+      <ConfirmationDialog
+        confirmButtonText="Delete"
+        isOpen={isConfirmationDialogOpen}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this strike?"
+        isLoading={deleteStrikeLoading}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
       />
-    </div>
+      <div style={{ width: '50%' }}>
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Typography variant="h6" color="black" padding="16px">
+            Strikes ({strikes?.length || 0})
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+              New strike
+            </Button>
+          </Stack>
+        </Box>
+
+        {strikesError || deleteStrikeError ? (
+          <Alert severity="error">
+            Oopsie! Something went wrong: {getErrorMessage(strikesError || deleteStrikeError)}
+          </Alert>
+        ) : strikesLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <StrikesList strikes={strikes || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
+        )}
+        <StrikeDetailsModal
+          isLoading={addStrikeLoading || editStrikeLoading}
+          editMode={isEditMode}
+          error={modalError}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirmAdd={onConfirmAdd}
+          onConfirmEdit={onConfirmEdit}
+          strikeToEdit={strikeToEdit}
+        />
+      </div>
+    </>
   );
 };
