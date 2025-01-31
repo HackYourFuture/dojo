@@ -1,6 +1,6 @@
-import { useQuery } from 'react-query';
-import axios from 'axios';
 import { Trainee } from '../models';
+import axios from 'axios';
+import { useQuery } from 'react-query';
 
 /**
  * A React Query hook that fetches trainee information data form api.
@@ -12,6 +12,7 @@ export const useTraineeInfoData = (traineeId: string) => {
     ['traineeInfo', traineeId],
     async () => {
       const { data } = await axios.get<Trainee>(`/api/trainees/${traineeId}`);
+
       return data;
     },
     {
