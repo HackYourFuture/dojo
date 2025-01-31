@@ -14,12 +14,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Strike, StrikeReason } from '../../models';
-import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../helpers/dateHelper';
+import { useState } from 'react';
 
-//TODO: rename to AddStrikeModal
 interface StrikeDetailsModalProps {
   isOpen: boolean;
   error: string;
@@ -28,6 +27,7 @@ interface StrikeDetailsModalProps {
   onConfirmAdd: (strike: Strike) => void;
   onConfirmEdit: (strike: Strike) => void;
   strikeToEdit: Strike | null;
+  editMode: boolean;
 }
 
 export const StrikeDetailsModal = ({
@@ -38,6 +38,7 @@ export const StrikeDetailsModal = ({
   onConfirmAdd,
   onConfirmEdit,
   strikeToEdit,
+  editMode,
 }: StrikeDetailsModalProps) => {
   const [strikeFields, setStrikeFields] = useState<Strike>({
     id: '',
@@ -46,15 +47,6 @@ export const StrikeDetailsModal = ({
     reason: StrikeReason.Other,
     comments: '',
   } as Strike);
-  const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    if (strikeToEdit) {
-      console.log('useEff', strikeToEdit);
-      setStrikeFields(strikeToEdit);
-      setIsEditing(true);
-    }
-  }, [strikeToEdit]);
 
   const [commentsRequiredError, setCommentsRequiredError] = useState(false);
 
@@ -70,9 +62,8 @@ export const StrikeDetailsModal = ({
   };
 
   const handleClose = () => {
-    setIsEditing(false);
-    resetForm();
     onClose();
+    resetForm();
   };
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -142,7 +133,7 @@ export const StrikeDetailsModal = ({
           }}
         >
           <Typography variant="h6" mb={0.5}>
-            {isEditing ? 'Edit a strike' : 'Add a new strike'}
+            {editMode ? 'Edit a strike' : 'Add a new strike'}
           </Typography>
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
@@ -204,12 +195,12 @@ export const StrikeDetailsModal = ({
           {error && <Alert severity="error">{error}</Alert>}
 
           <Box display="flex" flexDirection="row" gap={2}>
-            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
-              {isEditing ? 'Edit' : 'Add'}
-            </LoadingButton>
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>
+            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
+              {editMode ? 'Edit' : 'Add'}
+            </LoadingButton>
           </Box>
         </Box>
       </Fade>
