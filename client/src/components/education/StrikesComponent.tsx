@@ -25,8 +25,8 @@ export const StrikesComponent = () => {
   const [idToDelete, setIdToDelete] = useState<string>('');
   const queryClient = useQueryClient();
   const onSuccess = () => {
-    setIsModalOpen(false);
     queryClient.invalidateQueries(['strikes', traineeId]);
+    setIsModalOpen(false);
   };
 
   const getErrorMessage = (error: Error | unknown) => {

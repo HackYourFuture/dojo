@@ -94,14 +94,13 @@ export const StrikeDetailsModal = ({
     );
   };
 
-  const onConfirm = () => {
+  const onConfirm = async () => {
     if (!strikeFields.comments) {
       setCommentsRequiredError(true);
       return;
     }
 
     strikeToEdit ? onConfirmEdit(strikeFields) : onConfirmAdd(strikeFields);
-    handleClose();
   };
 
   //TODO: Add text validation
