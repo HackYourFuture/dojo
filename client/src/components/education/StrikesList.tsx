@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
-import { formatDate } from '../../helpers/dateHelper';
+import { formatDateForDisplay } from '../../helpers/dateHelper';
 
 interface StrikesListProps {
   strikes: Strike[];
@@ -43,7 +43,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
   const renderActions = (date: Date, id: string) => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
-        <Typography sx={{ paddingRight: 2 }}>{formatDate(date)}</Typography>
+        <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(date)}</Typography>
         <IconButton aria-label="edit" onClick={() => handleEdit(id)}>
           <EditIcon />
         </IconButton>
