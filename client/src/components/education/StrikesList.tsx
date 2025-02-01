@@ -23,6 +23,16 @@ interface StrikesListProps {
 }
 
 export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, onClickDelete }) => {
+  /**
+   * Formats the strike reason to a readable format
+   * with the first letter capitalized
+   * @param reason - The strike reason to format
+   * @returns The formatted strike reason
+   */
+  const formatStrikeReason = (reason: string): string => {
+    return reason.split('-').join(' ').charAt(0).toUpperCase() + reason.split('-').join(' ').slice(1).toLowerCase();
+  };
+
   const handleEdit = (id: string) => {
     onClickEdit(id);
   };
@@ -77,7 +87,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                     </Avatar>
                   </Tooltip>
                 </ListItemAvatar>
-                <ListItemText primary={strike.reason} secondary={strike.comments} />
+                <ListItemText primary={formatStrikeReason(strike.reason)} secondary={strike.comments} />
                 {renderActions(strike.date, strike.id)}
               </ListItem>
             </Box>
