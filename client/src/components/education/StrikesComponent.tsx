@@ -21,7 +21,6 @@ export const StrikesComponent = () => {
   const { mutate: editStrike, isLoading: editStrikeLoading } = useEditStrike(traineeId);
   const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId);
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
 
   const [idToDelete, setIdToDelete] = useState<string>('');
   const queryClient = useQueryClient();
@@ -35,14 +34,13 @@ export const StrikesComponent = () => {
   };
 
   const onClickEdit = (id: string) => {
-    const strike = strikes?.find((strike) => strike.id === id);
-    setStrikeToEdit(strike || null);
-    setIsEditMode(true);
+    const strike = strikes?.find((strike) => strike.id === id) || null;
+
+    setStrikeToEdit(strike);
     setIsModalOpen(true);
   };
 
   const onConfirmAdd = async (strike: Strike) => {
-    setIsEditMode(false);
     addStrike(strike, {
       onSuccess: onSuccess,
       onError: (e) => {
@@ -130,7 +128,6 @@ export const StrikesComponent = () => {
         )}
         <StrikeDetailsModal
           isLoading={addStrikeLoading || editStrikeLoading}
-          editMode={isEditMode}
           error={modalError}
           isOpen={isModalOpen}
           onClose={closeModal}

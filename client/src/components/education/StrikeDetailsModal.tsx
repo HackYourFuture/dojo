@@ -14,10 +14,10 @@ import {
   Typography,
 } from '@mui/material';
 import { Strike, StrikeReason } from '../../models';
+import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../helpers/dateHelper';
-import { useState } from 'react';
 
 interface StrikeDetailsModalProps {
   isOpen: boolean;
@@ -27,7 +27,6 @@ interface StrikeDetailsModalProps {
   onConfirmAdd: (strike: Strike) => void;
   onConfirmEdit: (strike: Strike) => void;
   strikeToEdit: Strike | null;
-  editMode: boolean;
 }
 
 export const StrikeDetailsModal = ({
@@ -38,7 +37,6 @@ export const StrikeDetailsModal = ({
   onConfirmAdd,
   onConfirmEdit,
   strikeToEdit,
-  editMode,
 }: StrikeDetailsModalProps) => {
   const [strikeFields, setStrikeFields] = useState<Strike>({
     id: '',
@@ -48,7 +46,17 @@ export const StrikeDetailsModal = ({
     comments: '',
   } as Strike);
 
-  const [commentsRequiredError, setCommentsRequiredError] = useState(false);
+  const [commentsRequiredError, setCommentsRequiredError] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (strikeToEdit) {
+      setStrikeFields(strikeToEdit);
+      setIsEditMode(true);
+      return;
+    }
+    resetForm();
+  }, [strikeToEdit]);
 
   const resetForm = () => {
     setStrikeFields({
@@ -58,6 +66,7 @@ export const StrikeDetailsModal = ({
       reason: StrikeReason.Other,
       comments: '',
     } as Strike);
+
     setCommentsRequiredError(false);
   };
 
@@ -133,7 +142,7 @@ export const StrikeDetailsModal = ({
           }}
         >
           <Typography variant="h6" mb={0.5}>
-            {editMode ? 'Edit a strike' : 'Add a new strike'}
+            {isEditMode ? 'Edit a strike' : 'Add a new strike'}
           </Typography>
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
@@ -199,7 +208,7 @@ export const StrikeDetailsModal = ({
               Cancel
             </Button>
             <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
-              {editMode ? 'Edit' : 'Add'}
+              {isEditMode ? 'Edit' : 'Add'}
             </LoadingButton>
           </Box>
         </Box>
