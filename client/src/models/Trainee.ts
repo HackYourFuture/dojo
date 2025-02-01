@@ -175,7 +175,7 @@ export interface Strike {
   readonly id: string;
   date: Date;
   reporterID: string;
-  reason: StrikeReason;
+  reason: StrikeReason | null;
   comments: string;
   reporter: Reporter;
 }

@@ -40,10 +40,9 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
     onClickDelete(id);
   };
 
-  const renderActions = (date: Date, id: string) => {
+  const renderActions = (id: string) => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
-        <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(date)}</Typography>
         <IconButton aria-label="edit" onClick={() => handleEdit(id)}>
           <EditIcon />
         </IconButton>
@@ -76,19 +75,42 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 alignItems="flex-start"
                 disablePadding
                 sx={{
-                  paddingBottom: '16px',
+                  paddingBottom: 1,
                   bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
                 }}
               >
-                <ListItemAvatar>
+                <ListItemAvatar
+                  sx={{
+                    display: 'flex',
+                    alignIntems: 'center',
+                    paddingLeft: 2,
+                    paddingRight: 2,
+                    paddingTop: 1,
+                  }}
+                >
                   <Tooltip title={strike.reporter.name} placement="top">
                     <Avatar src={strike.reporter.imageUrl}>
                       <HighlightOffIcon />
                     </Avatar>
                   </Tooltip>
                 </ListItemAvatar>
-                <ListItemText primary={formatStrikeReason(strike.reason)} secondary={strike.comments} />
-                {renderActions(strike.date, strike.id)}
+                <ListItemText
+                  primary={
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      justifyContent="space-between"
+                      width="100%"
+                      paddingTop={1}
+                      paddingBottom={1}
+                    >
+                      {formatStrikeReason(strike.reason || '')}
+                      <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
+                    </Box>
+                  }
+                  secondary={strike.comments}
+                />
+                {renderActions(strike.id)}
               </ListItem>
             </Box>
           );

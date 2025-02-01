@@ -5,6 +5,7 @@ import {
   Button,
   Fade,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Modal,
@@ -42,11 +43,12 @@ export const StrikeDetailsModal = ({
     id: '',
     date: new Date(),
     reporterID: '',
-    reason: StrikeReason.Other,
     comments: '',
+    reason: null,
   } as Strike);
 
   const [commentsRequiredError, setCommentsRequiredError] = useState<boolean>(false);
+  const [reasonRequiredError, setReasonRequiredError] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   useEffect(() => {
@@ -63,11 +65,12 @@ export const StrikeDetailsModal = ({
       id: '',
       date: new Date(),
       reporterID: '',
-      reason: StrikeReason.Other,
+      reason: null,
       comments: '',
     } as Strike);
 
     setCommentsRequiredError(false);
+    setReasonRequiredError(false);
   };
 
   const handleClose = () => {
@@ -85,7 +88,7 @@ export const StrikeDetailsModal = ({
 
   const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
-
+    setReasonRequiredError(false);
     setStrikeFields(
       (prevStrike: Strike): Strike => ({
         ...prevStrike,
@@ -95,6 +98,10 @@ export const StrikeDetailsModal = ({
   };
 
   const onConfirm = async () => {
+    if (strikeFields.reason === null) {
+      setReasonRequiredError(true);
+      return;
+    }
     if (!strikeFields.comments) {
       setCommentsRequiredError(true);
       return;
@@ -158,13 +165,16 @@ export const StrikeDetailsModal = ({
               />
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel htmlFor="reason">Reason</InputLabel>
+              <InputLabel htmlFor="reason" error={reasonRequiredError}>
+                Reason
+              </InputLabel>
               <Select
                 disabled={isLoading}
                 name="reason"
                 id="reason"
                 label="Reason"
-                value={strikeFields.reason}
+                value={strikeFields.reason || ''}
+                error={reasonRequiredError}
                 startAdornment=" "
                 onChange={handleStrikeSelectChange}
               >
@@ -176,6 +186,7 @@ export const StrikeDetailsModal = ({
                 <MenuItem value={StrikeReason.PendingFeedback}>Pending feedback</MenuItem>
                 <MenuItem value={StrikeReason.Other}>Other</MenuItem>
               </Select>
+              {reasonRequiredError && <FormHelperText error>Reason is required</FormHelperText>}
             </FormControl>
           </Box>
           <FormControl fullWidth>
