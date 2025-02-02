@@ -1,19 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
+import { Background, EducationLevel, EnglishLevel, Gender, ResidencyStatus, TraineePersonalInfo } from '../models';
 import {
+  Box,
   Button,
   FormControl,
   InputLabel,
   MenuItem,
-  TextField,
   Select,
   SelectChangeEvent,
   Stack,
-  Box,
+  TextField,
 } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ReactNode, useEffect, useState } from 'react';
+
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { LoadingButton } from '@mui/lab';
-import { Background, EducationLevel, EnglishLevel, Gender, ResidencyStatus, TraineePersonalInfo } from '../models';
 
 const NoIcon = () => null;
 
@@ -212,8 +213,8 @@ export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps
             <MenuItem value="He/him">He/him</MenuItem>
             <MenuItem value="She/her">She/her</MenuItem>
             <MenuItem value="They/them">They/them</MenuItem>
-            <MenuItem value="They/them">He/they</MenuItem>
-            <MenuItem value="They/them">She/they</MenuItem>
+            <MenuItem value="He/They">He/they</MenuItem>
+            <MenuItem value="She/They">She/they</MenuItem>
           </Select>
         </FormControl>
       </div>

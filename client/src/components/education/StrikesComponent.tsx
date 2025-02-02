@@ -1,47 +1,72 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { useAddStrike, useDeleteStrike, useEditStrike, useGetStrikes } from '../../hooks/education/strike-queries';
 
 import AddIcon from '@mui/icons-material/Add';
-import { AddStrikeModal } from './AddStrikeModal';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { ConfirmationDialog } from '../ConfirmationDialog';
 import { Strike } from '../../models';
-import { formatDate } from '../../helpers/dateHelper';
-import { useAddStrike } from '../../hooks/education/strike-queries';
+import { StrikeDetailsModal } from './StrikeDetailsModal';
+import { StrikesList } from './StrikesList';
+import { useQueryClient } from 'react-query';
 import { useState } from 'react';
+import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
 
-interface StrikesProps {
-  traineeId: string;
-  strikes: Strike[];
-}
-
-// TODO: Put traineeId in a context
-export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
+export const StrikesComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { mutate, isLoading, error } = useAddStrike(traineeId);
 
-  // TODO: Add patching strike functionality when the API is ready.
-  const handleAddStrike = async (strike: Strike) => {
-    mutate(strike, {
-      onSuccess: () => {
-        setIsModalOpen(false);
+  const [modalError, setModalError] = useState<string>('');
+  const [strikeToEdit, setStrikeToEdit] = useState<Strike | null>(null);
+  const { traineeId } = useTraineeProfileContext();
+  const { mutate: addStrike, isLoading: addStrikeLoading } = useAddStrike(traineeId);
+  const { mutate: deleteStrike, isLoading: deleteStrikeLoading, error: deleteStrikeError } = useDeleteStrike(traineeId);
+  const { mutate: editStrike, isLoading: editStrikeLoading } = useEditStrike(traineeId);
+  const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
+  const [idToDelete, setIdToDelete] = useState<string>('');
+  const queryClient = useQueryClient();
+  const onSuccess = () => {
+    queryClient.invalidateQueries(['strikes', traineeId]);
+    setIsModalOpen(false);
+  };
+
+  const getErrorMessage = (error: Error | unknown) => {
+    return (error as Error).message || 'Unknown error';
+  };
+
+  const onClickEdit = (id: string) => {
+    const strike = strikes?.find((strike) => strike.id === id) || null;
+
+    setStrikeToEdit(strike);
+    setIsModalOpen(true);
+  };
+
+  const onConfirmAdd = async (strike: Strike) => {
+    addStrike(strike, {
+      onSuccess: onSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
       },
     });
+  };
+
+  const onConfirmEdit = (strike: Strike) => {
+    editStrike(strike, {
+      onSuccess: onSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onClickDelete = (id: string) => {
+    setIdToDelete(id);
+    setIsConfirmationDialogOpen(true);
   };
 
   /**
    * Function to enable adding strikes.
    */
-  const handleOpenStrike = () => {
+  const onClickAdd = () => {
     setIsModalOpen(true);
   };
 
@@ -50,59 +75,67 @@ export const StrikesComponent = ({ traineeId, strikes }: StrikesProps) => {
    */
   const closeModal = () => {
     setIsModalOpen(false);
+    setStrikeToEdit(null);
+    setModalError('');
+  };
+
+  const onCancelDelete = () => {
+    setIsConfirmationDialogOpen(false);
+  };
+
+  const onConfirmDelete = () => {
+    deleteStrike(idToDelete, {
+      onSuccess: () => {
+        setIsConfirmationDialogOpen(false);
+        queryClient.invalidateQueries(['strikes', traineeId]);
+      },
+    });
   };
 
   return (
-    <div style={{ width: '50%' }}>
-      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h6" color="black" padding="16px">
-          Strikes ({strikes.length || 0})
-        </Typography>
-
-        <Stack direction="row" spacing={2}>
-          <Button startIcon={<AddIcon />} onClick={handleOpenStrike}>
-            New strike
-          </Button>
-        </Stack>
-      </Box>
-
-      <List
-        sx={{
-          width: '100%',
-          bgcolor: 'background.paper',
-        }}
-      >
-        {strikes.map((strike: Strike, index: number) => {
-          return (
-            <Box key={strike.id}>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={formatDate(strike.date)}
-                disablePadding
-                sx={{
-                  paddingBottom: '16px',
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <HighlightOffIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={strike.reason} secondary={strike.comments} />
-              </ListItem>
-              {index < strikes.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
-            </Box>
-          );
-        })}
-      </List>
-
-      <AddStrikeModal
-        isLoading={isLoading}
-        error={error instanceof Error ? error.message : ''}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={handleAddStrike}
+    <>
+      <ConfirmationDialog
+        confirmButtonText="Delete"
+        isOpen={isConfirmationDialogOpen}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this strike?"
+        isLoading={deleteStrikeLoading}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
       />
-    </div>
+      <div style={{ width: '50%' }}>
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Typography variant="h6" color="black" padding="16px">
+            Strikes ({strikes?.length || 0})
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+              New strike
+            </Button>
+          </Stack>
+        </Box>
+
+        {strikesError || deleteStrikeError ? (
+          <Alert severity="error">
+            Oopsie! Something went wrong: {getErrorMessage(strikesError || deleteStrikeError)}
+          </Alert>
+        ) : strikesLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <StrikesList strikes={strikes || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
+        )}
+        <StrikeDetailsModal
+          isLoading={addStrikeLoading || editStrikeLoading}
+          error={modalError}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirmAdd={onConfirmAdd}
+          onConfirmEdit={onConfirmEdit}
+          strikeToEdit={strikeToEdit}
+        />
+      </div>
+    </>
   );
 };
