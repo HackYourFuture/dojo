@@ -218,7 +218,7 @@ export const StrikeDetailsModal = ({
               Cancel
             </Button>
             <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
-              {isEditMode ? 'Edit' : 'Add'}
+              Save
             </LoadingButton>
           </Box>
         </Box>
