@@ -1,4 +1,12 @@
-import { Background, EducationLevel, EnglishLevel, Gender, ResidencyStatus, TraineePersonalInfo } from '../models';
+import {
+  Background,
+  EducationLevel,
+  EnglishLevel,
+  Gender,
+  Pronouns,
+  ResidencyStatus,
+  TraineePersonalInfo,
+} from '../models';
 import {
   Box,
   Button,
@@ -210,11 +218,11 @@ export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="He/him">He/him</MenuItem>
-            <MenuItem value="She/her">She/her</MenuItem>
-            <MenuItem value="They/them">They/them</MenuItem>
-            <MenuItem value="He/They">He/they</MenuItem>
-            <MenuItem value="She/They">She/they</MenuItem>
+            <MenuItem value={Pronouns.HeHim}>{Pronouns.HeHim}</MenuItem>
+            <MenuItem value={Pronouns.SheHer}>{Pronouns.SheHer}</MenuItem>
+            <MenuItem value={Pronouns.TheyThem}>{Pronouns.TheyThem}</MenuItem>
+            <MenuItem value={Pronouns.HeThey}>{Pronouns.HeThey}</MenuItem>
+            <MenuItem value={Pronouns.SheThey}>{Pronouns.SheThey}</MenuItem>
           </Select>
         </FormControl>
       </div>
