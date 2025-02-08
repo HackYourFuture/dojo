@@ -1,4 +1,4 @@
-export * from './CohortAccordion';
+export * from './cohorts/CohortAccordion';
 export * from './Comment';
 export * from './ContactInfo';
 export * from './InteractionsInfo';
