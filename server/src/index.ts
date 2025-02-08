@@ -38,7 +38,8 @@ class Main {
   }
 
   setupMiddlewares() {
-    if (process.env.ALLOW_CORS?.toLowerCase() === 'true') {
+    const corsEnabled = process.env.ALLOW_CORS?.toLowerCase() === 'true';
+    if (corsEnabled) {
       this.app.use(cors());
     }
     this.app.use('/api-docs', swagger('./api.yaml'));
@@ -49,9 +50,11 @@ class Main {
         contentSecurityPolicy: {
           directives: {
             'script-src': ["'self'", 'https://accounts.google.com'],
+            'img-src': ["'self'", 'data:', 'http://*.hackyourfuture.net'],
           },
         },
         crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+        crossOriginResourcePolicy: { policy: corsEnabled ? 'cross-origin' : 'same-site' },
       })
     );
   }
