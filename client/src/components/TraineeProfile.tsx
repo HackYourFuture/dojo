@@ -1,4 +1,4 @@
-import { Box, Snackbar } from '@mui/material';
+import { Box, Button, Snackbar } from '@mui/material';
 import {
   ContactInfo,
   EducationInfo,
@@ -10,13 +10,13 @@ import {
   ProfileNav,
   ProfileSidebar,
 } from '.';
-import { TraineeContactInfo, TraineeEducationInfo, TraineeEmploymentInfo, TraineePersonalInfo } from '../models';
+import { SaveTraineeRequestData, useSaveTraineeInfo, useTraineeInfoData } from '../hooks';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 
+import { LoadingButton } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
-import axios from 'axios';
-import { useTraineeInfoData } from '../hooks';
+import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
 
 interface TraineeProfileProps {
   id: string;
@@ -31,11 +31,11 @@ interface TraineeProfileProps {
 export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
-
   const { isLoading, isError, data, error, isFetching } = useTraineeInfoData(id);
+  const { isError: isSavingError, isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
+  const context = useTraineeProfileContext();
 
   const [traineeData, setTraineeData] = useState(data && data);
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -71,25 +71,45 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
    * @param {Object} editedData Object with added/edited trainee info.
    */
   const saveTraineeData = async (
-    editedData: TraineePersonalInfo | TraineeContactInfo | TraineeEducationInfo | TraineeEmploymentInfo
+    // editedData: TraineePersonalInfo | TraineeContactInfo | TraineeEducationInfo | TraineeEmploymentInfo
+    editedFields: SaveTraineeRequestData
   ) => {
-    console.log('Saving trainee data', editedData);
-    try {
-      const response = await axios.patch(`/api/trainees/${id}`, editedData);
-      console.log('Trainee data saved successfully', response.data);
-      setTraineeData(response.data);
-      setSnackbarSeverity('success');
-      setSnackbarMessage('Trainee data saved successfully');
-    } catch (error: any) {
-      console.error('There was a problem saving trainee data:', error.message);
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error saving trainee data');
-      throw error;
-    } finally {
-      setSnackbarOpen(true);
-    }
+    // TODO: createt a new object that is differences
+    mutate(editedFields, {
+      onSuccess: () => {
+        // TODO: invalidate the cache
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Trainee data saved successfully');
+      },
+      onError: (error) => {
+        console.error('There was a problem saving trainee data:', error.message);
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Error saving trainee data');
+      },
+    });
+    setSnackbarOpen(true);
   };
 
+  /**
+   * if in edit mode, save the changes,
+   * else enable edit mode.
+   *
+   */
+  const onClickEditButton = () => {
+    const { isEditMode, setIsEditMode } = context;
+    if (!isEditMode) {
+      setIsEditMode(true);
+      return;
+    }
+
+    const chagedTrainee = context.getTraineeInfoChanges(traineeData!);
+    saveTraineeData(chagedTrainee);
+  };
+
+  const onCancelEdit = () => {
+    context.setIsEditMode(false);
+    // TODO: Resrt the fields
+  };
   return (
     <div style={{ display: 'flex', background: '#fff' }}>
       <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
@@ -97,6 +117,16 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
+        <Box display="flex" justifyContent="flex-end" padding="16px">
+          <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
+            {context.isEditMode ? 'Save' : 'Edit'}
+          </LoadingButton>
+          {context.isEditMode && (
+            <Button variant="outlined" disabled={isSaveLoading} onClick={onCancelEdit}>
+              Cancel
+            </Button>
+          )}
+        </Box>
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={6000}
@@ -107,9 +137,8 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
             {snackbarMessage}
           </MuiAlert>
         </Snackbar>
-        {activeTab === 'personal' && (
-          <PersonalInfo traineeData={traineeData && traineeData.personalInfo} saveTraineeData={saveTraineeData} />
-        )}
+
+        {activeTab === 'personal' && <PersonalInfo personalInfo={traineeData!.personalInfo} />}
         {activeTab === 'contact' && (
           <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={saveTraineeData} />
         )}

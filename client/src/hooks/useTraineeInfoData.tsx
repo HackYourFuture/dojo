@@ -1,6 +1,13 @@
-import { Trainee } from '../models';
+import {
+  Trainee,
+  TraineeContactInfo,
+  TraineeEducationInfo,
+  TraineeEmploymentInfo,
+  TraineePersonalInfo,
+} from '../models';
+import { useMutation, useQuery } from 'react-query';
+
 import axios from 'axios';
-import { useQuery } from 'react-query';
 
 /**
  * A React Query hook that fetches trainee information data form api.
@@ -22,4 +29,24 @@ export const useTraineeInfoData = (traineeId: string) => {
       refetchOnWindowFocus: false, // Prevent refetching on window focus
     }
   );
+};
+
+//TODO: move to a different file
+export interface SaveTraineeRequestData {
+  personalInfo?: TraineePersonalInfo;
+  contactInfo?: TraineeContactInfo;
+  educationInfo?: TraineeEducationInfo;
+  emplotmentInfo?: TraineeEmploymentInfo;
+}
+
+/**
+ * A React Query hook that saves trainee information data to api.
+ *
+ * @param {string} traineeId trainee id
+ */
+export const useSaveTraineeInfo = (traineeId: string) => {
+  return useMutation(async (dataToSave: SaveTraineeRequestData) => {
+    const response = await axios.patch(`/api/trainees/${traineeId}`, dataToSave);
+    return response.data;
+  });
 };

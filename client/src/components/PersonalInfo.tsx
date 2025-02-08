@@ -7,93 +7,34 @@ import {
   ResidencyStatus,
   TraineePersonalInfo,
 } from '../models';
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-} from '@mui/material';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import React, { ReactNode, useEffect } from 'react';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { LoadingButton } from '@mui/lab';
+import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
 
 const NoIcon = () => null;
 
 interface PersonalInfoProps {
-  traineeData?: TraineePersonalInfo;
-  saveTraineeData: (editedData: TraineePersonalInfo) => void;
+  personalInfo: TraineePersonalInfo;
 }
 
 /**
  * Component for displaying trainee profile data on the personal information tab.
  *
- * @param {TraineePersonalInfo} traineeData trainee personal information.
- * @param {TraineePersonalInfo} saveTraineeData callback to save edited trainee personal information.
+ * @param {TraineePersonalInfo} personalInfo trainee personal information.
  * @returns {ReactNode} A React element that renders trainee personal information with view, add, and edit logic.
  */
-export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps) => {
+export const PersonalInfo = ({ personalInfo }: PersonalInfoProps) => {
+  const {
+    personalInfo: editedFields,
+    setPersonalInfo: setEditedFields,
+    isEditMode: isEditing,
+  } = useTraineeProfileContext();
+
   useEffect(() => {
-    if (traineeData) setEditedFields(traineeData as TraineePersonalInfo);
-  }, [traineeData]);
-
-  const [editedFields, setEditedFields] = useState<TraineePersonalInfo>(traineeData!);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  /**
-   * Function to enable edit mode when edit button is clicked.
-   */
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  /**
-   * Function to set editing mode to `false` when cancel button is clicked.
-   */
-  const handleCancelClick = () => {
-    if (traineeData) {
-      setEditedFields(traineeData);
-    }
-    setIsEditing(false);
-  };
-
-  /**
-   * Function to handel the saving logic after clicking the save button.
-   */
-  const handleSaveClick = async () => {
-    if (!editedFields || !traineeData) return;
-
-    const changedFields: Partial<TraineePersonalInfo> = {};
-    Object.entries(editedFields).forEach(([key, value]) => {
-      if (traineeData[key as keyof TraineePersonalInfo] !== value) {
-        changedFields[key as keyof TraineePersonalInfo] = value;
-      }
-    });
-
-    const editedData: any = {
-      personalInfo: {
-        ...changedFields,
-      },
-    };
-
-    setIsSaving(true);
-
-    try {
-      await saveTraineeData(editedData);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error saving trainee data:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+    if (personalInfo) setEditedFields(personalInfo);
+  }, [personalInfo]);
 
   /**
    * Function to handel changing text fields with edited data.
@@ -102,10 +43,14 @@ export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: value,
-    }));
+
+    setEditedFields((prevFields: TraineePersonalInfo) => {
+      const updatedFields = {
+        ...prevFields,
+        [name]: value,
+      };
+      return updatedFields as TraineePersonalInfo;
+    });
   };
 
   /**
@@ -115,28 +60,17 @@ export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps
    */
   const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
     const { name, value } = event.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: value === 'true' ? true : value === 'false' ? false : value,
-    }));
+    setEditedFields((prevFields: TraineePersonalInfo) => {
+      const updatedFields = {
+        ...prevFields,
+        [name]: value === 'true' ? true : value === 'false' ? false : value,
+      };
+      return updatedFields as TraineePersonalInfo;
+    });
   };
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <Box width={'100%'} display="flex" justifyContent={'end'}>
-        <Stack direction="row" spacing={2}>
-          <LoadingButton
-            color="primary"
-            onClick={isEditing ? handleSaveClick : handleEditClick}
-            loading={isSaving}
-            variant="contained"
-          >
-            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
-          </LoadingButton>
-          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
-        </Stack>
-      </Box>
-
       <div style={{ width: '100%' }}>
         {/* First Name */}
         <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
