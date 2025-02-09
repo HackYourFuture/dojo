@@ -89,7 +89,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   return (
     <div style={{ display: 'flex', background: '#fff' }}>
       <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
-        <ProfileSidebar />
+        <ProfileSidebar traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
