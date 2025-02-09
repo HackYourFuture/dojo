@@ -7,11 +7,11 @@ export enum Gender {
 }
 
 export enum Pronouns {
-  HeHim = 'He/him',
-  SheHer = 'She/her',
-  TheyThem = 'They/them',
-  HeThey = 'He/they',
-  SheThey = 'She/they',
+  HeHim = 'He/Him',
+  SheHer = 'She/Her',
+  TheyThem = 'They/Them',
+  HeThey = 'He/They',
+  SheThey = 'She/They',
 }
 
 export enum EnglishLevel {
