@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
+import { Trainee } from '../models';
 import { useQueryClient } from 'react-query';
 import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
 
@@ -53,10 +54,11 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   const saveTraineeData = async (editedFields: SaveTraineeRequestData) => {
     mutate(editedFields, {
-      onSuccess: (data) => {
+      onSuccess: (data: Trainee) => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Trainee data saved successfully');
         context.setTrainee(data);
+
         queryClient.invalidateQueries(['traineeInfo', id]);
         context.setIsEditMode(false);
       },
@@ -93,15 +95,15 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
-        <Box display="flex" justifyContent="flex-end" padding="16px">
-          <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
-            {context.isEditMode ? 'Save' : 'Edit'}
-          </LoadingButton>
+        <Box display="flex" justifyContent="flex-end" padding="16px" gap={1} marginRight={5}>
           {context.isEditMode && (
             <Button variant="outlined" disabled={isSaveLoading} onClick={onCancelEdit}>
               Cancel
             </Button>
           )}
+          <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
+            {context.isEditMode ? 'Save' : 'Edit'}
+          </LoadingButton>
         </Box>
         <Snackbar
           open={snackbarOpen}
