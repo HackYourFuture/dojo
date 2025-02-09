@@ -1,41 +1,21 @@
-import {
-  Background,
-  EducationLevel,
-  EnglishLevel,
-  Gender,
-  Pronouns,
-  ResidencyStatus,
-  TraineePersonalInfo,
-} from '../models';
+import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus, Trainee } from '../models';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
 
 const NoIcon = () => null;
 
-interface PersonalInfoProps {
-  personalInfo: TraineePersonalInfo;
-}
-
 /**
- * Component for displaying trainee profile data on the personal information tab.
+ * Component for displaying  and updating trainee profile data on the personal information tab.
  *
- * @param {TraineePersonalInfo} personalInfo trainee personal information.
  * @returns {ReactNode} A React element that renders trainee personal information with view, add, and edit logic.
  */
-export const PersonalInfo = ({ personalInfo }: PersonalInfoProps) => {
-  const {
-    personalInfo: editedFields,
-    setPersonalInfo: setEditedFields,
-    isEditMode: isEditing,
-  } = useTraineeProfileContext();
+export const PersonalInfo = () => {
+  const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
 
-  useEffect(() => {
-    if (personalInfo) setEditedFields(personalInfo);
-  }, [personalInfo]);
-
+  const { personalInfo: editedFields } = trainee;
   /**
    * Function to handel changing text fields with edited data.
    *
@@ -44,12 +24,13 @@ export const PersonalInfo = ({ personalInfo }: PersonalInfoProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setEditedFields((prevFields: TraineePersonalInfo) => {
-      const updatedFields = {
-        ...prevFields,
+    setTrainee((prevFields: Trainee) => {
+      const personalInfo = {
+        ...prevFields.personalInfo,
         [name]: value,
       };
-      return updatedFields as TraineePersonalInfo;
+
+      return { ...prevFields, personalInfo };
     });
   };
 
@@ -60,12 +41,14 @@ export const PersonalInfo = ({ personalInfo }: PersonalInfoProps) => {
    */
   const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
     const { name, value } = event.target;
-    setEditedFields((prevFields: TraineePersonalInfo) => {
-      const updatedFields = {
-        ...prevFields,
+
+    setTrainee((prevFields: Trainee) => {
+      const personalInfo = {
+        ...prevFields.personalInfo,
         [name]: value === 'true' ? true : value === 'false' ? false : value,
       };
-      return updatedFields as TraineePersonalInfo;
+
+      return { ...prevFields, personalInfo };
     });
   };
 

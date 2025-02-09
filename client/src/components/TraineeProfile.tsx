@@ -3,19 +3,17 @@ import {
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
-  ErrorBox,
   InteractionsInfo,
-  Loader,
   PersonalInfo,
   ProfileNav,
   ProfileSidebar,
 } from '.';
 import { SaveTraineeRequestData, useSaveTraineeInfo, useTraineeInfoData } from '../hooks';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
+import { useQueryClient } from 'react-query';
 import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
 
 interface TraineeProfileProps {
@@ -31,57 +29,39 @@ interface TraineeProfileProps {
 export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
-  const { isLoading, isError, data, error, isFetching } = useTraineeInfoData(id);
-  const { isError: isSavingError, isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
+  const { data } = useTraineeInfoData(id);
+  const { isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
   const context = useTraineeProfileContext();
+  const queryClient = useQueryClient();
 
-  const [traineeData, setTraineeData] = useState(data && data);
+  const [traineeData, setTraineeData] = useState(data && data); //TODO: To be removed
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  useEffect(() => {
+    document.title = `${context.trainee.displayName} | Dojo`;
+  }, [data]);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  if (isLoading || isFetching) {
-    return <Loader />;
-  }
-
-  if (isError && error instanceof Error) {
-    return <ErrorBox errorMessage={error.message} />;
-  }
-
-  useEffect(() => {
-    document.title = `${traineeData?.displayName} | Dojo`;
-  }, [traineeData]);
-
-  /**
-   * Function to navigate to active tab.
-   *
-   * @param {string} tab active tab to open.
-   */
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
 
-  /**
-   * Function to save trainee info after add/edit.
-   *
-   * @param {Object} editedData Object with added/edited trainee info.
-   */
-  const saveTraineeData = async (
-    // editedData: TraineePersonalInfo | TraineeContactInfo | TraineeEducationInfo | TraineeEmploymentInfo
-    editedFields: SaveTraineeRequestData
-  ) => {
-    // TODO: createt a new object that is differences
+  const saveTraineeData = async (editedFields: SaveTraineeRequestData) => {
     mutate(editedFields, {
-      onSuccess: () => {
-        // TODO: invalidate the cache
+      onSuccess: (data) => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Trainee data saved successfully');
+        context.setTrainee(data);
+        queryClient.invalidateQueries(['traineeInfo', id]);
+        context.setIsEditMode(false);
       },
       onError: (error) => {
+        // TOOD: Better error handling
         console.error('There was a problem saving trainee data:', error.message);
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving trainee data');
@@ -90,11 +70,6 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     setSnackbarOpen(true);
   };
 
-  /**
-   * if in edit mode, save the changes,
-   * else enable edit mode.
-   *
-   */
   const onClickEditButton = () => {
     const { isEditMode, setIsEditMode } = context;
     if (!isEditMode) {
@@ -108,12 +83,13 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   const onCancelEdit = () => {
     context.setIsEditMode(false);
-    // TODO: Resrt the fields
+    context.setTrainee(traineeData!);
   };
+
   return (
     <div style={{ display: 'flex', background: '#fff' }}>
       <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
-        <ProfileSidebar traineeId={id} />
+        <ProfileSidebar />
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
@@ -138,18 +114,15 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
           </MuiAlert>
         </Snackbar>
 
-        {activeTab === 'personal' && <PersonalInfo personalInfo={traineeData!.personalInfo} />}
+        {activeTab === 'personal' && <PersonalInfo />}
         {activeTab === 'contact' && (
-          <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={saveTraineeData} />
+          <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={() => {}} />
         )}
         {activeTab === 'education' && (
-          <EducationInfo educationData={traineeData && traineeData.educationInfo} saveTraineeData={saveTraineeData} />
+          <EducationInfo educationData={traineeData && traineeData.educationInfo} saveTraineeData={() => {}} />
         )}
         {activeTab === 'employment' && (
-          <EmploymentInfo
-            employmentData={traineeData && traineeData.employmentInfo}
-            saveTraineeData={saveTraineeData}
-          />
+          <EmploymentInfo employmentData={traineeData && traineeData.employmentInfo} saveTraineeData={() => {}} />
         )}
         {activeTab === 'interactions' && <InteractionsInfo />}
       </Box>
