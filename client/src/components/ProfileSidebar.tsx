@@ -45,12 +45,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
     >
       {/* Profile image */}
       <Box height={180} width={180} display="flex" justifyContent="center">
-        <Avatar
-          variant="square"
-          sx={{ width: '100%', height: '100%' }}
-          src={data?.personalInfo?.imageUrl}
-          alt={data?.displayName}
-        />
+        <Avatar variant="square" sx={{ width: '100%', height: '100%' }} src={data?.imageURL} alt={data?.displayName} />
       </Box>
 
       <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">

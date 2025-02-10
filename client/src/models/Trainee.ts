@@ -110,6 +110,8 @@ export interface Trainee {
   readonly createdAt: Date;
   readonly updatedAt: Date;
   displayName: string;
+  imageURL?: string;
+  thumbnailURL?: string;
   personalInfo: TraineePersonalInfo;
   contactInfo: TraineeContactInfo;
   educationInfo: TraineeEducationInfo;
@@ -121,7 +123,6 @@ export interface TraineePersonalInfo {
   firstName: string;
   lastName: string;
   preferredName?: string;
-  imageUrl?: string;
   gender: Gender;
   pronouns?: string;
   location?: string;

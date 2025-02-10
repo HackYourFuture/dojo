@@ -12,7 +12,6 @@ import {
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Strike } from '../../models';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
 
@@ -89,9 +88,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                   }}
                 >
                   <Tooltip title={strike.reporter.name} placement="top">
-                    <Avatar src={strike.reporter.imageUrl}>
-                      <HighlightOffIcon />
-                    </Avatar>
+                    <Avatar src={strike.reporter.imageUrl}></Avatar>
                   </Tooltip>
                 </ListItemAvatar>
                 <ListItemText

@@ -1,11 +1,17 @@
 import { Router } from 'express';
 import RouterType from './Router';
-import { TraineeControllerType, InteractionControllerType, TestControllerType } from '../controllers';
+import {
+  TraineeControllerType,
+  InteractionControllerType,
+  TestControllerType,
+  ProfilePictureControllerType,
+} from '../controllers';
 import Middleware from '../middlewares/Middleware';
 
 export class TraineesRouter implements RouterType {
   private readonly traineeController: TraineeControllerType;
   private readonly interactionController: InteractionControllerType;
+  private readonly profilePictureController: ProfilePictureControllerType;
   private readonly testController: TestControllerType;
   private readonly middlewares: Middleware[];
 
@@ -13,11 +19,13 @@ export class TraineesRouter implements RouterType {
     traineesController: TraineeControllerType,
     interactionController: InteractionControllerType,
     testController: TestControllerType,
+    profilePictureController: ProfilePictureControllerType,
     middlewares: Middleware[] = []
   ) {
     this.traineeController = traineesController;
     this.interactionController = interactionController;
     this.testController = testController;
+    this.profilePictureController = profilePictureController;
     this.middlewares = middlewares;
   }
 
@@ -29,9 +37,14 @@ export class TraineesRouter implements RouterType {
     router.patch('/:id', this.traineeController.updateTrainee.bind(this.traineeController));
     router.delete('/:id', this.traineeController.deleteTrainee.bind(this.traineeController));
 
-    router.get('/:id/profile-picture', this.traineeController.getProfilePicture.bind(this.traineeController));
-    router.put('/:id/profile-picture', this.traineeController.setProfilePicture.bind(this.traineeController));
-    router.delete('/:id/profile-picture', this.traineeController.deleteProfilePicture.bind(this.traineeController));
+    router.put(
+      '/:id/profile-picture',
+      this.profilePictureController.setProfilePicture.bind(this.profilePictureController)
+    );
+    router.delete(
+      '/:id/profile-picture',
+      this.profilePictureController.deleteProfilePicture.bind(this.profilePictureController)
+    );
 
     router.get('/:id/strikes', this.traineeController.getStrikes.bind(this.traineeController));
     router.post('/:id/strikes', this.traineeController.addStrike.bind(this.traineeController));

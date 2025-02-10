@@ -76,7 +76,7 @@ export class SearchController implements SearchControllerType {
         return {
           id: trainee.id,
           name: `${trainee.displayName}`,
-          thumbnail: trainee.personalInfo.imageUrl ? `${trainee.personalInfo.imageUrl}?size=small` : null,
+          thumbnail: trainee.thumbnailURL ?? null,
           cohort: trainee.educationInfo.currentCohort ?? null,
           searchScore: this.calculateScore(trainee, keywords),
         };

@@ -264,44 +264,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 
   /trainees/{id}/profile-picture:
-    get:
-      tags:
-        - Trainees
-      summary: Fetch the profile picture of a trainee
-      description: ''
-      security:
-        - cookie_token:
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: "3jvz35Z"
-        - name: size
-          in: query
-          description: Fetch a different size of the image.
-          required: false
-          schema:
-            type: string
-            enum:
-            - small
-          
-          
-      responses:
-        '200':
-          description: successful operation
-          content:
-            image/png:
-              schema:
-                $ref: '#/components/schemas/Binary'
-        '404':
-          description: Trainee was not found or image was not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
     put:
       tags:
         - Trainees
@@ -339,9 +301,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  imageUrl:
+                  imageURL:
                     type: string
-                    example: 'https://example.cpm/trainee/65e9c0d25cd76173a4e431c2/profile-picture'
+                    example: 'https://example.com/image/65e9c0d25cd76173a4e431c.jpeg'
+                  thumbnailURL:
+                      type: string
+                      example: 'https://example.com/image/65e9c0d25cd76173a4e431c_thumbnail.jpeg'
         '404':
           description: Trainee was not found
           content:

@@ -60,11 +60,10 @@ export class CohortsController implements CohortsControllerType {
   }
 
   private getTraineeSummary(trainee: Trainee): TraineeSummary {
-    const thumbnailURL = trainee.personalInfo.imageUrl ? `${trainee.personalInfo.imageUrl}?size=small` : null;
     return {
       id: trainee.id,
       displayName: trainee.displayName,
-      thumbnailURL: thumbnailURL,
+      thumbnailURL: trainee.thumbnailURL ?? null,
       location: trainee.personalInfo.location,
       hasWorkPermit: trainee.personalInfo.hasWorkPermit,
       email: trainee.contactInfo.email,
