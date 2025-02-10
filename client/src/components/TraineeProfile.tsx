@@ -30,19 +30,22 @@ interface TraineeProfileProps {
 export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
-  const { data } = useTraineeInfoData(id);
+  const { data: traineeData } = useTraineeInfoData(id);
   const { isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
   const context = useTraineeProfileContext();
   const queryClient = useQueryClient();
 
-  const [traineeData, setTraineeData] = useState(data && data); //TODO: To be removed
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
-    document.title = `${context.trainee.displayName} | Dojo`;
-  }, [data]);
+    if (traineeData) {
+      document.title = `${traineeData.displayName} | Dojo`;
+      return;
+    }
+    document.title = 'Trainee Profile | Dojo';
+  }, [traineeData]);
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -117,15 +120,9 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         </Snackbar>
 
         {activeTab === 'personal' && <PersonalInfo />}
-        {activeTab === 'contact' && (
-          <ContactInfo contactData={traineeData && traineeData.contactInfo} saveTraineeData={() => {}} />
-        )}
-        {activeTab === 'education' && (
-          <EducationInfo educationData={traineeData && traineeData.educationInfo} saveTraineeData={() => {}} />
-        )}
-        {activeTab === 'employment' && (
-          <EmploymentInfo employmentData={traineeData && traineeData.employmentInfo} saveTraineeData={() => {}} />
-        )}
+        {activeTab === 'contact' && <ContactInfo />}
+        {activeTab === 'education' && <EducationInfo />}
+        {activeTab === 'employment' && <EmploymentInfo />}
         {activeTab === 'interactions' && <InteractionsInfo />}
       </Box>
     </div>

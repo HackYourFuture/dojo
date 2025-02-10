@@ -1,6 +1,6 @@
 import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus, Trainee } from '../models';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import React, { ReactNode } from 'react';
+import { useHandleSelectChange, useHandleTextChange } from '../helpers/helpers';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
@@ -14,43 +14,21 @@ const NoIcon = () => null;
  */
 export const PersonalInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
-
   const { personalInfo: editedFields } = trainee;
+
   /**
    * Function to handel changing text fields with edited data.
    *
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setTrainee((prevFields: Trainee) => {
-      const personalInfo = {
-        ...prevFields.personalInfo,
-        [name]: value,
-      };
-
-      return { ...prevFields, personalInfo };
-    });
-  };
+  const handleChange = useHandleTextChange(setTrainee, 'personalInfo');
 
   /**
    * Function to handel changing select fields with edited data.
    *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
-  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
-    const { name, value } = event.target;
-
-    setTrainee((prevFields: Trainee) => {
-      const personalInfo = {
-        ...prevFields.personalInfo,
-        [name]: value === 'true' ? true : value === 'false' ? false : value,
-      };
-
-      return { ...prevFields, personalInfo };
-    });
-  };
+  const handleSelectChange = useHandleSelectChange(setTrainee, 'personalInfo');
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">

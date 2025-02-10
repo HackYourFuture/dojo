@@ -31,7 +31,6 @@ export const useTraineeInfoData = (traineeId: string) => {
   );
 };
 
-//TODO: move to a different file
 export interface SaveTraineeRequestData {
   personalInfo?: TraineePersonalInfo;
   contactInfo?: TraineeContactInfo;

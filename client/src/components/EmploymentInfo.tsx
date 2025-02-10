@@ -1,156 +1,43 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
 import {
   Box,
   Button,
+  Divider,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
   InputAdornment,
+  InputLabel,
   Link,
-  Typography,
   List,
   ListItem,
   ListItemText,
-  Divider,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { useHandleSelectChange, useHandleTextChange } from '../helpers/helpers';
+
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { JobPath } from '../models';
 import LinkIcon from '@mui/icons-material/Link';
-import { JobPath, TraineeEmploymentInfo } from '../models';
+import React from 'react';
+import { formatDate } from '../helpers/dateHelper';
+import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
 
 const NoIcon = () => null;
-
-interface EmploymentInfoProps {
-  employmentData?: TraineeEmploymentInfo;
-  saveTraineeData: (editedData: TraineeEmploymentInfo) => void;
-}
 
 /**
  * Component for displaying trainee profile data on the employment information tab.
  *
- * @param {TraineeEmploymentInfo} employmentData trainee employment information.
- * @param {TraineeEmploymentInfo} saveTraineeData callback to save edited trainee employment information.
  * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
  */
-export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentInfoProps) => {
-  const [editedFields, setEditedFields] = useState<TraineeEmploymentInfo>(employmentData!);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    if (employmentData) setEditedFields(employmentData as TraineeEmploymentInfo);
-  }, [employmentData]);
-
-  /**
-   * Function to enable edit mode when edit button is clicked.
-   */
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  /**
-   * Function to set editing mode to `false` when cancel button is clicked.
-   */
-  const handleCancelClick = () => {
-    if (employmentData) {
-      setEditedFields(employmentData);
-    }
-    setIsEditing(false);
-  };
-
-  /**
-   * Function to handel the saving logic after clicking the save button.
-   */
-  const handleSaveClick = async () => {
-    if (!editedFields || !employmentData) return;
-
-    const changedFields: Partial<TraineeEmploymentInfo> = {};
-    Object.entries(editedFields).forEach(([key, value]) => {
-      if (employmentData[key as keyof TraineeEmploymentInfo] !== value) {
-        changedFields[key as keyof TraineeEmploymentInfo] = value;
-      }
-    });
-
-    const editedData: any = {
-      employmentInfo: {
-        ...changedFields,
-      },
-    };
-
-    setIsSaving(true);
-
-    try {
-      await saveTraineeData(editedData);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error saving trainee data:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  /**
-   * Function to handel changing text fields with edited data.
-   *
-   * @param {HTMLInputElement} e the event received from the text fields after editing.
-   */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: name === 'date' ? new Date(value) : value,
-    }));
-  };
-
-  /**
-   * Function to handel changing select fields with edited data.
-   *
-   * @param {SelectChangeEvent} event the event received from select component change.
-   */
-  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
-    const { name, value } = event.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: value === 'true' ? true : value === 'false' ? false : value,
-    }));
-  };
-
-  /**
-   * Function to format date value.
-   *
-   * @param {Date | undefined} date date value selected.
-   */
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return '';
-    const formattedDate = new Date(date);
-    if (isNaN(formattedDate.getTime())) {
-      return date.toString();
-    }
-    return formattedDate.toISOString().split('T')[0];
-  };
+export const EmploymentInfo = () => {
+  const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
+  const { employmentInfo: editedFields } = trainee;
+  const handleTextChange = useHandleTextChange(setTrainee, 'employmentInfo');
+  const handleSelectChange = useHandleSelectChange(setTrainee, 'employmentInfo');
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <Box width={'100%'} display="flex" justifyContent={'end'}>
-        <Stack direction="row" spacing={2}>
-          <LoadingButton
-            color="primary"
-            onClick={isEditing ? handleSaveClick : handleEditClick}
-            loading={isSaving}
-            variant="contained"
-          >
-            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
-          </LoadingButton>
-          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
-        </Stack>
-      </Box>
-
       <div style={{ width: '100%' }}>
         {/* Job path */}
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
@@ -200,7 +87,7 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
               shrink: true,
             }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
       </div>
@@ -217,7 +104,7 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
       </div>
@@ -234,7 +121,7 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
 
@@ -249,7 +136,7 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
 
@@ -284,7 +171,7 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
       </div>
@@ -337,7 +224,7 @@ export const EmploymentInfo = ({ employmentData, saveTraineeData }: EmploymentIn
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
       </div>

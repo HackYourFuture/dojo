@@ -1,119 +1,29 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-} from '@mui/material';
-import { LearningStatus, QuitReason, TraineeEducationInfo } from '../../models';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { LearningStatus, QuitReason, Trainee } from '../../models';
+import { useHandleSelectChange, useHandleTextChange } from '../../helpers/helpers';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { LoadingButton } from '@mui/lab';
+import React from 'react';
 import { StrikesComponent } from './StrikesComponent';
 import { formatDate } from '../../helpers/dateHelper';
+import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
 
 const NoIcon = () => null;
-
-interface EducationInfoProps {
-  educationData?: TraineeEducationInfo;
-  saveTraineeData: (editedData: TraineeEducationInfo) => void;
-}
 
 /**
  * Component for displaying trainee profile data on the education information tab.
  *
- * @param {TraineeEducationInfo} educationData trainee education information.
- * @param {TraineeEducationInfo} saveTraineeData callback to save edited trainee education information.
  * @returns {ReactNode} A React element that renders trainee education information with view, add, and edit logic.
  */
-export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoProps) => {
-  const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(educationData!);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+export const EducationInfo = () => {
+  const {
+    trainee: { educationInfo: editedFields },
+    setTrainee,
+    isEditMode: isEditing,
+  } = useTraineeProfileContext();
 
-  useEffect(() => {
-    if (educationData) setEditedFields(educationData as TraineeEducationInfo);
-  }, [educationData]);
-
-  /**
-   * Function to enable edit mode when edit button is clicked.
-   */
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  /**
-   * Function to set editing mode to `false` when cancel button is clicked.
-   */
-  const handleCancelClick = () => {
-    if (educationData) {
-      setEditedFields(educationData);
-    }
-    setIsEditing(false);
-  };
-
-  /**
-   * Function to handel the saving logic after clicking the save button.
-   */
-  const handleSaveClick = async () => {
-    if (!editedFields || !educationData) return;
-
-    const changedFields: Partial<TraineeEducationInfo> = {};
-    Object.entries(editedFields).forEach(([key, value]) => {
-      if (educationData[key as keyof TraineeEducationInfo] !== value) {
-        changedFields[key as keyof TraineeEducationInfo] = value;
-      }
-    });
-
-    const editedData: any = {
-      educationInfo: {
-        ...changedFields,
-      },
-    };
-
-    setIsSaving(true);
-
-    try {
-      await saveTraineeData(editedData);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error saving trainee data:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  /**
-   * Function to handel the changing text fields with edited data.
-   *
-   * @param {HTMLInputElement} e the event received from the text fields after editing.
-   */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: name === 'date' ? new Date(value) : value,
-    }));
-  };
-
-  /**
-   * Function to handel changing select fields with edited data.
-   *
-   * @param {SelectChangeEvent} event the event received from select component change.
-   */
-  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
-    const { name, value } = event.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: value === 'true' ? true : value === 'false' ? false : value,
-    }));
-  };
+  const handleTextChange = useHandleTextChange(setTrainee, 'educationInfo');
+  const handleSelectChange = useHandleSelectChange(setTrainee, 'educationInfo');
 
   /**
    * Function for converting numeric values from textFields with ‘type=number’
@@ -121,28 +31,20 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
   const handleNumericChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (/^\d*$/.test(value)) {
-      setEditedFields((prevFields) => ({
-        ...prevFields,
-        [name]: value,
-      }));
+      setTrainee((prevFields: Trainee) => {
+        return {
+          ...prevFields,
+          educationInfo: {
+            ...prevFields.educationInfo,
+            [name]: value,
+          },
+        };
+      });
     }
   };
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <Box width={'100%'} display="flex" justifyContent={'end'}>
-        <Stack direction="row" spacing={2}>
-          <LoadingButton
-            color="primary"
-            onClick={isEditing ? handleSaveClick : handleEditClick}
-            loading={isSaving}
-            variant="contained"
-          >
-            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
-          </LoadingButton>
-          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
-        </Stack>
-      </Box>
       <div style={{ width: '100%' }}>
         {/* Cohort */}
         <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
@@ -197,7 +99,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
               variant={isEditing ? 'outlined' : 'standard'}
-              onChange={handleChange}
+              onChange={handleTextChange}
             />
           </FormControl>
         )}
@@ -239,7 +141,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
               InputProps={{ readOnly: isEditing ? false : true }}
               InputLabelProps={{ shrink: true }}
               variant={isEditing ? 'outlined' : 'standard'}
-              onChange={handleChange}
+              onChange={handleTextChange}
             />
           </FormControl>
         )}
@@ -277,7 +179,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
       </div>
@@ -295,12 +197,10 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            onChange={handleTextChange}
           />
         </FormControl>
       </div>
     </Box>
   );
 };
-
-// TODO: Extract to helper file

@@ -1,3 +1,4 @@
+import { ContactInfo, EducationInfo, EmploymentInfo } from '../components';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   Trainee,
@@ -7,7 +8,6 @@ import {
   TraineePersonalInfo,
 } from '../models';
 
-import { ContactInfo } from '../components';
 import { SaveTraineeRequestData } from './useTraineeInfoData';
 
 export type TraineeProfileContextType = {
@@ -57,11 +57,11 @@ export const TraineeProfileProvider = ({
     // // Compare every key of the state object, with the original trainee data
     // // return only the changed fields
 
-    const personalInfo: Partial<TraineePersonalInfo> = getChangedFields('personalInfo');
-    const contactInfo: Partial<TraineeContactInfo> = getChangedFields('contactInfo');
     const editedData = {
-      personalInfo,
-      contactInfo,
+      personalInfo: getChangedFields('personalInfo'),
+      contactInfo: getChangedFields('contactInfo'),
+      educationInfo: getChangedFields('educationInfo'),
+      employmentInfo: getChangedFields('employmentInfo'),
     };
 
     return editedData;
