@@ -7,16 +7,16 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { TraineeAvatar } from '../cohorts/TraineeAvatar';
 
 import { useNavigate } from 'react-router-dom';
-import { Cohort, LearningStatus } from '../models';
-import { SidebarJobPath, SidebarLearningStatus } from '.';
-import slackLogo from '../assets/slack.png';
+import { Cohort, LearningStatus } from '../../models';
+import { SidebarJobPath, SidebarLearningStatus } from '..';
+import slackLogo from '../../assets/slack.png';
 
 export interface CohortAccordionProps {
   cohortInfo: Cohort;
@@ -71,11 +71,7 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   onClick={() => navigate(`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`)}
                 >
                   <TableCell component="th" scope="row">
-                    <Avatar
-                      alt={trainee.displayName}
-                      src={trainee.thumbnailURL ? trainee.thumbnailURL : undefined}
-                      variant="square"
-                    />
+                    <TraineeAvatar imageURL={trainee.thumbnailURL ?? ''} altText={trainee.displayName}></TraineeAvatar>
                   </TableCell>
                   <TableCell>{trainee.displayName}</TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>
