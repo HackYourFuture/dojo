@@ -1,6 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Trainee, TraineePersonalInfo } from '../models';
+import {
+  Trainee,
+  TraineeContactInfo,
+  TraineeEducationInfo,
+  TraineeEmploymentInfo,
+  TraineePersonalInfo,
+} from '../models';
 
+import { ContactInfo } from '../components';
 import { SaveTraineeRequestData } from './useTraineeInfoData';
 
 export type TraineeProfileContextType = {
@@ -46,26 +53,32 @@ export const TraineeProfileProvider = ({
   };
 
   // recieves trainee objects and compares to the edited fields
-  const getTraineeInfoChanges = (originalTraineeData: Trainee): SaveTraineeRequestData => {
-    const personalInfoChanges: Partial<TraineePersonalInfo> = {};
+  const getTraineeInfoChanges = (): SaveTraineeRequestData => {
+    // // Compare every key of the state object, with the original trainee data
+    // // return only the changed fields
 
-    // Compare every key of the state object, with the original trainee data
-    // return only the changed fields
-    Object.entries(trainee.personalInfo).forEach(([key, value]) => {
-      if (originalTraineeData.personalInfo[key as keyof TraineePersonalInfo] !== value) {
-        personalInfoChanges[key as keyof TraineePersonalInfo] = value;
-      }
-    });
-
-    const editedData: any = {
-      personalInfo: {
-        ...personalInfoChanges,
-      },
+    const personalInfo: Partial<TraineePersonalInfo> = getChangedFields('personalInfo');
+    const contactInfo: Partial<TraineeContactInfo> = getChangedFields('contactInfo');
+    const editedData = {
+      personalInfo,
+      contactInfo,
     };
 
     return editedData;
   };
+  const getChangedFields = <T extends object>(keyName: keyof Trainee): Partial<T> => {
+    const updatedFields: Partial<T> = {};
+    // Compare every key of the state object, with the original trainee data
+    // return only the changed fields
+    Object.entries(trainee[keyName]).forEach(([key, value]) => {
+      const typedKey = key as string;
+      if (originalTrainee[keyName][typedKey] !== value) {
+        updatedFields[typedKey as keyof T] = value as T[keyof T];
+      }
+    });
 
+    return updatedFields;
+  };
   return (
     <TraineeProfileContext.Provider
       value={{
