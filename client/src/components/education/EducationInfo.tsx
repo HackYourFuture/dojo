@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,22 +8,15 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
-  Typography,
-  List,
-  ListItem,
-  Divider,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Modal,
-  Fade,
-  Backdrop,
 } from '@mui/material';
+import { LearningStatus, QuitReason, TraineeEducationInfo } from '../../models';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { ReactNode, useEffect, useState } from 'react';
+
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import AddIcon from '@mui/icons-material/Add';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { LoadingButton } from '@mui/lab';
-import { LearningStatus, QuitReason, Strike, StrikeReason, TraineeEducationInfo } from '../models';
+import { StrikesComponent } from './StrikesComponent';
+import { formatDate } from '../../helpers/dateHelper';
 
 const NoIcon = () => null;
 
@@ -43,18 +34,8 @@ interface EducationInfoProps {
  */
 export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoProps) => {
   const [editedFields, setEditedFields] = useState<TraineeEducationInfo>(educationData!);
-
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isAddingStrike, setIsAddingStrike] = useState(false);
-
-  const [strikeFields, setStrikeFields] = useState<Strike>({
-    id: '',
-    date: new Date(),
-    reporterID: '',
-    reason: StrikeReason.Other,
-    comments: '',
-  });
 
   useEffect(() => {
     if (educationData) setEditedFields(educationData as TraineeEducationInfo);
@@ -75,29 +56,6 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
       setEditedFields(educationData);
     }
     setIsEditing(false);
-  };
-
-  /**
-   * Function to enable adding strikes.
-   */
-  const handleOpenStrike = () => {
-    setIsAddingStrike(true);
-  };
-
-  /**
-   * Function to cancel adding strikes.
-   */
-  const handleCancelOpenStrike = () => {
-    if (educationData?.strikes) {
-      setStrikeFields({
-        id: '',
-        date: new Date(),
-        reporterID: '',
-        reason: StrikeReason.Other,
-        comments: '',
-      });
-    }
-    setIsAddingStrike(false);
   };
 
   /**
@@ -170,39 +128,6 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
     }
   };
 
-  /**
-   * Function to format date value.
-   *
-   * @param {Date | undefined} date date value selected.
-   */
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return '';
-    const formattedDate = new Date(date);
-    if (isNaN(formattedDate.getTime())) {
-      return date.toString();
-    }
-    return formattedDate.toISOString().split('T')[0];
-  };
-
-  const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setStrikeFields((prevStrike) => ({
-      ...prevStrike,
-      [name]: name === 'date' ? new Date(value) : value,
-    }));
-  };
-
-  const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
-    const { name, value } = event.target;
-    setStrikeFields((prevStrike) => ({
-      ...prevStrike,
-      [name]: value,
-    }));
-  };
-
-  // TODO: Add patching strike functionality when the API is ready.
-  const handleAddStrike = async () => {};
-
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
       <Box width={'100%'} display="flex" justifyContent={'end'}>
@@ -218,7 +143,6 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
           {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
         </Stack>
       </Box>
-
       <div style={{ width: '100%' }}>
         {/* Cohort */}
         <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
@@ -320,7 +244,6 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
           </FormControl>
         )}
       </div>
-
       <div style={{ width: '100%' }}>
         {/* Start Cohort */}
         <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
@@ -358,137 +281,7 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
           />
         </FormControl>
       </div>
-
-      <div style={{ width: '50%' }}>
-        {/* Strikes */}
-        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" color="black" padding="16px">
-            Strikes ({editedFields?.strikes.length || 0})
-          </Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Button startIcon={<AddIcon />} onClick={handleOpenStrike}>
-              New strike
-            </Button>
-          </Stack>
-        </Box>
-
-        <List
-          sx={{
-            width: '100%',
-            bgcolor: 'background.paper',
-          }}
-        >
-          {editedFields?.strikes.map((strike, index) => (
-            <React.Fragment key={strike.id}>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={formatDate(strike.date)}
-                disablePadding
-                sx={{
-                  paddingBottom: '16px',
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    <HighlightOffIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={strike.reason} secondary={strike.comments} />
-              </ListItem>
-              {index < editedFields?.strikes.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
-            </React.Fragment>
-          ))}
-        </List>
-
-        <Modal
-          open={isAddingStrike}
-          onClose={handleCancelOpenStrike}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500,
-          }}
-        >
-          <Fade in={isAddingStrike}>
-            <Box
-              component="form"
-              display="flex"
-              flexDirection="column"
-              gap={2}
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 400,
-                bgcolor: 'background.paper',
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              <Typography variant="h6" mb={0.5}>
-                Adding a strike:
-              </Typography>
-              <Box display="flex" flexDirection="row" gap={2}>
-                <FormControl fullWidth>
-                  <TextField
-                    id={strikeFields?.date ? 'date' : 'dateEmpty'}
-                    name="date"
-                    label="Date"
-                    type="date"
-                    value={formatDate(strikeFields.date)}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={handleStrikeChange}
-                    fullWidth
-                  />
-                </FormControl>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="reason">Reason</InputLabel>
-                  <Select
-                    name="reason"
-                    id="reason"
-                    label="Reason"
-                    value={strikeFields.reason}
-                    startAdornment=" "
-                    onChange={handleStrikeSelectChange}
-                  >
-                    <MenuItem value={StrikeReason.LastSubmission}>Last submission</MenuItem>
-                    <MenuItem value={StrikeReason.MissedSubmission}>Missed submission</MenuItem>
-                    <MenuItem value={StrikeReason.IncompleteSubmission}>Incomplete submission</MenuItem>
-                    <MenuItem value={StrikeReason.LateAttendance}>Late attendance</MenuItem>
-                    <MenuItem value={StrikeReason.Absence}>Absence</MenuItem>
-                    <MenuItem value={StrikeReason.PendingFeedback}>Pending feedback</MenuItem>
-                    <MenuItem value={StrikeReason.Other}>Other</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-              <FormControl fullWidth>
-                <TextField
-                  id="comments"
-                  name="comments"
-                  label="Comments"
-                  type="text"
-                  multiline
-                  value={strikeFields.comments}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={handleStrikeChange}
-                  fullWidth
-                />
-              </FormControl>
-              <Box display="flex" flexDirection="row" gap={2}>
-                <Button variant="contained" onClick={handleAddStrike} fullWidth>
-                  Add Strike
-                </Button>
-                <Button variant="outlined" onClick={handleCancelOpenStrike} fullWidth>
-                  Cancel
-                </Button>
-              </Box>
-            </Box>
-          </Fade>
-        </Modal>
-      </div>
-
+      <StrikesComponent />
       <div style={{ width: '100%' }}>
         {/* Comments */}
         <FormControl sx={{ mx: 2, width: '81ch' }}>
@@ -509,3 +302,5 @@ export const EducationInfo = ({ educationData, saveTraineeData }: EducationInfoP
     </Box>
   );
 };
+
+// TODO: Extract to helper file

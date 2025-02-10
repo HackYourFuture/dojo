@@ -154,7 +154,6 @@ export interface TraineeEducationInfo {
   graduationDate?: Date;
   quitReason?: QuitReason;
   quitDate?: Date;
-  strikes: Strike[];
   assignments: Assignment[];
   tests: Test[];
   comments?: string;
@@ -176,8 +175,9 @@ export interface Strike {
   readonly id: string;
   date: Date;
   reporterID: string;
-  reason: StrikeReason;
+  reason: StrikeReason | null;
   comments: string;
+  reporter: Reporter;
 }
 
 export interface Assignment {
@@ -242,4 +242,10 @@ export interface TraineeInteraction {
   title: string;
   reporter: Reporter;
   details: string;
+}
+
+export interface Reporter {
+  id: string;
+  name: string;
+  imageUrl: string;
 }

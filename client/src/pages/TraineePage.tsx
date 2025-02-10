@@ -1,6 +1,8 @@
+import { ErrorBox, Loader, TraineeProfile } from '../components';
+
+import { TraineeProfileProvider } from '../hooks/traineeProfileContext';
 import { useParams } from 'react-router-dom';
 import { useTraineeInfoData } from '../hooks';
-import { ErrorBox, Loader, TraineeProfile } from '../components';
 
 /**
  * Component for displaying the trainee profile page sidebar and tabs.
@@ -19,5 +21,9 @@ export const TraineePage = () => {
     return <ErrorBox errorMessage={error.message} />;
   }
 
-  return <TraineeProfile id={traineeId} />;
+  return (
+    <TraineeProfileProvider id={traineeId}>
+      <TraineeProfile id={traineeId} />
+    </TraineeProfileProvider>
+  );
 };

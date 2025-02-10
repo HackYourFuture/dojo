@@ -3,7 +3,7 @@ export * from './Comment';
 export * from './ContactInfo';
 export * from './InteractionsInfo';
 export * from './DashboardPieChart';
-export * from './EducationInfo';
+export * from './education/EducationInfo';
 export * from './EmploymentInfo';
 export * from './ErrorBox';
 export * from './Loader';

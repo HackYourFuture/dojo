@@ -1,21 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
 import { Box, Snackbar } from '@mui/material';
-import { useTraineeInfoData } from '../hooks';
-import axios from 'axios';
 import {
   ContactInfo,
   EducationInfo,
   EmploymentInfo,
-  InteractionsInfo,
   ErrorBox,
+  InteractionsInfo,
   Loader,
   PersonalInfo,
   ProfileNav,
   ProfileSidebar,
 } from '.';
-import MuiAlert from '@mui/material/Alert';
 import { TraineeContactInfo, TraineeEducationInfo, TraineeEmploymentInfo, TraineePersonalInfo } from '../models';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from 'react';
+
+import MuiAlert from '@mui/material/Alert';
+import axios from 'axios';
+import { useTraineeInfoData } from '../hooks';
 
 interface TraineeProfileProps {
   id: string;
