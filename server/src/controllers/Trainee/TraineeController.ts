@@ -1,19 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
-import { StorageServiceType, UploadServiceType, UploadServiceError, ImageServiceType } from '../../services';
 import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../../models';
-import * as Sentry from '@sentry/node';
-import fs from 'fs';
 
 export interface TraineeControllerType {
   getTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   createTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   updateTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
-
-  setProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
-  getProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
-  deleteProfilePicture(req: Request, res: Response, next: NextFunction): Promise<void>;
 
   getStrikes(req: Request, res: Response, next: NextFunction): Promise<void>;
   addStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -23,19 +16,8 @@ export interface TraineeControllerType {
 
 export class TraineeController implements TraineeControllerType {
   private readonly traineesRepository: TraineesRepository;
-  private readonly storageService: StorageServiceType;
-  private readonly uploadService: UploadServiceType;
-  private readonly imageService: ImageServiceType;
-  constructor(
-    traineesRepository: TraineesRepository,
-    storageService: StorageServiceType,
-    uploadService: UploadServiceType,
-    imageService: ImageServiceType
-  ) {
+  constructor(traineesRepository: TraineesRepository) {
     this.traineesRepository = traineesRepository;
-    this.storageService = storageService;
-    this.uploadService = uploadService;
-    this.imageService = imageService;
   }
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
@@ -119,125 +101,6 @@ export class TraineeController implements TraineeControllerType {
 
   async deleteTrainee(req: Request, res: Response, next: NextFunction) {
     res.status(500).send('Not implemented');
-  }
-
-  async getProfilePicture(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
-
-    let key = `images/profile/${trainee.id}`;
-    if (req.query.size === 'small') {
-      key += '_small';
-    }
-    try {
-      const stream = await this.storageService.download(key);
-      res.status(200).contentType('image/png');
-      stream.pipe(res);
-    } catch (error: any) {
-      if (error.$metadata.httpStatusCode === 404) {
-        res.status(404).send(new ResponseError('Profile picture does not exist'));
-        return;
-      }
-      next(error);
-    }
-  }
-
-  async setProfilePicture(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
-
-    // Handle file upload.
-    try {
-      await this.uploadService.uploadImage(req, res, 'profilePicture');
-    } catch (error: any) {
-      if (error instanceof UploadServiceError) {
-        res.status(400).send(new ResponseError(error.message));
-      } else {
-        next(error);
-      }
-      return;
-    }
-    if (!req.file?.path) {
-      res.status(400).send(new ResponseError('No file was uploaded'));
-      return;
-    }
-
-    // Resize image to reduce file size and create a smaller version
-    const originalFilePath = req.file.path;
-    const largeFilePath = originalFilePath + '_large';
-    const smallFilePath = originalFilePath + '_small';
-    try {
-      await this.imageService.resizeImage(originalFilePath, largeFilePath, 700, 700);
-      await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
-    } catch (error: any) {
-      next(error);
-      return;
-    }
-
-    // Upload image to storage
-    const baseURL = process.env.BASE_URL ?? '';
-    const imageURL = new URL(`api/trainees/${trainee.id}/profile-picture`, baseURL).href;
-
-    try {
-      // Upload images to storage
-      const largeFileStream = fs.createReadStream(largeFilePath);
-      const smallFileStream = fs.createReadStream(smallFilePath);
-      await this.storageService.upload(`images/profile/${trainee.id}`, largeFileStream);
-      await this.storageService.upload(`images/profile/${trainee.id}_small`, smallFileStream);
-
-      // update the trainee object with the new image URL
-      trainee.personalInfo.imageUrl = imageURL;
-      this.traineesRepository.updateTrainee(trainee);
-    } catch (error: any) {
-      next(error);
-      return;
-    }
-
-    // Cleanup
-    fs.unlink(originalFilePath, (error) => {
-      if (error) {
-        Sentry.captureException(error);
-      }
-    });
-    fs.unlink(largeFilePath, (error) => {
-      if (error) {
-        Sentry.captureException(error);
-      }
-    });
-    fs.unlink(smallFilePath, (error) => {
-      if (error) {
-        Sentry.captureException(error);
-      }
-    });
-
-    res.status(201).send({ imageUrl: imageURL, thumbnailUrl: imageURL + '?size=small' });
-  }
-
-  async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
-    try {
-      await this.storageService.delete(`images/profile/${trainee.id}`);
-      await this.storageService.delete(`images/profile/${trainee.id}_small`);
-
-      // update the trainee object with the new image URL
-      trainee.personalInfo.imageUrl = undefined;
-      this.traineesRepository.updateTrainee(trainee);
-    } catch (error: any) {
-      next(error);
-      return;
-    }
-
-    res.status(204).end();
   }
 
   async getStrikes(req: Request, res: Response, next: NextFunction) {

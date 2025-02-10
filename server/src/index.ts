@@ -22,6 +22,7 @@ import {
   DashboardController,
   CohortsController,
   TestController,
+  ProfilePictureController,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from './services';
@@ -50,7 +51,7 @@ class Main {
         contentSecurityPolicy: {
           directives: {
             'script-src': ["'self'", 'https://accounts.google.com'],
-            'img-src': ["'self'", 'data:', 'http://*.hackyourfuture.net'],
+            'img-src': ["'self'", 'data:', 'http://*.hackyourfuture.net', process.env.STORAGE_BASE_URL ?? ''],
           },
         },
         crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
@@ -93,7 +94,13 @@ class Main {
       tokenService,
       tokenExpirationInDays
     );
-    const traineeController = new TraineeController(traineesRepository, storageService, uploadService, imageService);
+    const traineeController = new TraineeController(traineesRepository);
+    const profilePictureController = new ProfilePictureController(
+      traineesRepository,
+      storageService,
+      uploadService,
+      imageService
+    );
     const interactionController = new InteractionController(traineesRepository);
     const testController = new TestController();
     const searchController = new SearchController(traineesRepository);
@@ -106,9 +113,13 @@ class Main {
 
     // Setup routers
     const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
-    const traineeRouter = new TraineesRouter(traineeController, interactionController, testController, [
-      authMiddleware,
-    ]);
+    const traineeRouter = new TraineesRouter(
+      traineeController,
+      interactionController,
+      testController,
+      profilePictureController,
+      [authMiddleware]
+    );
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
     const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
     const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);

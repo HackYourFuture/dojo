@@ -4,8 +4,13 @@ import stream from 'stream';
 
 export interface StorageServiceType {
   download(key: string): Promise<stream.Readable>;
-  upload(path: string, input: stream.Readable): Promise<void>;
+  upload(path: string, input: stream.Readable, accessControl: AccessControl): Promise<void>;
   delete(key: string): Promise<void>;
+}
+
+export enum AccessControl {
+  Public = 'public',
+  Private = 'private',
 }
 
 export class StorageService implements StorageServiceType {
@@ -37,13 +42,13 @@ export class StorageService implements StorageServiceType {
     });
   }
 
-  async upload(key: string, input: stream.Readable) {
+  async upload(key: string, input: stream.Readable, accessControl: AccessControl) {
     const upload = new Upload({
       client: this.s3Client,
       params: {
         Bucket: this.bucketName,
         Key: key,
-        ACL: 'private',
+        ACL: accessControl === AccessControl.Public ? 'public-read' : 'private',
         Body: input,
       },
     });

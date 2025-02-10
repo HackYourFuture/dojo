@@ -32,7 +32,6 @@ const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>(
     firstName: { type: String, required: true, index: true },
     lastName: { type: String, required: true, index: true },
     preferredName: { type: String, required: false, index: true, default: null },
-    imageUrl: { type: String, required: false, default: null },
     gender: { type: String, required: false, enum: Object.values(Gender), default: null },
     pronouns: { type: String, required: false, default: null },
     location: { type: String, required: false, default: null },
@@ -155,6 +154,8 @@ const TraineeEmploymentInfoSchema = new Schema<TraineeEmploymentInfo>(
 const TraineeSchema = new Schema<Trainee & WithMongoID>(
   {
     _id: { type: String, default: genId },
+    imageURL: { type: String, required: false, default: null },
+    thumbnailURL: { type: String, required: false, default: null },
     personalInfo: { type: TraineePersonalInfoSchema, required: true },
     contactInfo: { type: TraineeContactInfoSchema, required: true },
     educationInfo: {
