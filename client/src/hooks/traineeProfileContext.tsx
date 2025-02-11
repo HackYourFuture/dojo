@@ -1,4 +1,3 @@
-import { ContactInfo, EducationInfo, EmploymentInfo } from '../components';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   Trainee,
@@ -9,6 +8,8 @@ import {
 } from '../models';
 
 import { SaveTraineeRequestData } from './useTraineeInfoData';
+
+type TraineeInfoType = TraineePersonalInfo | TraineeContactInfo | TraineeEmploymentInfo | TraineeEducationInfo;
 
 export type TraineeProfileContextType = {
   traineeId: string;
@@ -52,33 +53,69 @@ export const TraineeProfileProvider = ({
     setIsEditing(isEditMode);
   };
 
-  // recieves trainee objects and compares to the edited fields
+  /**
+   * Function to get the changes made to the trainee's profile (every tab)
+   * @returns  {SaveTraineeRequestData} - Object with the changes made to the trainee's profile.
+   *                                     The object is structured as follows: { personalInfo, contactInfo, educationInfo, employmentInfo }
+   */
   const getTraineeInfoChanges = (): SaveTraineeRequestData => {
-    // // Compare every key of the state object, with the original trainee data
-    // // return only the changed fields
+    const personalInfo: Partial<TraineePersonalInfo> | null = getChangedFields(
+      originalTrainee.personalInfo,
+      trainee.personalInfo
+    );
+    const contactInfo: Partial<TraineeContactInfo> | null = getChangedFields(
+      originalTrainee.contactInfo,
+      trainee.contactInfo
+    );
+    const employmentInfo: Partial<TraineeEmploymentInfo> | null = getChangedFields(
+      originalTrainee.employmentInfo,
+      trainee.employmentInfo
+    );
+    const educationInfo: Partial<TraineeEducationInfo> | null = getChangedFields(
+      originalTrainee.educationInfo,
+      trainee.educationInfo
+    );
 
-    const editedData = {
-      personalInfo: getChangedFields('personalInfo'),
-      contactInfo: getChangedFields('contactInfo'),
-      educationInfo: getChangedFields('educationInfo'),
-      employmentInfo: getChangedFields('employmentInfo'),
-    };
+    const dataToSave: SaveTraineeRequestData = {};
 
-    return editedData;
+    // add the changed fields to the dataToSave object if not null
+    personalInfo && (dataToSave.personalInfo = personalInfo);
+    contactInfo && (dataToSave.contactInfo = contactInfo);
+    educationInfo && (dataToSave.educationInfo = educationInfo);
+    employmentInfo && (dataToSave.employmentInfo = employmentInfo);
+
+    return dataToSave;
   };
-  const getChangedFields = <T extends object>(keyName: keyof Trainee): Partial<T> => {
+
+  /**
+   * This function is used to get the fields that have been changed in the trainee's profile.
+   * It loops over the edited object and compares it to the original object.
+   * If the value of a field has changed, it will be added to the updatedFields object.
+   * Some of the properties are ignored while comparing, because they are edited in a different way.
+   *
+   * @param orig info before editing (personalInfo, contactInfo, employmentInfo, educationInfo)
+   * @param edited editted data (personalInfo, contactInfo, employmentInfo, educationInfo)
+   * @returns
+   */
+  const getChangedFields = <T extends TraineeInfoType>(orig: T, edited: T) => {
     const updatedFields: Partial<T> = {};
-    // Compare every key of the state object, with the original trainee data
-    // return only the changed fields
-    Object.entries(trainee[keyName]).forEach(([key, value]) => {
-      const typedKey = key as string;
-      if (originalTrainee[keyName][typedKey] !== value) {
-        updatedFields[typedKey as keyof T] = value as T[keyof T];
+
+    // These props exist on the Trainee but should not be included in the changes
+    const ignoredProps = ['strikes', 'assignments', 'tests', 'employmentHistory'];
+
+    Object.entries(edited).forEach(([key, value]) => {
+      const typedKey = key as keyof T;
+      if (ignoredProps.includes(key)) return;
+
+      if (orig[typedKey] !== value) {
+        updatedFields[typedKey] = value;
       }
     });
 
+    if (Object.keys(updatedFields).length === 0) return null;
     return updatedFields;
   };
+
   return (
     <TraineeProfileContext.Provider
       value={{

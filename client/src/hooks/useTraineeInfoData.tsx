@@ -32,10 +32,10 @@ export const useTraineeInfoData = (traineeId: string) => {
 };
 
 export interface SaveTraineeRequestData {
-  personalInfo?: TraineePersonalInfo;
-  contactInfo?: TraineeContactInfo;
-  educationInfo?: TraineeEducationInfo;
-  emplotmentInfo?: TraineeEmploymentInfo;
+  personalInfo?: Partial<TraineePersonalInfo>;
+  contactInfo?: Partial<TraineeContactInfo>;
+  educationInfo?: Partial<TraineeEducationInfo>;
+  employmentInfo?: Partial<TraineeEmploymentInfo>;
 }
 
 /**
