@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Button, FormControl, Icon, InputAdornment, Link, Stack, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, FormControl, Icon, InputAdornment, Link, TextField } from '@mui/material';
 
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -8,8 +6,8 @@ import LinkIcon from '@mui/icons-material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import slackIcon from '../assets/slack.png';
-import { useHandleTextChange } from '../helpers/helpers';
-import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
+import { useHandleTextChange } from '../hooks/useHandleTextChange';
+import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 /**
  * Component for displaying contact information in trainee profile data on the contact tab.

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   FormControl,
   InputAdornment,
@@ -14,14 +13,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useHandleSelectChange, useHandleTextChange } from '../helpers/helpers';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { JobPath } from '../models';
 import LinkIcon from '@mui/icons-material/Link';
 import React from 'react';
 import { formatDate } from '../helpers/dateHelper';
-import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
+import { useHandleSelectChange } from '../hooks/useHandleSelectChange';
+import { useHandleTextChange } from '../hooks/useHandleTextChange';
+import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
 

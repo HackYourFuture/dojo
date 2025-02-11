@@ -1,6 +1,6 @@
 import { ErrorBox, Loader, TraineeProfile } from '../components';
 
-import { TraineeProfileProvider } from '../hooks/traineeProfileContext';
+import { TraineeProfileProvider } from '../hooks/useTraineeProfileContext';
 import { useParams } from 'react-router-dom';
 import { useTraineeInfoData } from '../hooks';
 

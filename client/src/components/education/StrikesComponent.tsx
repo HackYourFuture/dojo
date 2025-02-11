@@ -8,7 +8,7 @@ import { StrikeDetailsModal } from './StrikeDetailsModal';
 import { StrikesList } from './StrikesList';
 import { useQueryClient } from 'react-query';
 import { useState } from 'react';
-import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
+import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
 export const StrikesComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

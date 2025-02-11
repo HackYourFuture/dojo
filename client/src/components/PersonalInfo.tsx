@@ -1,9 +1,10 @@
-import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus, Trainee } from '../models';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { useHandleSelectChange, useHandleTextChange } from '../helpers/helpers';
+import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus } from '../models';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
+import { useHandleSelectChange } from '../hooks/useHandleSelectChange';
+import { useHandleTextChange } from '../hooks/useHandleTextChange';
+import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
 

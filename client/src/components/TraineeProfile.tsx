@@ -15,7 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
 import { Trainee } from '../models';
 import { useQueryClient } from 'react-query';
-import { useTraineeProfileContext } from '../hooks/traineeProfileContext';
+import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 interface TraineeProfileProps {
   id: string;
@@ -32,7 +32,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   const [activeTab, setActiveTab] = useState('personal');
   const { data: traineeData } = useTraineeInfoData(id);
   const { isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
-  const context = useTraineeProfileContext();
+  const { isEditMode, setTrainee, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
   const queryClient = useQueryClient();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -55,19 +55,23 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     setActiveTab(tab);
   };
 
+  /**
+   * Save trainee data by calling the saveTraineeInfo mutation.
+   * Shows a snackbar with the result of the save operation and refreshes the trainee data.
+   * @param editedFields
+   */
   const saveTraineeData = async (editedFields: SaveTraineeRequestData) => {
     mutate(editedFields, {
       onSuccess: (data: Trainee) => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Trainee data saved successfully');
-        context.setTrainee(data);
+        setTrainee(data);
 
         queryClient.invalidateQueries(['traineeInfo', id]);
-        context.setIsEditMode(false);
+        setIsEditMode(false);
       },
       onError: (error) => {
-        // TOOD: Better error handling
-        console.error('There was a problem saving trainee data:', error.message);
+        console.error('There was a problem saving trainee data:', (error as Error).message);
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving trainee data');
       },
@@ -75,20 +79,27 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     setSnackbarOpen(true);
   };
 
+  /**
+   * Handle edit button click.
+   * Either sets the page to edit mode or saves the changes if edit mode is active.
+   */
   const onClickEditButton = () => {
-    const { isEditMode, setIsEditMode } = context;
     if (!isEditMode) {
       setIsEditMode(true);
       return;
     }
 
-    const chagedTrainee = context.getTraineeInfoChanges(traineeData!);
-    saveTraineeData(chagedTrainee);
+    const changedFields: SaveTraineeRequestData = getTraineeInfoChanges(traineeData!);
+    saveTraineeData(changedFields);
   };
 
+  /**
+   * Handle cancel edit button click.
+   * Resets the trainee data to the original data.
+   */
   const onCancelEdit = () => {
-    context.setIsEditMode(false);
-    context.setTrainee(traineeData!);
+    setIsEditMode(false);
+    setTrainee(traineeData!);
   };
 
   return (
@@ -99,13 +110,13 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
         <Box display="flex" justifyContent="flex-end" padding="16px" gap={1} marginRight={5}>
-          {context.isEditMode && (
+          {isEditMode && (
             <Button variant="outlined" disabled={isSaveLoading} onClick={onCancelEdit}>
               Cancel
             </Button>
           )}
           <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
-            {context.isEditMode ? 'Save' : 'Edit'}
+            {isEditMode ? 'Save' : 'Edit'}
           </LoadingButton>
         </Box>
         <Snackbar

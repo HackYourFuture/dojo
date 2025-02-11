@@ -1,12 +1,13 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { LearningStatus, QuitReason, Trainee } from '../../models';
-import { useHandleSelectChange, useHandleTextChange } from '../../helpers/helpers';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import React from 'react';
 import { StrikesComponent } from './StrikesComponent';
 import { formatDate } from '../../helpers/dateHelper';
-import { useTraineeProfileContext } from '../../hooks/traineeProfileContext';
+import { useHandleSelectChange } from '../../hooks/useHandleSelectChange';
+import { useHandleTextChange } from '../../hooks/useHandleTextChange';
+import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
 
