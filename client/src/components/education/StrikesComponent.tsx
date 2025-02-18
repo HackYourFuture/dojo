@@ -51,7 +51,10 @@ export const StrikesComponent = () => {
 
   const onConfirmEdit = (strike: Strike) => {
     editStrike(strike, {
-      onSuccess: onSuccess,
+      onSuccess: () => {
+        onSuccess();
+        setStrikeToEdit(null);
+      },
       onError: (e) => {
         setModalError((e as Error).message);
       },
