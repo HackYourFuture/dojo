@@ -13,14 +13,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { createSelectChangeHandler, createTextChangeHandler } from '../helpers/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { JobPath } from '../models';
 import LinkIcon from '@mui/icons-material/Link';
 import React from 'react';
 import { formatDate } from '../helpers/dateHelper';
-import { useHandleSelectChange } from '../hooks/useHandleSelectChange';
-import { useHandleTextChange } from '../hooks/useHandleTextChange';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
@@ -33,8 +32,8 @@ const NoIcon = () => null;
 export const EmploymentInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
-  const handleTextChange = useHandleTextChange(setTrainee, 'employmentInfo');
-  const handleSelectChange = useHandleSelectChange(setTrainee, 'employmentInfo');
+  const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
+  const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">

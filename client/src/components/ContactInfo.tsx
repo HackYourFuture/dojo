@@ -5,8 +5,8 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
+import { createTextChangeHandler } from '../helpers/formHelper';
 import slackIcon from '../assets/slack.png';
-import { useHandleTextChange } from '../hooks/useHandleTextChange';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 /**
@@ -19,7 +19,7 @@ export const ContactInfo = () => {
 
   const { contactInfo: editedFields } = trainee;
 
-  const handleTextChange = useHandleTextChange(setTrainee, 'contactInfo');
+  const handleTextChange = createTextChangeHandler(setTrainee, 'contactInfo');
 
   return (
     <Box display="flex" flexDirection="column" gap={4} padding="24px">

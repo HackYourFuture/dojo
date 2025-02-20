@@ -1,9 +1,8 @@
 import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus } from '../models';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { createSelectChangeHandler, createTextChangeHandler } from '../helpers/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useHandleSelectChange } from '../hooks/useHandleSelectChange';
-import { useHandleTextChange } from '../hooks/useHandleTextChange';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
@@ -22,14 +21,14 @@ export const PersonalInfo = () => {
    *
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
-  const handleChange = useHandleTextChange(setTrainee, 'personalInfo');
+  const handleChange = createTextChangeHandler(setTrainee, 'personalInfo');
 
   /**
    * Function to handel changing select fields with edited data.
    *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
-  const handleSelectChange = useHandleSelectChange(setTrainee, 'personalInfo');
+  const handleSelectChange = createSelectChangeHandler(setTrainee, 'personalInfo');
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">

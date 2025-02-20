@@ -1,12 +1,11 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { LearningStatus, QuitReason, Trainee } from '../../models';
+import { createSelectChangeHandler, createTextChangeHandler } from '../../helpers/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import React from 'react';
 import { StrikesComponent } from './StrikesComponent';
 import { formatDate } from '../../helpers/dateHelper';
-import { useHandleSelectChange } from '../../hooks/useHandleSelectChange';
-import { useHandleTextChange } from '../../hooks/useHandleTextChange';
 import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
@@ -23,8 +22,8 @@ export const EducationInfo = () => {
     isEditMode: isEditing,
   } = useTraineeProfileContext();
 
-  const handleTextChange = useHandleTextChange(setTrainee, 'educationInfo');
-  const handleSelectChange = useHandleSelectChange(setTrainee, 'educationInfo');
+  const handleTextChange = createTextChangeHandler(setTrainee, 'educationInfo');
+  const handleSelectChange = createSelectChangeHandler(setTrainee, 'educationInfo');
 
   /**
    * Function for converting numeric values from textFields with ‘type=number’
