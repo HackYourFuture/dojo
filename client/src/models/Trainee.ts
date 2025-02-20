@@ -232,3 +232,5 @@ export interface Reporter {
   name: string;
   imageUrl: string;
 }
+
+export type TraineeInfoType = 'personalInfo' | 'contactInfo' | 'employmentInfo' | 'educationInfo';
