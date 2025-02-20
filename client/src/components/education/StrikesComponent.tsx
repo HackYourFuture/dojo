@@ -24,7 +24,7 @@ export const StrikesComponent = () => {
 
   const [idToDelete, setIdToDelete] = useState<string>('');
   const queryClient = useQueryClient();
-  const onSuccess = () => {
+  const handleSuccess = () => {
     queryClient.invalidateQueries(['strikes', traineeId]);
     setIsModalOpen(false);
   };
@@ -42,7 +42,7 @@ export const StrikesComponent = () => {
 
   const onConfirmAdd = async (strike: Strike) => {
     addStrike(strike, {
-      onSuccess: onSuccess,
+      onSuccess: handleSuccess,
       onError: (e) => {
         setModalError((e as Error).message);
       },
@@ -51,10 +51,7 @@ export const StrikesComponent = () => {
 
   const onConfirmEdit = (strike: Strike) => {
     editStrike(strike, {
-      onSuccess: () => {
-        onSuccess();
-        setStrikeToEdit(null);
-      },
+      onSuccess: handleSuccess,
       onError: (e) => {
         setModalError((e as Error).message);
       },
