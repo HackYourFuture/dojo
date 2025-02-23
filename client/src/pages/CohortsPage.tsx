@@ -1,15 +1,21 @@
-import Container from '@mui/material/Container';
 import { CohortAccordion, ErrorBox, Loader } from '../components';
+
 import Box from '@mui/material/Box';
+import { Cohort } from '../models';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useCohortsData } from '../hooks';
-import { Cohort } from '../models';
-import Stack from '@mui/material/Stack';
+import { useEffect } from 'react';
 
 /**
  * Component for displaying the cohort page elements.
  */
 export const CohortsPage = () => {
+  useEffect(() => {
+    document.title = 'Cohorts | Dojo';
+  }, []);
+
   const { isLoading, isError, data, error, isFetching } = useCohortsData();
   if (isLoading || isFetching) {
     return <Loader />;

@@ -1,134 +1,37 @@
-import { Background, EducationLevel, EnglishLevel, Gender, ResidencyStatus, TraineePersonalInfo } from '../models';
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-} from '@mui/material';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from 'react';
+import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus } from '../models';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { createSelectChangeHandler, createTextChangeHandler } from '../helpers/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { LoadingButton } from '@mui/lab';
+import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
 
 const NoIcon = () => null;
 
-interface PersonalInfoProps {
-  traineeData?: TraineePersonalInfo;
-  saveTraineeData: (editedData: TraineePersonalInfo) => void;
-}
-
 /**
- * Component for displaying trainee profile data on the personal information tab.
+ * Component for displaying  and updating trainee profile data on the personal information tab.
  *
- * @param {TraineePersonalInfo} traineeData trainee personal information.
- * @param {TraineePersonalInfo} saveTraineeData callback to save edited trainee personal information.
  * @returns {ReactNode} A React element that renders trainee personal information with view, add, and edit logic.
  */
-export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps) => {
-  useEffect(() => {
-    if (traineeData) setEditedFields(traineeData as TraineePersonalInfo);
-  }, [traineeData]);
-
-  const [editedFields, setEditedFields] = useState<TraineePersonalInfo>(traineeData!);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-
-  /**
-   * Function to enable edit mode when edit button is clicked.
-   */
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  /**
-   * Function to set editing mode to `false` when cancel button is clicked.
-   */
-  const handleCancelClick = () => {
-    if (traineeData) {
-      setEditedFields(traineeData);
-    }
-    setIsEditing(false);
-  };
-
-  /**
-   * Function to handel the saving logic after clicking the save button.
-   */
-  const handleSaveClick = async () => {
-    if (!editedFields || !traineeData) return;
-
-    const changedFields: Partial<TraineePersonalInfo> = {};
-    Object.entries(editedFields).forEach(([key, value]) => {
-      if (traineeData[key as keyof TraineePersonalInfo] !== value) {
-        changedFields[key as keyof TraineePersonalInfo] = value;
-      }
-    });
-
-    const editedData: any = {
-      personalInfo: {
-        ...changedFields,
-      },
-    };
-
-    setIsSaving(true);
-
-    try {
-      await saveTraineeData(editedData);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error saving trainee data:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+export const PersonalInfo = () => {
+  const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
+  const { personalInfo: editedFields } = trainee;
 
   /**
    * Function to handel changing text fields with edited data.
    *
    * @param {HTMLInputElement} e the event received from the text fields after editing.
    */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: value,
-    }));
-  };
+  const handleChange = createTextChangeHandler(setTrainee, 'personalInfo');
 
   /**
    * Function to handel changing select fields with edited data.
    *
    * @param {SelectChangeEvent} event the event received from select component change.
    */
-  const handleSelectChange = (event: SelectChangeEvent<string | boolean | { name?: string; value: ReactNode }>) => {
-    const { name, value } = event.target;
-    setEditedFields((prevFields) => ({
-      ...prevFields,
-      [name]: value === 'true' ? true : value === 'false' ? false : value,
-    }));
-  };
+  const handleSelectChange = createSelectChangeHandler(setTrainee, 'personalInfo');
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <Box width={'100%'} display="flex" justifyContent={'end'}>
-        <Stack direction="row" spacing={2}>
-          <LoadingButton
-            color="primary"
-            onClick={isEditing ? handleSaveClick : handleEditClick}
-            loading={isSaving}
-            variant="contained"
-          >
-            <span>{isEditing ? 'Save' : 'Edit profile'}</span>
-          </LoadingButton>
-          {isEditing && <Button onClick={handleCancelClick}>Cancel</Button>}
-        </Stack>
-      </Box>
-
       <div style={{ width: '100%' }}>
         {/* First Name */}
         <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
@@ -210,11 +113,11 @@ export const PersonalInfo = ({ traineeData, saveTraineeData }: PersonalInfoProps
             startAdornment=" "
             onChange={handleSelectChange}
           >
-            <MenuItem value="He/him">He/him</MenuItem>
-            <MenuItem value="She/her">She/her</MenuItem>
-            <MenuItem value="They/them">They/them</MenuItem>
-            <MenuItem value="He/They">He/they</MenuItem>
-            <MenuItem value="She/They">She/they</MenuItem>
+            <MenuItem value={Pronouns.HeHim}>{Pronouns.HeHim}</MenuItem>
+            <MenuItem value={Pronouns.SheHer}>{Pronouns.SheHer}</MenuItem>
+            <MenuItem value={Pronouns.TheyThem}>{Pronouns.TheyThem}</MenuItem>
+            <MenuItem value={Pronouns.HeThey}>{Pronouns.HeThey}</MenuItem>
+            <MenuItem value={Pronouns.SheThey}>{Pronouns.SheThey}</MenuItem>
           </Select>
         </FormControl>
       </div>

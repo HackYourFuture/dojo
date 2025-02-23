@@ -6,6 +6,14 @@ export enum Gender {
   Other = 'other',
 }
 
+export enum Pronouns {
+  HeHim = 'He/him',
+  SheHer = 'She/her',
+  TheyThem = 'They/them',
+  HeThey = 'He/they',
+  SheThey = 'She/they',
+}
+
 export enum EnglishLevel {
   NeedsWork = 'needs-work',
   Moderate = 'moderate',
@@ -124,7 +132,7 @@ export interface TraineePersonalInfo {
   lastName: string;
   preferredName?: string;
   gender: Gender;
-  pronouns?: string;
+  pronouns?: Pronouns;
   location?: string;
   englishLevel?: EnglishLevel;
   professionalDutch?: boolean;
@@ -224,3 +232,5 @@ export interface Reporter {
   name: string;
   imageUrl: string;
 }
+
+export type TraineeInfoType = 'personalInfo' | 'contactInfo' | 'employmentInfo' | 'educationInfo';

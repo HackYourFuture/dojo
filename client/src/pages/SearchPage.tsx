@@ -1,8 +1,8 @@
 import { ErrorBox, SearchBar, SearchResultsList } from '../components';
+import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import HYFLogo from '../assets/HYF_logo.svg';
-import { useState } from 'react';
 import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
 
 /**
@@ -14,6 +14,10 @@ export const SearchPage = () => {
    * React Query hook to fetch matching trainees with a debounce time.
    */
   const { isLoading, data, isError, error } = useTraineeSearchData(searchString);
+
+  useEffect(() => {
+    document.title = 'Home | Dojo';
+  }, []);
 
   function handleTextChange(text: string) {
     setSearchString(text);

@@ -1,12 +1,14 @@
-import { useState } from 'react';
-import { useDashboardData } from '../hooks';
+import 'dayjs/locale/nl';
+
+import { Box, Button, Container, Stack } from '@mui/material';
 import { DashboardPieChart, ErrorBox, Loader } from '../components';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
+import { useEffect, useState } from 'react';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
-import 'dayjs/locale/nl';
-import { Container, Stack, Box, Button } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useDashboardData } from '../hooks';
 
 /**
  * Component for displaying the dashboard page elements.
@@ -14,6 +16,10 @@ import { Container, Stack, Box, Button } from '@mui/material';
  * @returns {ReactNode} A React element that renders date range to select and pie chart component.
  */
 export const DashboardPage = () => {
+  useEffect(() => {
+    document.title = 'Dashboard | Dojo';
+  }, []);
+
   const today = new Date();
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs(today));
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(today));

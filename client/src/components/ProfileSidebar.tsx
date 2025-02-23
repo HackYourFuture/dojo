@@ -1,10 +1,11 @@
 import { Avatar, Box, IconButton, Link, Stack, Typography } from '@mui/material';
-import slackLogo from '../assets/slack.png';
-import githubLogo from '../assets/github.png';
-import LinkedInLogo from '../assets/LinkedIn_logo.png';
-import { useTraineeInfoData } from '../hooks';
-import { SidebarJobPath, SidebarLearningStatus, Loader, ErrorBox } from '.';
+import { SidebarJobPath, SidebarLearningStatus } from '.';
+
 import { LearningStatus } from '../models';
+import LinkedInLogo from '../assets/LinkedIn_logo.png';
+import githubLogo from '../assets/github.png';
+import slackLogo from '../assets/slack.png';
+import { useTraineeInfoData } from '../hooks';
 
 interface ProfileSidebarProps {
   traineeId: string;
@@ -17,19 +18,11 @@ interface ProfileSidebarProps {
  * @returns {ReactNode} A React element that renders profile page sidebar information and profile image.
  */
 export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
-  const { isLoading, isError, data, error, isFetching } = useTraineeInfoData(traineeId);
+  const { data } = useTraineeInfoData(traineeId);
 
   const slackId = data?.contactInfo?.slackId;
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;
-
-  if (isLoading || isFetching) {
-    return <Loader />;
-  }
-
-  if (isError && error instanceof Error) {
-    return <ErrorBox errorMessage={error.message} />;
-  }
 
   return (
     <Box
