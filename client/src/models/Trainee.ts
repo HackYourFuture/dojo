@@ -92,6 +92,9 @@ export enum InteractionType {
   Feedback = 'feedback',
   TechHour = 'tech-hour',
   InPerson = 'in-person',
+  EnglishMentorship = 'english-mentorship',
+  TechMentorship = 'tech-mentorship',
+  HRMentorship = 'hr-mentorship',
   Other = 'other',
 }
 
