@@ -109,16 +109,18 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
       </Box>
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
-        <Box display="flex" justifyContent="flex-end" padding="16px" gap={1} marginRight={5}>
-          {isEditMode && (
-            <Button variant="outlined" disabled={isSaveLoading} onClick={onCancelEdit}>
-              Cancel
-            </Button>
-          )}
-          <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
-            {isEditMode ? 'Save' : 'Edit'}
-          </LoadingButton>
-        </Box>
+        {activeTab === 'interactions' ? null : (
+          <Box display="flex" justifyContent="flex-end" padding="16px" gap={1} marginRight={5}>
+            {isEditMode && (
+              <Button variant="outlined" disabled={isSaveLoading} onClick={onCancelEdit}>
+                Cancel
+              </Button>
+            )}
+            <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
+              {isEditMode ? 'Save' : 'Edit'}
+            </LoadingButton>
+          </Box>
+        )}
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={6000}
