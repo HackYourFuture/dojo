@@ -169,11 +169,11 @@ export interface TraineeEmploymentInfo {
   drivingLicense?: boolean;
   preferredLocation?: string;
   extraTechnologies?: string;
-  employmentHistory: TraineeEmploymentHistory[];
+  employmentHistory: EmploymentHistory[];
   comments?: string;
 }
 
-export interface TraineeEmploymentHistory {
+export interface EmploymentHistory {
   readonly id: string;
   type: EmploymentType;
   companyName: string;
