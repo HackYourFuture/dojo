@@ -183,7 +183,7 @@ export interface TraineeEmploymentInfo {
 export interface Strike {
   readonly id: string;
   date: Date;
-  ReporterID: string;
+  reporterID: string;
   reason: StrikeReason | null;
   comments: string;
   reporter: ReporterWithId;
