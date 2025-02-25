@@ -102,7 +102,7 @@ class Main {
       imageService
     );
     const interactionController = new InteractionController(traineesRepository);
-    const testController = new TestController();
+    const testController = new TestController(traineesRepository);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
