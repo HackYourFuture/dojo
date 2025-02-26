@@ -8,7 +8,7 @@ import {
   StrikeWithReporterID,
   Assignment,
   Test,
-  TraineeEmploymentHistory,
+  EmploymentHistory,
   Gender,
   EnglishLevel,
   Background,
@@ -118,7 +118,7 @@ const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
   { _id: false, minimize: false }
 );
 
-const TraineeEmploymentHistorySchema = new Schema<TraineeEmploymentHistory & WithMongoID>(
+const EmploymentHistorySchema = new Schema<EmploymentHistory & WithMongoID>(
   {
     _id: { type: String, default: genId },
     type: { type: String, required: true, enum: Object.values(EmploymentType) },
@@ -143,7 +143,7 @@ const TraineeEmploymentInfoSchema = new Schema<TraineeEmploymentInfo>(
     preferredLocation: { type: String, required: false, default: null },
     extraTechnologies: { type: String, required: false, default: null },
     employmentHistory: {
-      type: [TraineeEmploymentHistorySchema],
+      type: [EmploymentHistorySchema],
       required: true,
     },
     comments: { type: String, required: false, default: null },

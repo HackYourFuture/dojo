@@ -22,7 +22,9 @@ tags:
   - name: Trainees
     description: ''
   - name: Trainee Education
-    description: 'Containes endpoints to manage Trainee education info such as strikes and tests.'
+    description: 'Endpoints to manage Trainee education info such as strikes and tests.'
+  - name: Trainee Employment
+    description: 'Endpoints to manage Trainee employment info.'
   - name: Cohorts
     description: ''
   - name: Geography
@@ -695,7 +697,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Trainee or interaction was not found
+          description: Trainee or test was not found
           content:
             application/json:
               schema:
@@ -725,6 +727,146 @@ paths:
           description: successful operation
         '404':
           description: Trainee or test was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /trainees/{id}/employment-history:
+    get:
+      tags:
+        - Trainee Employment
+      summary: Fetch employment history of a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmploymentHistory'
+    post:
+      tags:
+        - Trainee Employment
+      summary: Create a new employment history record for a trainee
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmploymentHistory'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmploymentHistory'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /trainees/{id}/employment-history/{employmentHistoryID}:
+    put:
+      tags:
+        - Trainee Employment
+      summary: Update existing employment history data
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: employmentHistoryID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'The id field is not required and ignored.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmploymentHistory'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmploymentHistory'
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee or employment history was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Trainee Employment
+      summary: Delete existing employment history information
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+        - name: employmentHistoryID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      responses:
+        '204':
+          description: successful operation
+        '404':
+          description: Trainee or employment history was not found
           content:
             application/json:
               schema:
@@ -1158,7 +1300,7 @@ components:
         employmentHistory:
           type: array
           items:
-            $ref: '#/components/schemas/TraineeEmploymentHistory'
+            $ref: '#/components/schemas/EmploymentHistory'
         comments: 
           type: string
 
@@ -1330,7 +1472,7 @@ components:
         comments: 
           type: string
           
-    TraineeEmploymentHistory:
+    EmploymentHistory:
       type: object
       required:
         - startDate
@@ -1351,6 +1493,7 @@ components:
           example: HackYourFuture
         role:
           type: string
+          example: "Frontend developer"
         startDate:
           type: string
           format: date-time
