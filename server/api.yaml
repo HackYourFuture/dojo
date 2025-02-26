@@ -1235,6 +1235,9 @@ components:
             - feedback
             - in-person
             - tech-hour
+            - english-mentorship
+            - hr-mentorship
+            - tech-mentorship
             - other
         title: 
           type: string
@@ -1362,34 +1365,6 @@ components:
           type: number
           example: 500
         comments: 
-          type: string
-          
-    TraineeInteraction:
-      type: object
-      required:
-        - type
-        - details
-      properties:
-        id:
-          type: string
-          example: g5HQGuL8
-        date:
-          type: string
-          format: date-time
-          example: 2024-01-01T00:00:00.000Z 
-        type:
-          type: string
-          enum:
-            - call
-            - chat
-            - feedback
-            - tech-hour
-            - in-person
-            - other
-        reporterID:
-          type: string
-          example: 65ea2e1e696deb3b3ebff843
-        details:
           type: string
 
     LearningStatus:
