@@ -1,4 +1,4 @@
-import { Box, Button, Snackbar } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 import {
   ContactInfo,
   EducationInfo,
@@ -10,12 +10,11 @@ import {
 } from '.';
 import { SaveTraineeRequestData, useSaveTraineeInfo, useTraineeInfoData } from '../hooks';
 import { useEffect, useState } from 'react';
-
-import { LoadingButton } from '@mui/lab';
 import MuiAlert from '@mui/material/Alert';
 import { Trainee } from '../models';
 import { useQueryClient } from 'react-query';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
+import { EditSaveButton } from './trainee/EditSaveButton';
 
 interface TraineeProfileProps {
   id: string;
@@ -110,16 +109,12 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
       <Box width="100%" paddingY="16px">
         <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
         {activeTab === 'interactions' ? null : (
-          <Box display="flex" justifyContent="flex-end" padding="16px" gap={1} marginRight={5}>
-            {isEditMode && (
-              <Button variant="outlined" disabled={isSaveLoading} onClick={onCancelEdit}>
-                Cancel
-              </Button>
-            )}
-            <LoadingButton variant="contained" loading={isSaveLoading} onClick={onClickEditButton}>
-              {isEditMode ? 'Save' : 'Edit'}
-            </LoadingButton>
-          </Box>
+          <EditSaveButton
+            isEditMode={isEditMode}
+            isLoading={isSaveLoading}
+            onCancel={onCancelEdit}
+            onClickEditButton={onClickEditButton}
+          />
         )}
         <Snackbar
           open={snackbarOpen}
