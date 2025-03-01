@@ -189,7 +189,7 @@ export interface Strike {
   reporterID: string;
   reason: StrikeReason | null;
   comments: string;
-  reporter: Reporter;
+  reporter: ReporterWithId;
 }
 
 export interface Assignment {
@@ -231,9 +231,12 @@ export interface TraineeInteraction {
 }
 
 export interface Reporter {
-  id: string;
   name: string;
   imageUrl: string;
+}
+
+export interface ReporterWithId extends Reporter {
+  id: string;
 }
 
 export type TraineeInfoType = 'personalInfo' | 'contactInfo' | 'employmentInfo' | 'educationInfo';

@@ -1,15 +1,6 @@
-import {
-  Avatar,
-  Box,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 
+import { AvatarWithTooltip } from '../shared/AvatarWithTooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Strike } from '../../models';
@@ -87,9 +78,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                     paddingTop: 1,
                   }}
                 >
-                  <Tooltip title={strike.reporter.name} placement="top">
-                    <Avatar src={strike.reporter.imageUrl}></Avatar>
-                  </Tooltip>
+                  <AvatarWithTooltip imageUrl={strike.reporter.imageUrl} name={strike.reporter.name} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={
