@@ -23,6 +23,7 @@ import {
   CohortsController,
   TestController,
   ProfilePictureController,
+  EmploymentHistoryController,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from './services';
@@ -103,6 +104,8 @@ class Main {
     );
     const interactionController = new InteractionController(traineesRepository);
     const testController = new TestController(traineesRepository);
+    const employmentHistoryController = new EmploymentHistoryController();
+
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
@@ -118,6 +121,7 @@ class Main {
       interactionController,
       testController,
       profilePictureController,
+      employmentHistoryController,
       [authMiddleware]
     );
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);
