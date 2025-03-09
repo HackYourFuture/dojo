@@ -2,7 +2,7 @@ import FormControl from '@mui/material/FormControl';
 import React from 'react';
 import { SxProps } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { formatDate } from '../../helpers/dateHelper';
+import { formatDate } from '../helpers/dateHelper';
 
 interface FormDateTextFieldProps {
   label: string;

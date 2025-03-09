@@ -1,10 +1,9 @@
-import { Box, Button, Menu, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, SelectChangeEvent, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-import { Background } from '../../models';
-import FormDateTextField from './FormDateTextField';
-import FormSelect from '../education/FormSelect';
-import FormTextField from '../education/FormTextField';
+import FormDateTextField from '../FormDateTextField';
+import FormSelect from '../FormSelect';
+import FormTextField from '../FormTextField';
 
 const types = ['Call', 'Chat', 'Feedback', 'In person', 'Tech hour', 'Other'];
 
