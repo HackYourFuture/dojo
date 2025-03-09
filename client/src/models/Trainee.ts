@@ -1,3 +1,5 @@
+import { Interaction } from './Interactions';
+
 // enums
 export enum Gender {
   Man = 'man',
@@ -86,18 +88,6 @@ export enum JobPath {
   NoLongerHelping = 'no-longer-helping',
 }
 
-export enum InteractionType {
-  Call = 'call',
-  Chat = 'chat',
-  Feedback = 'feedback',
-  TechHour = 'tech-hour',
-  InPerson = 'in-person',
-  EnglishMentorship = 'english-mentorship',
-  TechMentorship = 'tech-mentorship',
-  HRMentorship = 'hr-mentorship',
-  Other = 'other',
-}
-
 export enum TestResult {
   Passed = 'passed',
   PassedWithWarning = 'passed-with-warning',
@@ -127,7 +117,7 @@ export interface Trainee {
   contactInfo: TraineeContactInfo;
   educationInfo: TraineeEducationInfo;
   employmentInfo: TraineeEmploymentInfo;
-  interactions: TraineeInteraction[];
+  interactions: Interaction[];
 }
 
 export interface TraineePersonalInfo {
@@ -220,14 +210,6 @@ export interface EmploymentHistory {
   feeCollected: boolean;
   feeAmount?: number;
   comments?: string;
-}
-
-export interface TraineeInteraction {
-  readonly id: string;
-  date: Date;
-  type: InteractionType;
-  reporterID: string;
-  details: string;
 }
 
 export interface Reporter {

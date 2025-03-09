@@ -9,10 +9,13 @@ export interface Interaction {
   reporter: Reporter;
 }
 export enum InteractionType {
-  CALL = 'call',
-  CHAT = 'chat',
-  FEEDBACK = 'feedback',
-  IN_PERSON = 'in-person',
-  TECH_HOUR = 'tech-hour',
-  OTHER = 'other',
+  Call = 'call',
+  Chat = 'chat',
+  Feedback = 'feedback',
+  TechHour = 'tech-hour',
+  InPerson = 'in-person',
+  EnglishMentorship = 'english-mentorship',
+  TechMentorship = 'tech-mentorship',
+  HRMentorship = 'hr-mentorship',
+  Other = 'other',
 }

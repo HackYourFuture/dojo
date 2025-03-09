@@ -1,36 +1,59 @@
-import { Box, Button, SelectChangeEvent, Typography } from '@mui/material';
+import { Alert, Box, Paper, SelectChangeEvent, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import FormDateTextField from '../FormDateTextField';
 import FormSelect from '../FormSelect';
 import FormTextField from '../FormTextField';
+import { Interaction } from '../../models/Interactions';
+import { InteractionType } from '../../models/Interactions';
+import { LoadingButton } from '@mui/lab';
+import { useAddInteraction } from '../../hooks/interactions/interaction-queries';
+import { useQueryClient } from 'react-query';
 
-const types = ['Call', 'Chat', 'Feedback', 'In person', 'Tech hour', 'Other'];
+const types = Object.values(InteractionType);
 
-interface InteractionFormState {
-  type: string;
-  title: string;
-  comments: string;
-  date: Date;
-}
+type FormState = Partial<Interaction>;
 
-const initialState: InteractionFormState = {
-  type: '',
+const initialState: FormState = {
   title: '',
-  comments: '',
+  details: '',
   date: new Date(),
 };
 
-const AddNewInteractionComponent: React.FC = () => {
-  const [formState, setFormState] = useState<InteractionFormState>(initialState);
+interface AddNewInteractionComponentProps {
+  traineeId: string;
+}
+
+const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({ traineeId }) => {
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [error, setError] = useState<string>('');
+
+  const queryClient = useQueryClient();
+  const { isLoading, mutateAsync: addInteraction } = useAddInteraction(traineeId);
 
   const handleSubmit = () => {
-    // Handle the form submission logic here
-    console.log('New interaction added:', formState);
+    setError('');
+
+    if (!formState.type || !formState.details) {
+      setError('Please fill in all required fields');
+      return;
+    }
+
+    addInteraction(formState, {
+      onSuccess: () => {
+        setFormState(initialState);
+        queryClient.invalidateQueries(['interactions', traineeId]);
+      },
+      onError: (error) => {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
+      },
+    });
   };
 
   const onTypeChange = (event: SelectChangeEvent<string>) => {
-    setFormState((prev) => ({ ...prev, type: event.target.value }));
+    setFormState((prev) => ({ ...prev, type: event.target.value as InteractionType }));
   };
 
   const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +61,7 @@ const AddNewInteractionComponent: React.FC = () => {
   };
 
   const onChangeComments = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormState((prev) => ({ ...prev, comments: event.target.value }));
+    setFormState((prev) => ({ ...prev, details: event.target.value }));
   };
 
   const onChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,43 +69,63 @@ const AddNewInteractionComponent: React.FC = () => {
   };
 
   return (
-    <Box display="flex" flexDirection={'column'} gap={2} paddingBottom={2}>
-      <Typography variant="h5" color="text.primary" padding="5px">
-        Add a new interaction
-      </Typography>
+    <Paper elevation={1} sx={{ padding: 2, marginBottom: 3 }}>
+      <Box display="flex" flexDirection={'column'} gap={2}>
+        <Typography variant="h5" color="text.primary" padding="5px">
+          Add a new interaction
+        </Typography>
 
-      <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
-        <FormSelect
-          id={'interactionType'}
-          label="Type"
-          value={formState.type}
-          onChange={onTypeChange}
-          optionLabels={types}
-          width={'40%'}
+        <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
+          <FormSelect
+            disabled={isLoading}
+            id={'interactionType'}
+            label="Type"
+            value={formState.type}
+            onChange={onTypeChange}
+            optionLabels={types}
+            width={'40%'}
+            required
+          />
+          <FormTextField
+            disabled={isLoading}
+            label="Title"
+            placeholder="Optional title"
+            value={formState.title}
+            onChange={onTitleChange}
+            width="100%"
+          />
+          <FormDateTextField
+            label="Date"
+            value={formState.date || new Date()}
+            onChange={onChangeDate}
+            width="35%"
+            disabled={isLoading}
+          />
+        </Box>
+        <FormTextField
+          disabled={isLoading}
+          label="Comments"
+          value={formState.details}
+          onChange={onChangeComments}
+          multiline
+          minRows={4}
+          maxRows={10}
           required
         />
-        <FormTextField
-          label="Title"
-          placeholder="Optional title"
-          value={formState.title}
-          onChange={onTitleChange}
-          width="100%"
-        />
-        <FormDateTextField label="Date" value={formState.date} onChange={onChangeDate} width="35%" />
-      </Box>
-      <FormTextField
-        label="Comments"
-        value={formState.comments}
-        onChange={onChangeComments}
-        multiline
-        minRows={4}
-        maxRows={10}
-      />
 
-      <Button sx={{ alignSelf: 'flex-start' }} variant="outlined" color="primary" onClick={handleSubmit}>
-        Add
-      </Button>
-    </Box>
+        <LoadingButton
+          sx={{ alignSelf: 'flex-start' }}
+          variant="outlined"
+          color="primary"
+          onClick={handleSubmit}
+          loading={isLoading}
+          disabled={isLoading}
+        >
+          Add
+        </LoadingButton>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Box>
+    </Paper>
   );
 };
 

@@ -1,3 +1,4 @@
+import AddNewInteractionComponent from './AddNewInteractionComponent';
 import { Box } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import InteractionsList from './InteractionsList';
@@ -9,5 +10,18 @@ export const InteractionsInfo = () => {
 
   const { data: interactions, isLoading } = useGetInteractions(traineeId);
 
-  return <Box>{isLoading ? <CircularProgress /> : <InteractionsList interactions={interactions || []} />}</Box>;
+  return (
+    <Box padding="24px" width="65%" paddingRight={10}>
+      {isLoading ? (
+        <Box display={'flex'} justifyContent={'center'} alignItems={'center'} height={'100%'}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <AddNewInteractionComponent traineeId={traineeId} />
+          <InteractionsList interactions={interactions || []} />
+        </>
+      )}
+    </Box>
+  );
 };

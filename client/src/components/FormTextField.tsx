@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 
 interface FormTextFieldProps {
   label: string;
-  value: string;
+  value?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean;
   helperText?: string;
@@ -15,11 +15,13 @@ interface FormTextFieldProps {
   maxRows?: number;
   sx?: SxProps;
   width?: string;
+  disabled?: boolean;
+  required?: boolean;
 }
 
 const FormTextField: React.FC<FormTextFieldProps> = ({
   label,
-  value,
+  value = '',
   onChange,
   error,
   helperText,
@@ -29,6 +31,8 @@ const FormTextField: React.FC<FormTextFieldProps> = ({
   maxRows = 1,
   sx = {},
   width = '100%',
+  disabled = false,
+  required = false,
 }) => {
   return (
     <FormControl fullWidth error={error} style={{ width }}>
@@ -44,6 +48,8 @@ const FormTextField: React.FC<FormTextFieldProps> = ({
         minRows={minRows}
         maxRows={maxRows}
         sx={sx}
+        disabled={disabled}
+        required={required}
       />
     </FormControl>
   );

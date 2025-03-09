@@ -1,31 +1,32 @@
-import { Schema } from 'mongoose';
 import {
-  Trainee,
-  TraineeContactInfo,
-  TraineePersonalInfo,
-  TraineeEducationInfo,
-  TraineeEmploymentInfo,
-  StrikeWithReporterID,
   Assignment,
-  Test,
-  EmploymentHistory,
-  Gender,
-  EnglishLevel,
   Background,
   EducationLevel,
+  EmploymentHistory,
   EmploymentType,
-  StrikeReason,
+  EnglishLevel,
+  Gender,
+  InteractionType,
+  InteractionWithReporterID,
   JobPath,
   LearningStatus,
   QuitReason,
   ResidencyStatus,
+  StrikeReason,
+  StrikeWithReporterID,
+  Test,
   TestResult,
   TestType,
-  InteractionWithReporterID,
-  InteractionType,
+  Trainee,
+  TraineeContactInfo,
+  TraineeEducationInfo,
+  TraineeEmploymentInfo,
+  TraineePersonalInfo,
 } from '../models';
-import { genId } from '../utils/random';
 import { WithMongoID, jsonFormatting } from '../utils/database';
+
+import { Schema } from 'mongoose';
+import { genId } from '../utils/random';
 
 const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>(
   {

@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
-import { Trainee, StrikeWithReporter, StrikeWithReporterID, StrikeReason, Test, TestResult, TestType } from '../models';
-import { TraineeSchema } from '../schemas';
-import { WithMongoID } from '../utils/database';
-import { UserRepository } from './UserRepository';
 import { InteractionType, InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
+import { StrikeReason, StrikeWithReporter, StrikeWithReporterID, Test, TestResult, TestType, Trainee } from '../models';
+
+import { TraineeSchema } from '../schemas';
+import { UserRepository } from './UserRepository';
+import { WithMongoID } from '../utils/database';
+import mongoose from 'mongoose';
 
 export interface TraineesRepository {
   getAllTrainees(): Promise<Trainee[]>;

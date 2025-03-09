@@ -1,38 +1,17 @@
 import { Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { Interaction, InteractionType } from '../../models/Interactions';
 
-import AddNewInteractionComponent from './AddNewInteractionComponent';
 import { AvatarWithTooltip } from '../shared/AvatarWithTooltip';
 import React from 'react';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
+import { formatTextToFriendly } from '../../helpers/formHelper';
 
 interface InteractionsListProps {
   interactions: Interaction[];
 }
 const InteractionsList: React.FC<InteractionsListProps> = ({ interactions }) => {
-  // coverts the interaction type to a user friendly string
-  const getInteractionType = (type: InteractionType): string => {
-    switch (type) {
-      case InteractionType.CALL:
-        return 'Call';
-      case InteractionType.CHAT:
-        return 'Chat';
-      case InteractionType.FEEDBACK:
-        return 'Feedback';
-      case InteractionType.IN_PERSON:
-        return 'In person';
-      case InteractionType.TECH_HOUR:
-        return 'Tech hour';
-      case InteractionType.OTHER:
-        return 'Other';
-      default:
-        return '';
-    }
-  };
-
   return (
-    <Box padding="24px" width="65%" paddingRight={10}>
-      <AddNewInteractionComponent />
+    <Box>
       <List
         sx={{
           width: '100%',
@@ -79,7 +58,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions }) => 
                         paddingBottom={1}
                       >
                         <Box display="flex" flexDirection="row" gap={1}>
-                          <Chip label={getInteractionType(interaction.type)} color="primary" size="small" />
+                          <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
                           <Typography>{interaction.title}</Typography>
                         </Box>
                         <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
