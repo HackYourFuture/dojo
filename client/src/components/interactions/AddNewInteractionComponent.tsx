@@ -8,7 +8,6 @@ import { Interaction } from '../../models/Interactions';
 import { InteractionType } from '../../models/Interactions';
 import { LoadingButton } from '@mui/lab';
 import { useAddInteraction } from '../../hooks/interactions/interaction-queries';
-import { useQueryClient } from 'react-query';
 
 const types = Object.values(InteractionType);
 
@@ -28,7 +27,6 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
   const [formState, setFormState] = useState<FormState>(initialState);
   const [error, setError] = useState<string>('');
 
-  const queryClient = useQueryClient();
   const { isLoading, mutateAsync: addInteraction } = useAddInteraction(traineeId);
 
   const handleSubmit = () => {
@@ -42,7 +40,6 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
     addInteraction(formState, {
       onSuccess: () => {
         setFormState(initialState);
-        queryClient.invalidateQueries(['interactions', traineeId]);
       },
       onError: (error) => {
         if (error instanceof Error) {

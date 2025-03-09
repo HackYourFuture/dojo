@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { Interaction } from '../../models/Interactions';
 import axios from 'axios';
@@ -29,18 +29,32 @@ const orderInteractionsByDateDesc = (data: Interaction[]): Interaction[] => {
 };
 
 export const useAddInteraction = (traineeId: string) => {
+  const queryClient = useQueryClient();
+
   // partial becase not all fields are sent to the backend
-  return useMutation(async (interaction: Partial<Interaction>) => {
-    return await axios.post(`/api/trainees/${traineeId}/interactions`, interaction);
-  });
+  return useMutation(
+    async (interaction: Partial<Interaction>) => {
+      return await axios.post(`/api/trainees/${traineeId}/interactions`, interaction);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['interactions', traineeId]);
+      },
+    }
+  );
 };
 
 export const useDeleteInteraction = (traineeId: string) => {
-  return useMutation(async (interactionId: string) => {
-    try {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (interactionId: string) => {
       return await axios.delete(`/api/trainees/${traineeId}/interactions/${interactionId}`);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Failed to delete interaction');
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['interactions', traineeId]);
+      },
     }
-  });
+  );
 };

@@ -19,7 +19,7 @@ export const InteractionsInfo = () => {
       ) : (
         <>
           <AddNewInteractionComponent traineeId={traineeId} />
-          <InteractionsList interactions={interactions || []} />
+          <InteractionsList traineeId={traineeId} interactions={interactions || []} />
         </>
       )}
     </Box>
