@@ -1,6 +1,7 @@
 import { Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { Interaction, InteractionType } from '../../models/Interactions';
 
+import AddNewInteractionComponent from './AddNewInteractionComponent';
 import { AvatarWithTooltip } from '../shared/AvatarWithTooltip';
 import React from 'react';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
@@ -31,6 +32,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions }) => 
 
   return (
     <Box padding="24px" width="65%" paddingRight={10}>
+      <AddNewInteractionComponent />
       <List
         sx={{
           width: '100%',
