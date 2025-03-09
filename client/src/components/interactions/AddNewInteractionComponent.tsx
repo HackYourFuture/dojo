@@ -7,52 +7,77 @@ import FormTextField from '../FormTextField';
 
 const types = ['Call', 'Chat', 'Feedback', 'In person', 'Tech hour', 'Other'];
 
+interface InteractionFormState {
+  type: string;
+  title: string;
+  comments: string;
+  date: Date;
+}
+
+const initialState: InteractionFormState = {
+  type: '',
+  title: '',
+  comments: '',
+  date: new Date(),
+};
+
 const AddNewInteractionComponent: React.FC = () => {
-  const [type, setType] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [comments, setComments] = useState<string>('');
-  const [date, setDate] = useState<Date>(new Date());
+  const [formState, setFormState] = useState<InteractionFormState>(initialState);
 
   const handleSubmit = () => {
     // Handle the form submission logic here
-    console.log('New interaction added:', type, title, comments);
+    console.log('New interaction added:', formState);
   };
 
   const onTypeChange = (event: SelectChangeEvent<string>) => {
-    setType(event.target.value);
+    setFormState((prev) => ({ ...prev, type: event.target.value }));
   };
 
   const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+    setFormState((prev) => ({ ...prev, title: event.target.value }));
   };
 
   const onChangeComments = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setComments(event.target.value);
+    setFormState((prev) => ({ ...prev, comments: event.target.value }));
   };
 
   const onChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(new Date(event.target.value));
+    setFormState((prev) => ({ ...prev, date: new Date(event.target.value) }));
   };
 
   return (
-    <Box display="flex" flexDirection={'column'} gap={2}>
-      <Typography variant="h5" color="text.primary" padding="16px" textAlign="center">
-        Add new interaction
+    <Box display="flex" flexDirection={'column'} gap={2} paddingBottom={2}>
+      <Typography variant="h5" color="text.primary" padding="5px">
+        Add a new interaction
       </Typography>
 
       <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
         <FormSelect
           id={'interactionType'}
           label="Type"
-          value={type}
+          value={formState.type}
           onChange={onTypeChange}
           optionLabels={types}
           width={'40%'}
+          required
         />
-        <FormTextField label="Title" placeholder="Optional title" value={title} onChange={onTitleChange} width="100%" />
-        <FormDateTextField label="Date" value={date} onChange={onChangeDate} width="30%" />
+        <FormTextField
+          label="Title"
+          placeholder="Optional title"
+          value={formState.title}
+          onChange={onTitleChange}
+          width="100%"
+        />
+        <FormDateTextField label="Date" value={formState.date} onChange={onChangeDate} width="35%" />
       </Box>
-      <FormTextField label="Comments" value={comments} onChange={onChangeComments} multiline minRows={2} maxRows={3} />
+      <FormTextField
+        label="Comments"
+        value={formState.comments}
+        onChange={onChangeComments}
+        multiline
+        minRows={4}
+        maxRows={10}
+      />
 
       <Button sx={{ alignSelf: 'flex-start' }} variant="outlined" color="primary" onClick={handleSubmit}>
         Add

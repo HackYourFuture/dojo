@@ -10,6 +10,7 @@ interface FormSelectProps {
   optionLabels: string[];
   width?: string;
   sx?: SxProps;
+  required?: boolean;
 }
 
 const FormSelect: React.FC<FormSelectProps> = ({
@@ -20,9 +21,10 @@ const FormSelect: React.FC<FormSelectProps> = ({
   optionLabels: options,
   width = '100%',
   sx = {},
+  required = false,
 }) => {
   return (
-    <FormControl variant="outlined" fullWidth style={{ width }}>
+    <FormControl variant="outlined" fullWidth style={{ width }} required={required}>
       <InputLabel>{label}</InputLabel>
 
       <Select id={id} name={id} value={value} onChange={onChange} label={label} sx={sx}>
