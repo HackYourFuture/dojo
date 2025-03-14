@@ -1,9 +1,9 @@
 import { Alert, Box, Paper, SelectChangeEvent, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-import FormDateTextField from '../FormDateTextField';
-import FormSelect from '../FormSelect';
-import FormTextField from '../FormTextField';
+import FormDateTextField from './FormDateTextField';
+import FormSelect from './FormSelect';
+import FormTextField from './FormTextField';
 import { Interaction } from '../../models/Interactions';
 import { InteractionType } from '../../models/Interactions';
 import { LoadingButton } from '@mui/lab';

@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, SxProps } from '@mui/material';
 
 import React from 'react';
-import { formatTextToFriendly } from '../helpers/formHelper';
+import { formatTextToFriendly } from '../../helpers/formHelper';
 
 interface FormSelectProps {
   id: string;

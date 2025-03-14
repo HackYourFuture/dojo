@@ -1,10 +1,10 @@
 import { Alert, Box, Chip, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import React, { useState } from 'react';
 
 import { AvatarWithTooltip } from '../shared/AvatarWithTooltip';
 import { ConfirmationDialog } from '../ConfirmationDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Interaction } from '../../models/Interactions';
-import React from 'react';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
 import { formatTextToFriendly } from '../../helpers/formHelper';
 import { useDeleteInteraction } from '../../hooks/interactions/interaction-queries';
@@ -15,7 +15,7 @@ interface InteractionsListProps {
 }
 const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId }) => {
   const { mutateAsync: deleteInteraction, isLoading: isDeleteLoading } = useDeleteInteraction(traineeId);
-  const [error, setError] = React.useState<string>('');
+  const [error, setError] = useState<string>('');
   const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
