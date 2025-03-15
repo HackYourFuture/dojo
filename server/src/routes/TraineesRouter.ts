@@ -8,12 +8,14 @@ import {
   StrikeControllerType,
 } from '../controllers';
 import Middleware from '../middlewares/Middleware';
+import { EmploymentHistoryControllerType } from '../controllers/Trainee/EmploymentHistoryController';
 
 export class TraineesRouter implements RouterType {
   private readonly traineeController: TraineeControllerType;
   private readonly interactionController: InteractionControllerType;
   private readonly profilePictureController: ProfilePictureControllerType;
   private readonly testController: TestControllerType;
+  private readonly employmentHistoryController: EmploymentHistoryControllerType;
   private readonly strikeController: StrikeControllerType;
   private readonly middlewares: Middleware[];
 
@@ -23,6 +25,7 @@ export class TraineesRouter implements RouterType {
     testController: TestControllerType,
     profilePictureController: ProfilePictureControllerType,
     strikeController: StrikeControllerType,
+    employmentHistoryController: EmploymentHistoryControllerType,
     middlewares: Middleware[] = []
   ) {
     this.traineeController = traineesController;
@@ -30,6 +33,7 @@ export class TraineesRouter implements RouterType {
     this.testController = testController;
     this.profilePictureController = profilePictureController;
     this.strikeController = strikeController;
+    this.employmentHistoryController = employmentHistoryController;
     this.middlewares = middlewares;
   }
 
@@ -70,6 +74,23 @@ export class TraineesRouter implements RouterType {
     router.post('/:id/tests', this.testController.addTest.bind(this.testController));
     router.put('/:id/tests/:testID', this.testController.updateTest.bind(this.testController));
     router.delete('/:id/tests/:testID', this.testController.deleteTest.bind(this.testController));
+
+    router.get(
+      '/:id/employment-history',
+      this.employmentHistoryController.getEmploymentHistory.bind(this.employmentHistoryController)
+    );
+    router.post(
+      '/:id/employment-history',
+      this.employmentHistoryController.addEmploymentHistory.bind(this.employmentHistoryController)
+    );
+    router.put(
+      '/:id/employment-history/:employmentHistoryID',
+      this.employmentHistoryController.updateEmploymentHistory.bind(this.employmentHistoryController)
+    );
+    router.delete(
+      '/:id/employment-history/:employmentHistoryID',
+      this.employmentHistoryController.deleteEmploymentHistory.bind(this.employmentHistoryController)
+    );
     return router;
   }
 }
