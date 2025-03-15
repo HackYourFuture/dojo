@@ -5,6 +5,7 @@ import {
   InteractionControllerType,
   TestControllerType,
   ProfilePictureControllerType,
+  StrikeControllerType,
 } from '../controllers';
 import Middleware from '../middlewares/Middleware';
 import { EmploymentHistoryControllerType } from '../controllers/Trainee/EmploymentHistoryController';
@@ -15,7 +16,7 @@ export class TraineesRouter implements RouterType {
   private readonly profilePictureController: ProfilePictureControllerType;
   private readonly testController: TestControllerType;
   private readonly employmentHistoryController: EmploymentHistoryControllerType;
-
+  private readonly strikeController: StrikeControllerType;
   private readonly middlewares: Middleware[];
 
   constructor(
@@ -23,6 +24,7 @@ export class TraineesRouter implements RouterType {
     interactionController: InteractionControllerType,
     testController: TestControllerType,
     profilePictureController: ProfilePictureControllerType,
+    strikeController: StrikeControllerType,
     employmentHistoryController: EmploymentHistoryControllerType,
     middlewares: Middleware[] = []
   ) {
@@ -30,6 +32,7 @@ export class TraineesRouter implements RouterType {
     this.interactionController = interactionController;
     this.testController = testController;
     this.profilePictureController = profilePictureController;
+    this.strikeController = strikeController;
     this.employmentHistoryController = employmentHistoryController;
     this.middlewares = middlewares;
   }
@@ -51,10 +54,10 @@ export class TraineesRouter implements RouterType {
       this.profilePictureController.deleteProfilePicture.bind(this.profilePictureController)
     );
 
-    router.get('/:id/strikes', this.traineeController.getStrikes.bind(this.traineeController));
-    router.post('/:id/strikes', this.traineeController.addStrike.bind(this.traineeController));
-    router.put('/:id/strikes/:strikeId', this.traineeController.updateStrike.bind(this.traineeController));
-    router.delete('/:id/strikes/:strikeId', this.traineeController.deleteStrike.bind(this.traineeController));
+    router.get('/:id/strikes', this.strikeController.getStrikes.bind(this.strikeController));
+    router.post('/:id/strikes', this.strikeController.addStrike.bind(this.strikeController));
+    router.put('/:id/strikes/:strikeId', this.strikeController.updateStrike.bind(this.strikeController));
+    router.delete('/:id/strikes/:strikeId', this.strikeController.deleteStrike.bind(this.strikeController));
 
     router.get('/:id/interactions', this.interactionController.getInteractions.bind(this.interactionController));
     router.post('/:id/interactions', this.interactionController.addInteraction.bind(this.interactionController));

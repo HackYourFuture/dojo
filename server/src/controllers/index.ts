@@ -5,6 +5,7 @@ export * from './Trainee/InteractionController';
 export * from './Trainee/TestController';
 export * from './Trainee/ProfilePictureController';
 export * from './Trainee/EmploymentHistoryController';
+export * from './Trainee/StrikeController';
 export * from './GeographyController';
 export * from './DashboardController';
 export * from './CohortsController';
