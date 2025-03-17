@@ -68,12 +68,12 @@ export class ProfilePictureController implements ProfilePictureControllerType {
       return;
     }
 
-    // Upload image to storage
-    const baseURL = process.env.STORAGE_BASE_URL ?? '';
-    const imageURL = new URL(this.getImageKey(trainee.id), baseURL).href;
-    const thumbnailURL = new URL(this.getThumbnailKey(trainee.id), baseURL).href;
-
     try {
+      // Upload image to storage
+      const baseURL = process.env.STORAGE_BASE_URL ?? '';
+      const imageURL = new URL(this.getImageKey(trainee.id), baseURL).href;
+      const thumbnailURL = new URL(this.getThumbnailKey(trainee.id), baseURL).href;
+
       // Upload images to storage
       const largeFileStream = fs.createReadStream(largeFilePath);
       const smallFileStream = fs.createReadStream(smallFilePath);
@@ -84,6 +84,7 @@ export class ProfilePictureController implements ProfilePictureControllerType {
       trainee.imageURL = imageURL;
       trainee.thumbnailURL = thumbnailURL;
       this.traineesRepository.updateTrainee(trainee);
+      res.status(201).send({ imageURL, thumbnailURL });
     } catch (error: any) {
       next(error);
       return;
@@ -105,8 +106,6 @@ export class ProfilePictureController implements ProfilePictureControllerType {
         Sentry.captureException(error);
       }
     });
-
-    res.status(201).send({ imageURL, thumbnailURL });
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {

@@ -4,7 +4,7 @@ import stream from 'stream';
 
 export interface StorageServiceType {
   download(key: string): Promise<stream.Readable>;
-  upload(path: string, input: stream.Readable, accessControl: AccessControl): Promise<void>;
+  upload(path: string, input: stream.Readable, accessControl: AccessControl): Promise<string>;
   delete(key: string): Promise<void>;
 }
 
@@ -17,7 +17,14 @@ export class StorageService implements StorageServiceType {
   private readonly s3Client: S3Client;
   private readonly bucketName: string;
 
-  constructor(endpoint: string, region: string, bucketName: string, accessKeyId: string, secretAccessKey: string) {
+  constructor(
+    endpoint: string,
+    region: string,
+    bucketName: string,
+    accessKeyId: string,
+    secretAccessKey: string,
+    forcePathStyle: boolean
+  ) {
     if (!endpoint) {
       throw new Error('Missing required configuration: endpoint');
     }
@@ -36,13 +43,13 @@ export class StorageService implements StorageServiceType {
     this.bucketName = bucketName;
     this.s3Client = new S3Client({
       endpoint,
-      forcePathStyle: false,
+      forcePathStyle: forcePathStyle,
       region,
       credentials: { accessKeyId, secretAccessKey },
     });
   }
 
-  async upload(key: string, input: stream.Readable, accessControl: AccessControl) {
+  async upload(key: string, input: stream.Readable, accessControl: AccessControl): Promise<string> {
     const upload = new Upload({
       client: this.s3Client,
       params: {
@@ -53,7 +60,12 @@ export class StorageService implements StorageServiceType {
       },
     });
 
-    await upload.done();
+    const uploadResponse = await upload.done();
+    if (!uploadResponse.Location) {
+      throw new Error(`Failed to upload file ${uploadResponse.$metadata}`);
+    }
+
+    return uploadResponse.Location;
   }
 
   async download(key: string) {

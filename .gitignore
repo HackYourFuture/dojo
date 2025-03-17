@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .env
 server/temp
+server/dev-services/volumes
 
 # Editor directories and files
 .vscode
