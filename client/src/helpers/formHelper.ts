@@ -48,3 +48,14 @@ export const createTextChangeHandler = (
     });
   };
 };
+
+/**
+ * formats the text to a UI friendly format
+ * for example: "in-progress" becomes "In progress"
+ * @param value
+ * @returns
+ */
+export const formatTextToFriendly = (value: string): string => {
+  // replace '-' with ' ' in the type string and capitilzie first letter
+  return value.replace(/-/g, ' ').replace(/^\w/, (char) => char.toUpperCase());
+};

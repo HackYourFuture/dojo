@@ -1,97 +1,129 @@
-import { Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-import { Interaction, InteractionType } from '../../models/Interactions';
+import { Alert, Box, Chip, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import React, { useState } from 'react';
 
 import { AvatarWithTooltip } from '../shared/AvatarWithTooltip';
-import React from 'react';
+import { ConfirmationDialog } from '../ConfirmationDialog';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Interaction } from '../../models/Interactions';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
+import { formatTextToFriendly } from '../../helpers/formHelper';
+import { useDeleteInteraction } from '../../hooks/interactions/interaction-queries';
 
 interface InteractionsListProps {
   interactions: Interaction[];
+  traineeId: string;
 }
-const InteractionsList: React.FC<InteractionsListProps> = ({ interactions }) => {
-  // coverts the interaction type to a user friendly string
-  const getInteractionType = (type: InteractionType): string => {
-    switch (type) {
-      case InteractionType.CALL:
-        return 'Call';
-      case InteractionType.CHAT:
-        return 'Chat';
-      case InteractionType.FEEDBACK:
-        return 'Feedback';
-      case InteractionType.IN_PERSON:
-        return 'In person';
-      case InteractionType.TECH_HOUR:
-        return 'Tech hour';
-      case InteractionType.OTHER:
-        return 'Other';
-      default:
-        return '';
-    }
+const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId }) => {
+  const { mutateAsync: deleteInteraction, isLoading: isDeleteLoading } = useDeleteInteraction(traineeId);
+  const [error, setError] = useState<string>('');
+  const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+
+  const handleClickOnDeleteButton = async (interaction: Interaction) => {
+    setError('');
+    setInteractionToDelete(interaction);
+    setIsModalOpen(true);
+  };
+
+  const onConfirmDelete = async () => {
+    if (!interactionToDelete) return;
+    await deleteInteraction(interactionToDelete.id, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+        setInteractionToDelete(null);
+      },
+      onError: (error) => {
+        if (error instanceof Error) setError(error.message);
+      },
+    });
+  };
+
+  const onCancelDelete = () => {
+    setIsModalOpen(false);
   };
 
   return (
-    <Box padding="24px" width="65%" paddingRight={10}>
-      <List
-        sx={{
-          width: '100%',
-          bgcolor: 'background.paper',
-          overflow: 'auto',
-          scrollbarWidth: 'thin',
-        }}
-      >
-        {interactions.length === 0 ? (
-          <Typography variant="body1" color="text.secondary" padding="16px" textAlign="center">
-            No interactions yet!
-          </Typography>
-        ) : (
-          interactions?.map((interaction: Interaction, index: number) => {
-            return (
-              <Box key={interaction.id}>
-                <ListItem
-                  alignItems="flex-start"
-                  disablePadding
-                  sx={{
-                    paddingBottom: 1,
-                    bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
-                  }}
-                >
-                  <ListItemAvatar
+    <React.Fragment>
+      <ConfirmationDialog
+        confirmButtonText="Delete"
+        isOpen={isModalOpen}
+        title="Confirm Delete"
+        message={`
+        Are you sure you want to delete the following interaction: ${interactionToDelete?.title || interactionToDelete?.type}
+      `}
+        isLoading={isDeleteLoading}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
+      />
+      <Box>
+        {error && <Alert severity="error">{error}</Alert>}
+        <List
+          sx={{
+            width: '100%',
+            bgcolor: 'background.paper',
+            overflow: 'auto',
+            scrollbarWidth: 'thin',
+          }}
+        >
+          {interactions.length === 0 ? (
+            <Typography variant="body1" color="text.secondary" padding="16px" textAlign="center">
+              No interactions yet!
+            </Typography>
+          ) : (
+            interactions?.map((interaction: Interaction, index: number) => {
+              return (
+                <Box key={interaction.id}>
+                  <ListItem
+                    alignItems="flex-start"
+                    disablePadding
                     sx={{
-                      display: 'flex',
-                      alignIntems: 'center',
-                      paddingLeft: 2,
-                      paddingRight: 2,
-                      paddingTop: 1,
+                      paddingBottom: 1,
+                      bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
                     }}
                   >
-                    <AvatarWithTooltip imageUrl={interaction.reporter.imageUrl} name={interaction.reporter.name} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Box
-                        display="flex"
-                        flexDirection="row"
-                        justifyContent="space-between"
-                        width="100%"
-                        paddingTop={1}
-                        paddingBottom={1}
-                      >
-                        <Box display="flex" flexDirection="row" gap={1}>
-                          <Chip label={getInteractionType(interaction.type)} color="primary" size="small" />
-                          <Typography>{interaction.title}</Typography>
+                    <ListItemAvatar
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                        paddingTop: 1,
+                      }}
+                    >
+                      <AvatarWithTooltip imageUrl={interaction.reporter.imageUrl} name={interaction.reporter.name} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          justifyContent="space-between"
+                          width="100%"
+                          paddingTop={1}
+                          paddingBottom={1}
+                        >
+                          <Box display="flex" flexDirection="row" gap={1}>
+                            <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
+                            <Typography>{interaction.title}</Typography>
+                          </Box>
+                          <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
                         </Box>
-                        <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
-                      </Box>
-                    }
-                    secondary={interaction.details}
-                  />
-                </ListItem>
-              </Box>
-            );
-          })
-        )}
-      </List>
-    </Box>
+                      }
+                      secondary={interaction.details}
+                    />
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
+                      <IconButton aria-label="delete" onClick={() => handleClickOnDeleteButton(interaction)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  </ListItem>
+                </Box>
+              );
+            })
+          )}
+        </List>
+      </Box>
+    </React.Fragment>
   );
 };
 
