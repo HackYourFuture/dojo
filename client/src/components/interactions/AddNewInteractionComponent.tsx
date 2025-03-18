@@ -57,11 +57,11 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
     setFormState((prev) => ({ ...prev, title: event.target.value }));
   };
 
-  const onChangeComments = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onCommentsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState((prev) => ({ ...prev, details: event.target.value }));
   };
 
-  const onChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormState((prev) => ({ ...prev, date: new Date(event.target.value) }));
   };
 
@@ -94,7 +94,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
           <FormDateTextField
             label="Date"
             value={formState.date || new Date()}
-            onChange={onChangeDate}
+            onChange={onDateChange}
             width="35%"
             disabled={isLoading}
           />
@@ -103,7 +103,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
           disabled={isLoading}
           label="Comments"
           value={formState.details}
-          onChange={onChangeComments}
+          onChange={onCommentsChange}
           multiline
           minRows={4}
           maxRows={10}
