@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Strike } from '../../models';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
+import MarkdownText from '../shared/MarkdownText';
 
 interface StrikesListProps {
   strikes: Strike[];
@@ -94,7 +95,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                       <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
                     </Box>
                   }
-                  secondary={strike.comments}
+                  secondary={<MarkdownText>{strike.comments}</MarkdownText>}
                 />
                 {renderActions(strike.id)}
               </ListItem>

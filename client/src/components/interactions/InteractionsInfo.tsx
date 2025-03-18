@@ -11,7 +11,7 @@ export const InteractionsInfo = () => {
   const { data: interactions, isLoading } = useGetInteractions(traineeId);
 
   return (
-    <Box padding="24px" width="65%" paddingRight={10}>
+    <Box padding="24px" maxWidth={1000} paddingRight={10}>
       {isLoading ? (
         <Box display={'flex'} justifyContent={'center'} alignItems={'center'} height={'100%'}>
           <CircularProgress />
