@@ -1378,8 +1378,9 @@ components:
             - in-person
             - tech-hour
             - english-mentorship
+            - tech-support
             - hr-mentorship
-            - tech-mentorship
+            - grad-mentorship
             - other
         title: 
           type: string
