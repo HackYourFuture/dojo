@@ -95,7 +95,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
             label="Date"
             value={formState.date || new Date()}
             onChange={onDateChange}
-            width="35%"
+            width="350px"
             disabled={isLoading}
           />
         </Box>

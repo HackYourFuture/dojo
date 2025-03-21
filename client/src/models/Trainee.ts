@@ -53,7 +53,7 @@ export enum LearningStatus {
 }
 
 export enum StrikeReason {
-  LastSubmission = 'late-submission',
+  LateSubmission = 'late-submission',
   MissedSubmission = 'missed-submission',
   IncompleteSubmission = 'incomplete-submission',
   LateAttendance = 'late-attendance',

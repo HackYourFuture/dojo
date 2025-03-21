@@ -178,7 +178,7 @@ export const StrikeDetailsModal = ({
                 startAdornment=" "
                 onChange={handleStrikeSelectChange}
               >
-                <MenuItem value={StrikeReason.LastSubmission}>Last submission</MenuItem>
+                <MenuItem value={StrikeReason.LateSubmission}>Late submission</MenuItem>
                 <MenuItem value={StrikeReason.MissedSubmission}>Missed submission</MenuItem>
                 <MenuItem value={StrikeReason.IncompleteSubmission}>Incomplete submission</MenuItem>
                 <MenuItem value={StrikeReason.LateAttendance}>Late attendance</MenuItem>

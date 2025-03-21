@@ -8,6 +8,7 @@ import { Interaction } from '../../models/Interactions';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
 import { formatTextToFriendly } from '../../helpers/formHelper';
 import { useDeleteInteraction } from '../../hooks/interactions/interaction-queries';
+import MarkdownText from '../shared/MarkdownText';
 
 interface InteractionsListProps {
   interactions: Interaction[];
@@ -109,7 +110,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
                           <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
                         </Box>
                       }
-                      secondary={interaction.details}
+                      secondary={<MarkdownText>{interaction.details}</MarkdownText>}
                     />
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
                       <IconButton aria-label="delete" onClick={() => handleClickOnDeleteButton(interaction)}>
