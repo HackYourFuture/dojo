@@ -80,8 +80,10 @@ class Main {
       process.env.STORAGE_REGION ?? '',
       process.env.STORAGE_BUCKET ?? '',
       process.env.STORAGE_ACCESS_KEY_ID ?? '',
-      process.env.STORAGE_ACCESS_KEY_SECRET ?? ''
+      process.env.STORAGE_ACCESS_KEY_SECRET ?? '',
+      process.env.STORAGE_BASE_FORCE_PATH_STYLE?.toLowerCase() === 'true' ? true : false
     );
+
     const uploadService = new UploadService(path.join(__dirname, '../temp'));
     uploadService.cleanupTempFiles();
     const imageService = new ImageService();

@@ -1,0 +1,25 @@
+services:
+  db:
+    image: mongo:latest
+    container_name: dojo-db
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./volumes/db:/data/db
+    restart: unless-stopped
+
+  storage:
+    build: ./storage
+    container_name: dojo-storage
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./volumes/storage:/data
+    environment:
+      - MINIO_ROOT_USER=dojo
+      - MINIO_ROOT_PASSWORD=dojodojo
+      - ACCESS_KEY=dojo_key
+      - SECRET_KEY=dojo_secret
+      - BUCKET_NAME=dojo-dev
+    restart: unless-stopped
