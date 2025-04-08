@@ -100,7 +100,7 @@ const TestSchema = new Schema<Test & WithMongoID>({
 const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
   {
     startCohort: { type: Number, required: true, min: 0, max: 999 },
-    currentCohort: { type: Number, required: false, default: null, min: 0, max: 999 },
+    currentCohort: { type: Number, required: false, default: null, index: true, min: 0, max: 999 },
     learningStatus: {
       type: String,
       required: true,
