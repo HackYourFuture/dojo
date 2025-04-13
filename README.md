@@ -50,7 +50,8 @@ Ensure you have the following installed:
 
 - Node.js
 - MongoDB
-- npm or yarn
+- Docker
+- npm
 
 ### Installation
 
