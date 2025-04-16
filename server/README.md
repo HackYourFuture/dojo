@@ -16,9 +16,9 @@ You will need to install Docker in order to run all the dependencies of the serv
 In the server root directory:
 1. Run `npm run setup`
 2. Copy `.env.example` to `.env `
-3. `cd services`
+3. `cd dev-services`
 4. Run `docker compose up` to setup and run all local service dependencies (Local DB server, local storage server)
-5. In a new terminal window, run `npm run dev`. This command uses `nodemon` to re-run the server after every change of the source files.
+5. In a new terminal window, run `npm run dev` from the `/server` folder. This command uses `nodemon` to re-run the server after every change of the source files.
 6. Test the server by navigating to http://localhost:7777/api-docs in your browser.
 
 ## 📡  Setup for production
