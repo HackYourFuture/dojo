@@ -62,7 +62,18 @@ export class MongooseTraineesRepository implements TraineesRepository {
       condition = { $or: [condition, { 'educationInfo.currentCohort': null }] };
     }
     return await this.TraineeModel.find(condition)
-      .where('educationInfo.learningStatus')
+      .select([
+        'thumbnailURL',
+        'contactInfo',
+        'personalInfo.firstName',
+        'personalInfo.lastName',
+        'personalInfo.location',
+        'personalInfo.hasWorkPermit',
+        'educationInfo.learningStatus',
+        'educationInfo.strikes.id',
+        'educationInfo.currentCohort',
+        'employmentInfo.jobPath',
+      ])
       .sort({ 'educationInfo.currentCohort': 1 })
       .exec();
   }
