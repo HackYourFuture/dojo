@@ -1193,6 +1193,7 @@ components:
             - diploma
             - bachelors-degree
             - masters-degree
+            - phd
           example: bachelors-degree
         educationBackground:
           type: string
