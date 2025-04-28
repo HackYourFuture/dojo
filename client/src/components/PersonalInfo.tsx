@@ -309,6 +309,7 @@ export const PersonalInfo = () => {
             <MenuItem value={EducationLevel.Diploma}>Diploma</MenuItem>
             <MenuItem value={EducationLevel.BachelorsDegree}>Bachelors degree</MenuItem>
             <MenuItem value={EducationLevel.MastersDegree}>Masters degree</MenuItem>
+            <MenuItem value={EducationLevel.PhD}>PhD</MenuItem>
           </Select>
         </FormControl>
 

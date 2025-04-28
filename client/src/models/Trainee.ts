@@ -36,6 +36,7 @@ export enum EducationLevel {
   Diploma = 'diploma',
   BachelorsDegree = 'bachelors-degree',
   MastersDegree = 'masters-degree',
+  PhD = 'phd',
 }
 
 export enum ResidencyStatus {
