@@ -8,7 +8,7 @@ export interface TokenServiceType {
 
 export class TokenService implements TokenServiceType {
   private readonly secret: string;
-  private readonly expiration: string;
+  private readonly expiration: JWT.SignOptions['expiresIn'];
   private readonly ALGORITHM = 'HS512';
 
   constructor(secret: string, expirationInDays: number) {
@@ -26,10 +26,13 @@ export class TokenService implements TokenServiceType {
       name: user.name,
       imageUrl: user.imageUrl,
     };
-    return JWT.sign(plainObject, this.secret, {
+
+    const signOptions: JWT.SignOptions = {
       algorithm: this.ALGORITHM,
       expiresIn: this.expiration,
-    });
+    };
+
+    return JWT.sign(plainObject, this.secret, signOptions);
   }
 
   verifyAccessToken(token: string): AuthenticatedUser {
