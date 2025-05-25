@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
 import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../../models';
+import { validateStrike } from '../../models/Strike';
+import { UserRepository } from '../../repositories/UserRepository';
 
 export interface StrikeControllerType {
   getStrikes(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -10,10 +12,10 @@ export interface StrikeControllerType {
 }
 
 export class StrikeController implements StrikeControllerType {
-  private readonly traineesRepository: TraineesRepository;
-  constructor(traineesRepository: TraineesRepository) {
-    this.traineesRepository = traineesRepository;
-  }
+  constructor(
+    private readonly traineesRepository: TraineesRepository,
+    private readonly userRepository: UserRepository
+  ) {}
 
   async getStrikes(req: Request, res: Response, next: NextFunction) {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
@@ -44,7 +46,11 @@ export class StrikeController implements StrikeControllerType {
 
     // Validate new strike model before creation
     try {
-      await this.traineesRepository.validateStrike(newStrike);
+      validateStrike(newStrike);
+      const reporter = await this.userRepository.findUserByID(reporterID);
+      if (!reporter) {
+        throw new Error(`Invalid reporter ID ${reporterID}. User not found.`);
+      }
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;
@@ -82,7 +88,7 @@ export class StrikeController implements StrikeControllerType {
 
     // Validate new strike model after applying the changes
     try {
-      await this.traineesRepository.validateStrike(strikeToUpdate);
+      validateStrike(strikeToUpdate);
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;

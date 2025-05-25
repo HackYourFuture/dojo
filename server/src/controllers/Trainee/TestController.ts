@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ResponseError, Test } from '../../models';
+import { ResponseError, Test, validateTest } from '../../models';
 import { TraineesRepository } from '../../repositories';
 
 export interface TestControllerType {
@@ -10,10 +10,8 @@ export interface TestControllerType {
 }
 
 export class TestController implements TestControllerType {
-  private readonly traineesRepository: TraineesRepository;
-  constructor(traineesRepository: TraineesRepository) {
-    this.traineesRepository = traineesRepository;
-  }
+  constructor(private readonly traineesRepository: TraineesRepository) {}
+
   async getTests(req: Request, res: Response, next: NextFunction): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
@@ -40,7 +38,7 @@ export class TestController implements TestControllerType {
 
     // Validate new test model before creation
     try {
-      await this.traineesRepository.validateTest(newTest);
+      validateTest(newTest);
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;
@@ -78,7 +76,7 @@ export class TestController implements TestControllerType {
 
     // Validate new test model after applying the changes
     try {
-      await this.traineesRepository.validateTest(testToUpdate);
+      validateTest(testToUpdate);
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;

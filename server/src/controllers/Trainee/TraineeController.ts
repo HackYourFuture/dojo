@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
 import { ResponseError } from '../../models';
+import { validateTrainee } from '../../models/Trainee';
 
 export interface TraineeControllerType {
   getTrainee(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -10,10 +11,7 @@ export interface TraineeControllerType {
 }
 
 export class TraineeController implements TraineeControllerType {
-  private readonly traineesRepository: TraineesRepository;
-  constructor(traineesRepository: TraineesRepository) {
-    this.traineesRepository = traineesRepository;
-  }
+  constructor(private readonly traineesRepository: TraineesRepository) {}
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
     const traineeId = req.params.id;
@@ -36,7 +34,7 @@ export class TraineeController implements TraineeControllerType {
 
     // Check if the request is valid
     try {
-      await this.traineesRepository.validateTrainee(req.body);
+      validateTrainee(req.body);
     } catch (error: any) {
       const message: string = `Invalid trainee information. ` + error.message;
       res.status(400).json(new ResponseError(message));
@@ -79,7 +77,7 @@ export class TraineeController implements TraineeControllerType {
 
     // Validate new trainee model after applying the changes
     try {
-      await this.traineesRepository.validateTrainee(trainee);
+      validateTrainee(trainee);
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;
