@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository, UserRepository } from '../../repositories';
 import { AuthenticatedUser, InteractionWithReporterID, ResponseError } from '../../models';
+import { NotificationService } from '../../services';
 import { validateInteraction } from '../../models/Interaction';
 export interface InteractionControllerType {
   getInteractions(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -12,7 +13,8 @@ export interface InteractionControllerType {
 export class InteractionController implements InteractionControllerType {
   constructor(
     private readonly traineesRepository: TraineesRepository,
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private notificationService: NotificationService
   ) {}
 
   async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -57,6 +59,7 @@ export class InteractionController implements InteractionControllerType {
     try {
       const interaction = await this.traineesRepository.addInteraction(req.params.id, newInteraction);
       res.status(201).json(interaction);
+      this.notificationService.interactionCreated(trainee, interaction);
     } catch (error: any) {
       next(error);
     }

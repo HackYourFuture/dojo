@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ResponseError, Test, validateTest } from '../../models';
 import { TraineesRepository } from '../../repositories';
+import { NotificationService } from '../../services';
 
 export interface TestControllerType {
   getTests(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -10,7 +11,10 @@ export interface TestControllerType {
 }
 
 export class TestController implements TestControllerType {
-  constructor(private readonly traineesRepository: TraineesRepository) {}
+  constructor(
+    private readonly traineesRepository: TraineesRepository,
+    private readonly notificationService: NotificationService
+  ) {}
 
   async getTests(req: Request, res: Response, next: NextFunction): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
@@ -47,6 +51,7 @@ export class TestController implements TestControllerType {
     try {
       const test = await this.traineesRepository.addTest(trainee.id, newTest);
       res.status(201).json(test);
+      this.notificationService.testCreated(trainee, test);
     } catch (error: any) {
       next(error);
     }

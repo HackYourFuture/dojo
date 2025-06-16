@@ -60,6 +60,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
         'contactInfo',
         'personalInfo.firstName',
         'personalInfo.lastName',
+        'personalInfo.preferredName',
         'personalInfo.location',
         'personalInfo.hasWorkPermit',
         'educationInfo.learningStatus',

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
 import { ResponseError } from '../../models';
+import { NotificationService, UpdateChange } from '../../services';
 import { validateTrainee } from '../../models/Trainee';
 
 export interface TraineeControllerType {
@@ -11,7 +12,10 @@ export interface TraineeControllerType {
 }
 
 export class TraineeController implements TraineeControllerType {
-  constructor(private readonly traineesRepository: TraineesRepository) {}
+  constructor(
+    private readonly traineesRepository: TraineesRepository,
+    private readonly notificationService: NotificationService
+  ) {}
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
     const traineeId = req.params.id;
@@ -73,7 +77,7 @@ export class TraineeController implements TraineeControllerType {
     }
 
     // Apply all changes from the request body to the trainee object
-    this.applyObjectUpdate(req.body, trainee);
+    const changes = this.applyObjectUpdate(req.body, trainee);
 
     // Validate new trainee model after applying the changes
     try {
@@ -87,6 +91,7 @@ export class TraineeController implements TraineeControllerType {
     try {
       await this.traineesRepository.updateTrainee(trainee);
       res.status(200).json(trainee);
+      this.notificationService.traineeUpdated(trainee, changes);
     } catch (error: any) {
       res.status(500).send(new ResponseError(error.message));
     }
@@ -98,10 +103,15 @@ export class TraineeController implements TraineeControllerType {
 
   // This function updates the destination object with the source object.
   // It is similar to Object.assign but works for nested objects and skips arrays.
-  private applyObjectUpdate(source: any, destination: any, nestLevel: number = 0) {
+  private applyObjectUpdate(
+    source: any,
+    destination: any,
+    nestLevel: number = 0,
+    changes: UpdateChange[] = []
+  ): UpdateChange[] {
     // safeguard against infinite recursion
     if (nestLevel > 5) {
-      return;
+      return changes;
     }
 
     for (let key of Object.keys(source)) {
@@ -109,13 +119,25 @@ export class TraineeController implements TraineeControllerType {
         continue;
       }
       if (typeof source[key] === 'object' && source[key] !== null) {
-        this.applyObjectUpdate(source[key], destination[key], nestLevel + 1);
+        this.applyObjectUpdate(source[key], destination[key], nestLevel + 1, changes);
         continue;
       }
       if (destination[key] === source[key]) {
         continue;
       }
+
+      // If the value has changed, record the change
+      if (destination[key] !== source[key]) {
+        changes.push({
+          fieldName: key,
+          previousValue: destination[key],
+          newValue: source[key],
+        });
+      }
+      // Update the destination object with the new value
       destination[key] = source[key];
     }
+
+    return changes;
   }
 }

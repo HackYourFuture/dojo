@@ -71,6 +71,15 @@ The following variables are used to send Sentry the source maps. It is not requi
 | `SENTRY_AUTH_TOKEN`  | Sentry auth token. Generated in the Sentry portal. | - empty -
 | `SENTRY_ENVIRONMENT` | development,  testing, production  | development
 
+### Slack config
+Variables used for sending Slack notifications. All are required. Create or update Slack app here: https://api.slack.com/apps
+
+| Name          | Description                                      | Default |
+|---------------|--------------------------------------------------|----------
+| `SLACK_TOKEN`  | Slack token for sending messages. Can be found in the 'OAuth & Permissions' section. | - empty -
+| `SLACK_SIGNING_SECRET` | App signing secret. Can be found in the basic information section. | - empty -
+| `SLACK_NOTIFICATION_CHANNEL` | The channel ID to send the notification to. The app must be added to that channel. | - empty -
+
 
 ## Google authentication setup
 Dojo uses Sign in with Google. In order to make it work, a new OAuth app needs to be create in  Google API Console. Here are the steps to do so:
