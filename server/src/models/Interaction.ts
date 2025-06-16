@@ -27,3 +27,18 @@ export type InteractionWithReporter = Interaction & { reporter: DisplayUser };
 
 // For database storage
 export type InteractionWithReporterID = Interaction & { reporterID: string };
+
+export const validateInteraction = (interaction: InteractionWithReporterID): void => {
+  if (!interaction.date) {
+    throw new Error('Interaction date is required');
+  }
+  if (!interaction.reporterID) {
+    throw new Error('Interaction reporter ID is required');
+  }
+  if (!interaction.details) {
+    throw new Error('Interaction details are required');
+  }
+  if (!Object.values(InteractionType).includes(interaction.type)) {
+    throw new Error(`Unknown interaction type [${Object.values(InteractionType)}]`);
+  }
+};

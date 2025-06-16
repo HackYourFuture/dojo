@@ -1,5 +1,6 @@
 import { InteractionWithReporter } from './Interaction';
 import { StrikeWithReporter } from './Strike';
+import { Test } from './Test';
 
 export enum Gender {
   Man = 'man',
@@ -130,15 +131,6 @@ export interface TraineePersonalInfo {
   comments?: string;
 }
 
-export interface Test {
-  readonly id: string;
-  date: Date;
-  type: TestType;
-  score?: number;
-  result: TestResult;
-  comments?: string;
-}
-
 export interface Assignment {
   readonly id: string;
   createDate: Date;
@@ -185,3 +177,44 @@ export interface EmploymentHistory {
   feeAmount?: number;
   comments?: string;
 }
+
+// Validations
+export const validateTrainee = (trainee: Trainee): void => {
+  validatePersonalInfo(trainee.personalInfo);
+  validateContactInfo(trainee.contactInfo);
+  validateEducationInfo(trainee.educationInfo);
+  validateEmploymentInfo(trainee.employmentInfo);
+};
+
+const validatePersonalInfo = (personalInfo: TraineePersonalInfo): void => {
+  if (!personalInfo.firstName) {
+    throw new Error('First name is required');
+  }
+  if (!personalInfo.lastName) {
+    throw new Error('Last name is required');
+  }
+  if (!personalInfo.gender) {
+    throw new Error('Gender is required');
+  }
+};
+
+const validateContactInfo = (contactInfo: TraineeContactInfo): void => {
+  if (!contactInfo.email) {
+    throw new Error('Email is required');
+  }
+};
+
+const validateEducationInfo = (educationInfo: TraineeEducationInfo): void => {
+  if (!educationInfo.startCohort) {
+    throw new Error('Start cohort is required');
+  }
+  if (!educationInfo.learningStatus) {
+    throw new Error('Learning status is required');
+  }
+};
+
+const validateEmploymentInfo = (employmentInfo: TraineeEmploymentInfo): void => {
+  if (!employmentInfo.jobPath) {
+    throw new Error('Job path is required');
+  }
+};

@@ -1,8 +1,7 @@
-import { InteractionType, InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
-import { StrikeReason, StrikeWithReporter, StrikeWithReporterID, Test, TestResult, TestType, Trainee } from '../models';
+import { InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
+import { StrikeWithReporter, StrikeWithReporterID, Test, Trainee } from '../models';
 
 import { TraineeSchema } from '../schemas';
-import { UserRepository } from './UserRepository';
 import { WithMongoID } from '../utils/database';
 import mongoose from 'mongoose';
 
@@ -18,34 +17,28 @@ export interface TraineesRepository {
   deleteTrainee(id: string): Promise<void>;
   updateTrainee(trainee: Trainee): Promise<void>;
   isEmailExists(email: string): Promise<boolean>;
-  validateTrainee(trainee: Trainee): Promise<void>;
 
   getStrikes(traineeID: string): Promise<StrikeWithReporter[]>;
   addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
   updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
   deleteStrike(traineeID: string, strikeID: string): Promise<void>;
-  validateStrike(strike: StrikeWithReporterID): Promise<void>;
 
   getInteractions(traineeID: string): Promise<InteractionWithReporter[]>;
   addInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter>;
   updateInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter>;
   deleteInteraction(traineeID: string, interactionID: string): Promise<void>;
-  validateInteraction(interaction: InteractionWithReporterID): Promise<void>;
 
   getTests(traineeID: string): Promise<Test[]>;
   addTest(traineeID: string, test: Test): Promise<Test>;
   updateTest(traineeID: string, test: Test): Promise<Test>;
   deleteTest(traineeID: string, testID: string): Promise<void>;
-  validateTest(test: Test): Promise<void>;
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
   private readonly TraineeModel: mongoose.Model<Trainee & WithMongoID>;
-  private readonly userRepository: UserRepository;
 
-  constructor(db: mongoose.Connection, userRepository: UserRepository) {
+  constructor(db: mongoose.Connection) {
     this.TraineeModel = db.model<Trainee & WithMongoID>('Trainee', TraineeSchema);
-    this.userRepository = userRepository;
   }
 
   async getAllTrainees(): Promise<Trainee[]> {
@@ -101,10 +94,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
     return result !== null;
   }
 
-  async validateTrainee(trainee: Trainee): Promise<void> {
-    await this.TraineeModel.validate(trainee);
-  }
-
   async getStrikes(traineeID: string): Promise<StrikeWithReporter[]> {
     const trainee = await this.TraineeModel.findById(traineeID)
       .populate('educationInfo.strikes.reporterID', 'name imageUrl')
@@ -152,27 +141,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
       { _id: traineeID },
       { $pull: { 'educationInfo.strikes': { _id: strikeID } } }
     );
-  }
-
-  async validateStrike(strike: StrikeWithReporterID): Promise<void> {
-    if (!strike.date) {
-      throw new Error('Strike date is required');
-    }
-    if (!strike.reporterID) {
-      throw new Error('Strike reporter ID is required');
-    }
-    if (!strike.reason) {
-      throw new Error('Strike reason is required');
-    }
-    if (!Object.values(StrikeReason).includes(strike.reason)) {
-      throw new Error('Unknown strike reason');
-    }
-    if (!strike.comments) {
-      throw new Error('Strike comments are required');
-    }
-    if ((await this.userRepository.findUserByID(strike.reporterID)) === null) {
-      throw new Error('Invalid strike reporter ID');
-    }
   }
 
   async getInteractions(traineeID: string): Promise<InteractionWithReporter[]> {
@@ -223,24 +191,6 @@ export class MongooseTraineesRepository implements TraineesRepository {
     await this.TraineeModel.findOneAndUpdate({ _id: traineeID }, { $pull: { interactions: { _id: interactionID } } });
   }
 
-  async validateInteraction(interaction: InteractionWithReporterID): Promise<void> {
-    if (!interaction.date) {
-      throw new Error('Interaction date is required');
-    }
-    if (!interaction.reporterID) {
-      throw new Error('Interaction reporter ID is required');
-    }
-    if (!interaction.details) {
-      throw new Error('Interaction details are required');
-    }
-    if (!Object.values(InteractionType).includes(interaction.type)) {
-      throw new Error(`Unknown interaction type [${Object.values(InteractionType)}]`);
-    }
-    if ((await this.userRepository.findUserByID(interaction.reporterID)) === null) {
-      throw new Error('Unknown reporter ID');
-    }
-  }
-
   async getTests(traineeID: string): Promise<Test[]> {
     const trainee = await this.TraineeModel.findById(traineeID).select('educationInfo.tests').exec();
 
@@ -287,17 +237,5 @@ export class MongooseTraineesRepository implements TraineesRepository {
 
   async deleteTest(traineeID: string, testID: string): Promise<void> {
     await this.TraineeModel.findOneAndUpdate({ _id: traineeID }, { $pull: { 'educationInfo.tests': { _id: testID } } });
-  }
-
-  async validateTest(test: Test): Promise<void> {
-    if (!test.date) {
-      throw new Error('Test date is required');
-    }
-    if (!test.result || !Object.values(TestResult).includes(test.result)) {
-      throw new Error(`Unknown test result [${Object.values(TestResult)}]`);
-    }
-    if (!test.type || !Object.values(TestType).includes(test.type)) {
-      throw new Error(`Unknown test type [${Object.values(TestType)}]`);
-    }
   }
 }

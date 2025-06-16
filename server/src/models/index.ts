@@ -6,3 +6,4 @@ export * from './City';
 export * from './Country';
 export * from './Strike';
 export * from './Interaction';
+export * from './Test';

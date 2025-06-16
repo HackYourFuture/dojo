@@ -88,7 +88,7 @@ class Main {
     uploadService.cleanupTempFiles();
     const imageService = new ImageService();
     const userRepository = new MongooseUserRepository(this.db);
-    const traineesRepository = new MongooseTraineesRepository(this.db, userRepository);
+    const traineesRepository = new MongooseTraineesRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
     // setup controllers
@@ -105,10 +105,10 @@ class Main {
       uploadService,
       imageService
     );
-    const interactionController = new InteractionController(traineesRepository);
+    const interactionController = new InteractionController(traineesRepository, userRepository);
     const testController = new TestController(traineesRepository);
     const employmentHistoryController = new EmploymentHistoryController();
-    const strikeController = new StrikeController(traineesRepository);
+    const strikeController = new StrikeController(traineesRepository, userRepository);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();

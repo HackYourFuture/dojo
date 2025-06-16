@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { TraineesRepository } from '../../repositories';
+import { TraineesRepository, UserRepository } from '../../repositories';
 import { AuthenticatedUser, InteractionWithReporterID, ResponseError } from '../../models';
-
+import { validateInteraction } from '../../models/Interaction';
 export interface InteractionControllerType {
   getInteractions(req: Request, res: Response, next: NextFunction): Promise<void>;
   addInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -10,10 +10,10 @@ export interface InteractionControllerType {
 }
 
 export class InteractionController implements InteractionControllerType {
-  private readonly traineesRepository: TraineesRepository;
-  constructor(traineesRepository: TraineesRepository) {
-    this.traineesRepository = traineesRepository;
-  }
+  constructor(
+    private readonly traineesRepository: TraineesRepository,
+    private readonly userRepository: UserRepository
+  ) {}
 
   async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
@@ -44,7 +44,11 @@ export class InteractionController implements InteractionControllerType {
 
     // Validate new interaction model before creation
     try {
-      await this.traineesRepository.validateInteraction(newInteraction);
+      validateInteraction(newInteraction);
+      const reporter = await this.userRepository.findUserByID(reporterID);
+      if (!reporter) {
+        throw new Error(`Invalid reporter ID ${reporterID}. User not found.`);
+      }
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;
@@ -83,7 +87,7 @@ export class InteractionController implements InteractionControllerType {
 
     // Validate new interaction model after applying the changes
     try {
-      await this.traineesRepository.validateInteraction(interactionToUpdate);
+      validateInteraction(interactionToUpdate);
     } catch (error: any) {
       res.status(400).send(new ResponseError(error.message));
       return;
