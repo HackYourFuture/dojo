@@ -34,6 +34,7 @@
     "@aws-sdk/lib-storage": "^3.540.0",
     "@sentry/cli": "^2.33.1",
     "@sentry/node": "^9.20.0",
+    "@slack/bolt": "^4.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",

@@ -22,6 +22,8 @@ import {
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
+  getDisplayName,
+  getProfileURL,
 } from '../models';
 import { WithMongoID, jsonFormatting } from '../utils/database';
 
@@ -175,9 +177,11 @@ const TraineeSchema = new Schema<Trainee & WithMongoID>(
 );
 
 TraineeSchema.virtual('displayName').get(function () {
-  const { preferredName, firstName, lastName } = this.personalInfo;
-  const name: string = preferredName ? preferredName : firstName;
-  return `${name} ${lastName}`;
+  return getDisplayName(this as Trainee);
+});
+
+TraineeSchema.virtual('profileURL').get(function () {
+  return getProfileURL(this as Trainee);
 });
 
 TraineeSchema.set('toJSON', jsonFormatting);

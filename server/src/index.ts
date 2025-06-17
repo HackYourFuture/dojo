@@ -27,7 +27,14 @@ import {
   StrikeController,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
-import { GoogleOAuthService, TokenService, StorageService, UploadService, ImageService } from './services';
+import {
+  GoogleOAuthService,
+  TokenService,
+  StorageService,
+  UploadService,
+  ImageService,
+  SlackNotificationService,
+} from './services';
 import { ResponseError } from './models';
 import { AuthMiddleware } from './middlewares';
 import { CohortsRouter } from './routes/CohortsRouter';
@@ -87,6 +94,11 @@ class Main {
     const uploadService = new UploadService(path.join(__dirname, '../temp'));
     uploadService.cleanupTempFiles();
     const imageService = new ImageService();
+    const notificationService = new SlackNotificationService({
+      signingSecret: process.env.SLACK_SIGNING_SECRET ?? '',
+      token: process.env.SLACK_TOKEN ?? '',
+      notificationChannel: process.env.SLACK_NOTIFICATION_CHANNEL ?? '',
+    });
     const userRepository = new MongooseUserRepository(this.db);
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
@@ -98,17 +110,17 @@ class Main {
       tokenService,
       tokenExpirationInDays
     );
-    const traineeController = new TraineeController(traineesRepository);
+    const traineeController = new TraineeController(traineesRepository, notificationService);
     const profilePictureController = new ProfilePictureController(
       traineesRepository,
       storageService,
       uploadService,
       imageService
     );
-    const interactionController = new InteractionController(traineesRepository, userRepository);
-    const testController = new TestController(traineesRepository);
+    const interactionController = new InteractionController(traineesRepository, userRepository, notificationService);
+    const testController = new TestController(traineesRepository, notificationService);
     const employmentHistoryController = new EmploymentHistoryController();
-    const strikeController = new StrikeController(traineesRepository, userRepository);
+    const strikeController = new StrikeController(traineesRepository, userRepository, notificationService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();

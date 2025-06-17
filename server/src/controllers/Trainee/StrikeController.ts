@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
 import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../../models';
+import { NotificationService } from '../../services';
 import { validateStrike } from '../../models/Strike';
 import { UserRepository } from '../../repositories/UserRepository';
 
@@ -14,7 +15,8 @@ export interface StrikeControllerType {
 export class StrikeController implements StrikeControllerType {
   constructor(
     private readonly traineesRepository: TraineesRepository,
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly notificationService: NotificationService
   ) {}
 
   async getStrikes(req: Request, res: Response, next: NextFunction) {
@@ -59,6 +61,7 @@ export class StrikeController implements StrikeControllerType {
     try {
       const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
       res.status(201).json(strike);
+      this.notificationService.strikeCreated(trainee, strike);
     } catch (error: any) {
       next(error);
     }

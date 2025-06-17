@@ -1,6 +1,7 @@
 import { InteractionWithReporter } from './Interaction';
 import { StrikeWithReporter } from './Strike';
 import { Test } from './Test';
+import removeAccents from 'remove-accents';
 
 export enum Gender {
   Man = 'man',
@@ -93,6 +94,7 @@ export interface Trainee {
   readonly id: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  profileURL: string;
   displayName: string;
   imageURL?: string;
   thumbnailURL?: string;
@@ -177,6 +179,17 @@ export interface EmploymentHistory {
   feeAmount?: number;
   comments?: string;
 }
+
+export const getDisplayName = (trainee: Trainee): string => {
+  const { preferredName, firstName, lastName } = trainee.personalInfo;
+  const name: string = preferredName ? preferredName : firstName;
+  return `${name} ${lastName}`;
+};
+
+export const getProfileURL = (trainee: Trainee): string => {
+  const normalizedName = removeAccents(getDisplayName(trainee).toLowerCase()).replaceAll(/\s/g, '-');
+  return `${process.env.BASE_URL}/trainee/${normalizedName}_${trainee.id}`;
+};
 
 // Validations
 export const validateTrainee = (trainee: Trainee): void => {
