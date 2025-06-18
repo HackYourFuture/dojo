@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
-import { ResponseError } from '../../models';
+import { AuthenticatedUser, ResponseError } from '../../models';
 import { NotificationService, UpdateChange } from '../../services';
 import { validateTrainee } from '../../models/Trainee';
 
@@ -91,7 +91,7 @@ export class TraineeController implements TraineeControllerType {
     try {
       await this.traineesRepository.updateTrainee(trainee);
       res.status(200).json(trainee);
-      this.notificationService.traineeUpdated(trainee, changes);
+      this.notificationService.traineeUpdated(trainee, changes, res.locals.user as AuthenticatedUser);
     } catch (error: any) {
       res.status(500).send(new ResponseError(error.message));
     }

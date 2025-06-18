@@ -1,4 +1,12 @@
-import { getProfileURL, InteractionWithReporter, StrikeWithReporter, Test, TestResult, Trainee } from '../models';
+import {
+  AuthenticatedUser,
+  getProfileURL,
+  InteractionWithReporter,
+  StrikeWithReporter,
+  Test,
+  TestResult,
+  Trainee,
+} from '../models';
 import { App } from '@slack/bolt';
 import * as Sentry from '@sentry/node';
 
@@ -9,7 +17,7 @@ export interface UpdateChange {
 }
 
 export interface NotificationService {
-  traineeUpdated(trainee: Trainee, changes: UpdateChange[]): Promise<void>;
+  traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): Promise<void>;
   interactionCreated(trainee: Trainee, interaction: InteractionWithReporter): Promise<void>;
   strikeCreated(trainee: Trainee, strike: StrikeWithReporter): Promise<void>;
   testCreated(trainee: Trainee, test: Test): Promise<void>;
@@ -28,8 +36,8 @@ export class SlackNotificationService implements NotificationService {
     this.notificationChannel = config.notificationChannel;
   }
 
-  async traineeUpdated(trainee: Trainee, changes: UpdateChange[]): Promise<void> {
-    const message = [`✏️ *New update* for <${getProfileURL(trainee)}|${trainee.displayName}>`];
+  async traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): Promise<void> {
+    const message = [`✏️ *New update* for <${getProfileURL(trainee)}|${trainee.displayName}>`, `*By:* ${user.name}`];
     changes.forEach((change) => {
       message.push(`> - *${change.fieldName}*: ${change.previousValue} → ${change.newValue}`);
     });
