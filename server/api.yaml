@@ -147,6 +147,18 @@ paths:
                             name:
                               type: string
                               example: John Doe
+                            profileURL:
+                              type: string
+                              example: https://example.com/trainee/Isaac-Pagaca_HpOjvmwX
+                            thumbnailURL:
+                              type: string
+                              example: https://cdn.example.com/images/HpOjvmwX_thumb.jpeg
+                            cohort:
+                              type: number
+                              example: 52
+                            searchScore: 
+                              type: number
+                              example: 100
                       size:
                         type: integer
                         example: 45

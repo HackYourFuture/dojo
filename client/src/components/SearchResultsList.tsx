@@ -38,7 +38,7 @@ export const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) =
             return (
               <ListItem disablePadding key={trainee.id}>
                 <Link
-                  to={`/trainee/${trainee.name.replace(/ /g, '-')}_${trainee.id}`}
+                  to={trainee.profileURL}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',

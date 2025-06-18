@@ -10,6 +10,7 @@ interface Cohort {
 interface TraineeSummary {
   id: string;
   displayName: string;
+  profileURL: string;
   thumbnailURL: string | null;
   location?: string;
   hasWorkPermit?: boolean;
@@ -63,6 +64,7 @@ export class CohortsController implements CohortsControllerType {
     return {
       id: trainee.id,
       displayName: trainee.displayName,
+      profileURL: trainee.profileURL,
       thumbnailURL: trainee.thumbnailURL ?? null,
       location: trainee.personalInfo.location,
       hasWorkPermit: trainee.personalInfo.hasWorkPermit,

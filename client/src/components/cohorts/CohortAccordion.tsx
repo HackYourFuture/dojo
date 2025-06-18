@@ -13,7 +13,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { TraineeAvatar } from '../cohorts/TraineeAvatar';
 
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Cohort, LearningStatus } from '../../models';
 import { SidebarJobPath, SidebarLearningStatus } from '..';
 import slackLogo from '../../assets/slack.png';
@@ -31,7 +31,6 @@ export interface CohortAccordionProps {
 export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
   const expandFlag = cohortInfo.cohort !== null ? true : false;
 
-  const navigate = useNavigate();
   const headerStyle = {
     fontWeight: 'bold',
   };
@@ -67,8 +66,9 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                 <TableRow
                   key={trainee.id}
                   hover
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-                  onClick={() => navigate(`/trainee/${trainee.displayName.replace(/ /g, '-')}_${trainee.id}`)}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer', textDecoration: 'none' }}
+                  component={Link}
+                  to={trainee.profileURL}
                 >
                   <TableCell component="th" scope="row">
                     <TraineeAvatar imageURL={trainee.thumbnailURL ?? ''} altText={trainee.displayName}></TraineeAvatar>
@@ -122,7 +122,7 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
   );
 };
 
-const convertToString = (value: Boolean | null | undefined) => {
+const convertToString = (value: boolean | null | undefined) => {
   if (value === null || value === undefined) {
     return '';
   }

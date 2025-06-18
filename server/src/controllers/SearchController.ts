@@ -16,6 +16,7 @@ interface SearchResult {
   id: string;
   name: string;
   thumbnail: string | null;
+  profileURL: string;
   cohort: number | null;
   searchScore: number;
 }
@@ -78,6 +79,7 @@ export class SearchController implements SearchControllerType {
           name: `${trainee.displayName}`,
           thumbnail: trainee.thumbnailURL ?? null,
           cohort: trainee.educationInfo.currentCohort ?? null,
+          profileURL: trainee.profileURL,
           searchScore: this.calculateScore(trainee, keywords),
         };
       })
