@@ -8,6 +8,7 @@ export interface Cohort {
 export interface TraineeSummary {
   id: string;
   displayName: string;
+  profileURL: string;
   thumbnailURL: string | null;
   location?: string;
   hasWorkPermit?: boolean;
