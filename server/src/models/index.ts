@@ -7,3 +7,4 @@ export * from './Country';
 export * from './Strike';
 export * from './Interaction';
 export * from './Test';
+export * from './EmploymentHistory';

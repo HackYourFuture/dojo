@@ -1,3 +1,4 @@
+import { EmploymentHistory } from './EmploymentHistory';
 import { InteractionWithReporter } from './Interaction';
 import { StrikeWithReporter } from './Strike';
 import { Test } from './Test';
@@ -31,11 +32,6 @@ export enum EducationLevel {
   BachelorsDegree = 'bachelors-degree',
   MastersDegree = 'masters-degree',
   PhD = 'phd',
-}
-
-export enum EmploymentType {
-  Internship = 'internship',
-  Job = 'job',
 }
 
 export enum QuitReason {
@@ -165,18 +161,6 @@ export interface TraineeEmploymentInfo {
   preferredLocation?: string;
   extraTechnologies?: string;
   employmentHistory: EmploymentHistory[];
-  comments?: string;
-}
-
-export interface EmploymentHistory {
-  readonly id: string;
-  type: EmploymentType;
-  companyName: string;
-  role: string;
-  startDate: Date;
-  endDate?: Date;
-  feeCollected: boolean;
-  feeAmount?: number;
   comments?: string;
 }
 
