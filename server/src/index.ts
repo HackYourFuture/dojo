@@ -119,7 +119,7 @@ class Main {
     );
     const interactionController = new InteractionController(traineesRepository, userRepository, notificationService);
     const testController = new TestController(traineesRepository, notificationService);
-    const employmentHistoryController = new EmploymentHistoryController();
+    const employmentHistoryController = new EmploymentHistoryController(traineesRepository);
     const strikeController = new StrikeController(traineesRepository, userRepository, notificationService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);

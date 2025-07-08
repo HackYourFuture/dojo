@@ -1,5 +1,5 @@
 import { InteractionWithReporter, InteractionWithReporterID } from '../models/Interaction';
-import { StrikeWithReporter, StrikeWithReporterID, Test, Trainee } from '../models';
+import { StrikeWithReporter, StrikeWithReporterID, Test, Trainee, EmploymentHistory } from '../models';
 
 import { TraineeSchema } from '../schemas';
 import { WithMongoID } from '../utils/database';
@@ -32,6 +32,11 @@ export interface TraineesRepository {
   addTest(traineeID: string, test: Test): Promise<Test>;
   updateTest(traineeID: string, test: Test): Promise<Test>;
   deleteTest(traineeID: string, testID: string): Promise<void>;
+
+  getEmploymentHistory(traineeID: string): Promise<EmploymentHistory[]>;
+  addEmploymentHistory(traineeID: string, employmentHistory: EmploymentHistory): Promise<EmploymentHistory>;
+  updateEmploymentHistory(traineeID: string, employmentHistory: EmploymentHistory): Promise<EmploymentHistory>;
+  deleteEmploymentHistory(traineeID: string, employmentHistoryID: string): Promise<void>;
 }
 
 export class MongooseTraineesRepository implements TraineesRepository {
@@ -123,10 +128,10 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
-    const DBStrike: StrikeWithReporterID & WithMongoID = { _id: strike.id, ...strike };
+    const dbStrike: StrikeWithReporterID & WithMongoID = { _id: strike.id, ...strike };
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID, 'educationInfo.strikes._id': strike.id },
-      { $set: { 'educationInfo.strikes.$': DBStrike } },
+      { $set: { 'educationInfo.strikes.$': dbStrike } },
       { new: true }
     ).populate('educationInfo.strikes.reporterID', 'name imageUrl');
 
@@ -134,7 +139,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.educationInfo.strikes.find((strike) => strike.id === DBStrike._id) as StrikeWithReporter;
+    return updatedTrainee.educationInfo.strikes.find((strike) => strike.id === dbStrike._id) as StrikeWithReporter;
   }
 
   async deleteStrike(traineeID: string, strikeID: string): Promise<void> {
@@ -172,10 +177,10 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async updateInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter> {
-    const DBInteraction: InteractionWithReporterID & WithMongoID = { _id: interaction.id, ...interaction };
+    const dbInteraction: InteractionWithReporterID & WithMongoID = { _id: interaction.id, ...interaction };
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID, 'interactions._id': interaction.id },
-      { $set: { 'interactions.$': DBInteraction } },
+      { $set: { 'interactions.$': dbInteraction } },
       { new: true }
     ).populate('interactions.reporterID', 'name imageUrl');
 
@@ -184,7 +189,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
     }
 
     return updatedTrainee.interactions.find(
-      (interaction) => interaction.id === DBInteraction._id
+      (interaction) => interaction.id === dbInteraction._id
     ) as InteractionWithReporter;
   }
 
@@ -217,10 +222,10 @@ export class MongooseTraineesRepository implements TraineesRepository {
   }
 
   async updateTest(traineeID: string, test: Test): Promise<Test> {
-    const DBTest: Test & WithMongoID = { _id: test.id, ...test };
+    const dbTest: Test & WithMongoID = { _id: test.id, ...test };
     const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
       { _id: traineeID, 'educationInfo.tests._id': test.id },
-      { $set: { 'educationInfo.tests.$': DBTest } },
+      { $set: { 'educationInfo.tests.$': dbTest } },
       { new: true }
     );
 
@@ -228,7 +233,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    const updatedTest = updatedTrainee.educationInfo.tests.find((test) => test.id === DBTest._id);
+    const updatedTest = updatedTrainee.educationInfo.tests.find((test) => test.id === dbTest._id);
     if (!updatedTest) {
       throw new Error('Test not found');
     }
@@ -238,5 +243,58 @@ export class MongooseTraineesRepository implements TraineesRepository {
 
   async deleteTest(traineeID: string, testID: string): Promise<void> {
     await this.TraineeModel.findOneAndUpdate({ _id: traineeID }, { $pull: { 'educationInfo.tests': { _id: testID } } });
+  }
+
+  async getEmploymentHistory(traineeID: string): Promise<EmploymentHistory[]> {
+    const trainee = await this.TraineeModel.findById(traineeID).select('employmentInfo.employmentHistory').exec();
+
+    if (!trainee) {
+      throw new Error('Trainee not found');
+    }
+
+    return trainee.employmentInfo.employmentHistory || [];
+  }
+
+  async addEmploymentHistory(traineeID: string, employmentHistory: EmploymentHistory): Promise<EmploymentHistory> {
+    const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID },
+      { $push: { 'employmentInfo.employmentHistory': employmentHistory } },
+      { new: true }
+    );
+
+    if (!updatedTrainee) {
+      throw new Error('Trainee not found');
+    }
+
+    return updatedTrainee.employmentInfo.employmentHistory.at(-1) as EmploymentHistory;
+  }
+
+  async updateEmploymentHistory(traineeID: string, employmentHistory: EmploymentHistory): Promise<EmploymentHistory> {
+    const dbEmploymentHistory: EmploymentHistory & WithMongoID = { _id: employmentHistory.id, ...employmentHistory };
+    const updatedTrainee = await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID, 'employmentInfo.employmentHistory._id': employmentHistory.id },
+      { $set: { 'employmentInfo.employmentHistory.$': dbEmploymentHistory } },
+      { new: true }
+    );
+
+    if (!updatedTrainee) {
+      throw new Error('Trainee or employment history not found');
+    }
+
+    const updatedEmploymentHistory = updatedTrainee.employmentInfo.employmentHistory.find(
+      (employmentHistory) => employmentHistory.id === dbEmploymentHistory._id
+    );
+    if (!updatedEmploymentHistory) {
+      throw new Error('Employment history not found');
+    }
+
+    return updatedEmploymentHistory;
+  }
+
+  async deleteEmploymentHistory(traineeID: string, employmentHistoryID: string): Promise<void> {
+    await this.TraineeModel.findOneAndUpdate(
+      { _id: traineeID },
+      { $pull: { 'employmentInfo.employmentHistory': { _id: employmentHistoryID } } }
+    );
   }
 }
