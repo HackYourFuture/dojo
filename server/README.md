@@ -16,14 +16,16 @@ The backend is using the following external dependencies:
 
 ## 🛠️ First time setup for local development
 
-In the server root directory:
-1. Copy `.env.example` to `.env`
+1. Open a new terminal window and navigate to the `server` root directory.
+2. Copy `.env.example` to `.env`
 3. `cd dev-services`
 4. Run `docker compose up` to setup and run all local service dependencies (Local DB server and local storage server)
-5. In a new terminal window, run `npm run setup` from the `server` root directory.
-6. run `npm run dev` from the `server` root directory. This command uses `nodemon` to re-run the server after every change of the source files.
-7. Test the server by navigating to http://localhost:7777/api-docs in your browser.
-8. run `npm run dbsetup` to setup the database with dummy data to work with.
+5. In a second terminal window, navigate to the `server` root directory.
+6. run `npm run setup`
+7. run `npm run dev` from the `server` root directory. This command uses `nodemon` to re-run the server after every change of the source files.
+8. Test the server by navigating to http://localhost:7777/api-docs in your browser.
+9. In a third terminal window navigate to the `server` root directory.
+10. run `npm run dbsetup` to setup the database with dummy data to work with.
 
 ## 📡  Setup for production
 1. Run `npm run setup`
