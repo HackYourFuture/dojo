@@ -59,7 +59,7 @@ const generatePersonalInfo = (): TraineePersonalInfo => {
   const personalInfo: TraineePersonalInfo = {
     firstName: faker.person.firstName(nameGender),
     lastName: faker.person.lastName(nameGender),
-    gender: getRandomGender(),
+    gender: gender,
     pronouns: getPronouns(gender),
     location: faker.helpers.arrayElement(cities),
     englishLevel: faker.helpers.arrayElement(Object.values(EnglishLevel)),
