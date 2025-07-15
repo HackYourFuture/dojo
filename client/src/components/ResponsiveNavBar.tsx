@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 export const ResponsiveNavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   const navigate = useNavigate();
   /**
@@ -168,7 +168,7 @@ export const ResponsiveNavBar = () => {
               </IconButton>
               <Tooltip title="Open user menu">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="User image" src="../assets/avatar/user.jpg" />
+                  <Avatar alt={user?.name ?? 'User image'} src={user?.imageUrl ?? ''} />
                 </IconButton>
               </Tooltip>
               <Menu

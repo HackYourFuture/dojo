@@ -31,9 +31,27 @@ export interface SlackNotificationServiceConfig {
 export class SlackNotificationService implements NotificationService {
   private readonly slack: App;
   private readonly notificationChannel: string;
+  private initialized = false;
   constructor(config: SlackNotificationServiceConfig) {
-    this.slack = new App({ token: config.token, signingSecret: config.signingSecret });
     this.notificationChannel = config.notificationChannel;
+    this.slack = new App({
+      token: config.token,
+      signingSecret: config.signingSecret,
+      socketMode: false,
+      deferInitialization: true,
+    });
+    this.initializeSlack();
+  }
+
+  private async initializeSlack(): Promise<void> {
+    try {
+      await this.slack.init();
+      await this.slack.start();
+      this.initialized = true;
+    } catch (error) {
+      console.warn(`⚠️ Slack is not initialized. Slack notifications will not work. (${error}).`);
+      console.warn('If you do not need to use Slack notifications, you can ignore this warning.\n');
+    }
   }
 
   async traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): Promise<void> {
@@ -89,6 +107,9 @@ export class SlackNotificationService implements NotificationService {
   }
 
   private async postMessageToSlack(message: string): Promise<void> {
+    if (!this.initialized || !this.notificationChannel) {
+      return;
+    }
     try {
       const response = await this.slack.client.chat.postMessage({
         channel: this.notificationChannel,

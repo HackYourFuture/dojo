@@ -194,6 +194,7 @@ const main = async () => {
     }
   }
   console.log('\n\n✅ Done. You are ready to go!');
+  process.exit(0);
 };
 
 main().then(console.log).catch(console.error);
