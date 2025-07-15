@@ -202,7 +202,7 @@ const validateContactInfo = (contactInfo: TraineeContactInfo): void => {
 };
 
 const validateEducationInfo = (educationInfo: TraineeEducationInfo): void => {
-  if (!educationInfo.startCohort) {
+  if (typeof educationInfo.startCohort !== 'number') {
     throw new Error('Start cohort is required');
   }
   if (!educationInfo.learningStatus) {

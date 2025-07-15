@@ -27,9 +27,6 @@ export const validateStrike = (strike: StrikeWithReporterID): void => {
   if (!strike.date) {
     throw new Error('Strike date is required');
   }
-  if (!strike.reporterID) {
-    throw new Error('Strike reporter ID is required');
-  }
   if (!strike.reason || !Object.values(StrikeReason).includes(strike.reason)) {
     throw new Error('Unknown strike reason');
   }

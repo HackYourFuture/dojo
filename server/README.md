@@ -10,16 +10,22 @@ The backend is using the following external dependencies:
 * S3 compatible storage server
 * Google OAuth credentials for authentication
 
-## 🛠️ Setup for local development
-You will need to install Docker in order to run all the dependencies of the server.
+## Prerequisites 
+1. Node.JS version 22 or later
+2. [Docker](https://www.docker.com/get-started/)
 
-In the server root directory:
-1. Run `npm run setup`
-2. Copy `.env.example` to `.env `
+## 🛠️ First time setup for local development
+
+1. Open a new terminal window and navigate to the `server` root directory.
+2. Copy `.env.example` to `.env`
 3. `cd dev-services`
-4. Run `docker compose up` to setup and run all local service dependencies (Local DB server, local storage server)
-5. In a new terminal window, run `npm run dev` from the `/server` folder. This command uses `nodemon` to re-run the server after every change of the source files.
-6. Test the server by navigating to http://localhost:7777/api-docs in your browser.
+4. Run `docker compose up` to setup and run all local service dependencies (Local DB server and local storage server)
+5. In a second terminal window, navigate to the `server` root directory.
+6. run `npm run setup`
+7. run `npm run dev` from the `server` root directory. This command uses `nodemon` to re-run the server after every change of the source files.
+8. Test the server by navigating to http://localhost:7777/api-docs in your browser.
+9. In a third terminal window navigate to the `server` root directory.
+10. run `npm run dbsetup` to setup the database with dummy data to work with.
 
 ## 📡  Setup for production
 1. Run `npm run setup`
