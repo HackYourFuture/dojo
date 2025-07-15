@@ -11,12 +11,14 @@
     "dev": "nodemon -w src src/index.ts",
     "start": "tsc && node dist/index.js",
     "setup": "npm install --include=dev",
+    "dbsetup": "ts-node scripts/setup/index.ts",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hackyourfuture-nl --project dojo-backend ./dist && sentry-cli sourcemaps upload --org hackyourfuture-nl --project dojo-backend ./dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^9.6.0",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.2",
