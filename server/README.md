@@ -13,19 +13,21 @@ The backend is using the following external dependencies:
 ## Prerequisites 
 1. Node.JS version 22 or later
 2. [Docker](https://www.docker.com/get-started/)
+3. Google OAuth tokens [More Info](#google-authentication-setup)
 
 ## 🛠️ First time setup for local development
 
 1. Open a new terminal window and navigate to the `server` root directory.
 2. Copy `.env.example` to `.env`
-3. `cd dev-services`
-4. Run `docker compose up` to setup and run all local service dependencies (Local DB server and local storage server)
-5. In a second terminal window, navigate to the `server` root directory.
-6. run `npm run setup`
-7. run `npm run dev` from the `server` root directory. This command uses `nodemon` to re-run the server after every change of the source files.
-8. Test the server by navigating to http://localhost:7777/api-docs in your browser.
-9. In a third terminal window navigate to the `server` root directory.
-10. run `npm run dbsetup` to setup the database with dummy data to work with.
+3. Configure the `.env` file: configure `GOOGLE_OAUTH_CLIENTID` and `GOOGLE_OAUTH_CLIENTSECRET` to make authentication work. Read more in [Google authentication setup](#google-authentication-setup)
+4. `cd dev-services`
+5. Run `docker compose up` to setup and run all local service dependencies (Local DB server and local storage server)
+6. In a second terminal window, navigate to the `server` root directory.
+7. run `npm run setup`
+8. run `npm run dev` from the `server` root directory. This command uses `nodemon` to re-run the server after every change of the source files.
+9. Test the server by navigating to http://localhost:7777/api-docs in your browser.
+10. In a third terminal window navigate to the `server` root directory.
+11. run `npm run dbsetup` to setup the database with dummy data to work with.
 
 ## 📡  Setup for production
 1. Run `npm run setup`
@@ -77,8 +79,8 @@ The following variables are used to send Sentry the source maps. It is not requi
 | `SENTRY_AUTH_TOKEN`  | Sentry auth token. Generated in the Sentry portal. | - empty -
 | `SENTRY_ENVIRONMENT` | development,  testing, production  | development
 
-### Slack config
-Variables used for sending Slack notifications. All are required. Create or update Slack app here: https://api.slack.com/apps
+### Slack config (Optional)
+Variables used for sending Slack notifications. Create or update Slack app here: https://api.slack.com/apps
 
 | Name          | Description                                      | Default |
 |---------------|--------------------------------------------------|----------
