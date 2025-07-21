@@ -12,8 +12,8 @@ export class TokenService implements TokenServiceType {
   private readonly ALGORITHM = 'HS512';
 
   constructor(secret: string, expirationInDays: number) {
-    if (!secret || secret.length < 16) {
-      throw new Error('JWT Secret is required');
+    if (!secret || secret.length < 32) {
+      throw new Error('JWT Secret must be at least 32 characters long for security');
     }
     this.secret = secret;
     this.expiration = `${expirationInDays}d`;
