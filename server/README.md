@@ -25,9 +25,9 @@ The backend is using the following external dependencies:
 6. In a second terminal window, navigate to the `server` root directory.
 7. run `npm run setup`
 8. run `npm run dev` from the `server` root directory. This command uses `nodemon` to re-run the server after every change of the source files.
-9. Test the server by navigating to http://localhost:7777/api-docs in your browser.
+9. Test the server by navigating to http://localhost:7777/api-docs in the browser. 
 10. In a third terminal window navigate to the `server` root directory.
-11. run `npm run dbsetup` to setup the database with dummy data to work with.
+11. Run `npm run dbsetup` to setup the database with dummy data to work with. You will only need to run this once. After setting up the DB, you can skip this step.
 
 ## 📡  Setup for production
 1. Run `npm run setup`
@@ -99,3 +99,4 @@ Dojo uses Sign in with Google. In order to make it work, a new OAuth app needs t
 4. Choose Web Application type and provide a name
 5. Add http://localhost:5173 to Authorised JavaScript origins and Authorised redirect URIs
 6. Save and copy the client ID and the client secret to the .env file
+7. Go to 'Audience' tab and add test users that will be allowed to use the Google authentication.
