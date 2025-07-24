@@ -23,3 +23,10 @@ services:
       - SECRET_KEY=dojo_secret
       - BUCKET_NAME=dojo-dev
     restart: unless-stopped
+
+  pdf-converter:
+    build: ./pdf-converter
+    container_name: pdf-converter
+    ports:
+    - '3456:3456'
+    restart: unless-stopped
