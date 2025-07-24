@@ -25,6 +25,7 @@ import {
   ProfilePictureController,
   EmploymentHistoryController,
   StrikeController,
+  LetterController,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import {
@@ -34,6 +35,8 @@ import {
   UploadService,
   ImageService,
   SlackNotificationService,
+  LetterGenerator,
+  PDFService,
 } from './services';
 import { ResponseError } from './models';
 import { AuthMiddleware } from './middlewares';
@@ -99,6 +102,10 @@ class Main {
       token: process.env.SLACK_TOKEN ?? '',
       notificationChannel: process.env.SLACK_NOTIFICATION_CHANNEL ?? '',
     });
+    const pdfServiceURL = process.env.PDF_CONVERTER_URL ?? 'http://localhost:3456';
+    const pdfService = new PDFService(pdfServiceURL);
+    console.log(`✅ PDF converter URL: ${pdfServiceURL}`);
+    const letterGenerator = new LetterGenerator(pdfService, storageService);
     const userRepository = new MongooseUserRepository(this.db);
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
@@ -125,6 +132,7 @@ class Main {
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
     const cohortsController = new CohortsController(traineesRepository);
+    const letterController = new LetterController(letterGenerator, traineesRepository);
 
     // Setup custom middlewares
     const authMiddleware = new AuthMiddleware(tokenService);
@@ -138,6 +146,7 @@ class Main {
       profilePictureController,
       strikeController,
       employmentHistoryController,
+      letterController,
       [authMiddleware]
     );
     const searchRouter = new SearchRouter(searchController, [authMiddleware]);

@@ -354,6 +354,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /trainees/{id}/letters:
+    post:
+      tags:
+        - Trainees
+      summary: Generate a letter for the trainee
+      description: 'This endpoint will generate and return a PDF document as a binary stream.'
+      security:
+        - cookie_token:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "3jvz35Z"
+      requestBody:
+        description: 'Provide a valid letter type'
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - github_trainee
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Binary'
+        '400':
+          description: Request format is invalid or the letter type is not supported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Trainee was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /trainees/{id}/strikes:
     get:
       tags:

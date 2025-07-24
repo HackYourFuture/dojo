@@ -6,36 +6,22 @@ import {
   TestControllerType,
   ProfilePictureControllerType,
   StrikeControllerType,
+  LetterControllerType,
 } from '../controllers';
 import Middleware from '../middlewares/Middleware';
 import { EmploymentHistoryControllerType } from '../controllers/Trainee/EmploymentHistoryController';
 
 export class TraineesRouter implements RouterType {
-  private readonly traineeController: TraineeControllerType;
-  private readonly interactionController: InteractionControllerType;
-  private readonly profilePictureController: ProfilePictureControllerType;
-  private readonly testController: TestControllerType;
-  private readonly employmentHistoryController: EmploymentHistoryControllerType;
-  private readonly strikeController: StrikeControllerType;
-  private readonly middlewares: Middleware[];
-
   constructor(
-    traineesController: TraineeControllerType,
-    interactionController: InteractionControllerType,
-    testController: TestControllerType,
-    profilePictureController: ProfilePictureControllerType,
-    strikeController: StrikeControllerType,
-    employmentHistoryController: EmploymentHistoryControllerType,
-    middlewares: Middleware[] = []
-  ) {
-    this.traineeController = traineesController;
-    this.interactionController = interactionController;
-    this.testController = testController;
-    this.profilePictureController = profilePictureController;
-    this.strikeController = strikeController;
-    this.employmentHistoryController = employmentHistoryController;
-    this.middlewares = middlewares;
-  }
+    private readonly traineeController: TraineeControllerType,
+    private readonly interactionController: InteractionControllerType,
+    private readonly testController: TestControllerType,
+    private readonly profilePictureController: ProfilePictureControllerType,
+    private readonly strikeController: StrikeControllerType,
+    private readonly employmentHistoryController: EmploymentHistoryControllerType,
+    private readonly letterController: LetterControllerType,
+    private readonly middlewares: Middleware[] = []
+  ) {}
 
   build(): Router {
     const router = Router();
@@ -91,6 +77,8 @@ export class TraineesRouter implements RouterType {
       '/:id/employment-history/:employmentHistoryID',
       this.employmentHistoryController.deleteEmploymentHistory.bind(this.employmentHistoryController)
     );
+
+    router.post('/:id/letters', this.letterController.generateLetter.bind(this.letterController));
     return router;
   }
 }
