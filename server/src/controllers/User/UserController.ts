@@ -55,7 +55,7 @@ export class UserControllerImpl implements UserController {
     //validate
     const userUpdates = UpdateUserSchema.safeParse(req.body);
     if (!userUpdates.success) {
-      res.status(400).json(new ResponseError('Invalid user data'));
+      res.status(400).json(z.flattenError(userUpdates.error));
       return;
     }
 
@@ -79,6 +79,7 @@ export class UserControllerImpl implements UserController {
     const deletedUser = await this.userRepository.deleteUser(userId);
     if (!deletedUser) {
       res.status(404).json(new ResponseError('User not found'));
+      return;
     }
 
     res.status(204).send();

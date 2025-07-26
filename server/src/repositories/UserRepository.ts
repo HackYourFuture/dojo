@@ -30,7 +30,7 @@ export class MongooseUserRepository implements UserRepository {
 
   getAllUsers: UserRepository['getAllUsers'] = () => this.UserModel.find();
 
-  createUser: UserRepository['createUser'] = (user: User) => this.UserModel.create(user);
+  createUser: UserRepository['createUser'] = (user) => this.UserModel.create(user);
 
   updateUser: UserRepository['updateUser'] = (id, user) => this.UserModel.findByIdAndUpdate(id, user, { new: true });
 
