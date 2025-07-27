@@ -10,5 +10,5 @@ export * from './Trainee/LetterController';
 export * from './GeographyController';
 export * from './DashboardController';
 export * from './CohortsController';
-export * from './User/UserController';
+export * from './User/UserControllerImpl';
 export type * from './User/UserController.d';

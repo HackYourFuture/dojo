@@ -4,7 +4,7 @@ import { ResponseError } from '../../models';
 import { CreateUserSchema, UpdateUserSchema } from '../../models/User';
 
 import type { RequestHandler } from 'express';
-import type UserController from './UserController.d';
+import type UserController from './UserController';
 
 export class UserControllerImpl implements UserController {
   constructor(private userRepository: UserRepository) {}
@@ -57,6 +57,15 @@ export class UserControllerImpl implements UserController {
     if (!userUpdates.success) {
       res.status(400).json(z.flattenError(userUpdates.error));
       return;
+    }
+
+    //check if email already exists if provided
+    if (userUpdates.data.email) {
+      const existingUser = await this.userRepository.findUserByEmail(userUpdates.data.email);
+      if (existingUser && existingUser.id !== userId) {
+        res.status(409).json(new ResponseError('Email already in use'));
+        return;
+      }
     }
 
     //update user

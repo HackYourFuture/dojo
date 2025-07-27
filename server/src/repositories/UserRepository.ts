@@ -9,7 +9,7 @@ export interface UserRepository {
 
   getAllUsers(): Promise<User[]>;
   createUser(user: CreateUser): Promise<User>;
-  updateUser(id: string, user: Partial<UpdateUser>): Promise<User | null>;
+  updateUser(id: string, user: UpdateUser): Promise<User | null>;
   deleteUser(id: string): Promise<User | null>;
 }
 
