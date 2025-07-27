@@ -88,6 +88,11 @@ Variables used for sending Slack notifications. Create or update Slack app here:
 | `SLACK_SIGNING_SECRET` | App signing secret. Can be found in the basic information section. | - empty -
 | `SLACK_NOTIFICATION_CHANNEL` | The channel ID to send the notification to. The app must be added to that channel. | - empty -
 
+### Other services
+
+| Name          | Description                                      | Default |
+|---------------|--------------------------------------------------|----------
+| `PDF_CONVERTER_URL`  | URL for the gotenberg service endpoint. Used to convert docx files to PDFs for letter generation | http://localhost:3456
 
 ## Google authentication setup
 Dojo uses Sign in with Google. In order to make it work, a new OAuth app needs to be create in  Google API Console. Here are the steps to do so:

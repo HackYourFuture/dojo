@@ -6,6 +6,7 @@ export * from './Trainee/TestController';
 export * from './Trainee/ProfilePictureController';
 export * from './Trainee/EmploymentHistoryController';
 export * from './Trainee/StrikeController';
+export * from './Trainee/LetterController';
 export * from './GeographyController';
 export * from './DashboardController';
 export * from './CohortsController';
