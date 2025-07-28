@@ -32,7 +32,7 @@ import {
   ProfilePictureController,
   EmploymentHistoryController,
   StrikeController,
-  UserControllerImpl,
+  DefaultUserController,
   LetterController,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
@@ -140,7 +140,7 @@ class Main {
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
     const cohortsController = new CohortsController(traineesRepository);
-    const userController = new UserControllerImpl(userRepository);
+    const userController = new DefaultUserController(userRepository);
     const letterController = new LetterController(letterGenerator, traineesRepository);
 
     // Setup custom middlewares
@@ -171,7 +171,7 @@ class Main {
     this.app.use('/api/geo', geographyRouter.build());
     this.app.use('/api/dashboard', dashboardRouter.build());
     this.app.use('/api/cohorts', cohortsRouter.build());
-    this.app.use('/api/users', userRouter.build());
+    this.app.use('/api/admin/users', userRouter.build());
 
     // Not found handler for API
     this.app.use('/api', (req: Request, res: Response) => {
@@ -191,6 +191,7 @@ class Main {
       if (this.isProduction) {
         res.status(500).json(new ResponseError('Something broke!'));
       } else {
+        console.log(error);
         res.status(500).json(error);
       }
     });

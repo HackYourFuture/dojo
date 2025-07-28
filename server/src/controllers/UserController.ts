@@ -1,30 +1,41 @@
 import z from 'zod';
-import { UserRepository } from '../../repositories';
-import { ResponseError } from '../../models';
-import { CreateUserSchema, UpdateUserSchema } from '../../models/User';
+import { UserRepository } from '../repositories';
+import { ResponseError } from '../models';
+import { CreateUserSchema, UpdateUserSchema } from '../models';
 
-import type { RequestHandler } from 'express';
-import type UserController from './UserController';
+import type { RequestHandler, Request, Response } from 'express';
 
-export class UserControllerImpl implements UserController {
-  constructor(private userRepository: UserRepository) {}
+export interface UserController {
+  getAllUsers: RequestHandler;
+  createUser: RequestHandler;
+  updateUser: RequestHandler;
+  deleteUser: RequestHandler;
+}
+
+export class DefaultUserController implements UserController {
+  constructor(private userRepository: UserRepository) {
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.createUser = this.createUser.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+  }
 
   /**
    * GET /users
    * get all users
    * 200 | 500
    */
-  getAllUsers: RequestHandler = async (req, res) => {
+  async getAllUsers(req: Request, res: Response) {
     const users = await this.userRepository.getAllUsers();
     res.status(200).json(users);
-  };
+  }
 
   /**
    * POST /users
    * create a new user
    * 201 | 400 | 409 | 500
    */
-  createUser: RequestHandler = async (req, res) => {
+  async createUser(req: Request, res: Response) {
     //validate
     const user = CreateUserSchema.safeParse(req.body);
     if (!user.success) {
@@ -42,14 +53,14 @@ export class UserControllerImpl implements UserController {
     //create user
     const createdUser = await this.userRepository.createUser(user.data);
     res.status(201).json(createdUser);
-  };
+  }
 
   /**
    * PUT /users/{id}
    * update an existing user
    * 200 | 400 | 404 | 500
    */
-  updateUser: RequestHandler = async (req, res) => {
+  async updateUser(req: Request, res: Response) {
     const userId = req.params.id;
 
     //validate
@@ -75,14 +86,14 @@ export class UserControllerImpl implements UserController {
     } else {
       res.status(200).json(updatedUser);
     }
-  };
+  }
 
   /**
    * DELETE /users/{id}
    * delete an existing user
    * 204 | 404 | 500
    */
-  deleteUser: RequestHandler = async (req, res) => {
+  async deleteUser(req: Request, res: Response) {
     const userId = req.params.id;
 
     const deletedUser = await this.userRepository.deleteUser(userId);
@@ -92,5 +103,5 @@ export class UserControllerImpl implements UserController {
     }
 
     res.status(204).send();
-  };
+  }
 }

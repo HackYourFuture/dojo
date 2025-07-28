@@ -370,7 +370,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'Provide a valid letter type'
         content:
@@ -1068,7 +1068,7 @@ paths:
                       type: string
                       example: '🇳🇱'
 
-  /users:
+  /admin/users:
     get:
       tags:
         - Users

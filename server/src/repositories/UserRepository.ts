@@ -18,21 +18,34 @@ export class MongooseUserRepository implements UserRepository {
 
   constructor(db: mongoose.Connection) {
     this.UserModel = db.model<User>('Users', UserSchema);
+
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.createUser = this.createUser.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
-  async findUserByID(id: string): Promise<User | null> {
-    return await this.UserModel.findById(id);
+  findUserByID(id: string) {
+    return this.UserModel.findById(id);
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    return await this.UserModel.findOne({ email });
+  findUserByEmail(email: string) {
+    return this.UserModel.findOne({ email });
   }
 
-  getAllUsers: UserRepository['getAllUsers'] = () => this.UserModel.find();
+  getAllUsers() {
+    return this.UserModel.find();
+  }
 
-  createUser: UserRepository['createUser'] = (user) => this.UserModel.create(user);
+  createUser(user: CreateUser) {
+    return this.UserModel.create(user);
+  }
 
-  updateUser: UserRepository['updateUser'] = (id, user) => this.UserModel.findByIdAndUpdate(id, user, { new: true });
+  updateUser(id: string, user: UpdateUser) {
+    return this.UserModel.findByIdAndUpdate(id, user, { new: true });
+  }
 
-  deleteUser: UserRepository['deleteUser'] = (id) => this.UserModel.findByIdAndDelete(id);
+  deleteUser(id: string) {
+    return this.UserModel.findByIdAndDelete(id);
+  }
 }
