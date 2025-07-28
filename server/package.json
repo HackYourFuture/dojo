@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "@faker-js/faker": "^9.6.0",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
@@ -27,9 +28,11 @@
     "@types/node": "^22.15.19",
     "@types/swagger-ui-express": "^4.1.6",
     "csv-parse": "^5.5.5",
+    "eslint": "^9.32.0",
     "nodemon": "^3.0.3",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.540.0",
