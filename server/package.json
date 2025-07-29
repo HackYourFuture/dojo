@@ -6,7 +6,6 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "type": "module",
   "scripts": {
     "build": "tsc && npm run sentry:sourcemaps",
     "dev": "nodemon -w src src/index.ts",
