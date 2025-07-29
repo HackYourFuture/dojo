@@ -6,13 +6,16 @@
   "engines": {
     "node": ">=22.0.0"
   },
+  "type": "module",
   "scripts": {
     "build": "tsc && npm run sentry:sourcemaps",
     "dev": "nodemon -w src src/index.ts",
     "start": "tsc && node dist/index.js",
     "setup": "npm install --include=dev",
     "dbsetup": "ts-node scripts/setup/index.ts",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hackyourfuture-nl --project dojo-backend ./dist && sentry-cli sourcemaps upload --org hackyourfuture-nl --project dojo-backend ./dist"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hackyourfuture-nl --project dojo-backend ./dist && sentry-cli sourcemaps upload --org hackyourfuture-nl --project dojo-backend ./dist",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "keywords": [],
   "author": "",
