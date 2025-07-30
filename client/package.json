@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "npm run dev",
     "build": "tsc && vite build",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint": "tsc --noEmit && eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "setup": "npm install --include=dev",
