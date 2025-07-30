@@ -79,10 +79,10 @@ export const TraineeProfileProvider = ({
     const dataToSave: SaveTraineeRequestData = {};
 
     // add the changed fields to the dataToSave object if not null
-    personalInfo && (dataToSave.personalInfo = personalInfo);
-    contactInfo && (dataToSave.contactInfo = contactInfo);
-    educationInfo && (dataToSave.educationInfo = educationInfo);
-    employmentInfo && (dataToSave.employmentInfo = employmentInfo);
+    if (personalInfo) dataToSave.personalInfo = personalInfo;
+    if (contactInfo) dataToSave.contactInfo = contactInfo;
+    if (educationInfo) dataToSave.educationInfo = educationInfo;
+    if (employmentInfo) dataToSave.employmentInfo = employmentInfo;
 
     return dataToSave;
   };
