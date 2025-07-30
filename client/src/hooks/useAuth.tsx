@@ -3,9 +3,17 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { useLocalStorage } from '.';
 import { Loader } from '../components';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { User } from '../models';
 
-export const ApiContext = createContext<any | null>(null);
+interface AuthContextType {
+  user: User | null;
+  errorMessage: string;
+  login: () => void;
+  logout: () => Promise<void>;
+}
+
+export const ApiContext = createContext<AuthContextType | null>(null);
 
 export const ApiProvider = () => {
   const [user, setUser] = useLocalStorage('user', null);
@@ -29,9 +37,11 @@ export const ApiProvider = () => {
           setUser(data);
           navigate('/', { replace: true });
         }
-      } catch (error: any) {
+      } catch (error) {
         console.log('Error logging in:', error);
-        setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
+
+        if (error instanceof AxiosError)
+          setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
         console.log(errorMessage);
       } finally {
         setLoading(false);
@@ -53,9 +63,11 @@ export const ApiProvider = () => {
       setUser(null);
       console.log('Successfully logged out!');
       navigate('/', { replace: true });
-    } catch (error: any) {
+    } catch (error) {
       console.log('Error logging out:', error);
-      setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
+
+      if (error instanceof AxiosError)
+        setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
       console.log(errorMessage);
     } finally {
       setLoading(false);
@@ -75,6 +87,11 @@ export const ApiProvider = () => {
   return <ApiContext.Provider value={value}>{loading ? <Loader /> : <Outlet />}</ApiContext.Provider>;
 };
 
-export const useAuth = () => {
-  return useContext(ApiContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(ApiContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an ApiProvider');
+  }
+
+  return context;
 };
