@@ -10,3 +10,4 @@ export * from './Trainee/LetterController';
 export * from './GeographyController';
 export * from './DashboardController';
 export * from './CohortsController';
+export * from './UserController';
