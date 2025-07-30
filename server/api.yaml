@@ -31,6 +31,8 @@ tags:
     description: ''
   - name: Dashboard
     description: ''
+  - name: Users
+    description: 'Endpoints to manage system users'
 paths:
   /auth/login:
     post:
@@ -107,7 +109,7 @@ paths:
       tags:
         - Search
       summary: Find trainees
-      description:  Find trainees by a keyword. The search will try to match the first name, last name or email.
+      description: Find trainees by a keyword. The search will try to match the first name, last name or email.
       security:
         - cookie_token:
       parameters:
@@ -156,7 +158,7 @@ paths:
                             cohort:
                               type: number
                               example: 52
-                            searchScore: 
+                            searchScore:
                               type: number
                               example: 100
                       size:
@@ -165,7 +167,7 @@ paths:
 
         '400':
           description: Missing query
-   
+
   /trainees:
     post:
       tags:
@@ -201,8 +203,8 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
-          
+            example: '3jvz35Z'
+
       responses:
         '200':
           description: successful operation
@@ -230,7 +232,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'Can be partially sent for partial updates'
         content:
@@ -250,7 +252,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
+
     delete:
       tags:
         - Trainees
@@ -264,8 +266,8 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
-          
+            example: '3jvz35Z'
+
       responses:
         '204':
           description: successful operation
@@ -282,10 +284,10 @@ paths:
       tags:
         - Trainees
       summary: Upload new profile picture of a given trainee
-      description: > 
-       Accepts only images. The new image will override the old image.
-       Max file size is 10MB. 
-       The image may be resized on the backend to reduce its size.
+      description: >
+        Accepts only images. The new image will override the old image.
+        Max file size is 10MB. 
+        The image may be resized on the backend to reduce its size.
 
       security:
         - cookie_token:
@@ -295,7 +297,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
 
       requestBody:
         description: ''
@@ -306,7 +308,7 @@ paths:
               properties:
                 profilePicture:
                   $ref: '#/components/schemas/Binary'
-          
+
       responses:
         '200':
           description: successful operation. Returns the image url
@@ -319,15 +321,15 @@ paths:
                     type: string
                     example: 'https://example.com/image/65e9c0d25cd76173a4e431c.jpeg'
                   thumbnailURL:
-                      type: string
-                      example: 'https://example.com/image/65e9c0d25cd76173a4e431c_thumbnail.jpeg'
+                    type: string
+                    example: 'https://example.com/image/65e9c0d25cd76173a4e431c_thumbnail.jpeg'
         '404':
           description: Trainee was not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-                
+
     delete:
       tags:
         - Trainees
@@ -341,8 +343,8 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
-          
+            example: '3jvz35Z'
+
       responses:
         '204':
           description: successful operation
@@ -368,7 +370,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'Provide a valid letter type'
         content:
@@ -414,7 +416,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         '200':
           description: Successful operation
@@ -437,7 +439,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
         content:
@@ -466,13 +468,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: strikeID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
         content:
@@ -499,13 +501,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: strikeID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         204:
           description: successful operation
@@ -524,7 +526,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         200:
           description: Successful operation
@@ -547,7 +549,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
         content:
@@ -588,13 +590,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: interactionID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored. If ReporterID is empty, the current logged in user ID will be used as the reporterID'
         content:
@@ -633,13 +635,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: interactionID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         '204':
           description: successful operation
@@ -664,7 +666,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         200:
           description: Successful operation
@@ -687,7 +689,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored.'
         content:
@@ -728,13 +730,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: testID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored.'
         content:
@@ -773,13 +775,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: testID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         '204':
           description: successful operation
@@ -804,7 +806,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         200:
           description: Successful operation
@@ -827,7 +829,7 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored.'
         content:
@@ -868,13 +870,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: employmentHistoryID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       requestBody:
         description: 'The id field is not required and ignored.'
         content:
@@ -913,13 +915,13 @@ paths:
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
         - name: employmentHistoryID
           in: path
           required: true
           schema:
             type: string
-            example: "3jvz35Z"
+            example: '3jvz35Z'
       responses:
         '204':
           description: successful operation
@@ -941,14 +943,14 @@ paths:
       parameters:
         - name: start
           in: query
-          description: "Lower range of the cohort. Default: 0"
+          description: 'Lower range of the cohort. Default: 0'
           schema:
             type: integer
             minimum: 0
             maximum: 999
         - name: end
           in: query
-          description: "Upper range of the cohort. Default: 999"
+          description: 'Upper range of the cohort. Default: 999'
           required: false
           schema:
             type: integer
@@ -1001,7 +1003,7 @@ paths:
       tags:
         - Geography
       summary: Get list of cities
-      description:  Find cities by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
+      description: Find cities by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
       security:
         - cookie_token:
       parameters:
@@ -1024,16 +1026,16 @@ paths:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   type: string
-                  example: "Amsterdam"
+                  example: 'Amsterdam'
 
   /geo/countries:
     get:
       tags:
         - Geography
       summary: Get list of countries
-      description:  Find countries by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
+      description: Find countries by a keyword. Query and limit variables are optional. This endpoint is useful for auto-complete fields
       security:
         - cookie_token:
       parameters:
@@ -1056,24 +1058,139 @@ paths:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
                   type: object
                   properties:
                     name:
                       type: string
-                      example: "The Netherlands"
+                      example: 'The Netherlands'
                     flag:
                       type: string
-                      example: "🇳🇱"
+                      example: '🇳🇱'
+
+  /admin/users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Retrieve a list of all users in the system
+      security:
+        - cookie_token: []
+      responses:
+        200:
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: Create a new user in the system
+      security:
+        - cookie_token: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Invalid user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /admin/users/{id}:
+    put:
+      tags:
+        - Users
+      summary: Update an existing user
+      description: Update user information by ID
+      security:
+        - cookie_token: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Invalid user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      description: Delete a user from the system by ID
+      security:
+        - cookie_token: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user to delete
+      responses:
+        204:
+          description: User deleted successfully
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /dashboard:
-      get:
-        tags:
-          - Dashboard
-        summary: Get the data to display on the dashboard
-        description: ''
-        security:
-          - cookie_token:
-        parameters:
+    get:
+      tags:
+        - Dashboard
+      summary: Get the data to display on the dashboard
+      description: ''
+      security:
+        - cookie_token:
+      parameters:
         - name: startDate
           in: query
           description: Include all trainees who started the program on or after startDate
@@ -1092,35 +1209,35 @@ paths:
             format: date-time
             example: '2025-01-01'
 
-        responses:
-          200:
-            description: successful operation
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    demographics:
-                      type: object
-                      properties:
-                        genderDistribution:
-                          type: array
-                          items: 
-                            $ref: '#/components/schemas/DashboardData'
-                        countryOfOrigin:
-                          type: array
-                          items: 
-                            $ref: '#/components/schemas/DashboardData'
-                    program:
-                      properties:
-                        graduations:
-                          type: array
-                          items: 
-                            $ref: '#/components/schemas/DashboardData'
-                        employment:
-                          type: array
-                          items: 
-                            $ref: '#/components/schemas/DashboardData'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  demographics:
+                    type: object
+                    properties:
+                      genderDistribution:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DashboardData'
+                      countryOfOrigin:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DashboardData'
+                  program:
+                    properties:
+                      graduations:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DashboardData'
+                      employment:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DashboardData'
 
 components:
   schemas:
@@ -1128,12 +1245,12 @@ components:
       type: object
       properties:
         authCode:
-            type: string
-            example: 4/0AnvDMrB6_8zVFU2GeTDALqZB_WDSYf6Zg8as7mAHQ84gJ5xrnwZA37Cz0tEned-MhPPn9w
+          type: string
+          example: 4/0AnvDMrB6_8zVFU2GeTDALqZB_WDSYf6Zg8as7mAHQ84gJ5xrnwZA37Cz0tEned-MhPPn9w
         redirectURI:
-            type: string
-            description: 'The callback URI that was used in the Google Auth request. It should match the base URL of the frontend'
-            example: http://localhost:5142
+          type: string
+          description: 'The callback URI that was used in the Google Auth request. It should match the base URL of the frontend'
+          example: http://localhost:5142
 
     LoginResponse:
       type: object
@@ -1141,7 +1258,7 @@ components:
         token:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-          
+
     Trainee:
       type: object
       required:
@@ -1177,14 +1294,14 @@ components:
         contactInfo:
           $ref: '#/components/schemas/TraineeContactInfo'
         educationInfo:
-          $ref: '#/components/schemas/TraineeEducationInfo'  
+          $ref: '#/components/schemas/TraineeEducationInfo'
         employmentInfo:
           $ref: '#/components/schemas/TraineeEmploymentInfo'
         interactions:
           type: array
           items:
             $ref: '#/components/schemas/InteractionWithReporter'
-          
+
     TraineePersonalInfo:
       type: object
       required:
@@ -1222,8 +1339,8 @@ components:
             - good
           example: good
         professionalDutch:
-            type: boolean
-            example: true
+          type: boolean
+          example: true
         countryOfOrigin:
           type: string
           example: Syria
@@ -1267,7 +1384,7 @@ components:
           example: BSc in Biology
         comments:
           type: string
-          
+
     TraineeContactInfo:
       type: object
       required:
@@ -1314,7 +1431,7 @@ components:
         graduationDate:
           type: string
           format: date-time
-          example: 2024-01-01  
+          example: 2024-01-01
         quitReason:
           type: string
           enum:
@@ -1343,7 +1460,7 @@ components:
             $ref: '#/components/schemas/Test'
         comments:
           type: string
-          
+
     TraineeEmploymentInfo:
       type: object
       required:
@@ -1357,19 +1474,19 @@ components:
         availability:
           type: string
         preferredRole:
-          type: string        
+          type: string
         preferredLocation:
-          type: string   
+          type: string
         drivingLicense:
           type: boolean
           example: false
         extraTechnologies:
-          type: string  
+          type: string
         employmentHistory:
           type: array
           items:
             $ref: '#/components/schemas/EmploymentHistory'
-        comments: 
+        comments:
           type: string
 
     Strike:
@@ -1396,7 +1513,7 @@ components:
             - missed-submission
             - pending-feedback
             - other
-        comments: 
+        comments:
           type: string
 
     StrikeWithReporter:
@@ -1405,7 +1522,7 @@ components:
         - type: object
           required:
             - reporter
-          properties: 
+          properties:
             reporter:
               type: object
               properties:
@@ -1418,7 +1535,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/Strike'
         - type: object
-          properties: 
+          properties:
             reporterID:
               type: string
               example: g5HQGuL8
@@ -1450,9 +1567,9 @@ components:
             - hr-mentorship
             - grad-mentorship
             - other
-        title: 
+        title:
           type: string
-        details: 
+        details:
           type: string
 
     InteractionWithReporter:
@@ -1461,7 +1578,7 @@ components:
         - type: object
           required:
             - reporter
-          properties: 
+          properties:
             reporter:
               type: object
               properties:
@@ -1474,7 +1591,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/Interaction'
         - type: object
-          properties: 
+          properties:
             reporterID:
               type: string
               example: g5HQGuL8
@@ -1491,7 +1608,7 @@ components:
         createDate:
           type: string
           format: date-time
-          example: 2024-01-01T00:00:00.000Z  
+          example: 2024-01-01T00:00:00.000Z
         type:
           type: string
           example: 'JS week 2'
@@ -1501,9 +1618,9 @@ components:
         content:
           type: string
           example: 'https://github.com/link/to/assignment'
-        comments: 
+        comments:
           type: string
-          
+
     Test:
       type: object
       required:
@@ -1538,9 +1655,9 @@ components:
             - passed-with-warning
             - failed
             - disqualified
-        comments: 
+        comments:
           type: string
-          
+
     EmploymentHistory:
       type: object
       required:
@@ -1555,14 +1672,14 @@ components:
         type:
           type: string
           enum:
-          - internship
-          - job
+            - internship
+            - job
         companyName:
           type: string
           example: HackYourFuture
         role:
           type: string
-          example: "Frontend developer"
+          example: 'Frontend developer'
         startDate:
           type: string
           format: date-time
@@ -1570,13 +1687,13 @@ components:
         endDate:
           type: string
           format: date-time
-          example: 2024-01-01 
+          example: 2024-01-01
         feeCollected:
           type: boolean
         feeAmount:
           type: number
           example: 500
-        comments: 
+        comments:
           type: string
 
     LearningStatus:
@@ -1607,24 +1724,65 @@ components:
         id:
           type: string
           example: Pv3R416r
-        name: 
+        name:
           type: string
-        email: 
+        email:
           type: string
           example: user@example.com
-        imageUrl: 
+        imageUrl:
           type: string
-          example: "https://images.example.com/image.png"
+          example: 'https://images.example.com/image.png'
+        isActive:
+          type: boolean
+          example: true
+
+    CreateUser:
+      type: object
+      required:
+        - email
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          example: John Doe
+        imageUrl:
+          type: string
+          example: 'https://images.example.com/image.png'
+        isActive:
+          type: boolean
+          default: true
+          example: true
+
+    UpdateUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          example: John Doe
+        imageUrl:
+          type: string
+          example: 'https://images.example.com/image.png'
+        isActive:
+          type: boolean
+          example: true
 
     DashboardData:
       type: object
       properties:
         label:
           type: string
-        value: 
+        value:
           type: number
           example: 42.12
-        percent: 
+        percent:
           type: number
           example: 58.1
 
