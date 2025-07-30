@@ -1,9 +1,22 @@
-export interface GoogleOAuthUserInfo {
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  pictureUrl?: string;
-}
+import z from 'zod';
+
+const GoogleOAuthAccessTokenSchema = z.object({
+  access_token: z.string(),
+});
+
+const GoogleOAuthUserInfoSchema = z
+  .object({
+    email: z.email(),
+    email_verified: z.boolean(),
+    name: z.string(),
+    picture: z.url().optional(),
+  })
+  .transform(({ email_verified, ...rest }) => ({
+    ...rest,
+    emailVerified: email_verified,
+  }));
+
+export type GoogleOAuthUserInfo = z.infer<typeof GoogleOAuthUserInfoSchema>;
 
 export interface GoogleOAuthServiceType {
   getUserInfo(accessToken: string): Promise<GoogleOAuthUserInfo>;
@@ -39,13 +52,10 @@ export class GoogleOAuthService {
       throw new Error(`Failed to fetch user info: ${response.statusText}`);
     }
 
-    const json: any = await response.json();
-    return {
-      email: json.email,
-      name: json.name,
-      emailVerified: json.email_verified,
-      pictureUrl: json.picture,
-    };
+    const parsed = GoogleOAuthUserInfoSchema.safeParse(await response.json());
+    if (!parsed.success) throw new Error(`Error in parsing Google OAuth user info: ${z.prettifyError(parsed.error)}`);
+
+    return parsed.data;
   }
 
   async exchangeAuthCodeForToken(code: string, redirectURI: string): Promise<string> {
@@ -68,8 +78,10 @@ export class GoogleOAuthService {
       throw new Error(`Failed to Google OAuth exchange token: ${response.statusText}`);
     }
 
-    const json: any = await response.json();
-    return json.access_token;
+    const parsed = GoogleOAuthAccessTokenSchema.safeParse(await response.json());
+    if (!parsed.success) throw new Error(z.prettifyError(parsed.error));
+
+    return parsed.data.access_token;
   }
 
   async revokeToken(accessToken: string): Promise<void> {

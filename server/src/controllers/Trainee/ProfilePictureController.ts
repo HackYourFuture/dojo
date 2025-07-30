@@ -43,7 +43,7 @@ export class ProfilePictureController implements ProfilePictureControllerType {
     // Handle file upload.
     try {
       await this.uploadService.uploadImage(req, res, 'profilePicture');
-    } catch (error: any) {
+    } catch (error) {
       if (error instanceof UploadServiceError) {
         res.status(400).send(new ResponseError(error.message));
       } else {
@@ -60,35 +60,26 @@ export class ProfilePictureController implements ProfilePictureControllerType {
     const originalFilePath = req.file.path;
     const largeFilePath = originalFilePath + '_large';
     const smallFilePath = originalFilePath + '_small';
-    try {
-      await this.imageService.resizeImage(originalFilePath, largeFilePath, 700, 700);
-      await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
-    } catch (error: any) {
-      next(error);
-      return;
-    }
 
-    try {
-      // Upload image to storage
-      const baseURL = process.env.STORAGE_BASE_URL ?? '';
-      const imageURL = new URL(this.getImageKey(trainee.id), baseURL).href;
-      const thumbnailURL = new URL(this.getThumbnailKey(trainee.id), baseURL).href;
+    await this.imageService.resizeImage(originalFilePath, largeFilePath, 700, 700);
+    await this.imageService.resizeImage(largeFilePath, smallFilePath, 70, 70);
 
-      // Upload images to storage
-      const largeFileStream = fs.createReadStream(largeFilePath);
-      const smallFileStream = fs.createReadStream(smallFilePath);
-      await this.storageService.upload(this.getImageKey(trainee.id), largeFileStream, AccessControl.Public);
-      await this.storageService.upload(this.getThumbnailKey(trainee.id), smallFileStream, AccessControl.Public);
+    // Upload image to storage
+    const baseURL = process.env.STORAGE_BASE_URL ?? '';
+    const imageURL = new URL(this.getImageKey(trainee.id), baseURL).href;
+    const thumbnailURL = new URL(this.getThumbnailKey(trainee.id), baseURL).href;
 
-      // update the trainee object with the new image URL
-      trainee.imageURL = imageURL;
-      trainee.thumbnailURL = thumbnailURL;
-      this.traineesRepository.updateTrainee(trainee);
-      res.status(201).send({ imageURL, thumbnailURL });
-    } catch (error: any) {
-      next(error);
-      return;
-    }
+    // Upload images to storage
+    const largeFileStream = fs.createReadStream(largeFilePath);
+    const smallFileStream = fs.createReadStream(smallFilePath);
+    await this.storageService.upload(this.getImageKey(trainee.id), largeFileStream, AccessControl.Public);
+    await this.storageService.upload(this.getThumbnailKey(trainee.id), smallFileStream, AccessControl.Public);
+
+    // update the trainee object with the new image URL
+    trainee.imageURL = imageURL;
+    trainee.thumbnailURL = thumbnailURL;
+    await this.traineesRepository.updateTrainee(trainee);
+    res.status(201).send({ imageURL, thumbnailURL });
 
     // Cleanup
     fs.unlink(originalFilePath, (error) => {
@@ -114,18 +105,14 @@ export class ProfilePictureController implements ProfilePictureControllerType {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
-    try {
-      await this.storageService.delete(this.getImageKey(trainee.id));
-      await this.storageService.delete(this.getThumbnailKey(trainee.id));
 
-      // update the trainee object with the new image URL
-      trainee.imageURL = undefined;
-      trainee.thumbnailURL = undefined;
-      this.traineesRepository.updateTrainee(trainee);
-    } catch (error: any) {
-      next(error);
-      return;
-    }
+    await this.storageService.delete(this.getImageKey(trainee.id));
+    await this.storageService.delete(this.getThumbnailKey(trainee.id));
+
+    // update the trainee object with the new image URL
+    trainee.imageURL = undefined;
+    trainee.thumbnailURL = undefined;
+    await this.traineesRepository.updateTrainee(trainee);
 
     res.status(204).end();
   }

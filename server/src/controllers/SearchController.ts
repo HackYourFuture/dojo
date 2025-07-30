@@ -31,19 +31,15 @@ export class SearchController implements SearchControllerType {
     this.traineesRepository = traineesRepository;
   }
 
-  async search(req: Request, res: Response, next: NextFunction) {
+  async search(req: Request, res: Response) {
     const maxAllowedLimit = 50;
     const inputLimit = Number(req.query.limit) || 20;
     const limit = Math.min(inputLimit, maxAllowedLimit);
     const searchQuery: string = (req.query.q as string) ?? '';
 
     let results: SearchResult[] = [];
-    try {
-      results = await this.getSearchResults(searchQuery, limit);
-    } catch (error) {
-      next(error);
-      return;
-    }
+
+    results = await this.getSearchResults(searchQuery, limit);
 
     const response: SearchResponse = {
       hits: {
@@ -75,7 +71,7 @@ export class SearchController implements SearchControllerType {
       .map((trainee) => {
         return {
           id: trainee.id,
-          name: `${trainee.displayName}`,
+          name: trainee.displayName,
           thumbnail: trainee.thumbnailURL ?? null,
           cohort: trainee.educationInfo.currentCohort ?? null,
           profilePath: trainee.profilePath,

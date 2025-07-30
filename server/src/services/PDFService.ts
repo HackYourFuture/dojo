@@ -42,7 +42,7 @@ export class PDFService implements PDFServiceType {
     try {
       response = await fetch(url, { method: 'POST', body: formData });
     } catch (error) {
-      const errorMessage = `Failed to connect to Gotenberg service at ${this.gotenbergUrl}: ${String(error)}`;
+      const errorMessage = `Failed to connect to Gotenberg service at ${this.gotenbergUrl.toString()}: ${String(error)}`;
       sentry.captureException(new Error(errorMessage));
       throw new Error(errorMessage);
     }

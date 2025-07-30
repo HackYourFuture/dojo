@@ -90,7 +90,7 @@ export class SlackNotificationService implements NotificationService {
       resultIcon = '✅';
     } else if (test.result === TestResult.PassedWithWarning) {
       resultIcon = '🟡';
-    } else if (test.result === TestResult.Disqualified) {
+    } else {
       resultIcon = '‼️';
     }
 

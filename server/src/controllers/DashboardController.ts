@@ -15,6 +15,7 @@ export class DashboardController implements DashboardControllerType {
   /**
    * Retrieve the dashboard data.
    */
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getDashboard(req: Request, res: Response) {
     const response = {
       demographics: {

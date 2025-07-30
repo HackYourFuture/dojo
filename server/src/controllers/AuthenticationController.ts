@@ -60,10 +60,10 @@ export class AuthenticationController implements AuthenticationControllerType {
 
       // 3. Revoke Google OAuth token - we don't use it anymore.
       // Do not wait for the response. Continue with login process.
-      this.googleOAuthService.revokeToken(googleAccessToken);
+      await this.googleOAuthService.revokeToken(googleAccessToken);
       googleAccessToken = '';
 
-      if (!oauthUser || !oauthUser.emailVerified) {
+      if (!oauthUser.emailVerified) {
         throw new Error('Could not verify google auth code');
       }
     } catch (error) {
@@ -74,7 +74,7 @@ export class AuthenticationController implements AuthenticationControllerType {
 
     // Check if the user is allowed to access to the system
     const user = await this.userRepository.findUserByEmail(oauthUser.email);
-    if (!user || !user.isActive) {
+    if (!user?.isActive) {
       res.status(403).json(new ResponseError('Not allowed to login'));
       Sentry.setUser({ email: oauthUser.email });
       Sentry.captureMessage(`Attempt to login with unauthorized user`, 'warning');
@@ -96,11 +96,13 @@ export class AuthenticationController implements AuthenticationControllerType {
     res.status(200).json(user);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getSession(req: Request, res: Response): Promise<void> {
     const user = res.locals.user as AuthenticatedUser;
     res.status(200).json(user);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async logout(req: Request, res: Response): Promise<void> {
     res.clearCookie(TOKEN_COOKIE_NAME);
     res.status(204).end();
@@ -112,7 +114,7 @@ export class AuthenticationController implements AuthenticationControllerType {
     try {
       const url = new URL(redirectURI);
       return allowedHosts.includes(url.hostname);
-    } catch (error) {
+    } catch {
       return false;
     }
   }
