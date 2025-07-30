@@ -1118,7 +1118,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /users/{id}:
+  /admin/users/{id}:
     put:
       tags:
         - Users
