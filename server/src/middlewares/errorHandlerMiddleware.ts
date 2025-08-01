@@ -28,6 +28,7 @@ export const errorHandlerMiddleware: ErrorRequestHandler = (error: Error, req: R
     statusCode = 500;
     response = isProduction ? 'Something broke!' : error;
 
+    // extra measures for unexpected/unhandled errors
     if (isProduction) sentry.captureException(error);
     else console.error(error);
   }
