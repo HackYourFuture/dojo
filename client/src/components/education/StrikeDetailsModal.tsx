@@ -107,7 +107,11 @@ export const StrikeDetailsModal = ({
       return;
     }
 
-    strikeToEdit ? onConfirmEdit(strikeFields) : onConfirmAdd(strikeFields);
+    if (strikeToEdit) {
+      onConfirmEdit(strikeFields);
+    } else {
+      onConfirmAdd(strikeFields);
+    }
   };
 
   //TODO: Add text validation
