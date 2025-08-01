@@ -46,9 +46,9 @@ import {
   LetterGenerator,
   PDFService,
 } from './services';
-import { ResponseError } from './models';
-import { AuthMiddleware } from './middlewares';
+import { AuthMiddleware, errorHandlerMiddleware } from './middlewares';
 import { CohortsRouter } from './routes/CohortsRouter';
+import { NotFoundError } from './utils/httpErrors';
 
 class Main {
   private readonly app: express.Application;
@@ -174,8 +174,8 @@ class Main {
     this.app.use('/api/admin/users', userRouter.build());
 
     // Not found handler for API
-    this.app.use('/api', (req: Request, res: Response) => {
-      res.status(404).json(new ResponseError('Not found'));
+    this.app.use('/api', () => {
+      throw new NotFoundError('API endpoint not found');
     });
 
     // Serve client static files in production
@@ -187,14 +187,7 @@ class Main {
     setupSentry(this.app);
 
     // Global error handler
-    this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-      if (this.isProduction) {
-        res.status(500).json(new ResponseError('Something broke!'));
-      } else {
-        console.log(error);
-        res.status(500).json(error);
-      }
-    });
+    this.app.use(errorHandlerMiddleware);
   }
 
   async connectToDatabase() {
