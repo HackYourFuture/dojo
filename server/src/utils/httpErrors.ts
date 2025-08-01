@@ -58,6 +58,11 @@ export class BadRequestError extends HttpError {
   constructor(message?: string);
   constructor(error: ZodError, stringify: 'stringify' | false);
 
+  // TODO: remove the note below
+  // ? This can be simplified by deciding whether we want the error field to be always a string or an object in req.body validation errors.
+  // ? Object is preferred as it's easier to handle or read.
+  // ? The previous ErrorResponse was always sending a string, so not sure if this has created a format dependency somewhere in the system.
+
   constructor(reason?: string | ZodError, stringify: 'stringify' | false = false) {
     let message: string;
 

@@ -26,7 +26,7 @@ export default tseslint.config(
       'no-warning-comments': [
         'warn',
         {
-          terms: ['todo', 'fixme', 'hack'],
+          terms: ['todo', 'fixme'],
           location: 'start',
         },
       ],

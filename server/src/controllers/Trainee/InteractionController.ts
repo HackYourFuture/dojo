@@ -1,129 +1,99 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, RequestHandler } from 'express';
+import { Trainee, InteractionInputSchema, InteractionWithReporter } from '../../models';
 import { TraineesRepository, UserRepository } from '../../repositories';
-import { AuthenticatedUser, InteractionWithReporterID, ResponseError } from '../../models';
 import { NotificationService } from '../../services';
-import { validateInteraction } from '../../models/Interaction';
+import { TraineeHelper } from './TraineeHelper';
+import { BadRequestError, NotFoundError } from '../../utils/httpErrors';
 export interface InteractionControllerType {
-  getInteractions(req: Request, res: Response, next: NextFunction): Promise<void>;
-  addInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
-  updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
-  deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getInteractions: RequestHandler;
+  addInteraction: RequestHandler;
+  updateInteraction: RequestHandler;
+  deleteInteraction: RequestHandler;
 }
 
 export class InteractionController implements InteractionControllerType {
   constructor(
     private readonly traineesRepository: TraineesRepository,
     private readonly userRepository: UserRepository,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private readonly traineeHelper: TraineeHelper
   ) {}
 
-  async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
+  async getInteractions(req: Request, res: Response): Promise<void> {
+    // input
+    const traineeID = req.params.id;
 
-    try {
-      const interactions = await this.traineesRepository.getInteractions(trainee.id);
-      res.status(200).json(interactions);
-    } catch (error: any) {
-      next(error);
-    }
+    // check if trainee exists
+    await this.traineeHelper.getTraineeOrThrow(traineeID);
+
+    // get
+    const interactions = await this.traineesRepository.getInteractions(traineeID);
+    res.status(200).json(interactions);
   }
 
-  async addInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
+  async addInteraction(req: Request, res: Response): Promise<void> {
+    // input
+    const reporterID = res.locals.user.id;
+    const traineeID = req.params.id;
 
-    const { date, type, title, details } = req.body;
-    const user = res.locals.user as AuthenticatedUser;
-    const reporterID = req.body.reporterID || user.id;
-    const newInteraction = { date, type, title, details, reporterID } as InteractionWithReporterID;
+    // validate
+    const parsed = InteractionInputSchema.safeParse({ reporterID, ...req.body });
+    if (!parsed.success) throw new BadRequestError(parsed.error, 'stringify');
+    const interactionToAdd = parsed.data;
 
-    // Validate new interaction model before creation
-    try {
-      validateInteraction(newInteraction);
-      const reporter = await this.userRepository.findUserByID(reporterID);
-      if (!reporter) {
-        throw new Error(`Invalid reporter ID ${reporterID}. User not found.`);
-      }
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
-    }
+    // get trainee
+    const trainee = await this.traineeHelper.getTraineeOrThrow(traineeID);
 
-    try {
-      const interaction = await this.traineesRepository.addInteraction(req.params.id, newInteraction);
-      res.status(201).json(interaction);
-      this.notificationService.interactionCreated(trainee, interaction);
-    } catch (error: any) {
-      next(error);
-    }
+    // check if reporter exists
+    const reporter = await this.userRepository.findUserByID(reporterID);
+    if (!reporter) throw new NotFoundError(`Invalid reporter ID ${reporterID}. User not found.`);
+
+    // add and notify
+    const addedInteraction = await this.traineesRepository.addInteraction(traineeID, interactionToAdd);
+    res.status(201).json(addedInteraction);
+    await this.notificationService.interactionCreated(trainee, addedInteraction);
   }
 
-  async updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
+  async updateInteraction(req: Request, res: Response): Promise<void> {
+    // input
+    const reporterID = res.locals.user.id;
+    const traineeID = req.params.id;
+    const interactionID = req.params.interactionID;
 
-    const interaction = trainee.interactions.find((interaction) => interaction.id === req.params.interactionID);
-    if (!interaction) {
-      res.status(404).send(new ResponseError('Interaction not found'));
-      return;
-    }
+    // validate
+    const parsed = InteractionInputSchema.safeParse({ reporterID, ...req.body, id: interactionID });
+    if (!parsed.success) throw new BadRequestError(parsed.error, 'stringify');
+    const interactionToUpdate = parsed.data;
 
-    const user = res.locals.user as AuthenticatedUser;
-    const interactionToUpdate: InteractionWithReporterID = {
-      id: req.params.interactionID,
-      date: req.body.date,
-      type: req.body.type,
-      title: req.body.title,
-      details: req.body.details,
-      reporterID: req.body.reporterID || user.id,
-    };
+    // check if trainee and interaction exist
+    const trainee = await this.traineeHelper.getTraineeOrThrow(traineeID);
+    this.getInteractionOrThrow(trainee, interactionID);
 
-    // Validate new interaction model after applying the changes
-    try {
-      validateInteraction(interactionToUpdate);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
-    }
-
-    try {
-      const updatedInteraction = await this.traineesRepository.updateInteraction(req.params.id, interactionToUpdate);
-      res.status(200).json(updatedInteraction);
-    } catch (error: any) {
-      console.error(error);
-      next(error);
-      return;
-    }
+    // update
+    const updatedInteraction = await this.traineesRepository.updateInteraction(traineeID, interactionToUpdate);
+    res.status(200).json(updatedInteraction);
   }
 
-  async deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
+  async deleteInteraction(req: Request, res: Response): Promise<void> {
+    // input
+    const traineeID = req.params.id;
+    const interactionID = req.params.interactionID;
 
-    if (!trainee.interactions.find((interaction) => interaction.id === req.params.interactionID)) {
-      res.status(404).send(new ResponseError('Interaction not found'));
-      return;
-    }
+    // check if trainee and interaction exist
+    const trainee = await this.traineeHelper.getTraineeOrThrow(traineeID);
+    this.getInteractionOrThrow(trainee, interactionID);
 
-    try {
-      await this.traineesRepository.deleteInteraction(req.params.id, req.params.interactionID);
-      res.status(204).end();
-    } catch (error: any) {
-      next(error);
-      return;
-    }
+    // delete
+    await this.traineesRepository.deleteInteraction(traineeID, interactionID);
+    res.status(204).end();
+  }
+
+  /**
+   * Helper method to get interaction or throw NotFoundError
+   */
+  private getInteractionOrThrow(trainee: Trainee, interactionID: string): InteractionWithReporter {
+    const interaction = trainee.interactions.find((interaction) => interaction.id === interactionID);
+    if (!interaction) throw new NotFoundError('Interaction not found');
+    return interaction;
   }
 }

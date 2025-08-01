@@ -34,6 +34,7 @@ import {
   StrikeController,
   DefaultUserController,
   LetterController,
+  DefaultTraineeHelper,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import {
@@ -118,6 +119,8 @@ class Main {
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
+    const traineeHelper = new DefaultTraineeHelper(traineesRepository);
+
     // setup controllers
     const authenticationController = new AuthenticationController(
       userRepository,
@@ -132,9 +135,14 @@ class Main {
       uploadService,
       imageService
     );
-    const interactionController = new InteractionController(traineesRepository, userRepository, notificationService);
+    const interactionController = new InteractionController(
+      traineesRepository,
+      userRepository,
+      notificationService,
+      traineeHelper
+    );
     const testController = new TestController(traineesRepository, notificationService);
-    const employmentHistoryController = new EmploymentHistoryController(traineesRepository);
+    const employmentHistoryController = new EmploymentHistoryController(traineesRepository, traineeHelper);
     const strikeController = new StrikeController(traineesRepository, userRepository, notificationService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
