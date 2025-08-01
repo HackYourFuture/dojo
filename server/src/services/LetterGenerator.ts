@@ -4,9 +4,7 @@ import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import Stream from 'stream';
 
-export type LetterData = {
-  [key: string]: string;
-};
+export type LetterData = Record<string, string>;
 
 export enum LetterType {
   GITHUB_TRAINEE = 'github_trainee',
@@ -36,7 +34,7 @@ export class LetterGenerator implements LetterGeneratorType {
     let outputDocument: Buffer;
     try {
       const templateDocument = Buffer.concat(await Array.fromAsync(templateDocumentStream));
-      outputDocument = await this.populateTemplate(templateDocument, data);
+      outputDocument = this.populateTemplate(templateDocument, data);
     } catch (error) {
       throw new Error(`Letter generation error: failed to generate document from template: ${String(error)}`);
     }
@@ -48,7 +46,7 @@ export class LetterGenerator implements LetterGeneratorType {
 
   // This function takes a docx template document and replaces the placeholders with actual data.
   // The process involves unzipping the docx file, parsing it with Docxtemplater, and then generating a new docx file.
-  private async populateTemplate(templateDocument: Buffer, letterData: LetterData): Promise<Buffer> {
+  private populateTemplate(templateDocument: Buffer, letterData: LetterData): Buffer {
     // Unzip the content of the docx file
     const zip = new PizZip(templateDocument);
 
