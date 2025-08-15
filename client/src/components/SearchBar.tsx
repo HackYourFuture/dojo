@@ -24,7 +24,7 @@ export const SearchBar = ({ onTextChange }: SearchBarProps) => {
     if (debouncedSearchTerm) {
       onTextChange(debouncedSearchTerm);
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, onTextChange]);
   /**
    * Function to set the value for search text field onChange event.
    *

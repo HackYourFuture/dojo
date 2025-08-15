@@ -1,5 +1,5 @@
 import { ErrorBox, SearchBar, SearchResultsList } from '../components';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import HYFLogo from '../assets/HYF_logo.svg';
@@ -19,9 +19,9 @@ export const SearchPage = () => {
     document.title = 'Home | Dojo';
   }, []);
 
-  function handleTextChange(text: string) {
+  const handleTextChange = useCallback((text: string) => {
     setSearchString(text);
-  }
+  }, []);
 
   return (
     <div className="App">
@@ -29,7 +29,7 @@ export const SearchPage = () => {
         <Box sx={{ display: 'flex' }}>
           <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
         </Box>
-        <SearchBar onTextChange={(text) => handleTextChange(text)} />
+        <SearchBar onTextChange={handleTextChange} />
         {isError && error instanceof Error ? (
           <ErrorBox errorMessage={error.message} />
         ) : (
