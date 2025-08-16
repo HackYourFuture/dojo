@@ -1,4 +1,4 @@
-import swaggerUi from 'swagger-ui-express';
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
 import fs from 'fs';
 import YAML from 'yaml';
 import { RequestHandler } from 'express';
@@ -9,8 +9,8 @@ import { RequestHandler } from 'express';
  * @param {string} documentPath The file path to the Swagger YAML document.
  * @returns {Array<RequestHandler>} An array for serving and setting up Swagger UI.
  * */
-export default (documentPath: string): Array<RequestHandler> => {
+export default (documentPath: string): RequestHandler[] => {
   const file = fs.readFileSync(documentPath, 'utf8');
-  const swaggerDocument = YAML.parse(file);
+  const swaggerDocument = YAML.parse(file) as JsonObject;
   return swaggerUi.serve.concat(swaggerUi.setup(swaggerDocument));
 };

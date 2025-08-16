@@ -17,22 +17,18 @@ export class InteractionController implements InteractionControllerType {
     private notificationService: NotificationService
   ) {}
 
-  async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getInteractions(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    try {
-      const interactions = await this.traineesRepository.getInteractions(trainee.id);
-      res.status(200).json(interactions);
-    } catch (error: any) {
-      next(error);
-    }
+    const interactions = await this.traineesRepository.getInteractions(trainee.id);
+    res.status(200).json(interactions);
   }
 
-  async addInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async addInteraction(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
@@ -51,21 +47,17 @@ export class InteractionController implements InteractionControllerType {
       if (!reporter) {
         throw new Error(`Invalid reporter ID ${reporterID}. User not found.`);
       }
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
+    } catch (error) {
+      if (error instanceof Error) res.status(400).send(new ResponseError(error.message));
       return;
     }
 
-    try {
-      const interaction = await this.traineesRepository.addInteraction(req.params.id, newInteraction);
-      res.status(201).json(interaction);
-      this.notificationService.interactionCreated(trainee, interaction);
-    } catch (error: any) {
-      next(error);
-    }
+    const interaction = await this.traineesRepository.addInteraction(req.params.id, newInteraction);
+    res.status(201).json(interaction);
+    await this.notificationService.interactionCreated(trainee, interaction);
   }
 
-  async updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateInteraction(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
@@ -91,22 +83,16 @@ export class InteractionController implements InteractionControllerType {
     // Validate new interaction model after applying the changes
     try {
       validateInteraction(interactionToUpdate);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
+    } catch (error) {
+      if (error instanceof Error) res.status(400).send(new ResponseError(error.message));
       return;
     }
 
-    try {
-      const updatedInteraction = await this.traineesRepository.updateInteraction(req.params.id, interactionToUpdate);
-      res.status(200).json(updatedInteraction);
-    } catch (error: any) {
-      console.error(error);
-      next(error);
-      return;
-    }
+    const updatedInteraction = await this.traineesRepository.updateInteraction(req.params.id, interactionToUpdate);
+    res.status(200).json(updatedInteraction);
   }
 
-  async deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteInteraction(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
@@ -118,12 +104,7 @@ export class InteractionController implements InteractionControllerType {
       return;
     }
 
-    try {
-      await this.traineesRepository.deleteInteraction(req.params.id, req.params.interactionID);
-      res.status(204).end();
-    } catch (error: any) {
-      next(error);
-      return;
-    }
+    await this.traineesRepository.deleteInteraction(req.params.id, req.params.interactionID);
+    res.status(204).end();
   }
 }
