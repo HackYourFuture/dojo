@@ -134,7 +134,6 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         {activeTab === 'education' && <EducationInfo />}
         {activeTab === 'employment' && <EmploymentInfo />}
         {activeTab === 'interactions' && <InteractionsInfo />}
-
       </Box>
     </div>
   );
