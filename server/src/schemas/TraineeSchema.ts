@@ -117,6 +117,9 @@ const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
     assignments: [AssignmentSchema],
     tests: [TestSchema],
     comments: { type: String, required: false, default: null },
+    technicalMentor: { type: String, required: false, default: null },
+    hrMentor: { type: String, required: false, default: null },
+    englishMentor: { type: String, required: false, default: null },
   },
   { _id: false, minimize: false }
 );

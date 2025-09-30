@@ -150,6 +150,9 @@ export interface TraineeEducationInfo {
   assignments: Assignment[];
   tests: Test[];
   comments?: string;
+  technicalMentor?: string;
+  hrMentor?: string;
+  englishMentor?: string;
 }
 
 export interface TraineeEmploymentInfo {

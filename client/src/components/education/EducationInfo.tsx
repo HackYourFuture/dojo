@@ -185,6 +185,54 @@ export const EducationInfo = () => {
       </div>
       <StrikesComponent />
       <div style={{ width: '100%' }}>
+        {/* Technical Mentor */}
+        <FormControl sx={{ mx: 2, my: 1, width: '53ch', gap: '2rem' }}>
+          <TextField
+            id="technicalMentor"
+            name="technicalMentor"
+            label="Technical mentor"
+            type="text"
+            value={editedFields?.technicalMentor || ''}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
+      </div>
+      <div style={{ width: '100%' }}>
+        {/* HR Mentor */}
+        <FormControl sx={{ mx: 2, my: 1, width: '53ch', gap: '2rem' }}>
+          <TextField
+            id="hrMentor"
+            name="hrMentor"
+            label="HR mentor"
+            type="text"
+            value={editedFields?.hrMentor || ''}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
+      </div>
+      <div style={{ width: '100%' }}>
+        {/* English Mentor */}
+        <FormControl sx={{ mx: 2, my: 1, width: '53ch', gap: '2rem' }}>
+          <TextField
+            id="englishMentor"
+            name="englishMentor"
+            label="English mentor"
+            type="text"
+            value={editedFields?.englishMentor || ''}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
+      </div>
+      <div style={{ width: '100%' }}>
         {/* Comments */}
         <FormControl sx={{ mx: 2, width: '81ch' }}>
           <TextField
