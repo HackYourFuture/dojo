@@ -3,6 +3,7 @@ import HYFLogo from '../assets/HYF_logo.svg';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../hooks';
+import { Link } from 'react-router-dom';
 import {
   AppBar,
   Avatar,
@@ -67,7 +68,9 @@ export const ResponsiveNavBar = () => {
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box component="div">
-              <a href="/home"><img src={HYFLogo} height="60" alt="HYF navbar logo" className="hyf-navbar-logo-img" /></a>
+              <Link to="/home">
+                <img src={HYFLogo} height="60" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
+              </Link>
             </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
