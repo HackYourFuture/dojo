@@ -66,8 +66,8 @@ export const ResponsiveNavBar = () => {
       <AppBar position="static" sx={{ bgcolor: 'black' }}>
         <Container maxWidth={false}>
           <Toolbar disableGutters>
-            <Box component="div">
-              <img src={HYFLogo} height="60" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
+            <Box component="div" sx={{cursor: "pointer"}}>
+              <img onClick={() => navigate('/home')} src={HYFLogo} height="60" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
             </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
