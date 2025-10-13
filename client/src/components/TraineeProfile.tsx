@@ -107,15 +107,17 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         <ProfileSidebar traineeId={id} />
       </Box>
       <Box width="100%" paddingY="16px">
-        <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
-        {activeTab === 'interactions' ? null : (
-          <EditSaveButton
-            isEditMode={isEditMode}
-            isLoading={isSaveLoading}
-            onCancel={onCancelEdit}
-            onClickEditButton={onClickEditButton}
-          />
-        )}
+        <Box display="flex" justifyContent="space-between">
+          <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
+          {activeTab === 'interactions' ? null : (
+            <EditSaveButton
+              isEditMode={isEditMode}
+              isLoading={isSaveLoading}
+              onCancel={onCancelEdit}
+              onClickEditButton={onClickEditButton}
+            />
+          )}
+        </Box>
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={6000}
