@@ -19,7 +19,7 @@ export const useAddTest = (traineeId: string) => {
 /**
  * Hook to get the tests of a trainee.
  * @param {string} traineeId the id of the trainee to get the tests from.
- * @returns {UseQueryResult<Strike[], Error>} the tests of the trainee.
+ * @returns {UseQueryResult<Test[], Error>} the tests of the trainee.
  */
 export const useGetTests = (traineeId: string) => {
   return useQuery(
@@ -29,7 +29,7 @@ export const useGetTests = (traineeId: string) => {
     },
     {
       select: ({ data }) => {
-        return orderTestsByDateDesc(data as Test[]);
+        return orderTestsByDateDesc(data);
       },
       enabled: !!traineeId,
       refetchOnWindowFocus: false,
