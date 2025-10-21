@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Test, TestResult } from '../../models';
 import { CheckCircle, OfflinePin, CancelSharp, Error } from '@mui/icons-material';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
+import { formatTextToFriendly } from '../../helpers/formHelper';
 import MarkdownText from '../shared/MarkdownText';
 
 interface TestsListProps {
@@ -13,17 +14,6 @@ interface TestsListProps {
 }
 
 export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClickDelete }) => {
-  const formatTestComment = (comment: string): string => {
-    return comment.split('-').join(' ').charAt(0).toUpperCase() + comment.split('-').join(' ').slice(1).toLowerCase();
-  };
-
-  const handleEdit = (id: string) => {
-    onClickEdit(id);
-  };
-  const handleDelete = (id: string) => {
-    onClickDelete(id);
-  };
-
   const resultIconMap = (testResult: TestResult) => {
     switch (testResult) {
       case TestResult.Passed:
@@ -42,10 +32,10 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
   const renderActions = (id: string) => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
-        <IconButton aria-label="edit" onClick={() => handleEdit(id)}>
+        <IconButton aria-label="edit" onClick={() => onClickEdit(id)}>
           <EditIcon />
         </IconButton>
-        <IconButton aria-label="delete" onClick={() => handleDelete(id)}>
+        <IconButton aria-label="delete" onClick={() => onClickDelete(id)}>
           <DeleteIcon />
         </IconButton>
       </Box>
@@ -88,9 +78,9 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                       paddingTop={1}
                       paddingBottom={1}
                     >
-                      <Box display="flex">
-                        <Tooltip title={test.result}>{resultIconMap(test.result)}</Tooltip>
-                        {formatTestComment(test.type || '')}
+                      <Box display="flex" sx={{ gap: 1 }}>
+                        <Tooltip title={formatTextToFriendly(test.result || '')}>{resultIconMap(test.result)}</Tooltip>
+                        {formatTextToFriendly(test.type || '')}
                       </Box>
                       <Typography sx={{ paddingRight: 2 }}>{test.score ?? 'N/A'}</Typography>
                       <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(test.date)}</Typography>
