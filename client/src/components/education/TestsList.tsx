@@ -53,7 +53,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
       }}
     >
       {tests.length === 0 ? (
-        <Typography variant="body1" color="#CCCCCC" padding="16px">
+        <Typography variant="body1" color="text.secondary" padding="16px">
           No tests found
         </Typography>
       ) : (
@@ -65,7 +65,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                 disablePadding
                 sx={{
                   paddingBottom: 1,
-                  bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
+                  bgcolor: index % 2 === 0 ? 'action.hover' : 'background.paper',
                 }}
               >
                 <ListItemText
@@ -82,8 +82,12 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                         <Tooltip title={formatTextToFriendly(test.result || '')}>{resultIconMap(test.result)}</Tooltip>
                         {formatTextToFriendly(test.type || '')}
                       </Box>
-                      <Typography sx={{ paddingRight: 2 }}>{test.score ?? 'N/A'}</Typography>
-                      <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(test.date)}</Typography>
+                      <Typography sx={{ paddingRight: 2 }} aria-label={`Score: ${test.score ?? 'N/A'}`}>
+                        {test.score ?? 'N/A'}
+                      </Typography>
+                      <Typography sx={{ paddingRight: 2 }} aria-label={`Date: ${formatDateForDisplay(test.date)}`}>
+                        {formatDateForDisplay(test.date)}
+                      </Typography>
                     </Box>
                   }
                   secondary={<MarkdownText>{test.comments ?? ''}</MarkdownText>}
