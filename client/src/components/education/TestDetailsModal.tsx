@@ -97,7 +97,10 @@ export const TestDetailsModal = ({
     if (name === 'type') setTypeError(false);
     if (name === 'result') setResultError(false);
 
-    setTestFields((prev) => ({ ...prev, [name]: value as any }));
+    setTestFields((prev) => ({
+      ...prev,
+      [name]: name === 'type' ? (value as TestType) : name === 'result' ? (value as TestResult) : value,
+    }));
   };
 
   const onConfirm = () => {
@@ -151,7 +154,7 @@ export const TestDetailsModal = ({
                 name="type"
                 id="type"
                 label="Test type"
-                value={(testFields.type as any) || ''}
+                value={testFields.type ?? ''}
                 onChange={handleTestSelectChange}
               >
                 <MenuItem value={TestType.Presentation}>Presentation</MenuItem>
@@ -188,7 +191,7 @@ export const TestDetailsModal = ({
                 name="result"
                 id="result"
                 label="Result"
-                value={(testFields.result as any) || ''}
+                value={testFields.result ?? ''}
                 onChange={handleTestSelectChange}
               >
                 <MenuItem value={TestResult.Passed}>Passed</MenuItem>
@@ -212,7 +215,7 @@ export const TestDetailsModal = ({
                 onChange={handleChange}
                 fullWidth
               />
-              {scoreError && <FormHelperText>Score between 0 and 10 is required</FormHelperText>}
+              {scoreError && <FormHelperText>Score from 0 to 10 is required</FormHelperText>}
             </FormControl>
           </Box>
 
