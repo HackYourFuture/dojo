@@ -78,7 +78,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                       paddingTop={1}
                       paddingBottom={1}
                     >
-                      <Box display="flex" sx={{ gap: 1 }}>
+                      <Box display="flex" flexDirection="row" width="50%">
                         <Tooltip title={formatTextToFriendly(test.result || '')}>{resultIconMap(test.result)}</Tooltip>
                         {formatTextToFriendly(test.type || '')}
                       </Box>
