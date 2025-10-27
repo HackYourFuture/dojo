@@ -196,7 +196,7 @@ export interface Test {
   readonly id: string;
   date: Date;
   type: TestType;
-  grade?: number;
+  score?: number;
   result: TestResult;
   comments?: string;
 }
