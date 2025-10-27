@@ -121,6 +121,7 @@ export const TestDetailsModal = ({
 
     if (isEditMode) onConfirmEdit(testFields as Test);
     else onConfirmAdd(testFields as Test);
+    resetForm();
   };
 
   return (
