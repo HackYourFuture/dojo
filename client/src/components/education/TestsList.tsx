@@ -82,8 +82,12 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                         <Tooltip title={formatTextToFriendly(test.result || '')}>{resultIconMap(test.result)}</Tooltip>
                         {formatTextToFriendly(test.type || '')}
                       </Box>
-                      <Typography sx={{ paddingRight: 2 }}>{test.score ?? 'N/A'}</Typography>
-                      <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(test.date)}</Typography>
+                      <Typography sx={{ paddingRight: 2 }} aria-label={`Score: ${test.score ?? 'N/A'}`}>
+                        {test.score ?? 'N/A'}
+                      </Typography>
+                      <Typography sx={{ paddingRight: 2 }} aria-label={`Date: ${formatDateForDisplay(test.date)}`}>
+                        {formatDateForDisplay(test.date)}
+                      </Typography>
                     </Box>
                   }
                   secondary={<MarkdownText>{test.comments ?? ''}</MarkdownText>}
