@@ -56,8 +56,7 @@ export const StrikeDetailsModal = ({
       setStrikeFields(strikeToEdit);
       setIsEditMode(true);
       return;
-    }
-    else {
+    } else {
       setIsEditMode(false);
     }
     resetForm();

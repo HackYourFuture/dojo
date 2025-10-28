@@ -7,13 +7,13 @@ import { Strike } from '../../models';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
 import MarkdownText from '../shared/MarkdownText';
 
-interface StrikesListProps { //NOTE: seems to hold strikes list
+interface StrikesListProps {
   strikes: Strike[];
   onClickEdit: (id: string) => void;
   onClickDelete: (id: string) => void;
 }
 
-export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, onClickDelete }) => { //NOTE: so this is making sure that strikes list is a react functional component with strikeslist props
+export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, onClickDelete }) => {
   /**
    * Formats the strike reason to a readable format
    * with the first letter capitalized
@@ -21,17 +21,16 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
    * @returns The formatted strike reason
    */
   const formatStrikeReason = (reason: string): string => {
-    return reason.split('-').join(' ').charAt(0).toUpperCase() + reason.split('-').join(' ').slice(1).toLowerCase(); //NOTE: formatter for the comment
+    return reason.split('-').join(' ').charAt(0).toUpperCase() + reason.split('-').join(' ').slice(1).toLowerCase();
   };
 
-  const handleEdit = (id: string) => { //NOTE: what to do for edit and delete which are on the side of each strike
+  const handleEdit = (id: string) => {
     onClickEdit(id);
   };
   const handleDelete = (id: string) => {
     onClickDelete(id);
   };
 
-  //NOTE: render how the actions look and these are two buttons that call either edit or delete.
   const renderActions = (id: string) => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
@@ -45,7 +44,6 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
     );
   };
 
-  //NOTE: the return of the component I assume that here is where the const render actions will be also called.
   return (
     <List
       sx={{
@@ -56,13 +54,13 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
         scrollbarWidth: 'thin',
       }}
     >
-      {strikes.length === 0 ? ( //NOTE: add all found elements in the list or none
+      {strikes.length === 0 ? (
         <Typography variant="body1" color="#CCCCCC" padding="16px">
           No strikes found
         </Typography>
       ) : (
         strikes.map((strike: Strike, index: number) => {
-          return ( //NOTE: the boxes are keyed so they are found again when needed
+          return (
             <Box key={strike.id}>
               <ListItem
                 alignItems="flex-start"
@@ -96,7 +94,11 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                       <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
                     </Box>
                   }
-                  secondary={<Box mt={-2}><MarkdownText>{strike.comments}</MarkdownText></Box>}
+                  secondary={
+                    <Box mt={-2}>
+                      <MarkdownText>{strike.comments}</MarkdownText>
+                    </Box>
+                  }
                 />
                 {renderActions(strike.id)}
               </ListItem>
