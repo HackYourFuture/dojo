@@ -64,7 +64,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                 alignItems="flex-start"
                 disablePadding
                 sx={{
-                  paddingBottom: 1,
+                  paddingBottom: 0.5,
                   bgcolor: index % 2 === 0 ? 'action.hover' : 'background.paper',
                 }}
               >
@@ -75,10 +75,9 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                       flexDirection="row"
                       justifyContent="space-between"
                       width="100%"
-                      paddingTop={1}
-                      paddingBottom={1}
+                      paddingTop={0.5}
                     >
-                      <Box display="flex" sx={{ gap: 1 }}>
+                      <Box display="flex" flexDirection="row" width="50%" gap={1} ml={1}>
                         <Tooltip title={formatTextToFriendly(test.result || '')}>{resultIconMap(test.result)}</Tooltip>
                         {formatTextToFriendly(test.type || '')}
                       </Box>
@@ -90,7 +89,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                       </Typography>
                     </Box>
                   }
-                  secondary={<MarkdownText>{test.comments ?? ''}</MarkdownText>}
+                  secondary={<Box ml={1} mt={-1}><MarkdownText>{test.comments ?? ''}</MarkdownText></Box>}
                 />
                 {renderActions(test.id)}
               </ListItem>
