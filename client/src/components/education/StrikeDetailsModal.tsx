@@ -56,6 +56,8 @@ export const StrikeDetailsModal = ({
       setStrikeFields(strikeToEdit);
       setIsEditMode(true);
       return;
+    } else {
+      setIsEditMode(false);
     }
     resetForm();
   }, [strikeToEdit]);
@@ -111,6 +113,7 @@ export const StrikeDetailsModal = ({
       onConfirmEdit(strikeFields);
     } else {
       onConfirmAdd(strikeFields);
+      resetForm();
     }
   };
 

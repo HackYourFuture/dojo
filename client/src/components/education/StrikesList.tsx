@@ -66,7 +66,6 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 alignItems="flex-start"
                 disablePadding
                 sx={{
-                  paddingBottom: 1,
                   bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
                 }}
               >
@@ -95,7 +94,11 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                       <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
                     </Box>
                   }
-                  secondary={<MarkdownText>{strike.comments}</MarkdownText>}
+                  secondary={
+                    <Box mt={-2}>
+                      <MarkdownText>{strike.comments}</MarkdownText>
+                    </Box>
+                  }
                 />
                 {renderActions(strike.id)}
               </ListItem>

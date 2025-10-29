@@ -67,6 +67,7 @@ export const StrikesComponent = () => {
    * Function to enable adding strikes.
    */
   const onClickAdd = () => {
+    setStrikeToEdit(null);
     setIsModalOpen(true);
   };
 
