@@ -5,6 +5,7 @@ import { createSelectChangeHandler, createTextChangeHandler } from '../../helper
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import React from 'react';
 import { StrikesComponent } from './StrikesComponent';
+import { TestsComponent } from './TestsComponent';
 import { formatDate } from '../../helpers/dateHelper';
 import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
@@ -183,7 +184,10 @@ export const EducationInfo = () => {
           />
         </FormControl>
       </div>
-      <StrikesComponent />
+      <Box display="flex" gap={2}>
+        <StrikesComponent />
+        <TestsComponent />
+      </Box>
       <div style={{ width: '100%' }}>
         {/* Comments */}
         <FormControl sx={{ mx: 2, width: '81ch' }}>
