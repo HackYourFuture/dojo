@@ -7,6 +7,8 @@ import { formatDateForDisplay } from '../../helpers/dateHelper';
 import { formatTextToFriendly } from '../../helpers/formHelper';
 import MarkdownText from '../shared/MarkdownText';
 
+import GradingIcon from '@mui/icons-material/Grading';
+
 interface TestsListProps {
   tests: Test[];
   onClickEdit: (id: string) => void;
@@ -81,15 +83,24 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                         <Tooltip title={formatTextToFriendly(test.result || '')}>{resultIconMap(test.result)}</Tooltip>
                         {formatTextToFriendly(test.type || '')}
                       </Box>
-                      <Typography sx={{ paddingRight: 2 }} aria-label={`Score: ${test.score ?? 'N/A'}`}>
-                        {test.score ?? 'N/A'}
+                      {test.score && (
+                        <Tooltip title={'Score'}>
+                          <GradingIcon sx={{ fontSize: 18, marginTop: 0.5 }}></GradingIcon>
+                        </Tooltip>
+                      )}
+                      <Typography sx={{ paddingRight: 6 }} aria-label={`Score: ${test.score ?? ''}`}>
+                        {test.score ?? ''}
                       </Typography>
                       <Typography sx={{ paddingRight: 2 }} aria-label={`Date: ${formatDateForDisplay(test.date)}`}>
                         {formatDateForDisplay(test.date)}
                       </Typography>
                     </Box>
                   }
-                  secondary={<Box ml={1} mt={-1}><MarkdownText>{test.comments ?? ''}</MarkdownText></Box>}
+                  secondary={
+                    <Box ml={5} mt={-1}>
+                      <MarkdownText>{test.comments ?? ''}</MarkdownText>
+                    </Box>
+                  }
                 />
                 {renderActions(test.id)}
               </ListItem>

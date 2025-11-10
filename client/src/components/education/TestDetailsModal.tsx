@@ -113,7 +113,7 @@ export const TestDetailsModal = ({
       setResultError(true);
       invalid = true;
     }
-    if (testFields.score === undefined || testFields.score < 0 || testFields.score > 10) {
+    if (testFields.score && (testFields.score < 0 || testFields.score > 10)) {
       setScoreError(true);
       invalid = true;
     }

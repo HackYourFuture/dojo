@@ -184,7 +184,7 @@ export const EducationInfo = () => {
           />
         </FormControl>
       </div>
-      <Box display="flex" gap={2}>
+      <Box display="flex" gap={2} style={{ width: '100%' }}>
         <StrikesComponent />
         <TestsComponent />
       </Box>
