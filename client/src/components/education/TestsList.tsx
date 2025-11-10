@@ -89,7 +89,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                       </Typography>
                     </Box>
                   }
-                  secondary={<Box ml={1} mt={-1}><MarkdownText>{test.comments ?? ''}</MarkdownText></Box>}
+                  secondary={<Box ml={5} mt={-1}><MarkdownText>{test.comments ?? ''}</MarkdownText></Box>}
                 />
                 {renderActions(test.id)}
               </ListItem>
