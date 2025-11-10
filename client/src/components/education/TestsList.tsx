@@ -82,7 +82,7 @@ export const TestsList: React.FC<TestsListProps> = ({ tests, onClickEdit, onClic
                         {formatTextToFriendly(test.type || '')}
                       </Box>
                       <Typography sx={{ paddingRight: 2 }} aria-label={`Score: ${test.score ?? ''}`}>
-                        {test.score ?? 'N/A'}
+                        {test.score ?? ''}
                       </Typography>
                       <Typography sx={{ paddingRight: 2 }} aria-label={`Date: ${formatDateForDisplay(test.date)}`}>
                         {formatDateForDisplay(test.date)}
