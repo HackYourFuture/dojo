@@ -39,6 +39,8 @@ export const validateInteraction = (interaction: InteractionWithReporterID): voi
     throw new Error('Interaction details are required');
   }
   if (!Object.values(InteractionType).includes(interaction.type)) {
-    throw new Error(`Unknown interaction type [${Object.values(InteractionType)}]`);
+    throw new Error(
+      `Unknown interaction type: ${interaction.type}. Allowed types: ${Object.values(InteractionType).join(', ')}`
+    );
   }
 };

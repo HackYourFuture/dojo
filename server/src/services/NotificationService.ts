@@ -40,7 +40,8 @@ export class SlackNotificationService implements NotificationService {
       socketMode: false,
       deferInitialization: true,
     });
-    this.initializeSlack();
+
+    void this.initializeSlack();
   }
 
   private async initializeSlack(): Promise<void> {
@@ -49,7 +50,7 @@ export class SlackNotificationService implements NotificationService {
       await this.slack.start();
       this.initialized = true;
     } catch (error) {
-      console.warn(`⚠️ Slack is not initialized. Slack notifications will not work. (${error}).`);
+      console.warn(`⚠️ Slack is not initialized. Slack notifications will not work. (${String(error)}).`);
       console.warn('If you do not need to use Slack notifications, you can ignore this warning.\n');
     }
   }
@@ -59,7 +60,8 @@ export class SlackNotificationService implements NotificationService {
     changes.forEach((change) => {
       message.push(`> - *${change.fieldName}*: ${change.previousValue} → ${change.newValue}`);
     });
-    this.postMessageToSlack(message.join('\n'));
+
+    await this.postMessageToSlack(message.join('\n'));
   }
 
   async interactionCreated(trainee: Trainee, interaction: InteractionWithReporter): Promise<void> {
@@ -69,7 +71,7 @@ export class SlackNotificationService implements NotificationService {
       `[${interaction.type}] *${interaction.title}*`,
     ].join('\n');
 
-    this.postMessageToSlack(message);
+    await this.postMessageToSlack(message);
   }
 
   async strikeCreated(trainee: Trainee, strike: StrikeWithReporter): Promise<void> {
@@ -79,7 +81,7 @@ export class SlackNotificationService implements NotificationService {
       `*Reason:* ${strike.reason}`,
     ].join('\n');
 
-    this.postMessageToSlack(message);
+    await this.postMessageToSlack(message);
   }
 
   async testCreated(trainee: Trainee, test: Test): Promise<void> {
@@ -90,20 +92,20 @@ export class SlackNotificationService implements NotificationService {
       resultIcon = '✅';
     } else if (test.result === TestResult.PassedWithWarning) {
       resultIcon = '🟡';
-    } else if (test.result === TestResult.Disqualified) {
+    } else {
       resultIcon = '‼️';
     }
 
     let message = [
       `📊 *New test result* for <${getProfileURL(trainee)}|${trainee.displayName}>`,
-      `${test.type}`,
+      test.type,
       `${resultIcon} ${test.result}`,
     ].join('\n');
 
     if (test.score) {
       message += ` (Score: ${test.score})`;
     }
-    this.postMessageToSlack(message);
+    await this.postMessageToSlack(message);
   }
 
   private async postMessageToSlack(message: string): Promise<void> {

@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { initializeSentry, setupSentry } from './monitoring/Sentry';
 initializeSentry();
 
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import path from 'path';
 import helmet from 'helmet';
@@ -187,7 +187,7 @@ class Main {
     setupSentry(this.app);
 
     // Global error handler
-    this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+    this.app.use((error: Error, req: Request, res: Response) => {
       if (this.isProduction) {
         res.status(500).json(new ResponseError('Something broke!'));
       } else {
