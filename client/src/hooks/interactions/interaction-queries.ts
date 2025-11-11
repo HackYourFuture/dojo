@@ -58,3 +58,15 @@ export const useDeleteInteraction = (traineeId: string) => {
     }
   );
 };
+
+/**
+ * Hook to edit a interaction of a trainee.
+ * @param {string} traineeId the id of the trainee to edit the interaction of.
+ */
+export const useEditInteraction = (traineeId: string) => {
+  return useMutation((interaction: Interaction) => {
+    return axios.put(`/api/trainees/${traineeId}/interactions/${interaction.id}`, interaction).catch((error) => {
+      throw new Error(error.response?.data?.error || 'Failed to edit interaction');
+    });
+  });
+};
