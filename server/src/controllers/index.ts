@@ -7,6 +7,7 @@ export * from './Trainee/ProfilePictureController';
 export * from './Trainee/EmploymentHistoryController';
 export * from './Trainee/StrikeController';
 export * from './Trainee/LetterController';
+export * from './Trainee/TraineeHelper';
 export * from './GeographyController';
 export * from './DashboardController';
 export * from './CohortsController';

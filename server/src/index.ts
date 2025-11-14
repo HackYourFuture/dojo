@@ -34,6 +34,7 @@ import {
   StrikeController,
   DefaultUserController,
   LetterController,
+  DefaultTraineeHelper,
 } from './controllers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import {
@@ -46,9 +47,9 @@ import {
   LetterGenerator,
   PDFService,
 } from './services';
-import { ResponseError } from './models';
-import { AuthMiddleware } from './middlewares';
+import { AuthMiddleware, errorHandlerMiddleware } from './middlewares';
 import { CohortsRouter } from './routes/CohortsRouter';
+import { NotFoundError } from './utils/httpErrors';
 
 class Main {
   private readonly app: express.Application;
@@ -118,6 +119,8 @@ class Main {
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
+    const traineeHelper = new DefaultTraineeHelper(traineesRepository);
+
     // setup controllers
     const authenticationController = new AuthenticationController(
       userRepository,
@@ -132,9 +135,14 @@ class Main {
       uploadService,
       imageService
     );
-    const interactionController = new InteractionController(traineesRepository, userRepository, notificationService);
+    const interactionController = new InteractionController(
+      traineesRepository,
+      userRepository,
+      notificationService,
+      traineeHelper
+    );
     const testController = new TestController(traineesRepository, notificationService);
-    const employmentHistoryController = new EmploymentHistoryController(traineesRepository);
+    const employmentHistoryController = new EmploymentHistoryController(traineesRepository, traineeHelper);
     const strikeController = new StrikeController(traineesRepository, userRepository, notificationService);
     const searchController = new SearchController(traineesRepository);
     const geographyController = new GeographyController(geographyRepository);
@@ -174,8 +182,8 @@ class Main {
     this.app.use('/api/admin/users', userRouter.build());
 
     // Not found handler for API
-    this.app.use('/api', (req: Request, res: Response) => {
-      res.status(404).json(new ResponseError('Not found'));
+    this.app.use('/api', () => {
+      throw new NotFoundError('API endpoint not found');
     });
 
     // Serve client static files in production
@@ -187,14 +195,7 @@ class Main {
     setupSentry(this.app);
 
     // Global error handler
-    this.app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-      if (this.isProduction) {
-        res.status(500).json(new ResponseError('Something broke!'));
-      } else {
-        console.log(error);
-        res.status(500).json(error);
-      }
-    });
+    this.app.use(errorHandlerMiddleware);
   }
 
   async connectToDatabase() {
