@@ -11,8 +11,10 @@ import axios from 'axios';
 export const useGetInteractions = (traineeId: string) => {
   return useQuery(
     ['interactions', traineeId],
-    () => {
-      return axios.get(`/api/trainees/${traineeId}/interactions`);
+    async () => {
+      return axios.get(`/api/trainees/${traineeId}/interactions`).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to get interactions');
+      });
     },
     {
       select: ({ data }) => {
@@ -28,13 +30,20 @@ const orderInteractionsByDateDesc = (data: Interaction[]): Interaction[] => {
   return data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 };
 
+/**
+ * Hook to add an interaction to a trainee.
+ * @param {string} traineeId - The ID of the trainee to add the interaction to
+ * @returns Mutation hook for adding an interaction
+ */
 export const useAddInteraction = (traineeId: string) => {
   const queryClient = useQueryClient();
 
   // partial becase not all fields are sent to the backend
   return useMutation(
     async (interaction: Partial<Interaction>) => {
-      return await axios.post(`/api/trainees/${traineeId}/interactions`, interaction);
+      return await axios.post(`/api/trainees/${traineeId}/interactions`, interaction).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to add interaction');
+      });
     },
     {
       onSuccess: () => {
@@ -44,12 +53,40 @@ export const useAddInteraction = (traineeId: string) => {
   );
 };
 
+/**
+ * Hook to delete an interaction from a trainee.
+ * @param {string} traineeId - The ID of the trainee to delete the interaction from
+ * @returns Mutation hook for deleting an interaction
+ */
 export const useDeleteInteraction = (traineeId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
     async (interactionId: string) => {
-      return await axios.delete(`/api/trainees/${traineeId}/interactions/${interactionId}`);
+      return await axios.delete(`/api/trainees/${traineeId}/interactions/${interactionId}`).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to delete interaction');
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['interactions', traineeId]);
+      },
+    }
+  );
+};
+
+/**
+ * Hook to edit an existing interaction for a trainee.
+ * @param {string} traineeId - The ID of the trainee
+ * @returns Mutation hook for editing an interaction
+ */
+export const useEditInteraction = (traineeId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (interaction: Interaction) => {
+      return axios.put(`/api/trainees/${traineeId}/interactions/${interaction.id}`, interaction).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to edit interaction');
+      });
     },
     {
       onSuccess: () => {
