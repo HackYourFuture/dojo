@@ -87,8 +87,12 @@ export const InteractionDetailsModal = ({
   const handleChange = (field: keyof Interaction) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (field === 'details') setDetailsError(false);
-    if (field === 'title') setTitleError(false);
+    if (field === 'details') {
+      setDetailsError(false);
+    }
+    if (field === 'title') {
+      setTitleError(false);
+    }
 
     setInteractionFields((prev) => ({
       ...prev,
@@ -119,10 +123,13 @@ export const InteractionDetailsModal = ({
       invalid = true;
     }
 
-    if (invalid) return;
+    if (invalid) {
+      return;
+    }
 
-    if (isEditMode) onConfirmEdit(interactionFields as Interaction);
-    else {
+    if (isEditMode) {
+      onConfirmEdit(interactionFields as Interaction);
+    } else {
       onConfirmAdd(interactionFields as Interaction);
       resetForm();
     }
