@@ -1,10 +1,22 @@
-import { Alert, Box, Button, Fade, FormHelperText, Modal, SelectChangeEvent, Typography } from '@mui/material';
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Button,
+  Fade,
+  FormControl,
+  FormHelperText,
+  Modal,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from '@mui/material';
 import FormSelect from './FormSelect';
 import { LoadingButton } from '@mui/lab';
 import FormTextField from './FormTextField';
-import FormDateTextField from './FormDateTextField';
 import { Interaction, InteractionType } from '../../models/Interactions';
 import { useEffect, useState } from 'react';
+import { formatDate } from '../../helpers/dateHelper';
 
 const types = Object.values(InteractionType);
 
@@ -40,14 +52,17 @@ export const InteractionDetailsModal = ({
   const [detailsError, setDetailsError] = useState(false);
   const [titleError, setTitleError] = useState(false);
 
-  const isEditMode = Boolean(interactionToEdit);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   useEffect(() => {
     if (interactionToEdit) {
       setInteractionFields(interactionToEdit);
+      setIsEditMode(true);
+      return;
     } else {
-      resetForm();
+      setIsEditMode(false);
     }
+    resetForm();
   }, [interactionToEdit]);
 
   const resetForm = () => {
@@ -107,12 +122,22 @@ export const InteractionDetailsModal = ({
     if (invalid) return;
 
     if (isEditMode) onConfirmEdit(interactionFields as Interaction);
-    else onConfirmAdd(interactionFields as Interaction);
-    resetForm();
+    else {
+      onConfirmAdd(interactionFields as Interaction);
+      resetForm();
+    }
   };
 
   return (
-    <Modal open={isOpen} onClose={handleClose}>
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
       <Fade in={isOpen}>
         <Box
           minWidth={550}
@@ -136,40 +161,41 @@ export const InteractionDetailsModal = ({
           </Typography>
 
           <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
-            <Box display="flex" flexDirection="column" width="40%">
-              <FormSelect
-                disabled={isLoading}
-                id="interactionType"
-                label="Type"
-                value={interactionFields.type ?? ''}
-                onChange={handleTypeChange}
-                optionLabels={types}
-                width="100%"
-                required
-              />
-              {typeError && <FormHelperText error>Type is required</FormHelperText>}
-            </Box>
-
-            <Box>
-              <FormTextField
-                disabled={isLoading}
-                label="Title"
-                placeholder="title"
-                value={interactionFields.title || ''}
-                onChange={handleChange('title')}
-                width="100%"
-                required
-                error={titleError}
-              />
-              {titleError && <FormHelperText error>Title is required</FormHelperText>}
-            </Box>
-            <FormDateTextField
-              label="Date"
-              value={interactionFields.date || new Date()}
-              onChange={handleChange('date')}
-              width="350px"
+            <FormSelect
               disabled={isLoading}
+              id="interactionType"
+              label="Type"
+              value={interactionFields.type ?? ''}
+              onChange={handleTypeChange}
+              optionLabels={types}
+              required
             />
+            {typeError && <FormHelperText error>Type is required</FormHelperText>}
+            <FormControl fullWidth>
+              <TextField
+                disabled={isLoading}
+                id={interactionFields?.date ? 'date' : 'dateEmpty'}
+                name="date"
+                label="Test Date"
+                type="date"
+                value={formatDate(interactionFields.date)}
+                InputLabelProps={{ shrink: true }}
+                onChange={handleChange('date')}
+              />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormTextField
+              disabled={isLoading}
+              label="Title"
+              placeholder="title"
+              value={interactionFields.title || ''}
+              onChange={handleChange('title')}
+              width="100%"
+              required
+              error={titleError}
+            />
+            {titleError && <FormHelperText error>Title is required</FormHelperText>}
           </Box>
 
           <Box>
@@ -184,7 +210,7 @@ export const InteractionDetailsModal = ({
               required
               error={detailsError}
             />
-            {detailsError && <FormHelperText error>Comment is required</FormHelperText>}
+            {detailsError && <FormHelperText error>Comments are required</FormHelperText>}
           </Box>
 
           {error && <Alert severity="error">{error}</Alert>}
