@@ -9,12 +9,14 @@ import { formatDateForDisplay } from '../../helpers/dateHelper';
 import { formatTextToFriendly } from '../../helpers/formHelper';
 import { useDeleteInteraction } from '../../hooks/interactions/interaction-queries';
 import MarkdownText from '../shared/MarkdownText';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface InteractionsListProps {
   interactions: Interaction[];
   traineeId: string;
+  onClickEdit: (id: string) => void;
 }
-const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId }) => {
+const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId, onClickEdit }) => {
   const { mutateAsync: deleteInteraction, isLoading: isDeleteLoading } = useDeleteInteraction(traineeId);
   const [error, setError] = useState<string>('');
   const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
@@ -113,6 +115,9 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
                       secondary={<MarkdownText>{interaction.details}</MarkdownText>}
                     />
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
+                      <IconButton aria-label="edit" onClick={() => onClickEdit(interaction.id)}>
+                        <EditIcon />
+                      </IconButton>
                       <IconButton aria-label="delete" onClick={() => handleClickOnDeleteButton(interaction)}>
                         <DeleteIcon />
                       </IconButton>

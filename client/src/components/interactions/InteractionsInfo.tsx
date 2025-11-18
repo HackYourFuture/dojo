@@ -1,27 +1,108 @@
-import AddNewInteractionComponent from './AddNewInteractionComponent';
-import { Box } from '@mui/material';
-import { CircularProgress } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import {
+  useAddInteraction,
+  useEditInteraction,
+  useGetInteractions,
+} from '../../hooks/interactions/interaction-queries';
+
+import AddIcon from '@mui/icons-material/Add';
+import { Interaction } from '../../models/Interactions';
+import { InteractionDetailsModal } from './InteractionDetailsModal';
 import InteractionsList from './InteractionsList';
-import { useGetInteractions } from '../../hooks/interactions/interaction-queries';
+import { useState } from 'react';
 import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
 export const InteractionsInfo = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalError, setModalError] = useState<string>('');
+  const [interactionToEdit, setInteractionToEdit] = useState<Interaction | null>(null);
   const { traineeId } = useTraineeProfileContext();
 
-  const { data: interactions, isLoading } = useGetInteractions(traineeId);
+  const { mutate: addInteraction, isLoading: addInteractionLoading } = useAddInteraction(traineeId);
+  const { mutate: editInteraction, isLoading: editInteractionLoading } = useEditInteraction(traineeId);
+  const {
+    data: interactions,
+    isLoading: interactionsLoading,
+    error: interactionsError,
+  } = useGetInteractions(traineeId);
+
+  const handleSuccess = () => {
+    setIsModalOpen(false);
+    setInteractionToEdit(null);
+  };
+
+  const getErrorMessage = (error: Error | unknown) => {
+    return (error as Error).message || 'Unknown error';
+  };
+
+  const onClickEdit = (id: string) => {
+    const interaction = interactions?.find((interaction) => interaction.id === id) || null;
+    setInteractionToEdit(interaction);
+    setIsModalOpen(true);
+  };
+
+  const onConfirmAdd = async (interaction: Interaction) => {
+    addInteraction(interaction, {
+      onSuccess: handleSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onConfirmEdit = (interaction: Interaction) => {
+    editInteraction(interaction, {
+      onSuccess: handleSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onClickAdd = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setInteractionToEdit(null);
+    setModalError('');
+  };
 
   return (
-    <Box padding="24px" maxWidth={1000} paddingRight={10}>
-      {isLoading ? (
-        <Box display={'flex'} justifyContent={'center'} alignItems={'center'} height={'100%'}>
-          <CircularProgress />
+    <>
+      <Box padding="24px" maxWidth={1000} paddingRight={10}>
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Typography variant="h6" color="black" padding="16px">
+            Interactions ({interactions?.length || 0})
+          </Typography>
+          <Stack direction="row" spacing={2}>
+            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+              New Interaction
+            </Button>
+          </Stack>
         </Box>
-      ) : (
-        <>
-          <AddNewInteractionComponent traineeId={traineeId} />
-          <InteractionsList traineeId={traineeId} interactions={interactions || []} />
-        </>
-      )}
-    </Box>
+
+        {interactionsError ? (
+          <Alert severity="error">Oopsie! Something went wrong: {getErrorMessage(interactionsError)}</Alert>
+        ) : interactionsLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <InteractionsList traineeId={traineeId} interactions={interactions || []} onClickEdit={onClickEdit} />
+        )}
+
+        <InteractionDetailsModal
+          isLoading={addInteractionLoading || editInteractionLoading}
+          error={modalError}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirmAdd={onConfirmAdd}
+          onConfirmEdit={onConfirmEdit}
+          interactionToEdit={interactionToEdit}
+        />
+      </Box>
+    </>
   );
 };
