@@ -1,4 +1,4 @@
-import { Avatar, Box, IconButton, Link, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Fade, IconButton, Link, Stack, Typography } from '@mui/material';
 
 import { LearningStatus } from '../../../data/types/Trainee';
 import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
@@ -7,6 +7,9 @@ import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus
 import githubLogo from '../../../assets/github.png';
 import slackLogo from '../../../assets/slack.png';
 import { useTraineeInfoData } from '../personal-info/data/useTraineeInfoData';
+import React from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ProfileSidebarProps {
   traineeId: string;
@@ -25,6 +28,8 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;
 
+  const [isHovering, setIsHovering] = React.useState<boolean>(false);
+
   return (
     <Box
       display="flex"
@@ -38,8 +43,70 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
       paddingY={4}
     >
       {/* Profile image */}
-      <Box height={180} width={180} display="flex" justifyContent="center">
-        <Avatar variant="square" sx={{ width: '100%', height: '100%' }} src={data?.imageURL} alt={data?.displayName} />
+      <Box
+        onMouseEnter={() => {
+          setIsHovering(true);
+        }}
+        onMouseLeave={() => {
+          setIsHovering(false);
+        }}
+        height={180}
+        width={180}
+        display="flex"
+        justifyContent="center"
+        position="relative"
+      >
+        <Avatar
+          src={data?.imageURL}
+          alt={data?.displayName}
+          variant="square"
+          sx={{
+            width: '100%',
+            height: '100%',
+            filter: isHovering ? 'brightness(0.7)' : 'none',
+          }}
+        />
+        {isHovering && (
+          <Box
+            sx={{
+              display: 'flex',
+              position: 'absolute',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 5,
+
+              height: 180,
+              width: 180,
+            }}
+          >
+            <Fade in={isHovering}>
+              <EditIcon
+                sx={{
+                  color: 'white',
+                  fontSize: 40,
+                  '&:hover': { transform: 'scale(1.1)' },
+                  '&:active': { transform: 'scale(0.9)' },
+                }}
+                onClick={() => {
+                  // todo edit profile picture
+                }}
+              ></EditIcon>
+            </Fade>
+            <Fade in={isHovering}>
+              <DeleteIcon
+                sx={{
+                  color: 'white',
+                  fontSize: 40,
+                  '&:hover': { transform: 'scale(1.1)' },
+                  '&:active': { transform: 'scale(0.9)' },
+                }}
+                onClick={() => {
+                  // todo delete profile picture
+                }}
+              ></DeleteIcon>
+            </Fade>
+          </Box>
+        )}
       </Box>
 
       <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
