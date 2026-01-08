@@ -53,7 +53,7 @@ export const EducationInfo = () => {
             id="currentCohort"
             name="currentCohort"
             label="Cohort"
-            value={editedFields?.currentCohort !== null ? editedFields?.currentCohort : 'No cohort assigned'}
+            value={editedFields?.currentCohort ?? 'No cohort assigned'}
             InputProps={{
               readOnly: isEditing ? false : true,
               inputMode: 'numeric',
