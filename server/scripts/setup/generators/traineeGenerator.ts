@@ -100,6 +100,7 @@ const generateEducationInfo = (minCohort: number, maxCohort: number): TraineeEdu
     currentCohort: cohort,
     startCohort: cohort,
     startDate: faker.date.future({ refDate: '2016-01-01', years: 10 }),
+    mentors: {},
     learningStatus: randomLearningStatus(),
     strikes: [],
     assignments: [],
