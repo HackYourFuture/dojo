@@ -5,7 +5,7 @@ import citiesJSON from './geo-data/dojo.cities.json';
 export const testUser = {
   _id: 'y6J0Fbva',
   name: 'Dojo Test',
-  email: 'makebreathe1224@gmail.com',
+  email: 'dojo.hyf.test@gmail.com',
   imageUrl: 'https://dojo-test.ams3.cdn.digitaloceanspaces.com/images/users/y6J0Fbva.png',
   isActive: true,
 };
