@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { LearningStatus, QuitReason, Trainee } from '../../models';
 import { createSelectChangeHandler, createTextChangeHandler } from '../../helpers/formHelper';
 
@@ -177,6 +177,56 @@ export const EducationInfo = () => {
             label="Start date"
             type="date"
             value={formatDate(editedFields?.startDate)}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
+      </div>
+      <div style={{ width: '100%' }}>
+        <Typography variant="h6" color="black" padding="16px">
+          Mentors
+        </Typography>
+
+        {/* Technical mentor */}
+        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
+          <TextField
+            id="techMentor"
+            name="techMentor"
+            label="Technical Mentor"
+            type="text"
+            value={editedFields?.techMentor ?? ''}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
+
+        {/* HR Mentor */}
+        <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
+          <TextField
+            id="hrMentor"
+            name="hrMentor"
+            label="HR Mentor"
+            type="text"
+            value={editedFields?.hrMentor ?? ''}
+            InputProps={{ readOnly: isEditing ? false : true }}
+            InputLabelProps={{ shrink: true }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
+
+        {/* English mentor */}
+        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
+          <TextField
+            id="engMentor"
+            name="engMentor"
+            label="English Mentor"
+            type="text"
+            value={editedFields?.engMentor ?? ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}

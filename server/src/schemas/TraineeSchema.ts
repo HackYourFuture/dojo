@@ -29,7 +29,6 @@ import { WithMongoID, jsonFormatting } from '../utils/database';
 
 import { Schema } from 'mongoose';
 import { genId } from '../utils/random';
-import { Mentors } from '../models/Mentors';
 
 const TraineePersonalInfoSchema = new Schema<TraineePersonalInfo>(
   {
@@ -63,15 +62,6 @@ const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
     linkedin: { type: String, required: false, default: null },
   },
   { _id: false }
-);
-
-const MentorsSchema = new Schema<Mentors>(
-  {
-    technical: { type: String, required: false, default: null },
-    hr: { type: String, required: false, default: null },
-    english: { type: String, required: false, default: null },
-  },
-  { minimize: false }
 );
 
 const StrikeSchema = new Schema<StrikeWithReporterID & WithMongoID>({
@@ -119,13 +109,9 @@ const TraineeEducationInfoSchema = new Schema<TraineeEducationInfo>(
       enum: Object.values(LearningStatus),
       default: LearningStatus.Studying,
     },
-    mentors: {
-      type: MentorsSchema,
-      required: false,
-      default: {},
-      id: false,
-      _id: false
-    },
+    techMentor: { type: String, required: false, default: null },
+    hrMentor: { type: String, required: false, default: null },
+    engMentor: { type: String, required: false, default: null },
     startDate: { type: Date, required: false, default: null },
     graduationDate: { type: Date, required: false, default: null },
     quitReason: { type: String, required: false, enum: Object.values(QuitReason), default: null },

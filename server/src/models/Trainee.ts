@@ -3,7 +3,6 @@ import { InteractionWithReporter } from './Interaction';
 import { StrikeWithReporter } from './Strike';
 import { Test } from './Test';
 import removeAccents from 'remove-accents';
-import { Mentors } from './Mentors';
 
 export enum Gender {
   Man = 'man',
@@ -143,7 +142,9 @@ export interface TraineeEducationInfo {
   startCohort: number;
   currentCohort?: number;
   learningStatus: LearningStatus;
-  mentors?: Mentors;
+  techMentor?: string;
+  hrMentor?: string;
+  engMentor?: string;
   startDate?: Date;
   graduationDate?: Date;
   quitReason?: QuitReason;

@@ -1424,15 +1424,12 @@ components:
           maximum: 999
         learningStatus:
           $ref: '#/components/schemas/LearningStatus'
-        mentors:
-          type: object
-          properties:
-            technical:
-              type: string
-            hr:
-              type: string
-            english:
-              type: string
+        techMentor:
+          type: string
+        hrMentor:
+          type: string
+        engMentor:
+          type: string
         startDate:
           type: string
           format: date-time

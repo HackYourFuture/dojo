@@ -153,6 +153,9 @@ export interface TraineeEducationInfo {
   startCohort: number;
   currentCohort?: number;
   learningStatus: LearningStatus;
+  techMentor?: string;
+  hrMentor?: string;
+  engMentor?: string;
   startDate?: Date;
   graduationDate?: Date;
   quitReason?: QuitReason;
