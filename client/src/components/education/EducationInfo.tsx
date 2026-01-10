@@ -205,7 +205,7 @@ export const EducationInfo = () => {
         </FormControl>
 
         {/* HR Mentor */}
-        <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
+        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
           <TextField
             id="hrMentor"
             name="hrMentor"
