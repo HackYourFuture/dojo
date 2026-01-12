@@ -254,7 +254,7 @@ export const ContactInfo = () => {
               id="emergencyContactName"
               name="emergencyContactName"
               label="Emergency Contact"
-              type="url"
+              type="text"
               value={editedFields.emergencyContactName || ''}
               InputProps={{
                 readOnly: isEditing ? false : true,
@@ -287,7 +287,7 @@ export const ContactInfo = () => {
             <TextField
               id="emergencyContactPhoneNum"
               name="emergencyContactPhoneNum"
-              label="Emergergency Contact Phone Number"
+              label="Emergency Contact Phone Number"
               type="tel"
               value={editedFields.emergencyContactPhoneNum || ''}
               InputProps={{

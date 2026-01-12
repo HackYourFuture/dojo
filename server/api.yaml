@@ -1407,6 +1407,7 @@ components:
           example: https://linkedin.com/in/john.doe
         emergencyContactName:
           type: string
+          example: John Doe
         emergencyContactPhoneNum:
           type: string
           example: 0612345678
