@@ -1405,6 +1405,11 @@ components:
         linkedin:
           type: string
           example: https://linkedin.com/in/john.doe
+        emergencyContactName:
+          type: string
+        emergencyContactPhoneNum:
+          type: string
+          example: 0612345678
 
     TraineeEducationInfo:
       type: object

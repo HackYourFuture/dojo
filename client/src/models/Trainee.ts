@@ -147,6 +147,8 @@ export interface TraineeContactInfo {
   phone?: string;
   githubHandle?: string;
   linkedin?: string;
+  emergencyContactName?: string;
+  emergencyContactPhoneNum?: string;
 }
 
 export interface TraineeEducationInfo {

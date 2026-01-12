@@ -60,6 +60,8 @@ const TraineeContactInfoSchema = new Schema<TraineeContactInfo>(
     phone: { type: String, required: false, default: null },
     githubHandle: { type: String, required: false, index: true, default: null },
     linkedin: { type: String, required: false, default: null },
+    emergencyContactName: { type: String, required: false, default: null },
+    emergencyContactPhoneNum: { type: String, required: false, default: null },
   },
   { _id: false }
 );

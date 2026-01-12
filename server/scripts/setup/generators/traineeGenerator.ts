@@ -90,6 +90,8 @@ const generateContactInfo = (firstName: string, lastName: string): TraineeContac
     phone: getRandomPhoneNumber(),
     githubHandle: 'HackYourFuture',
     linkedin: 'https://www.linkedin.com/school/hackyourfuture/',
+    emergencyContactName: faker.person.fullName(),
+    emergencyContactPhoneNum: getRandomPhoneNumber(),
   };
 };
 
