@@ -4,6 +4,10 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 
+// Config
+const URL = 'http://localhost:7777/api/trainees';
+const TOKEN = '<TOKEN>';
+
 const replaceBoolean = (str: string) => {
   if (!str.trim()) {
     return null;
@@ -46,8 +50,8 @@ const extractData = (data: string) => {
         linkedin: handleString(row['LinkedIn Profile URL']),
       },
       educationInfo: {
-        startCohort: row['Start Cohort*'],
-        currentCohort: row['Current Cohort'],
+        startCohort: Number(row['Start Cohort*']),
+        currentCohort: Number(row['Current Cohort']),
         learningStatus: handleString(row['Learning Status*']),
         startDate: handleString(row['Start Date']),
         graduationDate: handleString(row['Graduation Date']),
@@ -87,9 +91,6 @@ const main = async () => {
 };
 
 const postTrainee = async (trainee: any): Promise<string> => {
-  const URL = 'http://localhost:7777/api/trainees';
-  const TOKEN = '<TOKEN>';
-
   let response: any, body: any;
   try {
     response = await fetch(URL, {
