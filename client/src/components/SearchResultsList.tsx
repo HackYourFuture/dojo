@@ -51,7 +51,7 @@ export const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) =
                     </ListItemIcon>
                     <ListItemText primary={trainee.name}></ListItemText>
                     <ListItemText
-                      secondary={trainee.cohort ? `Cohort ${trainee.cohort}` : 'No cohort'}
+                      secondary={trainee.cohort !== null ? `Cohort ${trainee.cohort}` : 'No cohort assigned'}
                       sx={{ textAlign: 'right' }}
                     ></ListItemText>
                   </ListItemButton>
