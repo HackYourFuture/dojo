@@ -1426,10 +1426,13 @@ components:
           $ref: '#/components/schemas/LearningStatus'
         techMentor:
           type: string
+          example: "John Doe"
         hrMentor:
           type: string
+          example: "John Doe"
         engMentor:
           type: string
+          example: "John Doe"
         startDate:
           type: string
           format: date-time
