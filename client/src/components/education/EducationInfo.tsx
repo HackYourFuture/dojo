@@ -154,7 +154,7 @@ export const EducationInfo = () => {
             id="startCohort"
             name="startCohort"
             label="Start cohort"
-            value={editedFields?.startCohort || ''}
+            value={editedFields?.startCohort ?? 'No cohort assigned'}
             InputProps={{
               readOnly: isEditing ? false : true,
               inputMode: 'numeric',
