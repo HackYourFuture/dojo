@@ -167,30 +167,33 @@ export const InteractionDetailsModal = ({
             {isEditMode ? 'Edit an interaction' : 'Add a new interaction'}
           </Typography>
 
-          <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
-            <FormSelect
-              disabled={isLoading}
-              id="interactionType"
-              label="Type"
-              value={interactionFields.type ?? ''}
-              onChange={handleTypeChange}
-              optionLabels={types}
-              required
-            />
-            {typeError && <FormHelperText error>Type is required</FormHelperText>}
-            <FormControl fullWidth>
-              <TextField
+          <Box>
+            <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
+              <FormSelect
                 disabled={isLoading}
-                id={interactionFields?.date ? 'date' : 'dateEmpty'}
-                name="date"
-                label="Test Date"
-                type="date"
-                value={formatDate(interactionFields.date)}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange('date')}
+                id="interactionType"
+                label="Type"
+                value={interactionFields.type ?? ''}
+                onChange={handleTypeChange}
+                optionLabels={types}
+                required
               />
-            </FormControl>
+              <FormControl fullWidth>
+                <TextField
+                  disabled={isLoading}
+                  id={interactionFields?.date ? 'date' : 'dateEmpty'}
+                  name="date"
+                  label="Test Date"
+                  type="date"
+                  value={formatDate(interactionFields.date)}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={handleChange('date')}
+                />
+              </FormControl>
+            </Box>
+            {typeError && <FormHelperText error>Type is required</FormHelperText>}
           </Box>
+
           <Box>
             <FormTextField
               disabled={isLoading}
