@@ -25,8 +25,6 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   const githubHandle = data?.contactInfo?.githubHandle;
   const linkedIn = data?.contactInfo?.linkedin;
 
-  const [isHovering, setIsHovering] = React.useState<boolean>(false);
-
   return (
     <>
       <Box
