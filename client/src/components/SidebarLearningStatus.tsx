@@ -17,7 +17,7 @@ export const SidebarLearningStatus = ({ learningStatus }: LearningStatusProps) =
   const chipColor = (status: LearningStatus | undefined) => {
     switch (status) {
       case LearningStatus.Studying:
-        return 'primary';
+        return 'info';
       case LearningStatus.Graduated:
         return 'success';
       case LearningStatus.OnHold:

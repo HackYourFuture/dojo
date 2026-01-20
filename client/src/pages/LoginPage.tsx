@@ -1,4 +1,4 @@
-import HYFLogo from '../assets/HYF_logo.svg';
+import HYFLogo from '../assets/hyf-logo-red.png';
 import { useAuth } from '../hooks';
 import { ErrorBox } from '../components';
 import { Button, Stack } from '@mui/material';

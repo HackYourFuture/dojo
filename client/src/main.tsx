@@ -12,6 +12,15 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './routes';
 
 const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#B12900',
+    },
+    background: {
+      default: '#ffffff',
+    },
+  },
   typography: {
     button: {
       textTransform: 'none',

@@ -31,7 +31,7 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
       alignItems="center"
       gap={2}
       color="black"
-      bgcolor="#d1fbe6"
+      bgcolor="var(--hyf-beige)"
       height="100vh"
       paddingX={4}
       paddingY={4}

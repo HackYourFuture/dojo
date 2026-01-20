@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HYFLogo from '../assets/HYF_logo.svg';
+import HYFLogo from '../assets/hyf-logo-beige.png';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../hooks';
@@ -64,12 +64,12 @@ export const ResponsiveNavBar = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: 'black' }}>
+      <AppBar position="static" sx={{ backgroundColor: '#5E1600' }}>
         <Container maxWidth={false}>
           <Toolbar disableGutters>
             <Box component="div">
               <Link to="/home">
-                <img src={HYFLogo} height="60" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
+                <img src={HYFLogo} height="40" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
               </Link>
             </Box>
 
