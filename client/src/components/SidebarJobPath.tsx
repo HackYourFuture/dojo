@@ -18,7 +18,7 @@ export const SidebarJobPath = ({ jobPath }: JobPathProps) => {
   const jobChipColor = (status: JobPath | string) => {
     switch (status) {
       case JobPath.Searching:
-        return 'primary';
+        return 'info';
       case JobPath.Internship:
       case JobPath.TechJob:
         return 'success';

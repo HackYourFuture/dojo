@@ -15,6 +15,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --hyf-beige: #faf5d9;
 }
 
 @media (prefers-color-scheme: light) {
@@ -27,8 +28,10 @@ body {
 
 .hyf-navbar-logo-img {
   max-width: 100%;
+  height: 20px;
   vertical-align: middle;
-  padding: 8px 0;
+  padding: 0;
+  margin-right: 15px;
   display: inline-block;
   border: 0;
   box-sizing: border-box;
@@ -45,8 +48,7 @@ body {
 }
 
 .hyf-logo-img {
-  height: 100px;
-  background-color: black;
+  height: 70px;
   padding: 10px;
   margin-bottom: 50px;
 }
@@ -70,13 +72,6 @@ body {
   flex-direction: column;
   align-items: center;
   min-width: 200px;
-}
-
-.hyf-logo-img {
-  height: 100px;
-  background-color: black;
-  padding: 10px;
-  margin-bottom: 50px;
 }
 
 .input-wrapper {
