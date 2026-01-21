@@ -189,9 +189,9 @@ export const EducationInfo = () => {
           Mentors
         </Typography>
 
-        <Box display="flex" flexDirection="column" style={{ maxWidth: '80ch' }}>
+        <Box display="flex" flexWrap="wrap" style={{ maxWidth: '80%' }}>
           {/* Technical mentor */}
-          <FormControl sx={{ mx: 2, my: 1, width: '90%', gap: '2rem' }}>
+          <FormControl sx={{ mx: 2, my: 1, width: '40ch', gap: '2rem' }}>
             <TextField
               id="techMentor"
               name="techMentor"
@@ -206,7 +206,7 @@ export const EducationInfo = () => {
           </FormControl>
 
           {/* HR Mentor */}
-          <FormControl sx={{ mx: 2, my: 1, width: '90%', gap: '2rem' }}>
+          <FormControl sx={{ mx: 2, my: 1, width: '40ch', gap: '2rem' }}>
             <TextField
               id="hrMentor"
               name="hrMentor"
@@ -221,7 +221,7 @@ export const EducationInfo = () => {
           </FormControl>
 
           {/* English mentor */}
-          <FormControl sx={{ mx: 2, my: 1, width: '90%', gap: '2rem' }}>
+          <FormControl sx={{ mx: 2, my: 1, width: '40ch', gap: '2rem' }}>
             <TextField
               id="englishMentor"
               name="englishMentor"
