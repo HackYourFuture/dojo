@@ -9,7 +9,6 @@ import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import { createTextChangeHandler } from '../helpers/formHelper';
 import slackIcon from '../assets/slack.png';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
-import React from 'react';
 
 /**
  * Component for displaying contact information in trainee profile data on the contact tab.
