@@ -5,6 +5,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import { createTextChangeHandler } from '../helpers/formHelper';
 import slackIcon from '../assets/slack.png';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
@@ -223,6 +224,74 @@ export const ContactInfo = () => {
                     )}
                   </InputAdornment>
                 ),
+              }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+        </Box>
+
+        {/* Emergency Contact */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <ContactEmergencyIcon sx={{ color: 'action.active', mr: 1 }} />
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: '80ch',
+              gap: '2rem',
+            }}
+          >
+            <TextField
+              id="emergencyContactName"
+              name="emergencyContactName"
+              label="Emergency Contact"
+              type="text"
+              value={editedFields.emergencyContactName || ''}
+              InputProps={{
+                readOnly: isEditing ? false : true,
+              }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+        </Box>
+
+        {/* Emergency Contact Phone */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <PhoneIcon sx={{ color: 'action.active', mr: 1 }} />
+          <FormControl
+            sx={{
+              mx: 2,
+              my: 2,
+              width: '80ch',
+              gap: '2rem',
+            }}
+          >
+            <TextField
+              id="emergencyContactPhoneNum"
+              name="emergencyContactPhoneNum"
+              label="Emergency Contact Phone Number"
+              type="tel"
+              value={editedFields.emergencyContactPhoneNum || ''}
+              InputProps={{
+                readOnly: isEditing ? false : true,
               }}
               InputLabelProps={{
                 shrink: true,
