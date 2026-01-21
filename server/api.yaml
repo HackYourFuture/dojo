@@ -1430,7 +1430,7 @@ components:
         hrMentor:
           type: string
           example: "John Doe"
-        engMentor:
+        englishMentor:
           type: string
           example: "John Doe"
         startDate:

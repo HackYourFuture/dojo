@@ -189,50 +189,52 @@ export const EducationInfo = () => {
           Mentors
         </Typography>
 
-        {/* Technical mentor */}
-        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-          <TextField
-            id="techMentor"
-            name="techMentor"
-            label="Technical Mentor"
-            type="text"
-            value={editedFields?.techMentor ?? ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleTextChange}
-          />
-        </FormControl>
+        <Box display="flex" flexDirection="column" style={{ maxWidth: '80ch' }}>
+          {/* Technical mentor */}
+          <FormControl sx={{ mx: 2, my: 1, width: '90%', gap: '2rem' }}>
+            <TextField
+              id="techMentor"
+              name="techMentor"
+              label="Technical Mentor"
+              type="text"
+              value={editedFields?.techMentor ?? ''}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
 
-        {/* HR Mentor */}
-        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-          <TextField
-            id="hrMentor"
-            name="hrMentor"
-            label="HR Mentor"
-            type="text"
-            value={editedFields?.hrMentor ?? ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleTextChange}
-          />
-        </FormControl>
+          {/* HR Mentor */}
+          <FormControl sx={{ mx: 2, my: 1, width: '90%', gap: '2rem' }}>
+            <TextField
+              id="hrMentor"
+              name="hrMentor"
+              label="HR Mentor"
+              type="text"
+              value={editedFields?.hrMentor ?? ''}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
 
-        {/* English mentor */}
-        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-          <TextField
-            id="engMentor"
-            name="engMentor"
-            label="English Mentor"
-            type="text"
-            value={editedFields?.engMentor ?? ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleTextChange}
-          />
-        </FormControl>
+          {/* English mentor */}
+          <FormControl sx={{ mx: 2, my: 1, width: '90%', gap: '2rem' }}>
+            <TextField
+              id="englishMentor"
+              name="englishMentor"
+              label="English Mentor"
+              type="text"
+              value={editedFields?.englishMentor ?? ''}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+        </Box>
       </div>
       <Box display="flex" gap={2} style={{ width: '100%' }}>
         <StrikesComponent />

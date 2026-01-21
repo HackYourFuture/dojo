@@ -144,7 +144,7 @@ export interface TraineeEducationInfo {
   learningStatus: LearningStatus;
   techMentor?: string;
   hrMentor?: string;
-  engMentor?: string;
+  englishMentor?: string;
   startDate?: Date;
   graduationDate?: Date;
   quitReason?: QuitReason;
