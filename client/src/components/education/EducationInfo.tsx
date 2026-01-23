@@ -189,7 +189,7 @@ export const EducationInfo = () => {
           Mentors
         </Typography>
 
-        <Box display="flex" flexWrap="wrap" style={{ maxWidth: '80%' }}>
+        <Box display="flex" flexWrap="wrap" style={{ maxWidth: '85%' }}>
           {/* Technical mentor */}
           <FormControl sx={{ mx: 2, my: 1, width: '40ch', gap: '2rem' }}>
             <TextField
