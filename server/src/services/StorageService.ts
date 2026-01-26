@@ -62,7 +62,7 @@ export class StorageService implements StorageServiceType {
 
     const uploadResponse = await upload.done();
     if (!uploadResponse.Location) {
-      throw new Error(`Failed to upload file ${uploadResponse.$metadata}`);
+      throw new Error(`Failed to upload file ${JSON.stringify(uploadResponse.$metadata)}`);
     }
 
     return uploadResponse.Location;
