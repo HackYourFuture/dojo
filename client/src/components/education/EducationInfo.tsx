@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { LearningStatus, QuitReason, Trainee } from '../../models';
 import { createSelectChangeHandler, createTextChangeHandler } from '../../helpers/formHelper';
 
@@ -183,6 +183,58 @@ export const EducationInfo = () => {
             onChange={handleTextChange}
           />
         </FormControl>
+      </div>
+      <div style={{ width: '100%' }}>
+        <Typography variant="h6" color="black" padding="16px">
+          Mentors
+        </Typography>
+
+        <Box display="flex" flexWrap="wrap" style={{ maxWidth: '85%' }}>
+          {/* Technical mentor */}
+          <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
+            <TextField
+              id="techMentor"
+              name="techMentor"
+              label="Technical Mentor"
+              type="text"
+              value={editedFields?.techMentor ?? ''}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+
+          {/* HR Mentor */}
+          <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
+            <TextField
+              id="hrMentor"
+              name="hrMentor"
+              label="HR Mentor"
+              type="text"
+              value={editedFields?.hrMentor ?? ''}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+
+          {/* English mentor */}
+          <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
+            <TextField
+              id="englishMentor"
+              name="englishMentor"
+              label="English Mentor"
+              type="text"
+              value={editedFields?.englishMentor ?? ''}
+              InputProps={{ readOnly: isEditing ? false : true }}
+              InputLabelProps={{ shrink: true }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+        </Box>
       </div>
       <Box display="flex" gap={2} style={{ width: '100%' }}>
         <StrikesComponent />
