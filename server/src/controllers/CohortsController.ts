@@ -48,14 +48,14 @@ export class CohortsController implements CohortsControllerType {
 
     // Sort trainees in each group
     Object.values(cohortDictionary).forEach((trainees) => {
-      trainees?.sort(this.compareTraineeInCohort);
+      trainees?.sort(this.compareTraineeInCohort.bind(this));
     });
     // Convert dictionary to array of cohorts
     const result: Cohort[] = Object.entries(cohortDictionary).map(([cohortNumber, trainees]) => {
       const cohortNumberInt = Number.parseInt(cohortNumber);
       return {
         cohort: isNaN(cohortNumberInt) ? null : cohortNumberInt,
-        trainees: (trainees ?? []).map(this.getTraineeSummary),
+        trainees: (trainees ?? []).map(this.getTraineeSummary.bind(this)),
       };
     });
     res.status(200).json(result);
