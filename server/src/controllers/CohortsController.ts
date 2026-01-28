@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { TraineesRepository } from '../repositories';
-import { LearningStatus, Trainee } from '../models';
+import { LearningStatus, calculateAverageTestScore, Trainee } from '../models';
 
 interface Cohort {
   cohort: number | null;
@@ -21,6 +21,7 @@ interface TraineeSummary {
   LearningStatus: string;
   JobPath: string;
   strikes: number;
+  averageTestScore: number | null;
 }
 
 export interface CohortsControllerType {
@@ -47,14 +48,14 @@ export class CohortsController implements CohortsControllerType {
 
     // Sort trainees in each group
     Object.values(cohortDictionary).forEach((trainees) => {
-      trainees?.sort(this.compareTraineeInCohort);
+      trainees?.sort(this.compareTraineeInCohort.bind(this));
     });
     // Convert dictionary to array of cohorts
     const result: Cohort[] = Object.entries(cohortDictionary).map(([cohortNumber, trainees]) => {
       const cohortNumberInt = Number.parseInt(cohortNumber);
       return {
         cohort: isNaN(cohortNumberInt) ? null : cohortNumberInt,
-        trainees: (trainees ?? []).map(this.getTraineeSummary),
+        trainees: (trainees ?? []).map(this.getTraineeSummary.bind(this)),
       };
     });
     res.status(200).json(result);
@@ -75,6 +76,7 @@ export class CohortsController implements CohortsControllerType {
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
       strikes: trainee.educationInfo.strikes.length,
+      averageTestScore: calculateAverageTestScore(trainee.educationInfo.tests),
     };
   }
 
