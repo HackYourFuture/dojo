@@ -71,6 +71,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
         'educationInfo.learningStatus',
         'educationInfo.strikes.id',
         'educationInfo.tests.score',
+        'educationInfo.tests.type',
         'educationInfo.currentCohort',
         'employmentInfo.jobPath',
       ])

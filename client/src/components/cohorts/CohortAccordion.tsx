@@ -142,7 +142,7 @@ const getScoreColor = (score: number | null) => {
   if (score < 7) {
     return 'orange';
   }
-  if (score > 8.5) {
+  if (score >= 8.5) {
     return 'green';
   }
   return 'inherit';

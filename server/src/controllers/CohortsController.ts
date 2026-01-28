@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { TraineesRepository } from '../repositories';
-import { LearningStatus, Test, Trainee } from '../models';
+import { LearningStatus, calculateAverageTestScore, Trainee } from '../models';
 
 interface Cohort {
   cohort: number | null;
@@ -76,22 +76,8 @@ export class CohortsController implements CohortsControllerType {
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
       strikes: trainee.educationInfo.strikes.length,
-      averageTestScore: this.calculateAverageTestScore(trainee.educationInfo.tests),
+      averageTestScore: calculateAverageTestScore(trainee.educationInfo.tests),
     };
-  }
-
-  private calculateAverageTestScore(tests: Test[]): number | null {
-    // Filter out tests without scores
-    const scores = tests.map((test) => test.score).filter((score) => score !== undefined);
-    if (scores.length === 0) {
-      return null;
-    }
-
-    // Calculate average
-    const sum = scores.reduce((acc, score) => {
-      return acc + score;
-    }, 0);
-    return sum / scores.length;
   }
 
   private compareTraineeInCohort(a: Trainee, b: Trainee) {
