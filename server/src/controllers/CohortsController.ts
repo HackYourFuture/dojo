@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { TraineesRepository } from '../repositories';
-import { LearningStatus, Trainee } from '../models';
+import { LearningStatus, Test, Trainee } from '../models';
 
 interface Cohort {
   cohort: number | null;
@@ -21,7 +21,7 @@ interface TraineeSummary {
   LearningStatus: string;
   JobPath: string;
   strikes: number;
-  averageTestScore?: number;
+  averageTestScore: number | null;
 }
 
 export interface CohortsControllerType {
@@ -62,11 +62,6 @@ export class CohortsController implements CohortsControllerType {
   }
 
   private getTraineeSummary(trainee: Trainee): TraineeSummary {
-    const testsWithScores = trainee.educationInfo.tests.filter((test) => test.score !== undefined && test.score !== null);
-    const averageTestScore = testsWithScores.length > 0 
-      ? testsWithScores.reduce((sum, test) => sum + test.score!, 0) / testsWithScores.length
-      : undefined;
-
     return {
       id: trainee.id,
       displayName: trainee.displayName,
@@ -81,8 +76,17 @@ export class CohortsController implements CohortsControllerType {
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
       strikes: trainee.educationInfo.strikes.length,
-      averageTestScore,
+      averageTestScore: this.calculateAverageTestScore(trainee.educationInfo.tests),
     };
+  }
+
+  private calculateAverageTestScore(tests: Test[]): number | null {
+    const testsWithScores = tests.filter((test) => test.score !== undefined && test.score !== null);
+    if (testsWithScores.length === 0) {
+      return null;
+    }
+    const sum = testsWithScores.reduce((acc, test) => acc + (test.score as number), 0);
+    return sum / testsWithScores.length;
   }
 
   private compareTraineeInCohort(a: Trainee, b: Trainee) {

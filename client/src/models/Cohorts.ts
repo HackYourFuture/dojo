@@ -19,5 +19,5 @@ export interface TraineeSummary {
   LearningStatus: LearningStatus;
   JobPath: string;
   strikes: number;
-  averageTestScore?: number;
+  averageTestScore: number | null;
 }

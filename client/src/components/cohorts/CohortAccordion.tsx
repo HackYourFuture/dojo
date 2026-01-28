@@ -87,7 +87,7 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   <TableCell>{trainee.location}</TableCell>
                   <TableCell>{convertToString(trainee.hasWorkPermit)}</TableCell>
                   <TableCell sx={{ color: getScoreColor(trainee.averageTestScore) }}>
-                    {trainee.averageTestScore !== undefined ? trainee.averageTestScore.toFixed(1) : '-'}
+                    {trainee.averageTestScore !== null ? trainee.averageTestScore.toFixed(1) : '-'}
                   </TableCell>
                   <TableCell>{trainee.strikes}</TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
@@ -135,8 +135,8 @@ const convertToString = (value: boolean | null | undefined) => {
   return value ? 'Yes' : 'No';
 };
 
-const getScoreColor = (score: number | undefined) => {
-  if (score === undefined) {
+const getScoreColor = (score: number | null) => {
+  if (score === null) {
     return 'inherit';
   }
   if (score < 7) {
