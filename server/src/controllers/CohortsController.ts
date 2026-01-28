@@ -21,6 +21,7 @@ interface TraineeSummary {
   LearningStatus: string;
   JobPath: string;
   strikes: number;
+  averageTestScore?: number;
 }
 
 export interface CohortsControllerType {
@@ -61,6 +62,11 @@ export class CohortsController implements CohortsControllerType {
   }
 
   private getTraineeSummary(trainee: Trainee): TraineeSummary {
+    const testsWithScores = trainee.educationInfo.tests.filter((test) => test.score !== undefined && test.score !== null);
+    const averageTestScore = testsWithScores.length > 0 
+      ? testsWithScores.reduce((sum, test) => sum + (test.score ?? 0), 0) / testsWithScores.length
+      : undefined;
+
     return {
       id: trainee.id,
       displayName: trainee.displayName,
@@ -75,6 +81,7 @@ export class CohortsController implements CohortsControllerType {
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
       strikes: trainee.educationInfo.strikes.length,
+      averageTestScore,
     };
   }
 
