@@ -64,7 +64,7 @@ export class CohortsController implements CohortsControllerType {
   private getTraineeSummary(trainee: Trainee): TraineeSummary {
     const testsWithScores = trainee.educationInfo.tests.filter((test) => test.score !== undefined && test.score !== null);
     const averageTestScore = testsWithScores.length > 0 
-      ? testsWithScores.reduce((sum, test) => sum + (test.score ?? 0), 0) / testsWithScores.length
+      ? testsWithScores.reduce((sum, test) => sum + test.score!, 0) / testsWithScores.length
       : undefined;
 
     return {
