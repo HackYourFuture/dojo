@@ -48,14 +48,14 @@ export class CohortsController implements CohortsControllerType {
 
     // Sort trainees in each group
     Object.values(cohortDictionary).forEach((trainees) => {
-      trainees?.sort(this.compareTraineeInCohort.bind(this));
+      trainees?.sort(this.compareTraineeInCohort);
     });
     // Convert dictionary to array of cohorts
     const result: Cohort[] = Object.entries(cohortDictionary).map(([cohortNumber, trainees]) => {
       const cohortNumberInt = Number.parseInt(cohortNumber);
       return {
         cohort: isNaN(cohortNumberInt) ? null : cohortNumberInt,
-        trainees: (trainees ?? []).map(this.getTraineeSummary.bind(this)),
+        trainees: (trainees ?? []).map(this.getTraineeSummary),
       };
     });
     res.status(200).json(result);
@@ -76,11 +76,11 @@ export class CohortsController implements CohortsControllerType {
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
       strikes: trainee.educationInfo.strikes.length,
-      averageTestScore: this.calculateAverageTestScore(trainee.educationInfo.tests),
+      averageTestScore: CohortsController.calculateAverageTestScore(trainee.educationInfo.tests),
     };
   }
 
-  private calculateAverageTestScore(tests: Test[]): number | null {
+  private static calculateAverageTestScore(tests: Test[]): number | null {
     const testsWithScores = tests.filter((test) => test.score !== undefined && test.score !== null);
     if (testsWithScores.length === 0) {
       return null;
