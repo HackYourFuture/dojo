@@ -48,14 +48,14 @@ export class CohortsController implements CohortsControllerType {
 
     // Sort trainees in each group
     Object.values(cohortDictionary).forEach((trainees) => {
-      trainees?.sort(this.compareTraineeInCohort);
+      trainees?.sort(this.compareTraineeInCohort.bind(this));
     });
     // Convert dictionary to array of cohorts
     const result: Cohort[] = Object.entries(cohortDictionary).map(([cohortNumber, trainees]) => {
       const cohortNumberInt = Number.parseInt(cohortNumber);
       return {
         cohort: isNaN(cohortNumberInt) ? null : cohortNumberInt,
-        trainees: (trainees ?? []).map(this.getTraineeSummary),
+        trainees: (trainees ?? []).map(this.getTraineeSummary.bind(this)),
       };
     });
     res.status(200).json(result);
@@ -76,17 +76,22 @@ export class CohortsController implements CohortsControllerType {
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
       strikes: trainee.educationInfo.strikes.length,
-      averageTestScore: CohortsController.calculateAverageTestScore(trainee.educationInfo.tests),
+      averageTestScore: this.calculateAverageTestScore(trainee.educationInfo.tests),
     };
   }
 
-  private static calculateAverageTestScore(tests: Test[]): number | null {
-    const testsWithScores = tests.filter((test) => test.score !== undefined && test.score !== null);
-    if (testsWithScores.length === 0) {
+  private calculateAverageTestScore(tests: Test[]): number | null {
+    // Filter out tests without scores
+    const scores = tests.map((test) => test.score).filter((score) => score !== undefined);
+    if (scores.length === 0) {
       return null;
     }
-    const sum = testsWithScores.reduce((acc, test) => acc + (test.score as number), 0);
-    return sum / testsWithScores.length;
+
+    // Calculate average
+    const sum = scores.reduce((acc, score) => {
+      return acc + score;
+    }, 0);
+    return sum / scores.length;
   }
 
   private compareTraineeInCohort(a: Trainee, b: Trainee) {

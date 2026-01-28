@@ -56,7 +56,7 @@ export const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   Work Permit
                 </TableCell>
                 <TableCell sx={headerStyle} width={100}>
-                  Avg Test Score
+                  Avg Score
                 </TableCell>
                 <TableCell sx={headerStyle} width={50}>
                   Strikes
@@ -142,8 +142,8 @@ const getScoreColor = (score: number | null) => {
   if (score < 7) {
     return 'orange';
   }
-  if (score < 8.5) {
-    return 'black';
+  if (score > 8.5) {
+    return 'green';
   }
-  return 'green';
+  return 'inherit';
 };
