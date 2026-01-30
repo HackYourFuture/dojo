@@ -31,7 +31,7 @@ const getRandomTestResult = (score: number | null): TestResult => {
 };
 
 const getRandomScore = (): number | null => {
-  const getWeightedRandomScore: number | null = faker.helpers.weightedArrayElement([
+  const weightedRandomScore: number | null = faker.helpers.weightedArrayElement([
     { value: null, weight: 10 },
     { value: 1, weight: 1 },
     { value: 2, weight: 2 },
@@ -45,9 +45,9 @@ const getRandomScore = (): number | null => {
     { value: 10, weight: 10 },
   ]);
 
-  if (getWeightedRandomScore === null) {
+  if (weightedRandomScore === null) {
     return null;
   }
 
-  return faker.number.float({ min: getWeightedRandomScore - 1, max: getWeightedRandomScore, fractionDigits: 1 });
+  return faker.number.float({ min: weightedRandomScore - 1, max: weightedRandomScore, fractionDigits: 1 });
 };

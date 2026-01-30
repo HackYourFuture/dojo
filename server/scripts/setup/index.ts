@@ -195,7 +195,7 @@ const main = async () => {
     const imageResponse = await fetch(imageURL);
     const imageData = await imageResponse.blob();
 
-    // Set profile picture and add strikes and interactions
+    // Set profile picture and add strikes, tests and interactions
     await setProfilePicture(token, newTrainee.id, imageData);
     await addStrikes(token, newTrainee, randomStrikeNumber());
     await addTests(token, newTrainee, faker.number.int({ min: 0, max: 7 }));
