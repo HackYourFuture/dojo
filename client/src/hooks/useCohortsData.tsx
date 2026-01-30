@@ -1,21 +1,17 @@
-import { useQuery } from 'react-query';
-import axios from 'axios';
 import { Cohort } from '../models';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
 /**
  * A React Query hook that fetches cohort data form api for specific dates.
  */
 export const useCohortsData = () => {
-  return useQuery(
-    ['CohortsInfo'],
-    () => {
-      return axios.get<Cohort[]>(`/api/cohorts`);
+  return useQuery({
+    queryKey: ['CohortsInfo'],
+    queryFn: async () => {
+      const resonse = await axios.get<Cohort[]>(`/api/cohorts`);
+      return resonse.data;
     },
-    {
-      select: ({ data }) => {
-        return data;
-      },
-      refetchOnWindowFocus: false, // Prevent refetching on window focus
-    }
-  );
+    refetchOnWindowFocus: false, // Prevent refetching on window focus
+  });
 };

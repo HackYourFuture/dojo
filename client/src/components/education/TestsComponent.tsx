@@ -6,7 +6,7 @@ import { ConfirmationDialog } from '../ConfirmationDialog';
 import { Test } from '../../models';
 import { TestDetailsModal } from './TestDetailsModal';
 import { TestsList } from './TestsList';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 

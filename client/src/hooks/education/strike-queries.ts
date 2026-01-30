@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { Strike } from '../../models';
 import axios from 'axios';
@@ -22,19 +22,16 @@ export const useAddStrike = (traineeId: string) => {
  * @returns {UseQueryResult<Strike[], Error>} the strikes of the trainee.
  */
 export const useGetStrikes = (traineeId: string) => {
-  return useQuery(
-    ['strikes', traineeId],
-    () => {
-      return axios.get<Strike[]>(`/api/trainees/${traineeId}/strikes`);
+  return useQuery({
+    queryKey: ['strikes', traineeId],
+    queryFn: async () => {
+      const { data } = await axios.get<Strike[]>(`/api/trainees/${traineeId}/strikes`);
+      return orderStrikesByDateDesc(data as Strike[]);
     },
-    {
-      select: ({ data }) => {
-        return orderStrikesByDateDesc(data as Strike[]);
-      },
-      enabled: !!traineeId,
-      refetchOnWindowFocus: false,
-    }
-  );
+
+    enabled: !!traineeId,
+    refetchOnWindowFocus: false,
+  });
 };
 
 /**

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import HYFLogo from '../assets/hyf-logo-red.png';
-import { useTraineeSearchData } from '../hooks/useTraineeSearchData';
+import { useSearchTrainee } from '../data/trainee/queries';
 
 /**
  * Component for displaying the home page / search page elements.
@@ -13,7 +13,7 @@ export const SearchPage = () => {
   /**
    * React Query hook to fetch matching trainees with a debounce time.
    */
-  const { isLoading, data, isError, error } = useTraineeSearchData(searchString);
+  const { isLoading, data, isError, error } = useSearchTrainee(searchString);
 
   useEffect(() => {
     document.title = 'Home | Dojo';

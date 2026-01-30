@@ -10,11 +10,12 @@ import {
 } from '.';
 import { SaveTraineeRequestData, useSaveTraineeInfo, useTraineeInfoData } from '../hooks';
 import { useEffect, useState } from 'react';
+
+import { EditSaveButton } from './trainee/EditSaveButton';
 import MuiAlert from '@mui/material/Alert';
 import { Trainee } from '../models';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
-import { EditSaveButton } from './trainee/EditSaveButton';
 
 interface TraineeProfileProps {
   id: string;
