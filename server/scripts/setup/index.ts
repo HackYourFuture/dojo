@@ -8,7 +8,7 @@
  * - .env file configured in the server root directory.
  * - Dojo server running locally (npm run dev)
  *
- * The script will generate 800 trainees by default (configurable via GENERATE_COUNT).
+ * The script will generate 500 trainees by default (configurable via GENERATE_COUNT).
  */
 
 import fs from 'fs';
@@ -24,6 +24,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { TokenService } from '../../src/services/TokenService';
 import { createInterface } from 'readline/promises';
+import { generateTest } from './generators/testGenerator';
 
 // Config
 const MONGO_URI = 'mongodb://localhost:27017/dojo';
@@ -129,6 +130,18 @@ const addStrikes = async (token: string, trainee: Trainee, count: number) => {
   await Promise.all(promises);
 };
 
+const addTests = async (token: string, trainee: Trainee, count: number) => {
+  const url = `${BASE_URL}/trainees/${trainee.id}/tests`;
+  const promises = new Array(count).fill(0).map(() => {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(generateTest(trainee)),
+    });
+  });
+  await Promise.all(promises);
+};
+
 const addInteractions = async (token: string, trainee: Trainee, count: number) => {
   const url = `${BASE_URL}/trainees/${trainee.id}/interactions`;
   const promises = new Array(count).fill(0).map(() => {
@@ -185,6 +198,7 @@ const main = async () => {
     // Set profile picture and add strikes and interactions
     await setProfilePicture(token, newTrainee.id, imageData);
     await addStrikes(token, newTrainee, randomStrikeNumber());
+    await addTests(token, newTrainee, faker.number.int({ min: 0, max: 7 }));
     await addInteractions(token, newTrainee, faker.number.int({ min: 0, max: 12 }));
 
     const percent = ((i + 1) / GENERATE_COUNT) * 100;
