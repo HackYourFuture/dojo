@@ -47,19 +47,19 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginRequest'
       responses:
-        200:
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
-        401:
+        '401':
           description: Authentication failed. The provided token may be invalid.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        403:
+        '403':
           description: Unauthorized user - The user is not allowed to login
           content:
             application/json:
@@ -74,13 +74,13 @@ paths:
       security:
         - cookie_token:
       responses:
-        200:
+        '200':
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        401:
+        '401':
           description: Unauthorized
           content:
             application/json:
@@ -95,9 +95,9 @@ paths:
       security:
         - cookie_token:
       responses:
-        204:
+        '204':
           description: successful operation
-        401:
+        '401':
           description: Not logged in.
           content:
             application/json:
@@ -509,7 +509,7 @@ paths:
             type: string
             example: '3jvz35Z'
       responses:
-        204:
+        '204':
           description: successful operation
 
   /trainees/{id}/interactions:
@@ -528,7 +528,7 @@ paths:
             type: string
             example: '3jvz35Z'
       responses:
-        200:
+        '200':
           description: Successful operation
           content:
             application/json:
@@ -668,7 +668,7 @@ paths:
             type: string
             example: '3jvz35Z'
       responses:
-        200:
+        '200':
           description: Successful operation
           content:
             application/json:
@@ -808,7 +808,7 @@ paths:
             type: string
             example: '3jvz35Z'
       responses:
-        200:
+        '200':
           description: Successful operation
           content:
             application/json:
@@ -1077,7 +1077,7 @@ paths:
       security:
         - cookie_token: []
       responses:
-        200:
+        '200':
           description: A list of users
           content:
             application/json:
@@ -1099,19 +1099,19 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateUser'
       responses:
-        201:
+        '201':
           description: User created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        400:
+        '400':
           description: Invalid user data
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        409:
+        '409':
           description: Email already in use
           content:
             application/json:
@@ -1140,19 +1140,19 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateUser'
       responses:
-        200:
+        '200':
           description: User updated successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        400:
+        '400':
           description: Invalid user data
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
+        '404':
           description: User not found
           content:
             application/json:
@@ -1173,9 +1173,9 @@ paths:
             type: string
           description: The ID of the user to delete
       responses:
-        204:
+        '204':
           description: User deleted successfully
-        404:
+        '404':
           description: User not found
           content:
             application/json:
@@ -1210,7 +1210,7 @@ paths:
             example: '2025-01-01'
 
       responses:
-        200:
+        '200':
           description: successful operation
           content:
             application/json:
@@ -1473,6 +1473,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Test'
+        averageTestScore: 
+          type: number
+          example: 7.6
         comments:
           type: string
 
