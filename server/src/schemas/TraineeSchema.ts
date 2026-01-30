@@ -22,6 +22,7 @@ import {
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
+  calculateAverageTestScore,
   getDisplayName,
   getProfileURL,
 } from '../models';
@@ -189,8 +190,13 @@ TraineeSchema.virtual('profileURL').get(function () {
   return getProfileURL(this as Trainee);
 });
 
+TraineeEducationInfoSchema.virtual('averageTestScore').get(function (this: TraineeEducationInfo) {
+  return calculateAverageTestScore(this.tests);
+});
+
 TraineeSchema.set('toJSON', jsonFormatting);
 StrikeSchema.set('toJSON', jsonFormatting);
+TraineeEducationInfoSchema.set('toJSON', jsonFormatting);
 InteractionSchema.set('toJSON', jsonFormatting);
 TestSchema.set('toJSON', jsonFormatting);
 EmploymentHistorySchema.set('toJSON', jsonFormatting);
