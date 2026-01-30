@@ -1473,9 +1473,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Test'
-        averageTestScore: 
+        averageTestScore:
           type: number
           example: 7.6
+          nullable: true
         comments:
           type: string
 

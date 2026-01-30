@@ -164,6 +164,7 @@ export interface TraineeEducationInfo {
   quitDate?: Date;
   assignments: Assignment[];
   tests: Test[];
+  averageTestScore: number | null;
   comments?: string;
 }
 
