@@ -10,7 +10,7 @@ import axios from 'axios';
  */
 export const useAddTest = (traineeId: string) => {
   return useMutation({
-    mutationFn: (test: Test) => {
+    mutationFn: async (test: Test) => {
       return axios.post(`/api/trainees/${traineeId}/tests`, test).catch((error) => {
         throw new Error(error.response?.data?.error || 'Failed to add test');
       });
@@ -56,7 +56,7 @@ export const useDeleteTest = (traineeId: string) => {
  */
 export const useEditTest = (traineeId: string) => {
   return useMutation({
-    mutationFn: (test: Test) => {
+    mutationFn: async (test: Test) => {
       return axios.put(`/api/trainees/${traineeId}/tests/${test.id}`, test).catch((error) => {
         throw new Error(error.response?.data?.error || 'Failed to edit test');
       });

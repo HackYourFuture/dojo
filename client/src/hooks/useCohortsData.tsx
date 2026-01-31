@@ -9,8 +9,8 @@ export const useCohortsData = () => {
   return useQuery({
     queryKey: ['CohortsInfo'],
     queryFn: async () => {
-      const resonse = await axios.get<Cohort[]>(`/api/cohorts`);
-      return resonse.data;
+      const { data } = await axios.get<Cohort[]>(`/api/cohorts`);
+      return data;
     },
     refetchOnWindowFocus: false, // Prevent refetching on window focus
   });

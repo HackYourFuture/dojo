@@ -31,7 +31,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
   const { data: traineeData } = useTraineeInfoData(id);
-  const { isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
+  const { isPending: isSaveLoading, mutate } = useSaveTraineeInfo(id);
   const { isEditMode, setTrainee, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
   const queryClient = useQueryClient();
 
@@ -67,7 +67,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         setSnackbarMessage('Trainee data saved successfully');
         setTrainee(data);
 
-        queryClient.invalidateQueries(['traineeInfo', id]);
+        queryClient.invalidateQueries({ queryKey: ['traineeInfo', id] });
         setIsEditMode(false);
       },
       onError: (error) => {

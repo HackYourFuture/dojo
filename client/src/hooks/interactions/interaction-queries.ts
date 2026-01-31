@@ -47,7 +47,7 @@ export const useAddInteraction = (traineeId: string) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['interactions', traineeId]);
+      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
     },
   });
 };
@@ -67,7 +67,7 @@ export const useDeleteInteraction = (traineeId: string) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['interactions', traineeId]);
+      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
     },
   });
 };
@@ -86,7 +86,7 @@ export const useEditInteraction = (traineeId: string) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['interactions', traineeId]);
+      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
     },
   });
 };

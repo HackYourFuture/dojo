@@ -9,10 +9,12 @@ import axios from 'axios';
  * @param {Strike} strike the strike to add.
  */
 export const useAddStrike = (traineeId: string) => {
-  return useMutation((strike: Strike) => {
-    return axios.post(`/api/trainees/${traineeId}/strikes`, strike).catch((error) => {
-      throw new Error(error.response?.data?.error || 'Failed to add strike');
-    });
+  return useMutation({
+    mutationFn: async (strike: Strike) => {
+      return axios.post(`/api/trainees/${traineeId}/strikes`, strike).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to add strike');
+      });
+    },
   });
 };
 
@@ -28,7 +30,6 @@ export const useGetStrikes = (traineeId: string) => {
       const { data } = await axios.get<Strike[]>(`/api/trainees/${traineeId}/strikes`);
       return orderStrikesByDateDesc(data as Strike[]);
     },
-
     enabled: !!traineeId,
     refetchOnWindowFocus: false,
   });
@@ -41,8 +42,10 @@ export const useGetStrikes = (traineeId: string) => {
  * */
 
 export const useDeleteStrike = (traineeId: string) => {
-  return useMutation((strikeId: string) => {
-    return axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
+  return useMutation({
+    mutationFn: async (strikeId: string) => {
+      return axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
+    },
   });
 };
 
@@ -51,10 +54,12 @@ export const useDeleteStrike = (traineeId: string) => {
  * @param {string} traineeId the id of the trainee to edit the strike of.
  */
 export const useEditStrike = (traineeId: string) => {
-  return useMutation((strike: Strike) => {
-    return axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike).catch((error) => {
-      throw new Error(error.response?.data?.error || 'Failed to edit strike');
-    });
+  return useMutation({
+    mutationFn: async (strike: Strike) => {
+      return axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to edit strike');
+      });
+    },
   });
 };
 
