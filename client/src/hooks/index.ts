@@ -5,6 +5,5 @@ export * from './useDashboardData.tsx';
 export * from './useDebounce.tsx';
 export * from './useLocalStorage.tsx';
 export * from './useTraineeInfoData.tsx';
-export * from './useTraineeSearchData.tsx';
 export * from './useTraineeProfileContext.tsx';
 export * from './useTraineeProfileProvider.tsx';
