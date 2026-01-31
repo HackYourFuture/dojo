@@ -1,12 +1,15 @@
-import { useMemo, useState, useCallback } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import { useLocalStorage } from '.';
-import { Loader } from '../components';
 import axios, { AxiosError } from 'axios';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { ApiContext } from '.';
+import { Loader } from '../components';
+import { useLocalStorage } from '.';
+import { useSession } from '../auth/data/queries';
 
 export const ApiProvider = () => {
+  const [session, isPending] = useSession();
   const [user, setUser] = useLocalStorage('user', null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -18,6 +21,7 @@ export const ApiProvider = () => {
     onSuccess: async (response) => {
       try {
         setLoading(true);
+        // FIXME: This needs to be wrapped in a useQuery and extracted
         await axios.post('/api/auth/login', {
           authCode: response.code,
           redirectURI: new URL(window.location.href).origin,
