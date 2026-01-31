@@ -18,8 +18,8 @@ export const InteractionsInfo = () => {
   const [interactionToEdit, setInteractionToEdit] = useState<Interaction | null>(null);
   const { traineeId } = useTraineeProfileContext();
 
-  const { mutate: addInteraction, isLoading: addInteractionLoading } = useAddInteraction(traineeId);
-  const { mutate: editInteraction, isLoading: editInteractionLoading } = useEditInteraction(traineeId);
+  const { mutate: addInteraction, isPending: addInteractionLoading } = useAddInteraction(traineeId);
+  const { mutate: editInteraction, isPending: editInteractionLoading } = useEditInteraction(traineeId);
   const {
     data: interactions,
     isLoading: interactionsLoading,

@@ -28,7 +28,7 @@ import { QueryCache, QueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 // Type for the optional stored navigate function
-type NavigateFn = ((to: string, opts?: { replace?: boolean; state?: any }) => void) | null;
+type NavigateFn = ((to: string, opts?: { replace?: boolean; state?: unknown }) => void) | null;
 
 // Holds the router navigate function when the provider registers it.
 let navigateTo: NavigateFn = null;
