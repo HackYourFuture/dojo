@@ -1,7 +1,8 @@
 import { ErrorBox, Loader, TraineeProfile } from '../components';
+import { TraineeProfileProvider, useTraineeInfoData } from '../hooks';
 
+import { Box } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useTraineeInfoData, TraineeProfileProvider } from '../hooks';
 
 /**
  * Component for displaying the trainee profile page sidebar and tabs.
@@ -18,7 +19,11 @@ export const TraineePage = () => {
   }
 
   if (isError && error instanceof Error) {
-    return <ErrorBox errorMessage={error.message} />;
+    return (
+      <Box width="50%" margin="auto" marginTop="2rem">
+        return <ErrorBox errorMessage={error.message} />;
+      </Box>
+    );
   }
 
   if (data) {

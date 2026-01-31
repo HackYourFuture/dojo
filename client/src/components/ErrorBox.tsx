@@ -1,25 +1,25 @@
-import { Alert, AlertTitle } from '@mui/material';
+import { Alert, SxProps } from '@mui/material';
 
 export interface ErrorBoxProps {
   errorMessage: string;
+  sx?: SxProps;
 }
 
 /**
  * Component to display a error state / Alert MUI component when status is ‘isError’.
  */
-export const ErrorBox = (props: ErrorBoxProps) => {
+export const ErrorBox = ({ errorMessage, sx = {} }: ErrorBoxProps) => {
   return (
     <Alert
       severity="error"
       sx={{
-        marginY: '24px',
-        marginX: 'auto',
-        width: '40%',
+        marginTop: '0.5rem',
         wordBreak: 'break-word',
+        width: '100%',
+        ...sx,
       }}
     >
-      <AlertTitle>Error</AlertTitle>
-      <p>{props.errorMessage}</p>
+      {errorMessage}
     </Alert>
   );
 };
