@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import { AvatarWithTooltip } from '../shared/AvatarWithTooltip';
 import { ConfirmationDialog } from '../ConfirmationDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { Interaction } from '../../models/Interactions';
+import MarkdownText from '../shared/MarkdownText';
 import { formatDateForDisplay } from '../../helpers/dateHelper';
 import { formatTextToFriendly } from '../../helpers/formHelper';
 import { useDeleteInteraction } from '../../hooks/interactions/interaction-queries';
-import MarkdownText from '../shared/MarkdownText';
-import EditIcon from '@mui/icons-material/Edit';
 
 interface InteractionsListProps {
   interactions: Interaction[];
@@ -17,7 +17,7 @@ interface InteractionsListProps {
   onClickEdit: (id: string) => void;
 }
 const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId, onClickEdit }) => {
-  const { mutateAsync: deleteInteraction, isLoading: isDeleteLoading } = useDeleteInteraction(traineeId);
+  const { mutateAsync: deleteInteraction, isPending: isDeleteLoading } = useDeleteInteraction(traineeId);
   const [error, setError] = useState<string>('');
   const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);

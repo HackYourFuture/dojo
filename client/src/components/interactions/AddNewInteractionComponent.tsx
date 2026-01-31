@@ -27,7 +27,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
   const [formState, setFormState] = useState<FormState>(initialState);
   const [error, setError] = useState<string>('');
 
-  const { isLoading, mutateAsync: addInteraction } = useAddInteraction(traineeId);
+  const { isPending, mutateAsync: addInteraction } = useAddInteraction(traineeId);
 
   const handleSubmit = () => {
     setError('');
@@ -74,7 +74,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
 
         <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
           <FormSelect
-            disabled={isLoading}
+            disabled={isPending}
             id={'interactionType'}
             label="Type"
             value={formState.type}
@@ -84,7 +84,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
             required
           />
           <FormTextField
-            disabled={isLoading}
+            disabled={isPending}
             label="Title"
             placeholder="Optional title"
             value={formState.title}
@@ -96,11 +96,11 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
             value={formState.date || new Date()}
             onChange={onDateChange}
             width="350px"
-            disabled={isLoading}
+            disabled={isPending}
           />
         </Box>
         <FormTextField
-          disabled={isLoading}
+          disabled={isPending}
           label="Comments"
           value={formState.details}
           onChange={onCommentsChange}
@@ -115,8 +115,8 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
           variant="outlined"
           color="primary"
           onClick={handleSubmit}
-          loading={isLoading}
-          disabled={isLoading}
+          loading={isPending}
+          disabled={isPending}
         >
           Add
         </LoadingButton>

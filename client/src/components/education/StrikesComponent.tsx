@@ -6,7 +6,7 @@ import { ConfirmationDialog } from '../ConfirmationDialog';
 import { Strike } from '../../models';
 import { StrikeDetailsModal } from './StrikeDetailsModal';
 import { StrikesList } from './StrikesList';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
@@ -16,16 +16,16 @@ export const StrikesComponent = () => {
   const [modalError, setModalError] = useState<string>('');
   const [strikeToEdit, setStrikeToEdit] = useState<Strike | null>(null);
   const { traineeId } = useTraineeProfileContext();
-  const { mutate: addStrike, isLoading: addStrikeLoading } = useAddStrike(traineeId);
-  const { mutate: deleteStrike, isLoading: deleteStrikeLoading, error: deleteStrikeError } = useDeleteStrike(traineeId);
-  const { mutate: editStrike, isLoading: editStrikeLoading } = useEditStrike(traineeId);
-  const { data: strikes, isLoading: strikesLoading, error: strikesError } = useGetStrikes(traineeId);
+  const { mutate: addStrike, isPending: addStrikeLoading } = useAddStrike(traineeId);
+  const { mutate: deleteStrike, isPending: deleteStrikeLoading, error: deleteStrikeError } = useDeleteStrike(traineeId);
+  const { mutate: editStrike, isPending: editStrikeLoading } = useEditStrike(traineeId);
+  const { data: strikes, isPending: strikesLoading, error: strikesError } = useGetStrikes(traineeId);
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   const [idToDelete, setIdToDelete] = useState<string>('');
   const queryClient = useQueryClient();
   const handleSuccess = () => {
-    queryClient.invalidateQueries(['strikes', traineeId]);
+    queryClient.invalidateQueries({ queryKey: ['strikes', traineeId] });
     setIsModalOpen(false);
   };
 
@@ -88,7 +88,7 @@ export const StrikesComponent = () => {
     deleteStrike(idToDelete, {
       onSuccess: () => {
         setIsConfirmationDialogOpen(false);
-        queryClient.invalidateQueries(['strikes', traineeId]);
+        queryClient.invalidateQueries({ queryKey: ['strikes', traineeId] });
       },
     });
   };

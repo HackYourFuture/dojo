@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Interaction } from '../../models/Interactions';
 import axios from 'axios';
@@ -9,21 +9,22 @@ import axios from 'axios';
  * @returns an array of interactions for the trainee
  */
 export const useGetInteractions = (traineeId: string) => {
-  return useQuery(
-    ['interactions', traineeId],
-    async () => {
-      return axios.get(`/api/trainees/${traineeId}/interactions`).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to get interactions');
-      });
-    },
-    {
-      select: ({ data }) => {
+  return useQuery({
+    queryKey: ['interactions', traineeId],
+    queryFn: async () => {
+      try {
+        const { data } = await axios.get(`/api/trainees/${traineeId}/interactions`);
         return orderInteractionsByDateDesc(data as Interaction[]);
-      },
-      enabled: !!traineeId,
-      refetchOnWindowFocus: false,
-    }
-  );
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(error.response?.data?.error || 'Failed to get interactions');
+        }
+        throw new Error('Failed to get interactions');
+      }
+    },
+    enabled: !!traineeId,
+    refetchOnWindowFocus: false,
+  });
 };
 
 const orderInteractionsByDateDesc = (data: Interaction[]): Interaction[] => {
@@ -39,18 +40,16 @@ export const useAddInteraction = (traineeId: string) => {
   const queryClient = useQueryClient();
 
   // partial becase not all fields are sent to the backend
-  return useMutation(
-    async (interaction: Partial<Interaction>) => {
+  return useMutation({
+    mutationFn: async (interaction: Partial<Interaction>) => {
       return await axios.post(`/api/trainees/${traineeId}/interactions`, interaction).catch((error) => {
         throw new Error(error.response?.data?.error || 'Failed to add interaction');
       });
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['interactions', traineeId]);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
+    },
+  });
 };
 
 /**
@@ -61,18 +60,16 @@ export const useAddInteraction = (traineeId: string) => {
 export const useDeleteInteraction = (traineeId: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    async (interactionId: string) => {
+  return useMutation({
+    mutationFn: async (interactionId: string) => {
       return await axios.delete(`/api/trainees/${traineeId}/interactions/${interactionId}`).catch((error) => {
         throw new Error(error.response?.data?.error || 'Failed to delete interaction');
       });
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['interactions', traineeId]);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
+    },
+  });
 };
 
 /**
@@ -82,16 +79,14 @@ export const useDeleteInteraction = (traineeId: string) => {
  */
 export const useEditInteraction = (traineeId: string) => {
   const queryClient = useQueryClient();
-  return useMutation(
-    async (interaction: Interaction) => {
+  return useMutation({
+    mutationFn: async (interaction: Interaction) => {
       return axios.put(`/api/trainees/${traineeId}/interactions/${interaction.id}`, interaction).catch((error) => {
         throw new Error(error.response?.data?.error || 'Failed to edit interaction');
       });
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['interactions', traineeId]);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
+    },
+  });
 };

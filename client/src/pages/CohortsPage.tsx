@@ -17,12 +17,18 @@ export const CohortsPage = () => {
   }, []);
 
   const { isLoading, isError, data, error, isFetching } = useCohortsData();
+
   if (isLoading || isFetching) {
     return <Loader />;
   }
 
   if (isError && error instanceof Error) {
-    return <ErrorBox errorMessage={error.message} />;
+    return (
+      //fixme: make this reusable
+      <Box width="50%" margin="auto" marginTop="2rem">
+        return <ErrorBox errorMessage={error.message} />;
+      </Box>
+    );
   }
 
   return (

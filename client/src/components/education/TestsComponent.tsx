@@ -6,7 +6,7 @@ import { ConfirmationDialog } from '../ConfirmationDialog';
 import { Test } from '../../models';
 import { TestDetailsModal } from './TestDetailsModal';
 import { TestsList } from './TestsList';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
 
@@ -16,16 +16,16 @@ export const TestsComponent = () => {
   const [modalError, setModalError] = useState<string>('');
   const [testToEdit, setTestToEdit] = useState<Test | null>(null);
   const { traineeId } = useTraineeProfileContext();
-  const { mutate: addTest, isLoading: addTestLoading } = useAddTest(traineeId);
-  const { mutate: deleteTest, isLoading: deleteTestLoading, error: deleteTestError } = useDeleteTest(traineeId);
-  const { mutate: editTest, isLoading: editTestLoading } = useEditTest(traineeId);
-  const { data: tests, isLoading: testsLoading, error: testsError } = useGetTests(traineeId);
+  const { mutate: addTest, isPending: addTestLoading } = useAddTest(traineeId);
+  const { mutate: deleteTest, isPending: deleteTestLoading, error: deleteTestError } = useDeleteTest(traineeId);
+  const { mutate: editTest, isPending: editTestLoading } = useEditTest(traineeId);
+  const { data: tests, isPending: testsLoading, error: testsError } = useGetTests(traineeId);
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   const [idToDelete, setIdToDelete] = useState<string>('');
   const queryClient = useQueryClient();
   const handleSuccess = () => {
-    queryClient.invalidateQueries(['tests', traineeId]);
+    queryClient.invalidateQueries({ queryKey: ['tests', traineeId] });
     setIsModalOpen(false);
     setTestToEdit(null);
   };
@@ -88,7 +88,7 @@ export const TestsComponent = () => {
     deleteTest(idToDelete, {
       onSuccess: () => {
         setIsConfirmationDialogOpen(false);
-        queryClient.invalidateQueries(['tests', traineeId]);
+        queryClient.invalidateQueries({ queryKey: ['tests', traineeId] });
       },
     });
   };

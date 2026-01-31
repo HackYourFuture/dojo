@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { Test } from '../../models';
 import axios from 'axios';
@@ -9,10 +9,12 @@ import axios from 'axios';
  * @param {Test} test the test to add.
  */
 export const useAddTest = (traineeId: string) => {
-  return useMutation((test: Test) => {
-    return axios.post(`/api/trainees/${traineeId}/tests`, test).catch((error) => {
-      throw new Error(error.response?.data?.error || 'Failed to add test');
-    });
+  return useMutation({
+    mutationFn: async (test: Test) => {
+      return axios.post(`/api/trainees/${traineeId}/tests`, test).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to add test');
+      });
+    },
   });
 };
 
@@ -22,19 +24,16 @@ export const useAddTest = (traineeId: string) => {
  * @returns {UseQueryResult<Test[], Error>} the tests of the trainee.
  */
 export const useGetTests = (traineeId: string) => {
-  return useQuery(
-    ['tests', traineeId],
-    () => {
-      return axios.get<Test[]>(`/api/trainees/${traineeId}/tests`);
+  return useQuery({
+    queryKey: ['tests', traineeId],
+    queryFn: async () => {
+      const { data } = await axios.get<Test[]>(`/api/trainees/${traineeId}/tests`);
+      return orderTestsByDateDesc(data);
     },
-    {
-      select: ({ data }) => {
-        return orderTestsByDateDesc(data);
-      },
-      enabled: !!traineeId,
-      refetchOnWindowFocus: false,
-    }
-  );
+
+    enabled: !!traineeId,
+    refetchOnWindowFocus: false,
+  });
 };
 
 /**
@@ -44,8 +43,10 @@ export const useGetTests = (traineeId: string) => {
  * */
 
 export const useDeleteTest = (traineeId: string) => {
-  return useMutation((testId: string) => {
-    return axios.delete(`/api/trainees/${traineeId}/tests/${testId}`);
+  return useMutation({
+    mutationFn: (testId: string) => {
+      return axios.delete(`/api/trainees/${traineeId}/tests/${testId}`);
+    },
   });
 };
 
@@ -54,10 +55,12 @@ export const useDeleteTest = (traineeId: string) => {
  * @param {string} traineeId the id of the trainee to edit the test of.
  */
 export const useEditTest = (traineeId: string) => {
-  return useMutation((test: Test) => {
-    return axios.put(`/api/trainees/${traineeId}/tests/${test.id}`, test).catch((error) => {
-      throw new Error(error.response?.data?.error || 'Failed to edit test');
-    });
+  return useMutation({
+    mutationFn: async (test: Test) => {
+      return axios.put(`/api/trainees/${traineeId}/tests/${test.id}`, test).catch((error) => {
+        throw new Error(error.response?.data?.error || 'Failed to edit test');
+      });
+    },
   });
 };
 

@@ -37,6 +37,9 @@ export const DashboardPage = () => {
   }
 
   if (isError && error instanceof Error) {
+    <Box width="50%" margin="auto" marginTop="2rem">
+      return <ErrorBox errorMessage={error.message} />;
+    </Box>;
     return <ErrorBox errorMessage={error.message} />;
   }
 

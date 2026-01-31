@@ -1,9 +1,7 @@
 import { Outlet } from 'react-router-dom';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ResponsiveNavBar } from '../components';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-
-const queryClient = new QueryClient();
+import { TanStackQueryProvider } from '../data/tanstack/TanStackQueryProvider';
 
 /**
  * The main root element where we display the navigation and routes.
@@ -11,7 +9,7 @@ const queryClient = new QueryClient();
 export default function Root() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
+      <TanStackQueryProvider>
         <div id="navbar">
           <ResponsiveNavBar />
         </div>
@@ -20,8 +18,8 @@ export default function Root() {
         </div>
 
         {/* react query debugger */}
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-      </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </TanStackQueryProvider>
     </>
   );
 }

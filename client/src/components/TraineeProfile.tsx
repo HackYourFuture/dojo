@@ -10,11 +10,12 @@ import {
 } from '.';
 import { SaveTraineeRequestData, useSaveTraineeInfo, useTraineeInfoData } from '../hooks';
 import { useEffect, useState } from 'react';
+
+import { EditSaveButton } from './trainee/EditSaveButton';
 import MuiAlert from '@mui/material/Alert';
 import { Trainee } from '../models';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
-import { EditSaveButton } from './trainee/EditSaveButton';
 
 interface TraineeProfileProps {
   id: string;
@@ -30,7 +31,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
   const { data: traineeData } = useTraineeInfoData(id);
-  const { isLoading: isSaveLoading, mutate } = useSaveTraineeInfo(id);
+  const { isPending: isSaveLoading, mutate } = useSaveTraineeInfo(id);
   const { isEditMode, setTrainee, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
   const queryClient = useQueryClient();
 
@@ -66,7 +67,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         setSnackbarMessage('Trainee data saved successfully');
         setTrainee(data);
 
-        queryClient.invalidateQueries(['traineeInfo', id]);
+        queryClient.invalidateQueries({ queryKey: ['traineeInfo', id] });
         setIsEditMode(false);
       },
       onError: (error) => {
