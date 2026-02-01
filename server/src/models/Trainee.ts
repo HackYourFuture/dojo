@@ -177,7 +177,7 @@ export const getDisplayName = (trainee: Trainee): string => {
 
 export const getProfileURL = (trainee: Trainee): string => {
   const normalizedName = removeAccents(getDisplayName(trainee).toLowerCase()).replaceAll(/\s/g, '-');
-  return `${process.env.BASE_URL}/trainee/${normalizedName}_${trainee.id}`;
+  return `/trainee/${normalizedName}_${trainee.id}`;
 };
 
 // Validations
