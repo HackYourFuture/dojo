@@ -19,7 +19,6 @@ import { Trainee } from '../../../../data/types/Trainee';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 
-useTraineeProfileContext;
 interface TraineeProfileProps {
   id: string;
 }

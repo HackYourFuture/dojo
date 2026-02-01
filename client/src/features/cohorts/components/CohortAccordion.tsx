@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import { LearningStatus } from '../../../data/types/Trainee';
 import { Link } from 'react-router-dom';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { SidebarJobPath } from '../../../components';
+import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
