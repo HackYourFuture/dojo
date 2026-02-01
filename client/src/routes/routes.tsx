@@ -1,8 +1,13 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import Root from './root';
-import { LoginPage, SearchPage, DashboardPage, CohortsPage, TraineePage } from '../pages';
-import { ApiProvider } from '../hooks';
+
+import { ApiProvider } from '../auth/hooks/useAuthProvider';
+import CohortsPage from '../features/cohorts/CohortsPage';
+import DashboardPage from '../features/dashboard/DashboardPage';
+import LoginPage from '../features/login/LoginPage';
 import { ProtectedRoute } from './ProtectedRoute';
+import Root from './root';
+import SearchPage from '../features/search/SearchPage';
+import TraineePage from '../features/trainee-profile/TraineePage';
 
 export const router = createBrowserRouter([
   {

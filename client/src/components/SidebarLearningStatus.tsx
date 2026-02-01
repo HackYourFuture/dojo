@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material';
-import { LearningStatus } from '../models';
+import { LearningStatus } from '../data/types/Trainee';
 
 interface LearningStatusProps {
   learningStatus: LearningStatus | undefined;
@@ -42,3 +42,5 @@ export const SidebarLearningStatus = ({ learningStatus }: LearningStatusProps) =
 
   return <Chip label={chipLabel(learningStatus)} color={chipColor(learningStatus)} size="small" />;
 };
+
+export default SidebarLearningStatus;
