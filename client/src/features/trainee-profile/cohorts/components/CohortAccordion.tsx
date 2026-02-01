@@ -1,22 +1,23 @@
-import { Cohort, LearningStatus } from '../../models';
-import { SidebarJobPath, SidebarLearningStatus } from '..';
-
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import { Cohort } from '../Cohorts';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import IconButton from '@mui/material/IconButton';
+import { LearningStatus } from '../../Trainee';
 import { Link } from 'react-router-dom';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { SidebarJobPath } from '../../components/SidebarJobPath';
+import { SidebarLearningStatus } from '../../components/SidebarLearningStatus';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { TraineeAvatar } from './TraineeAvatar';
-import slackLogo from '../../assets/slack.png';
+import slackLogo from '../../../../assets/slack.png';
 
 export interface CohortAccordionProps {
   cohortInfo: Cohort;

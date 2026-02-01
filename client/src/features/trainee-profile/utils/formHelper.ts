@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactNode } from 'react';
-import { Trainee, TraineeInfoType } from '../../../models';
+import { Trainee, TraineeInfoType } from '../Trainee';
 
 import { SelectChangeEvent } from '@mui/material';
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import { ErrorBox } from '../../components';
-import HYFLogo from '../assets/hyf-logo-red.png';
+import HYFLogo from '../../assets/hyf-logo-red.png';
 import SearchBar from './components/SearchBar';
 import SearchResultsList from './components/SearchResultsList';
 import { useSearch } from './data/queries';

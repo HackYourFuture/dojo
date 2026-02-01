@@ -14,11 +14,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { TestResult, TestType } from '../../../../models';
+import { Test, TestResult, TestType } from '../../Trainee';
 import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
-import { Test } from '../../../../models';
 import { formatDate } from '../../utils/dateHelper';
 
 type TestDetailsModalProps = {

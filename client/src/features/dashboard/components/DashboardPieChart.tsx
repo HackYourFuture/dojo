@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { ChartData, DashboardData } from '../../../models';
+import { ChartData, DashboardData } from '../Dashboard';
 
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import { PieChart } from '@mui/x-charts/PieChart';

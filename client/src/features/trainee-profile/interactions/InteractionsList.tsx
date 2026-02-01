@@ -9,7 +9,7 @@ import { Interaction } from './Interactions';
 import MarkdownText from '../components/MarkdownText';
 import { formatDateForDisplay } from '../utils/dateHelper';
 import { formatTextToFriendly } from '../utils/formHelper';
-import { useDeleteInteraction } from '../../hooks/interactions/interaction-queries';
+import { useDeleteInteraction } from './data/interaction-queries';
 
 interface InteractionsListProps {
   interactions: Interaction[];

@@ -1,9 +1,5 @@
 import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import {
-  useAddInteraction,
-  useEditInteraction,
-  useGetInteractions,
-} from '../../hooks/interactions/interaction-queries';
+import { useAddInteraction, useEditInteraction, useGetInteractions } from './data/interaction-queries';
 
 import AddIcon from '@mui/icons-material/Add';
 import { Interaction } from './Interactions';
@@ -12,7 +8,7 @@ import InteractionsList from './InteractionsList';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
-export const InteractionsInfo = () => {
+const InteractionsInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalError, setModalError] = useState<string>('');
   const [interactionToEdit, setInteractionToEdit] = useState<Interaction | null>(null);
@@ -106,3 +102,5 @@ export const InteractionsInfo = () => {
     </>
   );
 };
+
+export default InteractionsInfo;

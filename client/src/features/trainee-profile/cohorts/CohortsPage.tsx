@@ -1,12 +1,12 @@
-import { ErrorBox, Loader } from '../components';
+import { ErrorBox, Loader } from '../../../components';
 
 import Box from '@mui/material/Box';
-import { Cohort } from '../models';
-import { CohortAccordion } from '../components';
+import { Cohort } from '../cohorts/Cohorts';
+import CohortAccordion from './components/CohortAccordion';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useCohortsData } from '../hooks';
+import { useCohortsData } from './data/useCohortsData';
 import { useEffect } from 'react';
 
 /**

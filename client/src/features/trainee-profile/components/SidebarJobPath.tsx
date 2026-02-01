@@ -1,5 +1,5 @@
 import { Chip, Stack } from '@mui/material';
-import { JobPath, LearningStatus } from '../../../models';
+import { JobPath, LearningStatus } from '../Trainee';
 
 import { SidebarLearningStatus } from '../../../components';
 

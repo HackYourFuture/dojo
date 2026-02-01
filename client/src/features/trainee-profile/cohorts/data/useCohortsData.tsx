@@ -1,4 +1,4 @@
-import { Cohort } from '../../../../models';
+import { Cohort } from '../Cohorts';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 

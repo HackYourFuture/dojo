@@ -1,4 +1,4 @@
-import { SearchResult } from '../../../models';
+import { SearchResult } from '../Search';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 

@@ -5,10 +5,10 @@ import {
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
-} from '../../../models';
+} from '../Trainee';
 
-import { SaveTraineeRequestData } from './useTraineeInfoData';
-import { TraineeProfileContext } from '../../../hooks';
+import { SaveTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
+import { TraineeProfileContext } from './useTraineeProfileContext';
 
 type TraineeInfoType = TraineePersonalInfo | TraineeContactInfo | TraineeEmploymentInfo | TraineeEducationInfo;
 

@@ -1,9 +1,9 @@
 import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import { useAddTest, useDeleteTest, useEditTest, useGetTests } from '../../hooks/education/test-queries';
+import { useAddTest, useDeleteTest, useEditTest, useGetTests } from './data/test-queries';
 
 import AddIcon from '@mui/icons-material/Add';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
-import { Test } from '../../../../models';
+import { Test } from '../../Trainee';
 import { TestDetailsModal } from './TestDetailsModal';
 import { TestsList } from './TestsList';
 import { useQueryClient } from '@tanstack/react-query';

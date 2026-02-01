@@ -1,8 +1,10 @@
-import { ErrorBox, Loader, TraineeProfile } from '../../components';
-import { TraineeProfileProvider, useTraineeInfoData } from '../../hooks';
+import { ErrorBox, Loader } from '../../components';
 
 import { Box } from '@mui/material';
+import TraineeProfile from './profile/components/TraineeProfile';
+import { TraineeProfileProvider } from './context/useTraineeProfileProvider';
 import { useParams } from 'react-router-dom';
+import { useTraineeInfoData } from './personal-info/data/useTraineeInfoData';
 
 /**
  * Component for displaying the trainee profile page sidebar and tabs.

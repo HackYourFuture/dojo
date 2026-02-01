@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../../components/Loader';
-import { SearchResult } from '../../../models';
+import { SearchResult } from '../Search';
 
 interface SearchResultsListProps {
   isLoading: boolean;

@@ -7,7 +7,7 @@ import FormTextField from './FormTextField';
 import { Interaction } from './Interactions';
 import { InteractionType } from './Interactions';
 import { LoadingButton } from '@mui/lab';
-import { useAddInteraction } from '../../hooks/interactions/interaction-queries';
+import { useAddInteraction } from './data/interaction-queries';
 
 const types = Object.values(InteractionType);
 

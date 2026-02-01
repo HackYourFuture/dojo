@@ -1,9 +1,5 @@
 import * as React from 'react';
-import HYFLogo from '../assets/hyf-logo-beige.png';
-import SearchIcon from '@mui/icons-material/Search';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useAuth } from '../hooks';
-import { Link } from 'react-router-dom';
+
 import {
   AppBar,
   Avatar,
@@ -17,6 +13,12 @@ import {
   Toolbar,
   Tooltip,
 } from '@mui/material';
+
+import HYFLogo from '../assets/hyf-logo-beige.png';
+import { Link } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+import { useAuth } from '../auth/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 /**

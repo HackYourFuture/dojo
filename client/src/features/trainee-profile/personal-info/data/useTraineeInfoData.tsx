@@ -4,7 +4,7 @@ import {
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
-} from '../models';
+} from '../../Trainee';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import axios from 'axios';

@@ -12,7 +12,7 @@ interface ProfileNavProps {
  * @param {string} onTabChange callback for when tab is changed.
  * @returns {ReactNode} A React element that renders trainee profile page tabs and active tab logic.
  */
-export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
+const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
   return (
     <Box display="flex" color="black" sx={{ mx: 5, my: 1 }}>
       <Tabs
@@ -30,3 +30,4 @@ export const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
     </Box>
   );
 };
+export default ProfileNav;

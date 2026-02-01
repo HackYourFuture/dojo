@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { Interaction } from '../../models/Interactions';
+import { Interaction } from '../Interactions';
 import axios from 'axios';
 
 /**

@@ -1,4 +1,4 @@
-import { DashboardData } from '../../../models';
+import { DashboardData } from '../Dashboard';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 

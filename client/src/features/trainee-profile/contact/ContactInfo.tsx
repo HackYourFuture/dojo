@@ -6,9 +6,9 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { createTextChangeHandler } from '../../helpers/formHelper';
-import slackIcon from '../assets/slack.png';
-import { useTraineeProfileContext } from '../../hooks/useTraineeProfileContext';
+import { createTextChangeHandler } from '../utils/formHelper';
+import slackIcon from '../../../assets/slack.png';
+import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
 /**
  * Component for displaying contact information in trainee profile data on the contact tab.

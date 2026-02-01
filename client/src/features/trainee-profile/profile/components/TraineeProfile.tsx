@@ -1,22 +1,25 @@
 import { Box, Snackbar } from '@mui/material';
 import {
-  ContactInfo,
-  EducationInfo,
-  EmploymentInfo,
-  InteractionsInfo,
-  PersonalInfo,
-  ProfileNav,
-  ProfileSidebar,
-} from '.';
-import { SaveTraineeRequestData, useSaveTraineeInfo, useTraineeInfoData } from '../hooks';
+  SaveTraineeRequestData,
+  useSaveTraineeInfo,
+  useTraineeInfoData,
+} from '../../personal-info/data/useTraineeInfoData';
 import { useEffect, useState } from 'react';
 
-import { EditSaveButton } from './trainee/EditSaveButton';
+import ContactInfo from '../../contact/ContactInfo';
+import { EditSaveButton } from '../../components/EditSaveButton';
+import EducationInfo from '../../education/EducationInfo';
+import EmploymentInfo from '../../employment/EmploymentInfo';
+import InteractionsInfo from '../../interactions/InteractionsInfo';
 import MuiAlert from '@mui/material/Alert';
-import { Trainee } from '../models';
+import PersonalInfo from '../../personal-info/PersonalInfo';
+import ProfileNav from './ProfileNav';
+import ProfileSidebar from '../ProfileSidebar';
+import { Trainee } from '../../Trainee';
 import { useQueryClient } from '@tanstack/react-query';
-import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
+import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 
+useTraineeProfileContext;
 interface TraineeProfileProps {
   id: string;
 }
@@ -27,7 +30,7 @@ interface TraineeProfileProps {
  * @param {string} id trainee id.
  * @returns {ReactNode} A React element that renders profile page tabs and sidebar.
  */
-export const TraineeProfile = ({ id }: TraineeProfileProps) => {
+const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
   const { data: traineeData } = useTraineeInfoData(id);
@@ -70,7 +73,7 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
         queryClient.invalidateQueries({ queryKey: ['traineeInfo', id] });
         setIsEditMode(false);
       },
-      onError: (error) => {
+      onError: (error: Error) => {
         console.error('There was a problem saving trainee data:', (error as Error).message);
         setSnackbarSeverity('error');
         setSnackbarMessage('Error saving trainee data');
@@ -139,3 +142,5 @@ export const TraineeProfile = ({ id }: TraineeProfileProps) => {
     </div>
   );
 };
+
+export default TraineeProfile;

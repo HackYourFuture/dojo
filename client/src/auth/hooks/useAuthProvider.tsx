@@ -4,8 +4,8 @@ import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { useCallback, useMemo, useState } from 'react';
 
 import { ApiContext } from './useAuth';
-import { Loader } from '../../../components';
-import { useLocalStorage } from '../../../hooks';
+import { Loader } from '../../components';
+import { useLocalStorage } from './useLocalStorage';
 
 export const ApiProvider = () => {
   const [user, setUser] = useLocalStorage('user', null);

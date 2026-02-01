@@ -1,11 +1,12 @@
 import { Avatar, Box, IconButton, Link, Stack, Typography } from '@mui/material';
-import { SidebarJobPath, SidebarLearningStatus } from '../../components';
 
-import { LearningStatus } from '../../models';
-import LinkedInLogo from '../assets/LinkedIn_logo.png';
-import githubLogo from '../assets/github.png';
-import slackLogo from '../assets/slack.png';
-import { useTraineeInfoData } from '../../hooks';
+import { LearningStatus } from '../Trainee';
+import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
+import { SidebarJobPath } from '../components/SidebarJobPath';
+import { SidebarLearningStatus } from '../components/SidebarLearningStatus';
+import githubLogo from '../../../assets/github.png';
+import slackLogo from '../../../assets/slack.png';
+import { useTraineeInfoData } from '../personal-info/data/useTraineeInfoData';
 
 interface ProfileSidebarProps {
   traineeId: string;
@@ -17,7 +18,7 @@ interface ProfileSidebarProps {
  * @param {string} traineeId trainee id.
  * @returns {ReactNode} A React element that renders profile page sidebar information and profile image.
  */
-export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
+const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
   const { data } = useTraineeInfoData(traineeId);
 
   const slackId = data?.contactInfo?.slackId;
@@ -89,3 +90,4 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
     </Box>
   );
 };
+export default ProfileSidebar;

@@ -1,8 +1,8 @@
 import { Button, Stack } from '@mui/material';
 
 import { ErrorBox } from '../../components';
-import HYFLogo from '../assets/hyf-logo-red.png';
-import { useAuth } from './hooks/useAuth';
+import HYFLogo from '../../assets/hyf-logo-red.png';
+import { useAuth } from '../../auth/hooks/useAuth';
 
 /**
  * Component for displaying the login page elements.

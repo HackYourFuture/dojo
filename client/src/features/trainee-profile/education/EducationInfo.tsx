@@ -1,5 +1,5 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { LearningStatus, QuitReason, Trainee } from '../../../models';
+import { LearningStatus, QuitReason, Trainee } from '../Trainee';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -16,7 +16,7 @@ const NoIcon = () => null;
  *
  * @returns {ReactNode} A React element that renders trainee education information with view, add, and edit logic.
  */
-export const EducationInfo = () => {
+const EducationInfo = () => {
   const {
     trainee: { educationInfo: editedFields },
     setTrainee,
@@ -260,3 +260,4 @@ export const EducationInfo = () => {
     </Box>
   );
 };
+export default EducationInfo;

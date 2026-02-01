@@ -1,14 +1,14 @@
 import 'dayjs/locale/nl';
 
 import { Box, Button, Container, Stack } from '@mui/material';
-import { DashboardPieChart, ErrorBox, Loader } from '../components';
+import { DashboardPieChart, ErrorBox, Loader } from '../../components';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useDashboardData } from '../hooks';
+import { useDashboardData } from './data/useDashboardData';
 
 /**
  * Component for displaying the dashboard page elements.

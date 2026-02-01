@@ -1,9 +1,9 @@
-import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus } from '../models';
+import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus } from '../Trainee';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useTraineeProfileContext } from '../hooks/useTraineeProfileContext';
+import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
 const NoIcon = () => null;
 
@@ -12,7 +12,7 @@ const NoIcon = () => null;
  *
  * @returns {ReactNode} A React element that renders trainee personal information with view, add, and edit logic.
  */
-export const PersonalInfo = () => {
+const PersonalInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { personalInfo: editedFields } = trainee;
 
@@ -349,3 +349,5 @@ export const PersonalInfo = () => {
     </Box>
   );
 };
+
+export default PersonalInfo;

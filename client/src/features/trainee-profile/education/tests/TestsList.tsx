@@ -1,6 +1,6 @@
 import { Box, Icon, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
 import { CancelSharp, CheckCircle, Error, OfflinePin } from '@mui/icons-material';
-import { Test, TestResult } from '../../../../models';
+import { Test, TestResult } from '../../Trainee';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
