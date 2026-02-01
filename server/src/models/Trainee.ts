@@ -90,7 +90,7 @@ export interface Trainee {
   readonly id: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
-  profileURL: string;
+  profilePath: string;
   displayName: string;
   imageURL?: string;
   thumbnailURL?: string;
@@ -175,9 +175,15 @@ export const getDisplayName = (trainee: Trainee): string => {
   return `${name} ${lastName}`;
 };
 
-export const getProfileURL = (trainee: Trainee): string => {
+export const getProfilePath = (trainee: Trainee): string => {
   const normalizedName = removeAccents(getDisplayName(trainee).toLowerCase()).replaceAll(/\s/g, '-');
   return `/trainee/${normalizedName}_${trainee.id}`;
+};
+
+export const getProfileURL = (trainee: Trainee): string => {
+  const url = new URL(process.env.BASE_URL ?? 'https://localhost');
+  url.pathname = getProfilePath(trainee);
+  return url.toString();
 };
 
 // Validations

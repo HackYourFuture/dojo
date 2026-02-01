@@ -72,7 +72,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   hover
                   sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer', textDecoration: 'none' }}
                   component={Link}
-                  to={trainee.profileURL}
+                  to={trainee.profilePath}
                 >
                   <TableCell component="th" scope="row">
                     <TraineeAvatar imageURL={trainee.thumbnailURL ?? ''} altText={trainee.displayName}></TraineeAvatar>

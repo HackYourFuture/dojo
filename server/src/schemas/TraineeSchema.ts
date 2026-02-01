@@ -23,7 +23,7 @@ import {
   TraineeEmploymentInfo,
   TraineePersonalInfo,
   getDisplayName,
-  getProfileURL,
+  getProfilePath,
 } from '../models';
 import { WithMongoID, jsonFormatting } from '../utils/database';
 
@@ -185,8 +185,8 @@ TraineeSchema.virtual('displayName').get(function () {
   return getDisplayName(this as Trainee);
 });
 
-TraineeSchema.virtual('profileURL').get(function () {
-  return getProfileURL(this as Trainee);
+TraineeSchema.virtual('profilePath').get(function () {
+  return getProfilePath(this as Trainee);
 });
 
 TraineeSchema.set('toJSON', jsonFormatting);

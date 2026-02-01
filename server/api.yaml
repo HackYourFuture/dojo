@@ -149,9 +149,9 @@ paths:
                             name:
                               type: string
                               example: John Doe
-                            profileURL:
+                            profilePath:
                               type: string
-                              example: https://example.com/trainee/Isaac-Pagaca_HpOjvmwX
+                              example: /trainee/Isaac-Pagaca_HpOjvmwX
                             thumbnailURL:
                               type: string
                               example: https://cdn.example.com/images/HpOjvmwX_thumb.jpeg
@@ -1280,9 +1280,9 @@ components:
         displayName:
           type: string
           example: Johnny Doe
-        profileURL:
+        profilePath:
           type: string
-          example: https://example.com/trainee/Isaac-Pagaca_HpOjvmwX
+          example: /trainee/Isaac-Pagaca_HpOjvmwX
         imageURL:
           type: string
           example: https://cdn.example.com/images/profile/HpOjvmwX.jpeg
