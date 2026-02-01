@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 
 import { SaveTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
-import { Trainee } from '../Trainee';
+import { Trainee } from '../../../data/types/Trainee';
 
 export type TraineeProfileContextType = {
   traineeId: string;

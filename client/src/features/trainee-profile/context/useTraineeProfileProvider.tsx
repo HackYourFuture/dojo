@@ -5,7 +5,7 @@ import {
   TraineeEducationInfo,
   TraineeEmploymentInfo,
   TraineePersonalInfo,
-} from '../Trainee';
+} from '../../../data/types/Trainee';
 
 import { SaveTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
 import { TraineeProfileContext } from './useTraineeProfileContext';

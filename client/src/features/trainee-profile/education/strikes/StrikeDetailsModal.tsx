@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Strike, StrikeReason } from '../../Trainee';
+import { Strike, StrikeReason } from '../../../../data/types/Trainee';
 import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';

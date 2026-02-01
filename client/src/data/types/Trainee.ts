@@ -1,4 +1,4 @@
-import { Interaction } from './interactions/Interactions';
+import { Interaction } from '../../features/trainee-profile/interactions/Interactions';
 
 // enums
 export enum Gender {

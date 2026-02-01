@@ -1,4 +1,4 @@
-import { ErrorBox, Loader } from '../../../components';
+import { ErrorBox, Loader } from '../../components';
 
 import Box from '@mui/material/Box';
 import { Cohort } from '../cohorts/Cohorts';

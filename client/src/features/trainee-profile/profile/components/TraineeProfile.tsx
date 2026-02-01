@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import ContactInfo from '../../contact/ContactInfo';
-import { EditSaveButton } from '../../components/EditSaveButton';
+import { EditSaveButton } from './EditSaveButton';
 import EducationInfo from '../../education/EducationInfo';
 import EmploymentInfo from '../../employment/EmploymentInfo';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
@@ -15,7 +15,7 @@ import MuiAlert from '@mui/material/Alert';
 import PersonalInfo from '../../personal-info/PersonalInfo';
 import ProfileNav from './ProfileNav';
 import ProfileSidebar from '../ProfileSidebar';
-import { Trainee } from '../../Trainee';
+import { Trainee } from '../../../../data/types/Trainee';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 

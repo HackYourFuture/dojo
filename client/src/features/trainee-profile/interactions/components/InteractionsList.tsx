@@ -1,15 +1,15 @@
 import { Alert, Box, Chip, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-import { AvatarWithTooltip } from '../education/components/AvatarWithTooltip';
-import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
+import { AvatarWithTooltip } from '../../education/components/AvatarWithTooltip';
+import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Interaction } from './Interactions';
-import MarkdownText from '../components/MarkdownText';
-import { formatDateForDisplay } from '../utils/dateHelper';
-import { formatTextToFriendly } from '../utils/formHelper';
-import { useDeleteInteraction } from './data/interaction-queries';
+import { Interaction } from '../Interactions';
+import MarkdownText from '../../components/MarkdownText';
+import { formatDateForDisplay } from '../../utils/dateHelper';
+import { formatTextToFriendly } from '../../utils/formHelper';
+import { useDeleteInteraction } from '../data/interaction-queries';
 
 interface InteractionsListProps {
   interactions: Interaction[];

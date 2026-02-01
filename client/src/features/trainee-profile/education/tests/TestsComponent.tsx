@@ -3,7 +3,7 @@ import { useAddTest, useDeleteTest, useEditTest, useGetTests } from './data/test
 
 import AddIcon from '@mui/icons-material/Add';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
-import { Test } from '../../Trainee';
+import { Test } from '../../../../data/types/Trainee';
 import { TestDetailsModal } from './TestDetailsModal';
 import { TestsList } from './TestsList';
 import { useQueryClient } from '@tanstack/react-query';

@@ -1,4 +1,4 @@
-import { LearningStatus } from '../Trainee';
+import { LearningStatus } from '../../data/types/Trainee';
 
 export interface Cohort {
   cohort: number | null;

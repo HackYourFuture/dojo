@@ -16,7 +16,7 @@ import {
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { JobPath } from '../Trainee';
+import { JobPath } from '../../../data/types/Trainee';
 import LinkIcon from '@mui/icons-material/Link';
 import React from 'react';
 import { formatDate } from '../utils/dateHelper';

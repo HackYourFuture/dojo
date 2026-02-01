@@ -3,8 +3,8 @@ import { useAddInteraction, useEditInteraction, useGetInteractions } from './dat
 
 import AddIcon from '@mui/icons-material/Add';
 import { Interaction } from './Interactions';
-import { InteractionDetailsModal } from './InteractionDetailsModal';
-import InteractionsList from './InteractionsList';
+import { InteractionDetailsModal } from './components/InteractionDetailsModal';
+import InteractionsList from './components/InteractionsList';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 

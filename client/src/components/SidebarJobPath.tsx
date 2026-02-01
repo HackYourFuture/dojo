@@ -1,7 +1,7 @@
 import { Chip, Stack } from '@mui/material';
-import { JobPath, LearningStatus } from '../Trainee';
+import { JobPath, LearningStatus } from '../data/types/Trainee';
 
-import { SidebarLearningStatus } from '../../../components';
+import { SidebarLearningStatus } from '.';
 
 interface JobPathProps {
   jobPath: JobPath | string;

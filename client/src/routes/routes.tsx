@@ -1,7 +1,7 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { ApiProvider } from '../auth/hooks/useAuthProvider';
-import CohortsPage from '../features/trainee-profile/cohorts/CohortsPage';
+import CohortsPage from '../features/cohorts/CohortsPage';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import LoginPage from '../features/login/LoginPage';
 import { ProtectedRoute } from './ProtectedRoute';

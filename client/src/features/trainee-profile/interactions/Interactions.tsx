@@ -1,4 +1,4 @@
-import { Reporter } from '../Trainee';
+import { Reporter } from '../../../data/types/Trainee';
 
 export interface Interaction {
   id: string;

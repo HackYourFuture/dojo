@@ -1,9 +1,9 @@
 import { Avatar, Box, IconButton, Link, Stack, Typography } from '@mui/material';
 
-import { LearningStatus } from '../Trainee';
+import { LearningStatus } from '../../../data/types/Trainee';
 import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
-import { SidebarJobPath } from '../components/SidebarJobPath';
-import { SidebarLearningStatus } from '../components/SidebarLearningStatus';
+import { SidebarJobPath } from '../../../components/SidebarJobPath';
+import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
 import githubLogo from '../../../assets/github.png';
 import slackLogo from '../../../assets/slack.png';
 import { useTraineeInfoData } from '../personal-info/data/useTraineeInfoData';

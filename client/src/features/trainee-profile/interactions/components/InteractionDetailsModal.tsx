@@ -11,13 +11,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Interaction, InteractionType } from './Interactions';
+import { Interaction, InteractionType } from '../Interactions';
 import { useEffect, useState } from 'react';
 
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
 import { LoadingButton } from '@mui/lab';
-import { formatDate } from '../utils/dateHelper';
+import { formatDate } from '../../utils/dateHelper';
 
 const types = Object.values(InteractionType);
 

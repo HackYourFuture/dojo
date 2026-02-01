@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material';
-import { LearningStatus } from '../Trainee';
+import { LearningStatus } from '../data/types/Trainee';
 
 interface LearningStatusProps {
   learningStatus: LearningStatus | undefined;

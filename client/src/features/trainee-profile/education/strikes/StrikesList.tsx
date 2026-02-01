@@ -4,7 +4,7 @@ import { AvatarWithTooltip } from '../components/AvatarWithTooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MarkdownText from '../../components/MarkdownText';
-import { Strike } from '../../Trainee';
+import { Strike } from '../../../../data/types/Trainee';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 
 interface StrikesListProps {

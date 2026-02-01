@@ -1,4 +1,11 @@
-import { Background, EducationLevel, EnglishLevel, Gender, Pronouns, ResidencyStatus } from '../Trainee';
+import {
+  Background,
+  EducationLevel,
+  EnglishLevel,
+  Gender,
+  Pronouns,
+  ResidencyStatus,
+} from '../../../data/types/Trainee';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 

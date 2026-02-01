@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Test, TestResult, TestType } from '../../Trainee';
+import { Test, TestResult, TestType } from '../../../../data/types/Trainee';
 import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';

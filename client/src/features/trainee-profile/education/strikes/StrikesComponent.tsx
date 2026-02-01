@@ -3,7 +3,7 @@ import { useAddStrike, useDeleteStrike, useEditStrike, useGetStrikes } from './d
 
 import AddIcon from '@mui/icons-material/Add';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
-import { Strike } from '../../Trainee';
+import { Strike } from '../../../../data/types/Trainee';
 import { StrikeDetailsModal } from './StrikeDetailsModal';
 import { StrikesList } from './StrikesList';
 import { useQueryClient } from '@tanstack/react-query';

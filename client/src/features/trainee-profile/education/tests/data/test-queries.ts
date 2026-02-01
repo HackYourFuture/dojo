@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { Test } from '../../../Trainee';
+import { Test } from '../../../../../data/types/Trainee';
 import axios from 'axios';
 
 /**
