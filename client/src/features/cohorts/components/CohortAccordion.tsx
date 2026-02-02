@@ -59,10 +59,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                 <TableCell sx={headerStyle} width={100}>
                   Avg Score
                 </TableCell>
-                <TableCell sx={headerStyle} width={50}>
-                  Strikes
-                </TableCell>
-                <TableCell></TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -90,7 +87,6 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   <TableCell sx={{ color: getScoreColor(trainee.averageTestScore) }}>
                     {trainee.averageTestScore !== null ? trainee.averageTestScore.toFixed(1) : '-'}
                   </TableCell>
-                  <TableCell>{trainee.strikes}</TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
                     <div>
                       {trainee.slackID && (

@@ -20,7 +20,6 @@ interface TraineeSummary {
   linkedIn?: string;
   LearningStatus: string;
   JobPath: string;
-  strikes: number;
   averageTestScore: number | null;
 }
 
@@ -75,7 +74,6 @@ export class CohortsController implements CohortsControllerType {
       linkedIn: trainee.contactInfo.linkedin,
       LearningStatus: trainee.educationInfo.learningStatus,
       JobPath: trainee.employmentInfo.jobPath,
-      strikes: trainee.educationInfo.strikes.length,
       averageTestScore: calculateAverageTestScore(trainee.educationInfo.tests),
     };
   }
