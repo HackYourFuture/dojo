@@ -105,7 +105,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
   };
 
   return (
-    <div style={{ display: 'flex', background: '#fff' }}>
+    <Box style={{ display: 'flex' }} bgcolor={'background.default'}>
       <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
         <ProfileSidebar traineeId={id} />
       </Box>
@@ -138,7 +138,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
         {activeTab === 'employment' && <EmploymentInfo />}
         {activeTab === 'interactions' && <InteractionsInfo />}
       </Box>
-    </div>
+    </Box>
   );
 };
 

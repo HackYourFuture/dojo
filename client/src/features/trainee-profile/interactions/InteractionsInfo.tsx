@@ -69,7 +69,7 @@ const InteractionsInfo = () => {
     <>
       <Box padding="24px" maxWidth={1000} paddingRight={10}>
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" color="black" padding="16px">
+          <Typography variant="h6" padding="16px">
             Interactions ({interactions?.length || 0})
           </Typography>
           <Stack direction="row" spacing={2}>

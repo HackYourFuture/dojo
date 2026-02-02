@@ -42,11 +42,15 @@ const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) => {
                   to={trainee.profilePath}
                   style={{
                     textDecoration: 'none',
-                    color: 'inherit',
                     width: '100%',
                   }}
                 >
-                  <ListItemButton key={trainee.id}>
+                  <ListItemButton
+                    key={trainee.id}
+                    sx={{
+                      color: 'text.primary',
+                    }}
+                  >
                     <ListItemIcon>
                       <Avatar src={trainee.thumbnail ?? ''} sx={{ width: 32, height: 32 }} variant="rounded"></Avatar>
                     </ListItemIcon>

@@ -26,19 +26,42 @@ const SearchPage = () => {
   }, []);
 
   return (
-    <div className="App">
-      <div className="search-bar-container">
-        <Box sx={{ display: 'flex' }}>
-          <img src={HYFLogo} alt="HYF logo" className="hyf-logo-img" />
-        </Box>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        color: '#333',
+      }}
+    >
+      <Box
+        sx={{
+          paddingTop: '20vh',
+          minWidth: '200px',
+          width: '40%',
+          margin: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Box
+          component="img"
+          src={HYFLogo}
+          alt="HYF logo"
+          sx={{
+            height: '70px',
+            padding: '10px',
+            marginBottom: '50px',
+          }}
+        />
         <SearchBar onTextChange={handleTextChange} />
         {isError && error instanceof Error ? (
           <ErrorBox errorMessage={error.message} />
         ) : (
           searchString && <SearchResultsList isLoading={isLoading} data={data || []} />
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

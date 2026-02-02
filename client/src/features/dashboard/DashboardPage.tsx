@@ -37,14 +37,15 @@ const DashboardPage = () => {
   }
 
   if (isError && error instanceof Error) {
-    <Box width="50%" margin="auto" marginTop="2rem">
-      return <ErrorBox errorMessage={error.message} />;
-    </Box>;
-    return <ErrorBox errorMessage={error.message} />;
+    return (
+      <Box width="50%" margin="auto" marginTop="2rem">
+        <ErrorBox errorMessage={error.message} />;
+      </Box>
+    );
   }
 
   return (
-    <Container fixed>
+    <Container fixed sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       <Box my={3} display="flex" alignItems="start" justifyContent="start" p={2}>
         <Stack direction="row" spacing={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
@@ -56,7 +57,7 @@ const DashboardPage = () => {
           </Button>
         </Stack>
       </Box>
-      {data && <DashboardPieChart chartData={data}></DashboardPieChart>}
+      {data && <DashboardPieChart chartData={data} />}
     </Container>
   );
 };

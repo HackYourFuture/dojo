@@ -48,20 +48,22 @@ const ContactInfo = () => {
                 label="Email"
                 type="email"
                 value={editedFields.email || ''}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      {!isEditing && editedFields.email && (
-                        <Link href={'mailto:' + editedFields.email}>
-                          <LinkIcon sx={{ color: 'action.active' }} />
-                        </Link>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-                InputLabelProps={{
-                  shrink: true,
+                slotProps={{
+                  input: {
+                    readOnly: isEditing ? false : true,
+                    endAdornment: (
+                      <InputAdornment position="start">
+                        {!isEditing && editedFields.email && (
+                          <Link href={'mailto:' + editedFields.email}>
+                            <LinkIcon sx={{ color: 'action.active' }} />
+                          </Link>
+                        )}
+                      </InputAdornment>
+                    ),
+                  },
+                  inputLabel: {
+                    shrink: true,
+                  },
                 }}
                 variant={isEditing ? 'outlined' : 'standard'}
                 onChange={handleTextChange}
@@ -94,20 +96,22 @@ const ContactInfo = () => {
                 type="text"
                 placeholder="Format: UXXXXXXXXXX"
                 value={editedFields.slackId || ''}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      {!isEditing && editedFields.slackId && (
-                        <Link href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}>
-                          <LinkIcon sx={{ color: 'action.active' }} />
-                        </Link>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-                InputLabelProps={{
-                  shrink: true,
+                slotProps={{
+                  input: {
+                    readOnly: isEditing ? false : true,
+                    endAdornment: (
+                      <InputAdornment position="start">
+                        {!isEditing && editedFields.slackId && (
+                          <Link href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}>
+                            <LinkIcon sx={{ color: 'action.active' }} />
+                          </Link>
+                        )}
+                      </InputAdornment>
+                    ),
+                  },
+                  inputLabel: {
+                    shrink: true,
+                  },
                 }}
                 variant={isEditing ? 'outlined' : 'standard'}
                 onChange={handleTextChange}
@@ -139,11 +143,13 @@ const ContactInfo = () => {
                 label="Phone"
                 type="tel"
                 value={editedFields.phone || ''}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
+                slotProps={{
+                  input: {
+                    readOnly: isEditing ? false : true,
+                  },
+                  inputLabel: {
+                    shrink: true,
+                  },
                 }}
                 variant={isEditing ? 'outlined' : 'standard'}
                 onChange={handleTextChange}
@@ -173,20 +179,22 @@ const ContactInfo = () => {
                 label="Github Handle"
                 type="text"
                 value={editedFields.githubHandle || ''}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      {!isEditing && editedFields.githubHandle && (
-                        <Link href={'https://github.com/' + editedFields.githubHandle} target="_blank">
-                          <LinkIcon sx={{ color: 'action.active' }} />
-                        </Link>
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-                InputLabelProps={{
-                  shrink: true,
+                slotProps={{
+                  input: {
+                    readOnly: isEditing ? false : true,
+                    endAdornment: (
+                      <InputAdornment position="start">
+                        {!isEditing && editedFields.githubHandle && (
+                          <Link href={'https://github.com/' + editedFields.githubHandle} target="_blank">
+                            <LinkIcon sx={{ color: 'action.active' }} />
+                          </Link>
+                        )}
+                      </InputAdornment>
+                    ),
+                  },
+                  inputLabel: {
+                    shrink: true,
+                  },
                 }}
                 variant={isEditing ? 'outlined' : 'standard'}
                 onChange={handleTextChange}
@@ -219,20 +227,22 @@ const ContactInfo = () => {
             label="Linkedin"
             type="url"
             value={editedFields.linkedin || ''}
-            InputProps={{
-              readOnly: isEditing ? false : true,
-              endAdornment: (
-                <InputAdornment position="start">
-                  {!isEditing && editedFields.linkedin && (
-                    <Link href={editedFields.linkedin} target="_blank">
-                      <LinkIcon sx={{ color: 'action.active' }} />
-                    </Link>
-                  )}
-                </InputAdornment>
-              ),
-            }}
-            InputLabelProps={{
-              shrink: true,
+            slotProps={{
+              input: {
+                readOnly: isEditing ? false : true,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && editedFields.linkedin && (
+                      <Link href={editedFields.linkedin} target="_blank">
+                        <LinkIcon sx={{ color: 'action.active' }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
+              },
+              inputLabel: {
+                shrink: true,
+              },
             }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
@@ -240,7 +250,7 @@ const ContactInfo = () => {
         </FormControl>
       </Box>
 
-      <Typography variant="h6" color="black" padding="5px" width="100%">
+      <Typography variant="h6" padding="5px" width="100%">
         Emergency contact
       </Typography>
 
@@ -268,11 +278,13 @@ const ContactInfo = () => {
                 label="Emergency Contact"
                 type="text"
                 value={editedFields.emergencyContactName || ''}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
+                slotProps={{
+                  input: {
+                    readOnly: isEditing ? false : true,
+                  },
+                  inputLabel: {
+                    shrink: true,
+                  },
                 }}
                 variant={isEditing ? 'outlined' : 'standard'}
                 onChange={handleTextChange}
@@ -304,11 +316,13 @@ const ContactInfo = () => {
                 label="Emergency Contact Phone Number"
                 type="tel"
                 value={editedFields.emergencyContactPhoneNum || ''}
-                InputProps={{
-                  readOnly: isEditing ? false : true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
+                slotProps={{
+                  input: {
+                    readOnly: isEditing ? false : true,
+                  },
+                  inputLabel: {
+                    shrink: true,
+                  },
                 }}
                 variant={isEditing ? 'outlined' : 'standard'}
                 onChange={handleTextChange}

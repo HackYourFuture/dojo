@@ -63,7 +63,6 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
         <List
           sx={{
             width: '100%',
-            bgcolor: 'background.paper',
             overflow: 'auto',
             scrollbarWidth: 'thin',
           }}
@@ -81,7 +80,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
                     disablePadding
                     sx={{
                       paddingBottom: 1,
-                      bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
+                      bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
                     }}
                   >
                     <ListItemAvatar
