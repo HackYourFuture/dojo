@@ -3,7 +3,7 @@ import { StrikeWithReporter, StrikeWithReporterID, Test, Trainee, EmploymentHist
 
 import { TraineeSchema } from '../schemas';
 import { WithMongoID } from '../utils/database';
-import mongoose from 'mongoose';
+import mongoose, { RootFilterQuery } from 'mongoose';
 
 export interface TraineesRepository {
   getAllTrainees(): Promise<Trainee[]>;
@@ -53,12 +53,16 @@ export class MongooseTraineesRepository implements TraineesRepository {
   async getTraineesByCohort(
     fromCohort: number | undefined,
     toCohort: number | undefined,
-    includeNullCohort: boolean = false
+    includeNullCohort = false
   ): Promise<Trainee[]> {
-    let condition: any = { 'educationInfo.currentCohort': { $gte: fromCohort ?? 0, $lte: toCohort ?? 999 } };
+    let condition: RootFilterQuery<Trainee & WithMongoID>;
+    condition = {
+      'educationInfo.currentCohort': { $gte: fromCohort ?? 0, $lte: toCohort ?? 999 },
+    };
     if (includeNullCohort) {
       condition = { $or: [condition, { 'educationInfo.currentCohort': null }] };
     }
+
     return await this.TraineeModel.find(condition)
       .select([
         'thumbnailURL',
@@ -87,7 +91,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
     return await this.TraineeModel.create(trainee);
   }
 
-  async deleteTrainee(id: string): Promise<void> {
+  deleteTrainee(_id: string): Promise<void> {
     throw new Error('Not implemented');
   }
 
@@ -112,7 +116,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return trainee.educationInfo.strikes || [];
+    return this.safeArray(trainee.educationInfo.strikes);
   }
 
   async addStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
@@ -126,7 +130,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.educationInfo.strikes.at(-1) as StrikeWithReporter;
+    return this.getLastItem(updatedTrainee.educationInfo.strikes);
   }
 
   async updateStrike(traineeID: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
@@ -141,7 +145,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.educationInfo.strikes.find((strike) => strike.id === dbStrike._id) as StrikeWithReporter;
+    return this.safeFindItem(updatedTrainee.educationInfo.strikes, (strike) => strike.id === dbStrike._id);
   }
 
   async deleteStrike(traineeID: string, strikeID: string): Promise<void> {
@@ -161,7 +165,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return trainee.interactions || [];
+    return this.safeArray(trainee.interactions);
   }
 
   async addInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter> {
@@ -175,7 +179,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.interactions.at(-1) as InteractionWithReporter;
+    return this.getLastItem(updatedTrainee.interactions);
   }
 
   async updateInteraction(traineeID: string, interaction: InteractionWithReporterID): Promise<InteractionWithReporter> {
@@ -190,9 +194,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Interaction was not found');
     }
 
-    return updatedTrainee.interactions.find(
-      (interaction) => interaction.id === dbInteraction._id
-    ) as InteractionWithReporter;
+    return this.safeFindItem(updatedTrainee.interactions, (interaction) => interaction.id === dbInteraction._id);
   }
 
   async deleteInteraction(traineeID: string, interactionID: string): Promise<void> {
@@ -206,7 +208,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return trainee.educationInfo.tests || [];
+    return this.safeArray(trainee.educationInfo.tests);
   }
 
   async addTest(traineeID: string, test: Test): Promise<Test> {
@@ -220,7 +222,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.educationInfo.tests.at(-1) as Test;
+    return this.getLastItem(updatedTrainee.educationInfo.tests);
   }
 
   async updateTest(traineeID: string, test: Test): Promise<Test> {
@@ -254,7 +256,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return trainee.employmentInfo.employmentHistory || [];
+    return this.safeArray(trainee.employmentInfo.employmentHistory);
   }
 
   async addEmploymentHistory(traineeID: string, employmentHistory: EmploymentHistory): Promise<EmploymentHistory> {
@@ -268,7 +270,7 @@ export class MongooseTraineesRepository implements TraineesRepository {
       throw new Error('Trainee not found');
     }
 
-    return updatedTrainee.employmentInfo.employmentHistory.at(-1) as EmploymentHistory;
+    return this.getLastItem(updatedTrainee.employmentInfo.employmentHistory);
   }
 
   async updateEmploymentHistory(traineeID: string, employmentHistory: EmploymentHistory): Promise<EmploymentHistory> {
@@ -298,5 +300,26 @@ export class MongooseTraineesRepository implements TraineesRepository {
       { _id: traineeID },
       { $pull: { 'employmentInfo.employmentHistory': { _id: employmentHistoryID } } }
     );
+  }
+
+  // ? Reason: It wasn't clear whether the best is to follow linter's suggestions or to ignore them
+  // Therefore, these helper methods are added
+  // the methods currently solves the linter's errors while keeping the code readable and maybe unnecessarily verbose
+  // but can be modified easily to follow the previous code style if needed
+
+  private getLastItem<T>(arr: T[]): T {
+    const item = arr.at(-1);
+    if (!item) throw new Error('Array unexpectedly empty');
+    return item;
+  }
+
+  private safeFindItem<T>(array: T[], predicate: (value: T, index: number, obj: T[]) => boolean): T {
+    const result = array.find(predicate);
+    if (!result) throw new Error('Item not found');
+    return result;
+  }
+
+  private safeArray<T>(array: T[] | undefined | null): T[] {
+    return Array.isArray(array) ? array : [];
   }
 }

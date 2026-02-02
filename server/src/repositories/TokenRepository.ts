@@ -15,7 +15,7 @@ export class MongooseTokenRepository implements TokenRepository {
   }
 
   async addToken(token: Token) {
-    this.TokenModel.create(token);
+    await this.TokenModel.create(token);
   }
 
   async findToken(payload: string): Promise<Token | null> {

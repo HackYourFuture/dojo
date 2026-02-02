@@ -171,7 +171,7 @@ export interface TraineeEmploymentInfo {
 
 export const getDisplayName = (trainee: Trainee): string => {
   const { preferredName, firstName, lastName } = trainee.personalInfo;
-  const name: string = preferredName ? preferredName : firstName;
+  const name: string = preferredName ?? firstName;
   return `${name} ${lastName}`;
 };
 

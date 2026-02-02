@@ -16,22 +16,18 @@ export class TestController implements TestControllerType {
     private readonly notificationService: NotificationService
   ) {}
 
-  async getTests(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getTests(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    try {
-      const tests = await this.traineesRepository.getTests(trainee.id);
-      res.status(200).json(tests);
-    } catch (error: any) {
-      next(error);
-    }
+    const tests = await this.traineesRepository.getTests(trainee.id);
+    res.status(200).json(tests);
   }
 
-  async addTest(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async addTest(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
@@ -43,21 +39,17 @@ export class TestController implements TestControllerType {
     // Validate new test model before creation
     try {
       validateTest(newTest);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
+    } catch (error) {
+      if (error instanceof Error) res.status(400).send(new ResponseError(error.message));
       return;
     }
 
-    try {
-      const test = await this.traineesRepository.addTest(trainee.id, newTest);
-      res.status(201).json(test);
-      this.notificationService.testCreated(trainee, test);
-    } catch (error: any) {
-      next(error);
-    }
+    const test = await this.traineesRepository.addTest(trainee.id, newTest);
+    res.status(201).json(test);
+    await this.notificationService.testCreated(trainee, test);
   }
 
-  async updateTest(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateTest(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
@@ -82,22 +74,16 @@ export class TestController implements TestControllerType {
     // Validate new test model after applying the changes
     try {
       validateTest(testToUpdate);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
+    } catch (error) {
+      if (error instanceof Error) res.status(400).send(new ResponseError(error.message));
       return;
     }
 
-    try {
-      const updatedTest = await this.traineesRepository.updateTest(trainee.id, testToUpdate);
-      res.status(200).json(updatedTest);
-    } catch (error: any) {
-      console.error(error);
-      next(error);
-      return;
-    }
+    const updatedTest = await this.traineesRepository.updateTest(trainee.id, testToUpdate);
+    res.status(200).json(updatedTest);
   }
 
-  async deleteTest(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteTest(req: Request, res: Response): Promise<void> {
     const trainee = await this.traineesRepository.getTrainee(req.params.id);
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
@@ -109,12 +95,7 @@ export class TestController implements TestControllerType {
       return;
     }
 
-    try {
-      await this.traineesRepository.deleteTest(req.params.id, req.params.testID);
-      res.status(204).end();
-    } catch (error: any) {
-      next(error);
-      return;
-    }
+    await this.traineesRepository.deleteTest(req.params.id, req.params.testID);
+    res.status(204).end();
   }
 }

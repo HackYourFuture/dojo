@@ -5,7 +5,7 @@ import * as size from '../utils/fileSize';
 import * as Sentry from '@sentry/node';
 
 const IMAGE_MAX_SIZE = size.MB(10);
-type UploadFileFilter = (req: any, file: Express.Multer.File, callback: multer.FileFilterCallback) => void;
+type UploadFileFilter = (req: unknown, file: Express.Multer.File, callback: multer.FileFilterCallback) => void;
 
 export class UploadServiceError extends Error {
   constructor(message: string) {
@@ -33,23 +33,30 @@ export class UploadService implements UploadServiceType {
     }).single(fieldName);
 
     return new Promise((resolve, reject) => {
-      upload(req, res, (error: any) => {
-        if (error) {
-          if (error instanceof multer.MulterError) {
-            reject(new UploadServiceError(error.message));
-            return;
-          }
-          reject(error);
+      void upload(req, res, (error) => {
+        if (!error) {
+          resolve();
           return;
         }
-        resolve();
+
+        let rejectionReason: Error;
+        if (error instanceof multer.MulterError) {
+          rejectionReason = new UploadServiceError(error.message);
+        } else if (error instanceof Error) {
+          rejectionReason = error;
+        } else {
+          rejectionReason = new Error(String(error));
+        }
+
+        reject(rejectionReason);
+        return;
       });
     });
   }
 
   cleanupTempFiles(): void {
     console.log(`Cleaning up temp directory: ${this.tempDir}`);
-    fs.rm(this.tempDir, { recursive: true, force: true }, (error: any) => {
+    fs.rm(this.tempDir, { recursive: true, force: true }, (error) => {
       if (error) {
         Sentry.captureException(error);
       }
@@ -57,7 +64,7 @@ export class UploadService implements UploadServiceType {
   }
 
   private get imageFileFilter(): UploadFileFilter {
-    return (_: any, file: Express.Multer.File, callback: multer.FileFilterCallback) => {
+    return (_: unknown, file: Express.Multer.File, callback: multer.FileFilterCallback) => {
       const isImage = file.mimetype.toLocaleLowerCase().startsWith('image/');
       if (isImage) {
         callback(null, isImage);
