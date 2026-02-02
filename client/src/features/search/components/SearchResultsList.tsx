@@ -39,7 +39,7 @@ const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) => {
             return (
               <ListItem disablePadding key={trainee.id}>
                 <Link
-                  to={trainee.profileURL}
+                  to={trainee.profilePath}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',

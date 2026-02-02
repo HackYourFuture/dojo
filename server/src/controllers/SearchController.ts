@@ -16,7 +16,7 @@ interface SearchResult {
   id: string;
   name: string;
   thumbnail: string | null;
-  profileURL: string;
+  profilePath: string;
   cohort: number | null;
   searchScore: number;
 }
@@ -70,7 +70,6 @@ export class SearchController implements SearchControllerType {
     // In an ideal scenario we should have a complex query to filter on the DB side.
     // However, because our dataset is not large, we can get away with this for now.
     const trainees = await this.traineesRepository.getAllTrainees();
-
     // Process all trainees, calculate the search score and return the top N results
     return trainees
       .map((trainee) => {
@@ -79,7 +78,7 @@ export class SearchController implements SearchControllerType {
           name: `${trainee.displayName}`,
           thumbnail: trainee.thumbnailURL ?? null,
           cohort: trainee.educationInfo.currentCohort ?? null,
-          profileURL: trainee.profileURL,
+          profilePath: trainee.profilePath,
           searchScore: this.calculateScore(trainee, keywords),
         };
       })

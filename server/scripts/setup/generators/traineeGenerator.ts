@@ -39,7 +39,7 @@ export const generateTrainee = (): Trainee => {
     displayName: '',
     createdAt: new Date(),
     updatedAt: new Date(),
-    profileURL: '',
+    profilePath: '',
     personalInfo,
     contactInfo,
     educationInfo,

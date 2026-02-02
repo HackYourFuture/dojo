@@ -17,10 +17,10 @@ export interface UpdateChange {
 }
 
 export interface NotificationService {
-  traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): Promise<void>;
-  interactionCreated(trainee: Trainee, interaction: InteractionWithReporter): Promise<void>;
-  strikeCreated(trainee: Trainee, strike: StrikeWithReporter): Promise<void>;
-  testCreated(trainee: Trainee, test: Test): Promise<void>;
+  traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): void;
+  interactionCreated(trainee: Trainee, interaction: InteractionWithReporter): void;
+  strikeCreated(trainee: Trainee, strike: StrikeWithReporter): void;
+  testCreated(trainee: Trainee, test: Test): void;
 }
 
 export interface SlackNotificationServiceConfig {
@@ -40,7 +40,7 @@ export class SlackNotificationService implements NotificationService {
       socketMode: false,
       deferInitialization: true,
     });
-    this.initializeSlack();
+    this.initializeSlack().catch(Sentry.captureException);
   }
 
   private async initializeSlack(): Promise<void> {
@@ -48,41 +48,41 @@ export class SlackNotificationService implements NotificationService {
       await this.slack.init();
       await this.slack.start();
       this.initialized = true;
-    } catch (error) {
-      console.warn(`⚠️ Slack is not initialized. Slack notifications will not work. (${error}).`);
+    } catch (error: unknown) {
+      console.warn(`⚠️ Slack is not initialized. Slack notifications will not work. (${String(error)}).`);
       console.warn('If you do not need to use Slack notifications, you can ignore this warning.\n');
     }
   }
 
-  async traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): Promise<void> {
+  traineeUpdated(trainee: Trainee, changes: UpdateChange[], user: AuthenticatedUser): void {
     const message = [`✏️ *New update* for <${getProfileURL(trainee)}|${trainee.displayName}>`, `*By:* ${user.name}`];
     changes.forEach((change) => {
       message.push(`> - *${change.fieldName}*: ${change.previousValue} → ${change.newValue}`);
     });
-    this.postMessageToSlack(message.join('\n'));
+    this.postMessageToSlack(message.join('\n')).catch(Sentry.captureException);
   }
 
-  async interactionCreated(trainee: Trainee, interaction: InteractionWithReporter): Promise<void> {
+  interactionCreated(trainee: Trainee, interaction: InteractionWithReporter): void {
     const message = [
       `📝 *New interaction* for <${getProfileURL(trainee)}|${trainee.displayName}>`,
       `*By:* ${interaction.reporter.name}`,
       `[${interaction.type}] *${interaction.title}*`,
     ].join('\n');
 
-    this.postMessageToSlack(message);
+    this.postMessageToSlack(message).catch(Sentry.captureException);
   }
 
-  async strikeCreated(trainee: Trainee, strike: StrikeWithReporter): Promise<void> {
+  strikeCreated(trainee: Trainee, strike: StrikeWithReporter): void {
     const message = [
       `🛑 *New strike* for <${getProfileURL(trainee)}|${trainee.displayName}>`,
       `*By:* ${strike.reporter.name}`,
       `*Reason:* ${strike.reason}`,
     ].join('\n');
 
-    this.postMessageToSlack(message);
+    this.postMessageToSlack(message).catch(Sentry.captureException);
   }
 
-  async testCreated(trainee: Trainee, test: Test): Promise<void> {
+  testCreated(trainee: Trainee, test: Test): void {
     let resultIcon = '';
     if (test.result === TestResult.Failed) {
       resultIcon = '❌';
@@ -96,14 +96,14 @@ export class SlackNotificationService implements NotificationService {
 
     let message = [
       `📊 *New test result* for <${getProfileURL(trainee)}|${trainee.displayName}>`,
-      `${test.type}`,
+      test.type,
       `${resultIcon} ${test.result}`,
     ].join('\n');
 
     if (test.score) {
       message += ` (Score: ${test.score})`;
     }
-    this.postMessageToSlack(message);
+    this.postMessageToSlack(message).catch(Sentry.captureException);
   }
 
   private async postMessageToSlack(message: string): Promise<void> {
