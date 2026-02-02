@@ -995,8 +995,6 @@ paths:
                             $ref: '#/components/schemas/LearningStatus'
                           jobPath:
                             $ref: '#/components/schemas/JobPath'
-                          strikes:
-                            type: number
 
   /geo/cities:
     get:
