@@ -75,7 +75,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     <TraineeAvatar imageURL={trainee.thumbnailURL ?? ''} altText={trainee.displayName}></TraineeAvatar>
                   </TableCell>
                   <TableCell>{trainee.displayName}</TableCell>
-                  <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                  <TableCell sx={{ whiteSpace: 'nowrap', minWidth: '240px' }}>
                     {trainee.LearningStatus === LearningStatus.Graduated ? (
                       <SidebarJobPath jobPath={trainee.JobPath}></SidebarJobPath>
                     ) : (
@@ -87,7 +87,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   <TableCell sx={{ color: getScoreColor(trainee.averageTestScore) }}>
                     {trainee.averageTestScore !== null ? trainee.averageTestScore.toFixed(1) : '-'}
                   </TableCell>
-                  <TableCell sx={{ whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
+                  <TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'end' }} onClick={(e) => e.stopPropagation()}>
                     <div>
                       {trainee.slackID && (
                         <IconButton aria-label="Slack Id" href={`slack://user?team=T0EJTUQ87&id=${trainee.slackID}`}>
@@ -96,7 +96,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                       )}
                       {trainee.email && (
                         <IconButton aria-label="email" href={`mailto:${trainee.email}`}>
-                          <EmailIcon sx={{ color: 'action.active', mr: 1 }} />
+                          <EmailIcon sx={{ color: 'action.active' }} />
                         </IconButton>
                       )}
                       {trainee.githubHandle && (
@@ -105,12 +105,12 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                           href={`https://github.com/${trainee.githubHandle}`}
                           target="_blank"
                         >
-                          <GitHubIcon sx={{ color: 'action.active', mr: 1 }} />
+                          <GitHubIcon sx={{ color: 'action.active' }} />
                         </IconButton>
                       )}
                       {trainee.linkedIn && (
                         <IconButton aria-label="LinkedIn URL" href={trainee.linkedIn} target="_blank">
-                          <LinkedInIcon sx={{ color: 'action.active', mr: 1 }} />
+                          <LinkedInIcon sx={{ color: 'action.active' }} />
                         </IconButton>
                       )}
                     </div>

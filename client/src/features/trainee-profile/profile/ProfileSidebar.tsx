@@ -33,7 +33,7 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
       gap={2}
       color="black"
       bgcolor="var(--hyf-beige)"
-      height="100vh"
+      height="95vh"
       paddingX={4}
       paddingY={4}
     >
