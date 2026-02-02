@@ -61,7 +61,7 @@ export class DefaultUserController implements UserController {
    * 200 | 400 | 404 | 500
    */
   async updateUser(req: Request, res: Response) {
-    const userId = req.params.id;
+    const userId = String(req.params.id);
 
     //validate
     const userUpdates = UpdateUserSchema.safeParse(req.body);
@@ -94,7 +94,7 @@ export class DefaultUserController implements UserController {
    * 204 | 404 | 500
    */
   async deleteUser(req: Request, res: Response) {
-    const userId = req.params.id;
+    const userId = String(req.params.id);
 
     const deletedUser = await this.userRepository.deleteUser(userId);
     if (!deletedUser) {

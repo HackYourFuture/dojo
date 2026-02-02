@@ -34,7 +34,7 @@ export class ProfilePictureController implements ProfilePictureControllerType {
   }
 
   async setProfilePicture(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -109,7 +109,7 @@ export class ProfilePictureController implements ProfilePictureControllerType {
   }
 
   async deleteProfilePicture(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;

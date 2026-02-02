@@ -14,7 +14,7 @@ export class EmploymentHistoryController implements EmploymentHistoryControllerT
 
   async getEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const traineeID = req.params.id;
+      const traineeID = String(req.params.id);
       const employmentHistory = await this.traineesRepository.getEmploymentHistory(traineeID);
       res.json(employmentHistory);
     } catch (error: any) {
@@ -23,7 +23,7 @@ export class EmploymentHistoryController implements EmploymentHistoryControllerT
   }
 
   async addEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const traineeID = req.params.id;
+    const traineeID = String(req.params.id);
     const employmentHistoryData: EmploymentHistory = req.body;
     try {
       validateEmploymentHistory(employmentHistoryData);
@@ -41,14 +41,14 @@ export class EmploymentHistoryController implements EmploymentHistoryControllerT
   }
 
   async updateEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
     const employmentHistoryData = trainee.employmentInfo.employmentHistory.find(
-      (history) => history.id === req.params.employmentHistoryID
+      (history) => history.id === String(req.params.employmentHistoryID)
     );
     if (!employmentHistoryData) {
       res.status(404).send(new ResponseError('Employment history was not found'));
@@ -88,13 +88,13 @@ export class EmploymentHistoryController implements EmploymentHistoryControllerT
 
   async deleteEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const trainee = await this.traineesRepository.getTrainee(req.params.id);
+      const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
       if (!trainee) {
         res.status(404).send(new ResponseError('Trainee not found'));
         return;
       }
 
-      const employmentHistoryID = req.params.employmentHistoryID;
+      const employmentHistoryID = String(req.params.employmentHistoryID);
       if (!trainee.employmentInfo.employmentHistory.find((history) => history.id === employmentHistoryID)) {
         res.status(404).send(new ResponseError('Employment history not found'));
         return;
