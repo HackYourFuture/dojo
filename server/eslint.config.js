@@ -22,7 +22,14 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-warning-comments': [
+        'warn',
+        {
+          terms: ['todo', 'fixme'],
+          location: 'start',
+        },
+      ],
     },
   }
 );

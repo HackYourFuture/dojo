@@ -1,3 +1,4 @@
+import z from 'zod';
 import { DisplayUser } from './User';
 
 export enum InteractionType {
@@ -14,7 +15,7 @@ export enum InteractionType {
 }
 
 export interface Interaction {
-  readonly id: string;
+  readonly id?: string;
   date: Date;
   type: InteractionType;
   reporterID: string;
@@ -26,19 +27,20 @@ export interface Interaction {
 export type InteractionWithReporter = Interaction & { reporter: DisplayUser };
 
 // For database storage
+// ! reporterID is already part of the interface Interaction?
 export type InteractionWithReporterID = Interaction & { reporterID: string };
 
-export const validateInteraction = (interaction: InteractionWithReporterID): void => {
-  if (!interaction.date) {
-    throw new Error('Interaction date is required');
-  }
-  if (!interaction.reporterID) {
-    throw new Error('Interaction reporter ID is required');
-  }
-  if (!interaction.details) {
-    throw new Error('Interaction details are required');
-  }
-  if (!Object.values(InteractionType).includes(interaction.type)) {
-    throw new Error(`Unknown interaction type [${Object.values(InteractionType)}]`);
-  }
-};
+export const InteractionTypeSchema = z.enum(InteractionType);
+
+export const InteractionSchema = z.object({
+  id: z.string(),
+  date: z.date(),
+  type: InteractionTypeSchema,
+  reporterID: z.string(),
+  title: z.string(),
+  details: z.string(),
+});
+
+export const InteractionInputSchema = InteractionSchema.partial({
+  id: true,
+});

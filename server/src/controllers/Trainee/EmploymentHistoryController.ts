@@ -1,109 +1,93 @@
-import { Request, Response, NextFunction } from 'express';
-import { ResponseError, EmploymentHistory, validateEmploymentHistory } from '../../models';
+import { Request, Response, RequestHandler } from 'express';
+import { EmploymentHistorySchema, Trainee, EmploymentHistory } from '../../models';
 import { TraineesRepository } from '../../repositories';
+import { BadRequestError, NotFoundError } from '../../utils/httpErrors';
+import { TraineeHelper } from './TraineeHelper';
 
 export interface EmploymentHistoryControllerType {
-  getEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void>;
-  addEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void>;
-  updateEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void>;
-  deleteEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getEmploymentHistory: RequestHandler;
+  addEmploymentHistory: RequestHandler;
+  updateEmploymentHistory: RequestHandler;
+  deleteEmploymentHistory: RequestHandler;
 }
 
 export class EmploymentHistoryController implements EmploymentHistoryControllerType {
-  constructor(private readonly traineesRepository: TraineesRepository) {}
+  constructor(
+    private readonly traineesRepository: TraineesRepository,
+    private readonly traineeHelper: TraineeHelper
+  ) {}
 
-  async getEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const traineeID = req.params.id;
-      const employmentHistory = await this.traineesRepository.getEmploymentHistory(traineeID);
-      res.json(employmentHistory);
-    } catch (error: any) {
-      next(error);
-    }
-  }
-
-  async addEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getEmploymentHistory(req: Request, res: Response): Promise<void> {
+    // input
     const traineeID = req.params.id;
-    const employmentHistoryData: EmploymentHistory = req.body;
-    try {
-      validateEmploymentHistory(employmentHistoryData);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
-    }
 
-    try {
-      const newEmploymentHistory = await this.traineesRepository.addEmploymentHistory(traineeID, employmentHistoryData);
-      res.status(201).json(newEmploymentHistory);
-    } catch (error: any) {
-      next(error);
-    }
+    // check if trainee exists
+    await this.traineeHelper.getTraineeOrThrow(traineeID);
+
+    // get
+    const employmentHistory = await this.traineesRepository.getEmploymentHistory(traineeID);
+    res.json(employmentHistory);
   }
 
-  async updateEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
-    if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
-    }
+  async addEmploymentHistory(req: Request, res: Response): Promise<void> {
+    // input
+    const traineeID = req.params.id;
 
-    const employmentHistoryData = trainee.employmentInfo.employmentHistory.find(
-      (history) => history.id === req.params.employmentHistoryID
+    // validate
+    const parsed = EmploymentHistorySchema.safeParse(req.body);
+    if (!parsed.success) throw new BadRequestError(parsed.error, 'stringify');
+    const historyToAdd = parsed.data;
+
+    // check if trainee exists
+    await this.traineeHelper.getTraineeOrThrow(traineeID);
+
+    // add
+    const addedEmploymentHistory = await this.traineesRepository.addEmploymentHistory(traineeID, historyToAdd);
+    res.status(201).json(addedEmploymentHistory);
+  }
+
+  async updateEmploymentHistory(req: Request, res: Response): Promise<void> {
+    // input
+    const traineeID = req.params.id;
+    const employmentHistoryID = req.params.employmentHistoryID;
+
+    // validate
+    const parsed = EmploymentHistorySchema.safeParse(req.body);
+    if (!parsed.success) throw new BadRequestError(parsed.error, 'stringify');
+    const historyToUpdate = parsed.data;
+
+    // check if trainee and employment history exists
+    const trainee = await this.traineeHelper.getTraineeOrThrow(traineeID);
+    this.getEmploymentHistoryOrThrow(trainee, employmentHistoryID);
+
+    // update
+    const updatedEmploymentHistory = await this.traineesRepository.updateEmploymentHistory(traineeID, historyToUpdate);
+    res.json(updatedEmploymentHistory);
+  }
+
+  async deleteEmploymentHistory(req: Request, res: Response): Promise<void> {
+    // input
+    const traineeID = req.params.id;
+    const employmentHistoryID = req.params.employmentHistoryID;
+
+    // check if trainee and employment history exists
+    const trainee = await this.traineeHelper.getTraineeOrThrow(traineeID);
+    this.getEmploymentHistoryOrThrow(trainee, employmentHistoryID);
+
+    // delete
+    await this.traineesRepository.deleteEmploymentHistory(traineeID, employmentHistoryID);
+    res.status(204).send();
+  }
+
+  /**
+   * Helper method to get employment history or throw NotFoundError
+   */
+  private getEmploymentHistoryOrThrow(trainee: Trainee, employmentHistoryID: string): EmploymentHistory {
+    const employmentHistory = trainee.employmentInfo.employmentHistory.find(
+      (history) => history.id === employmentHistoryID
     );
-    if (!employmentHistoryData) {
-      res.status(404).send(new ResponseError('Employment history was not found'));
-      return;
-    }
 
-    const historyToUpdate: EmploymentHistory = {
-      id: employmentHistoryData.id,
-      type: req.body.type,
-      companyName: req.body.companyName,
-      role: req.body.role,
-      startDate: new Date(req.body.startDate),
-      endDate: req.body.endDate ? new Date(req.body.endDate) : undefined,
-      feeCollected: req.body.feeCollected,
-      feeAmount: req.body.feeAmount,
-      comments: req.body.comments,
-    };
-
-    try {
-      validateEmploymentHistory(historyToUpdate);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
-    }
-
-    try {
-      const updatedEmploymentHistory = await this.traineesRepository.updateEmploymentHistory(
-        trainee.id,
-        historyToUpdate
-      );
-
-      res.json(updatedEmploymentHistory);
-    } catch (error: any) {
-      next(error);
-    }
-  }
-
-  async deleteEmploymentHistory(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const trainee = await this.traineesRepository.getTrainee(req.params.id);
-      if (!trainee) {
-        res.status(404).send(new ResponseError('Trainee not found'));
-        return;
-      }
-
-      const employmentHistoryID = req.params.employmentHistoryID;
-      if (!trainee.employmentInfo.employmentHistory.find((history) => history.id === employmentHistoryID)) {
-        res.status(404).send(new ResponseError('Employment history not found'));
-        return;
-      }
-
-      await this.traineesRepository.deleteEmploymentHistory(trainee.id, employmentHistoryID);
-      res.status(204).send();
-    } catch (error: any) {
-      next(error);
-    }
+    if (!employmentHistory) throw new NotFoundError('Employment history not found');
+    return employmentHistory;
   }
 }
