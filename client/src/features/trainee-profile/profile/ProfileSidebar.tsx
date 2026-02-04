@@ -32,7 +32,7 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
       alignItems="center"
       gap={2}
       color="black"
-      bgcolor="var(--hyf-beige)"
+      bgcolor="hyfBeige.main"
       height="95vh"
       paddingX={4}
       paddingY={4}
@@ -44,7 +44,7 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
 
       <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
         {/* Name */}
-        <Typography variant="h6" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold" color="text.primary">
           {data?.displayName}
         </Typography>
         {/* Pronouns */}

@@ -66,7 +66,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 alignItems="flex-start"
                 disablePadding
                 sx={{
-                  bgcolor: index % 2 === 0 ? '#f8f9fa' : 'background.paper',
+                  bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
                 }}
               >
                 <ListItemAvatar

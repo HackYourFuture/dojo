@@ -178,7 +178,7 @@ export const EmploymentInfo = () => {
       <div style={{ width: '100%' }}>
         {/* Employment history */}
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" color="black" padding="16px">
+          <Typography variant="h6" padding="16px">
             Employment history ({editedFields?.employmentHistory.length || 0})
           </Typography>
         </Box>

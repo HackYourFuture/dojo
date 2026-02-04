@@ -38,17 +38,22 @@ const SearchBar = ({ onTextChange }: SearchBarProps) => {
     <Box sx={{ display: 'flex', width: 1 }}>
       <TextField
         variant="outlined"
+        sx={{
+          backgroundColor: 'background.dark',
+        }}
         placeholder="Search trainee..."
         fullWidth
         autoFocus
         autoComplete="off"
         onChange={(e) => handleChange(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          },
         }}
       />
     </Box>

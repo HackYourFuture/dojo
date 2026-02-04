@@ -36,7 +36,7 @@ export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
           <PieChart
             series={[
               {
-                arcLabel: (item) => `${item.percent}%`,
+                arcLabel: (item) => `${(item as unknown as ChartData).percent}%`,
                 arcLabelMinAngle: 45,
                 data: pie as MakeOptional<PieValueType, 'id'>[],
               },

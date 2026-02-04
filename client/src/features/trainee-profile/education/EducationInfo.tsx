@@ -185,7 +185,7 @@ const EducationInfo = () => {
         </FormControl>
       </div>
       <div style={{ width: '100%' }}>
-        <Typography variant="h6" color="black" padding="16px">
+        <Typography variant="h6" padding="16px">
           Mentors
         </Typography>
 
