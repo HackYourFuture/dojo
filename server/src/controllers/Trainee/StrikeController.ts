@@ -20,7 +20,7 @@ export class StrikeController implements StrikeControllerType {
   ) {}
 
   async getStrikes(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -35,7 +35,7 @@ export class StrikeController implements StrikeControllerType {
   }
 
   async addStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -59,7 +59,7 @@ export class StrikeController implements StrikeControllerType {
     }
 
     try {
-      const strike = await this.traineesRepository.addStrike(req.params.id, newStrike);
+      const strike = await this.traineesRepository.addStrike(String(req.params.id), newStrike);
       res.status(201).json(strike);
       this.notificationService.strikeCreated(trainee, strike);
     } catch (error: any) {
@@ -68,13 +68,13 @@ export class StrikeController implements StrikeControllerType {
   }
 
   async updateStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    const strike = trainee.educationInfo.strikes.find((strike) => strike.id === req.params.strikeId);
+    const strike = trainee.educationInfo.strikes.find((strike) => strike.id === String(req.params.strikeId));
     if (!strike) {
       res.status(404).send(new ResponseError('Strike not found'));
       return;
@@ -82,7 +82,7 @@ export class StrikeController implements StrikeControllerType {
 
     const user = res.locals.user as AuthenticatedUser;
     const strikeToUpdate: StrikeWithReporterID = {
-      id: req.params.strikeId,
+      id: String(req.params.strikeId),
       reason: req.body.reason,
       date: req.body.date,
       comments: req.body.comments,
@@ -98,7 +98,7 @@ export class StrikeController implements StrikeControllerType {
     }
 
     try {
-      const updatedStrike = await this.traineesRepository.updateStrike(req.params.id, strikeToUpdate);
+      const updatedStrike = await this.traineesRepository.updateStrike(String(req.params.id), strikeToUpdate);
       res.status(200).json(updatedStrike);
     } catch (error: any) {
       next(error);
@@ -107,13 +107,13 @@ export class StrikeController implements StrikeControllerType {
   }
 
   async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
     try {
-      await this.traineesRepository.deleteStrike(req.params.id, req.params.strikeId);
+      await this.traineesRepository.deleteStrike(String(req.params.id), String(req.params.strikeId));
       res.status(204).end();
     } catch (error: any) {
       next(error);

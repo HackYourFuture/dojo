@@ -17,7 +17,7 @@ export class TestController implements TestControllerType {
   ) {}
 
   async getTests(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -32,7 +32,7 @@ export class TestController implements TestControllerType {
   }
 
   async addTest(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -58,20 +58,20 @@ export class TestController implements TestControllerType {
   }
 
   async updateTest(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    const test = trainee.educationInfo.tests.find((test) => test.id === req.params.testID);
+    const test = trainee.educationInfo.tests.find((test) => test.id === String(req.params.testID));
     if (!test) {
       res.status(404).send(new ResponseError('Test not found'));
       return;
     }
 
     const testToUpdate: Test = {
-      id: req.params.testID,
+      id: String(req.params.testID),
       date: req.body.date,
       type: req.body.type,
       result: req.body.result,
@@ -98,19 +98,19 @@ export class TestController implements TestControllerType {
   }
 
   async deleteTest(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    if (!trainee.educationInfo.tests.find((test) => test.id === req.params.testID)) {
+    if (!trainee.educationInfo.tests.find((test) => test.id === String(req.params.testID))) {
       res.status(404).send(new ResponseError('Test not found'));
       return;
     }
 
     try {
-      await this.traineesRepository.deleteTest(req.params.id, req.params.testID);
+      await this.traineesRepository.deleteTest(String(req.params.id), String(req.params.testID));
       res.status(204).end();
     } catch (error: any) {
       next(error);

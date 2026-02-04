@@ -16,7 +16,7 @@ export class LetterController implements LetterControllerType {
 
   async generateLetter(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { type } = req.body as { type: LetterType };
-    const traineeID = req.params.id;
+    const traineeID = String(req.params.id);
 
     const trainee = await this.traineeRepository.getTrainee(traineeID);
     if (!trainee) {

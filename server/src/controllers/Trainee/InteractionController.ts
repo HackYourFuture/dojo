@@ -18,7 +18,7 @@ export class InteractionController implements InteractionControllerType {
   ) {}
 
   async getInteractions(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -33,7 +33,7 @@ export class InteractionController implements InteractionControllerType {
   }
 
   async addInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
@@ -57,7 +57,7 @@ export class InteractionController implements InteractionControllerType {
     }
 
     try {
-      const interaction = await this.traineesRepository.addInteraction(req.params.id, newInteraction);
+      const interaction = await this.traineesRepository.addInteraction(String(req.params.id), newInteraction);
       res.status(201).json(interaction);
       this.notificationService.interactionCreated(trainee, interaction);
     } catch (error: any) {
@@ -66,13 +66,13 @@ export class InteractionController implements InteractionControllerType {
   }
 
   async updateInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    const interaction = trainee.interactions.find((interaction) => interaction.id === req.params.interactionID);
+    const interaction = trainee.interactions.find((interaction) => interaction.id === String(req.params.interactionID));
     if (!interaction) {
       res.status(404).send(new ResponseError('Interaction not found'));
       return;
@@ -80,7 +80,7 @@ export class InteractionController implements InteractionControllerType {
 
     const user = res.locals.user as AuthenticatedUser;
     const interactionToUpdate: InteractionWithReporterID = {
-      id: req.params.interactionID,
+      id: String(req.params.interactionID),
       date: req.body.date,
       type: req.body.type,
       title: req.body.title,
@@ -97,7 +97,10 @@ export class InteractionController implements InteractionControllerType {
     }
 
     try {
-      const updatedInteraction = await this.traineesRepository.updateInteraction(req.params.id, interactionToUpdate);
+      const updatedInteraction = await this.traineesRepository.updateInteraction(
+        String(req.params.id),
+        interactionToUpdate
+      );
       res.status(200).json(updatedInteraction);
     } catch (error: any) {
       console.error(error);
@@ -107,19 +110,19 @@ export class InteractionController implements InteractionControllerType {
   }
 
   async deleteInteraction(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
     }
 
-    if (!trainee.interactions.find((interaction) => interaction.id === req.params.interactionID)) {
+    if (!trainee.interactions.find((interaction) => interaction.id === String(req.params.interactionID))) {
       res.status(404).send(new ResponseError('Interaction not found'));
       return;
     }
 
     try {
-      await this.traineesRepository.deleteInteraction(req.params.id, req.params.interactionID);
+      await this.traineesRepository.deleteInteraction(String(req.params.id), String(req.params.interactionID));
       res.status(204).end();
     } catch (error: any) {
       next(error);

@@ -18,7 +18,7 @@ export class TraineeController implements TraineeControllerType {
   ) {}
 
   async getTrainee(req: Request, res: Response, next: NextFunction) {
-    const traineeId = req.params.id;
+    const traineeId = String(req.params.id);
     try {
       const trainee = await this.traineesRepository.getTrainee(traineeId);
       if (!trainee) {
@@ -70,7 +70,7 @@ export class TraineeController implements TraineeControllerType {
   }
 
   async updateTrainee(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(req.params.id);
+    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
     if (!trainee) {
       res.status(404).send(new ResponseError('Trainee not found'));
       return;
