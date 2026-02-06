@@ -14,7 +14,7 @@ export const TestsComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const [modalError, setModalError] = useState<string>('');
-  const [testToEdit, setTestToEdit] = useState<Test | null>(null);
+  const [initialTest, setInitialTest] = useState<Test | null>(null);
   const { traineeId } = useTraineeProfileContext();
   const { mutate: addTest, isPending: addTestLoading } = useAddTest(traineeId);
   const { mutate: deleteTest, isPending: deleteTestLoading, error: deleteTestError } = useDeleteTest(traineeId);
@@ -27,7 +27,7 @@ export const TestsComponent = () => {
   const handleSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['tests', traineeId] });
     setIsModalOpen(false);
-    setTestToEdit(null);
+    setInitialTest(null);
   };
 
   const getErrorMessage = (error: Error | unknown) => {
@@ -37,11 +37,13 @@ export const TestsComponent = () => {
   const onClickEdit = (id: string) => {
     const test = tests?.find((test) => test.id === id) || null;
 
-    setTestToEdit(test);
+    setInitialTest(test);
     setIsModalOpen(true);
   };
 
   const onConfirmAdd = async (test: Test) => {
+    if (modalError) setModalError('');
+
     addTest(test, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -51,6 +53,7 @@ export const TestsComponent = () => {
   };
 
   const onConfirmEdit = (test: Test) => {
+    if (modalError) setModalError('');
     editTest(test, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -76,7 +79,7 @@ export const TestsComponent = () => {
    */
   const closeModal = () => {
     setIsModalOpen(false);
-    setTestToEdit(null);
+    setInitialTest(null);
     setModalError('');
   };
 
@@ -127,13 +130,14 @@ export const TestsComponent = () => {
         )}
 
         <TestDetailsModal
+          key={initialTest?.id || `add-test-${isModalOpen}`} // Force remount to reset internal state when opening for a new test
           isLoading={addTestLoading || editTestLoading}
           error={modalError}
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirmAdd={onConfirmAdd}
           onConfirmEdit={onConfirmEdit}
-          testToEdit={testToEdit}
+          initialTest={initialTest}
         />
       </div>
     </>

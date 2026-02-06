@@ -15,10 +15,10 @@ import {
   Typography,
 } from '@mui/material';
 import { Test, TestResult, TestType } from '../../../../data/types/Trainee';
-import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
+import { useState } from 'react';
 
 type TestDetailsModalProps = {
   isOpen: boolean;
@@ -27,7 +27,7 @@ type TestDetailsModalProps = {
   onClose: () => void;
   onConfirmAdd: (t: Test) => void;
   onConfirmEdit: (t: Test) => void;
-  testToEdit: Test | null;
+  initialTest: Test | null;
 };
 
 export const TestDetailsModal = ({
@@ -37,48 +37,25 @@ export const TestDetailsModal = ({
   onClose,
   onConfirmAdd,
   onConfirmEdit,
-  testToEdit,
+  initialTest,
 }: TestDetailsModalProps) => {
   const [testFields, setTestFields] = useState<Partial<Test>>({
-    id: '',
-    date: new Date(),
-    type: undefined,
-    score: undefined,
-    result: undefined,
-    comments: '',
+    id: initialTest?.id || '',
+    date: initialTest?.date || new Date(),
+    type: initialTest?.type || undefined,
+    score: initialTest?.score || undefined,
+    result: initialTest?.result || undefined,
+    comments: initialTest?.comments || '',
   });
 
   const [typeError, setTypeError] = useState(false);
   const [resultError, setResultError] = useState(false);
   const [scoreError, setScoreError] = useState(false);
 
-  const isEditMode = Boolean(testToEdit);
-
-  useEffect(() => {
-    if (testToEdit) {
-      setTestFields(testToEdit);
-    } else {
-      resetForm();
-    }
-  }, [testToEdit]);
-
-  const resetForm = () => {
-    setTestFields({
-      id: '',
-      date: new Date(),
-      type: undefined,
-      score: undefined,
-      result: undefined,
-      comments: '',
-    });
-    setTypeError(false);
-    setResultError(false);
-    setScoreError(false);
-  };
+  const isEditMode = Boolean(initialTest);
 
   const handleClose = () => {
     onClose();
-    resetForm();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +98,6 @@ export const TestDetailsModal = ({
 
     if (isEditMode) onConfirmEdit(testFields as Test);
     else onConfirmAdd(testFields as Test);
-    resetForm();
   };
 
   return (

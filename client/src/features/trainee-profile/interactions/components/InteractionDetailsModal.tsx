@@ -12,12 +12,12 @@ import {
   Typography,
 } from '@mui/material';
 import { Interaction, InteractionType } from '../Interactions';
-import { useEffect, useState } from 'react';
 
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
+import { useState } from 'react';
 
 const types = Object.values(InteractionType);
 
@@ -28,7 +28,7 @@ type InteractionDetailsModalProps = {
   onClose: () => void;
   onConfirmAdd: (t: Interaction) => void;
   onConfirmEdit: (t: Interaction) => void;
-  interactionToEdit: Interaction | null;
+  initialInteraction: Interaction | null;
 };
 
 export const InteractionDetailsModal = ({
@@ -38,51 +38,25 @@ export const InteractionDetailsModal = ({
   onClose,
   onConfirmAdd,
   onConfirmEdit,
-  interactionToEdit,
+  initialInteraction,
 }: InteractionDetailsModalProps) => {
   const [interactionFields, setInteractionFields] = useState<Partial<Interaction>>({
-    id: '',
-    date: new Date(),
-    type: undefined,
-    title: '',
-    details: '',
-    reporter: undefined,
+    id: initialInteraction?.id || '',
+    date: initialInteraction?.date || new Date(),
+    type: initialInteraction?.type || undefined,
+    title: initialInteraction?.title || '',
+    details: initialInteraction?.details || '',
+    reporter: initialInteraction?.reporter || undefined,
   });
 
   const [typeError, setTypeError] = useState(false);
   const [detailsError, setDetailsError] = useState(false);
   const [titleError, setTitleError] = useState(false);
 
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (interactionToEdit) {
-      setInteractionFields(interactionToEdit);
-      setIsEditMode(true);
-      return;
-    } else {
-      setIsEditMode(false);
-    }
-    resetForm();
-  }, [interactionToEdit]);
-
-  const resetForm = () => {
-    setInteractionFields({
-      id: '',
-      date: new Date(),
-      type: undefined,
-      title: '',
-      details: '',
-      reporter: undefined,
-    });
-    setTypeError(false);
-    setDetailsError(false);
-    setTitleError(false);
-  };
+  const isEditMode = Boolean(initialInteraction);
 
   const handleClose = () => {
     onClose();
-    resetForm();
   };
 
   const handleChange = (field: keyof Interaction) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +106,6 @@ export const InteractionDetailsModal = ({
       onConfirmEdit(interactionFields as Interaction);
     } else {
       onConfirmAdd(interactionFields as Interaction);
-      resetForm();
     }
   };
 

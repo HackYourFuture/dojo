@@ -38,6 +38,7 @@ const InteractionsInfo = () => {
   };
 
   const onConfirmAdd = async (interaction: Interaction) => {
+    if (modalError) setModalError('');
     addInteraction(interaction, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -47,6 +48,7 @@ const InteractionsInfo = () => {
   };
 
   const onConfirmEdit = (interaction: Interaction) => {
+    if (modalError) setModalError('');
     editInteraction(interaction, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -90,13 +92,14 @@ const InteractionsInfo = () => {
         )}
 
         <InteractionDetailsModal
+          key={interactionToEdit?.id || `add-interaction-${isModalOpen}`} // Use interaction ID for edit mode, and a unique key for add mode to force remounting
           isLoading={addInteractionLoading || editInteractionLoading}
           error={modalError}
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirmAdd={onConfirmAdd}
           onConfirmEdit={onConfirmEdit}
-          interactionToEdit={interactionToEdit}
+          initialInteraction={interactionToEdit}
         />
       </Box>
     </>

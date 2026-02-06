@@ -41,6 +41,7 @@ export const StrikesComponent = () => {
   };
 
   const onConfirmAdd = async (strike: Strike) => {
+    if (modalError) setModalError('');
     addStrike(strike, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -50,6 +51,7 @@ export const StrikesComponent = () => {
   };
 
   const onConfirmEdit = (strike: Strike) => {
+    if (modalError) setModalError('');
     editStrike(strike, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -128,13 +130,14 @@ export const StrikesComponent = () => {
           <StrikesList strikes={strikes || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
         )}
         <StrikeDetailsModal
+          key={strikeToEdit?.id || `add-strike-${isModalOpen}`} // Use strike ID for edit mode, and a unique key for add mode to force remounting
           isLoading={addStrikeLoading || editStrikeLoading}
           error={modalError}
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirmAdd={onConfirmAdd}
           onConfirmEdit={onConfirmEdit}
-          strikeToEdit={strikeToEdit}
+          initialStrike={strikeToEdit}
         />
       </div>
     </>
