@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { ChartData, DashboardData } from '../Dashboard';
 
-import { MakeOptional } from '@mui/x-date-pickers/internals';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { PieValueType } from '@mui/x-charts';
 
@@ -38,7 +37,7 @@ export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
               {
                 arcLabel: (item) => `${(item as unknown as ChartData).percent}%`,
                 arcLabelMinAngle: 45,
-                data: pie as MakeOptional<PieValueType, 'id'>[],
+                data: pie as Omit<PieValueType, 'id'>[],
               },
             ]}
             {...size}
