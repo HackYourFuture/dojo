@@ -2,15 +2,8 @@ import axios from 'axios';
 import { Interaction } from '../Interactions';
 
 export const getInteractions = async (traineeId: string) => {
-  try {
-    const { data } = await axios.get(`/api/trainees/${traineeId}/interactions`);
-    return data as Interaction[];
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || 'Failed to get interactions');
-    }
-    throw new Error('Failed to get interactions');
-  }
+  const { data } = await axios.get<Interaction[]>(`/api/trainees/${traineeId}/interactions`);
+  return data;
 };
 
 export const addInteraction = async (traineeId: string, interaction: Partial<Interaction>) => {
