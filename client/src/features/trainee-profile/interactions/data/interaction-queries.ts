@@ -11,8 +11,8 @@ export const useGetInteractions = (traineeId: string) => {
   return useQuery({
     queryKey: ['interactions', traineeId],
     queryFn: async () => {
-      const data = await getInteractions(traineeId);
-      return orderInteractionsByDateDesc(data);
+      const interactions = await getInteractions(traineeId);
+      return orderInteractionsByDateDesc(interactions);
     },
     enabled: !!traineeId,
     refetchOnWindowFocus: false,
