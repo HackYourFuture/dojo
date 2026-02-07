@@ -13,7 +13,8 @@ export const addTest = async (traineeId: string, test: Test) => {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to add test');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };
 
@@ -28,6 +29,7 @@ export const editTest = async (traineeId: string, test: Test) => {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to edit test');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };

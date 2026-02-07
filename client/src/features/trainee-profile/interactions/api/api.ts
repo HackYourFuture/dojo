@@ -20,7 +20,8 @@ export const addInteraction = async (traineeId: string, interaction: Partial<Int
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to add interaction');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };
 
@@ -31,7 +32,8 @@ export const deleteInteraction = async (traineeId: string, interactionId: string
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to delete interaction');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };
 
@@ -42,6 +44,7 @@ export const editInteraction = async (traineeId: string, interaction: Interactio
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to edit interaction');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };

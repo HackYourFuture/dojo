@@ -13,7 +13,8 @@ export const addStrike = async (traineeId: string, strike: Strike) => {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to add strike');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };
 
@@ -28,6 +29,7 @@ export const editStrike = async (traineeId: string, strike: Strike) => {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.error || 'Failed to edit strike');
     }
-    throw error;
+
+    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
   }
 };
