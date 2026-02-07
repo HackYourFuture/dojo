@@ -54,15 +54,17 @@ const EducationInfo = () => {
             name="currentCohort"
             label="Cohort"
             value={editedFields?.currentCohort ?? 'No cohort assigned'}
-            InputProps={{
-              readOnly: isEditing ? false : true,
-              inputMode: 'numeric',
+            slotProps={{
+              input: {
+                readOnly: isEditing ? false : true,
+                inputMode: 'numeric',
+              },
+              inputLabel: { shrink: true },
             }}
             inputProps={{
               pattern: '[0-9]*',
               maxLength: 3,
             }}
-            InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleNumericChange}
           />
@@ -97,8 +99,10 @@ const EducationInfo = () => {
               label="Quit date"
               type="date"
               value={formatDate(editedFields?.quitDate)}
-              InputProps={{ readOnly: isEditing ? false : true }}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{
+                input: { readOnly: isEditing ? false : true },
+                inputLabel: { shrink: true },
+              }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
             />
@@ -139,8 +143,7 @@ const EducationInfo = () => {
               label="Graduation date"
               type="date"
               value={formatDate(editedFields?.graduationDate)}
-              InputProps={{ readOnly: isEditing ? false : true }}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
             />
@@ -155,15 +158,17 @@ const EducationInfo = () => {
             name="startCohort"
             label="Start cohort"
             value={editedFields?.startCohort || ''}
-            InputProps={{
-              readOnly: isEditing ? false : true,
-              inputMode: 'numeric',
+            slotProps={{
+              input: {
+                readOnly: isEditing ? false : true,
+                inputMode: 'numeric',
+              },
+              inputLabel: { shrink: true },
             }}
             inputProps={{
               pattern: '[0-9]*',
               maxLength: 3,
             }}
-            InputLabelProps={{ shrink: true }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleNumericChange}
           />
@@ -177,8 +182,7 @@ const EducationInfo = () => {
             label="Start date"
             type="date"
             value={formatDate(editedFields?.startDate)}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -198,8 +202,7 @@ const EducationInfo = () => {
               label="Technical Mentor"
               type="text"
               value={editedFields?.techMentor ?? ''}
-              InputProps={{ readOnly: isEditing ? false : true }}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
             />
@@ -213,8 +216,7 @@ const EducationInfo = () => {
               label="HR Mentor"
               type="text"
               value={editedFields?.hrMentor ?? ''}
-              InputProps={{ readOnly: isEditing ? false : true }}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
             />
@@ -228,8 +230,7 @@ const EducationInfo = () => {
               label="English Mentor"
               type="text"
               value={editedFields?.englishMentor ?? ''}
-              InputProps={{ readOnly: isEditing ? false : true }}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
             />
@@ -250,8 +251,7 @@ const EducationInfo = () => {
             type="text"
             multiline
             value={editedFields?.comments || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />

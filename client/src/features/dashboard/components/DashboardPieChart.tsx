@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { ChartData, DashboardData } from '../Dashboard';
 
-import { MakeOptional } from '@mui/x-date-pickers/internals';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { PieValueType } from '@mui/x-charts';
 
@@ -28,23 +27,34 @@ export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
 
   return (
     <Stack direction="row" useFlexGap flexWrap="wrap">
-      {piesData.map((pie: ChartData[], index: number) => (
-        <Box key={index} height={250} width={450} my={4} p={2}>
-          <Typography variant="h5" p={2}>
-            {chartTitle[index]}
-          </Typography>
-          <PieChart
-            series={[
-              {
-                arcLabel: (item) => `${(item as unknown as ChartData).percent}%`,
-                arcLabelMinAngle: 45,
-                data: pie as MakeOptional<PieValueType, 'id'>[],
-              },
-            ]}
-            {...size}
-          />
-        </Box>
-      ))}
+      {piesData.map((pie: ChartData[], index: number) => {
+        // Map ChartData to PieValueType with all required fields
+        const formattedData: PieValueType[] = pie.map((item) => ({
+          id: item.label,
+          label: item.label,
+          value: item.value,
+        }));
+        return (
+          <Box key={index} height={250} width={450} my={4} p={2}>
+            <Typography variant="h5" p={2}>
+              {chartTitle[index]}
+            </Typography>
+            <PieChart
+              series={[
+                {
+                  arcLabel: (item) => {
+                    const chartItem = pie.find((data) => data.label === item.label);
+                    return chartItem ? `${chartItem.percent}%` : '';
+                  },
+                  arcLabelMinAngle: 45,
+                  data: formattedData,
+                },
+              ]}
+              {...size}
+            />
+          </Box>
+        );
+      })}
     </Stack>
   );
 };

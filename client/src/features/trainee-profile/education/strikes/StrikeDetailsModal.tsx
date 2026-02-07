@@ -15,10 +15,10 @@ import {
   Typography,
 } from '@mui/material';
 import { Strike, StrikeReason } from '../../../../data/types/Trainee';
-import { useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
+import { useState } from 'react';
 
 interface StrikeDetailsModalProps {
   isOpen: boolean;
@@ -27,7 +27,7 @@ interface StrikeDetailsModalProps {
   onClose: () => void;
   onConfirmAdd: (strike: Strike) => void;
   onConfirmEdit: (strike: Strike) => void;
-  strikeToEdit: Strike | null;
+  initialStrike: Strike | null;
 }
 
 export const StrikeDetailsModal = ({
@@ -37,47 +37,22 @@ export const StrikeDetailsModal = ({
   onClose,
   onConfirmAdd,
   onConfirmEdit,
-  strikeToEdit,
+  initialStrike,
 }: StrikeDetailsModalProps) => {
   const [strikeFields, setStrikeFields] = useState<Strike>({
-    id: '',
-    date: new Date(),
-    reporterID: '',
-    comments: '',
-    reason: null,
+    id: initialStrike?.id || '',
+    date: initialStrike?.date || new Date(),
+    reporterID: initialStrike?.reporterID || '',
+    comments: initialStrike?.comments || '',
+    reason: initialStrike?.reason || null,
   } as Strike);
 
   const [commentsRequiredError, setCommentsRequiredError] = useState<boolean>(false);
   const [reasonRequiredError, setReasonRequiredError] = useState<boolean>(false);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (strikeToEdit) {
-      setStrikeFields(strikeToEdit);
-      setIsEditMode(true);
-      return;
-    } else {
-      setIsEditMode(false);
-    }
-    resetForm();
-  }, [strikeToEdit]);
-
-  const resetForm = () => {
-    setStrikeFields({
-      id: '',
-      date: new Date(),
-      reporterID: '',
-      reason: null,
-      comments: '',
-    } as Strike);
-
-    setCommentsRequiredError(false);
-    setReasonRequiredError(false);
-  };
+  const isEditMode = Boolean(initialStrike);
 
   const handleClose = () => {
     onClose();
-    resetForm();
   };
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -109,11 +84,10 @@ export const StrikeDetailsModal = ({
       return;
     }
 
-    if (strikeToEdit) {
+    if (initialStrike) {
       onConfirmEdit(strikeFields);
     } else {
       onConfirmAdd(strikeFields);
-      resetForm();
     }
   };
 
