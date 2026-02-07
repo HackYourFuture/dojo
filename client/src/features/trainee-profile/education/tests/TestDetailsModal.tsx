@@ -43,7 +43,7 @@ export const TestDetailsModal = ({
     id: initialTest?.id || '',
     date: initialTest?.date || new Date(),
     type: initialTest?.type || undefined,
-    score: initialTest?.score || undefined,
+    score: initialTest?.score ?? undefined,
     result: initialTest?.result || undefined,
     comments: initialTest?.comments || '',
   });
