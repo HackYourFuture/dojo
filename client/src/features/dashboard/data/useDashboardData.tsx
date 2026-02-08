@@ -1,9 +1,8 @@
-import { DashboardData } from '../Dashboard';
-import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { getDashboardData } from '../api/api';
 
 /**
- * A React Query hook that fetches dashboard data form api for specific dates.
+ * A React Query hook that fetches dashboard data from api for specific dates.
  *
  * @param {string | undefined} startDate
  * @param {string | undefined} endDate
@@ -11,10 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 export const useDashboardData = (startDate: string | undefined, endDate: string | undefined) => {
   return useQuery({
     queryKey: ['DashboardInfo'],
-    queryFn: async () => {
-      const response = await axios.get<DashboardData>(`/api/dashboard?startDate=${startDate}&endDate=${endDate}`);
-      return response.data;
-    },
+    queryFn: () => getDashboardData(startDate, endDate),
     refetchOnWindowFocus: false, // Prevent refetching on window focus
   });
 };

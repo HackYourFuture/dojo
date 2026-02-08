@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-
 import { Test } from '../../../../../data/types/Trainee';
-import axios from 'axios';
+import { getTests, addTest, deleteTest, editTest } from '../api/api';
 
 /**
  * Hook to add a test to a trainee.
@@ -10,11 +9,7 @@ import axios from 'axios';
  */
 export const useAddTest = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (test: Test) => {
-      return axios.post(`/api/trainees/${traineeId}/tests`, test).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to add test');
-      });
-    },
+    mutationFn: (test: Test) => addTest(traineeId, test),
   });
 };
 
@@ -27,7 +22,7 @@ export const useGetTests = (traineeId: string) => {
   return useQuery({
     queryKey: ['tests', traineeId],
     queryFn: async () => {
-      const { data } = await axios.get<Test[]>(`/api/trainees/${traineeId}/tests`);
+      const data = await getTests(traineeId);
       return orderTestsByDateDesc(data);
     },
 
@@ -44,9 +39,7 @@ export const useGetTests = (traineeId: string) => {
 
 export const useDeleteTest = (traineeId: string) => {
   return useMutation({
-    mutationFn: (testId: string) => {
-      return axios.delete(`/api/trainees/${traineeId}/tests/${testId}`);
-    },
+    mutationFn: (testId: string) => deleteTest(traineeId, testId),
   });
 };
 
@@ -56,11 +49,7 @@ export const useDeleteTest = (traineeId: string) => {
  */
 export const useEditTest = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (test: Test) => {
-      return axios.put(`/api/trainees/${traineeId}/tests/${test.id}`, test).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to edit test');
-      });
-    },
+    mutationFn: (test: Test) => editTest(traineeId, test),
   });
 };
 

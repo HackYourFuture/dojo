@@ -5,3 +5,9 @@ export interface SearchResult {
   profilePath: string;
   cohort: number | null;
 }
+
+export interface SearchResultResponse {
+  hits: {
+    data: SearchResult[];
+  };
+}
