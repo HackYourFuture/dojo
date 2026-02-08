@@ -1,9 +1,10 @@
 import { Box, Button, Stack } from '@mui/material';
+import type { FC } from 'react';
 
 import { NAVIGATION_LINKS } from './constants';
 import { useNavigate } from 'react-router-dom';
 
-export const NavigationLinksDesktop: React.FC = () => {
+export const NavigationLinksDesktop: FC = () => {
   const navigate = useNavigate();
 
   return (
