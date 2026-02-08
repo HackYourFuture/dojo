@@ -13,10 +13,11 @@ import {
   Toolbar,
   Tooltip,
 } from '@mui/material';
+import { Link, Navigate } from 'react-router-dom';
 
 import HYFLogo from '../assets/hyf-logo-beige.png';
-import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
+import { NavigationLinks } from './NavBar/NavigationLinks';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../auth/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -75,27 +76,7 @@ export const ResponsiveNavBar = () => {
               </Link>
             </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              <Stack direction="row" spacing={2}>
-                <Button key="Home" onClick={() => navigate('/home')} sx={{ my: 2, color: 'white', display: 'block' }}>
-                  Home
-                </Button>
-                <Button
-                  key="Cohorts"
-                  onClick={() => navigate('/cohorts')}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Cohorts
-                </Button>
-                <Button
-                  key="Dashboard"
-                  onClick={() => navigate('/dashboard')}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Dashboard
-                </Button>
-              </Stack>
-            </Box>
+            <NavigationLinks />
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
             <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
