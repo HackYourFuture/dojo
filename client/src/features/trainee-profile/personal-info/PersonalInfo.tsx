@@ -10,6 +10,7 @@ import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { GenderSelect } from '../profile/components/GenderSelect';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
 const NoIcon = () => null;
@@ -88,24 +89,7 @@ const PersonalInfo = () => {
 
       <div style={{ width: '100%' }}>
         {/* Gender */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <InputLabel htmlFor="gender">Gender</InputLabel>
-          <Select
-            name="gender"
-            id="gender"
-            label="Gender"
-            value={editedFields?.gender || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value={Gender.Woman}>Woman</MenuItem>
-            <MenuItem value={Gender.Man}>Man</MenuItem>
-            <MenuItem value={Gender.NonBinary}>Non binary</MenuItem>
-            <MenuItem value={Gender.Other}>Other</MenuItem>
-          </Select>
-        </FormControl>
+        <GenderSelect isEditing={isEditing} gender={editedFields?.gender} onChange={handleSelectChange} />
 
         {/* Pronouns */}
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
