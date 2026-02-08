@@ -2,6 +2,7 @@ import { Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import { NAVIGATION_LINKS } from './constants';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -26,12 +27,17 @@ export const NavigationLinksMobile: React.FC = () => {
     setMenuAnchor(null);
   };
 
+  const handleNavClick = (path: string) => {
+    navigate(path);
+    handleCloseNavMenu();
+  };
+  const menuId = 'main-menu-appbar';
   return (
     <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
       <IconButton
         size="large"
         aria-label="menu of current user"
-        aria-controls="menu-appbar"
+        aria-controls={menuId}
         aria-haspopup="true"
         onClick={handleOpenNavMenu}
         color="inherit"
@@ -40,7 +46,7 @@ export const NavigationLinksMobile: React.FC = () => {
         <MenuIcon />
       </IconButton>
       <Menu
-        id="main-menu-appbar"
+        id={menuId}
         anchorEl={menuAnchor}
         anchorOrigin={{
           vertical: 'bottom',
@@ -60,7 +66,7 @@ export const NavigationLinksMobile: React.FC = () => {
         {NAVIGATION_LINKS.map((link) => (
           <MenuItem key={link.name}>
             <Button
-              onClick={() => navigate(link.path)}
+              onClick={() => handleNavClick(link.path)}
               sx={{
                 color: 'inherit',
                 display: 'block',

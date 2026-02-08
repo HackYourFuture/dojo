@@ -4,7 +4,6 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useColorScheme } from '@mui/material/styles';
 
-// Switch colors - easy to update in one place
 const SWITCH_COLORS = {
   sun: '#FFA500',
   moon: '#2C1810',
@@ -62,6 +61,11 @@ export const DarkModeToggle = () => {
     <StyledSwitch
       checked={isDark}
       onChange={handleToggle}
+      slotProps={{
+        input: {
+          'aria-label': 'Toggle dark mode',
+        },
+      }}
       icon={
         <Box
           sx={{

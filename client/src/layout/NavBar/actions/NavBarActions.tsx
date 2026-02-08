@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 
 import { DarkModeToggle } from '../../../features/dark-mode/DarkModeToggle';
+import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../../auth/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';

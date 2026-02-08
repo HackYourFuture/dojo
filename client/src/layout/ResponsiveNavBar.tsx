@@ -15,7 +15,7 @@ import { useAuth } from '../auth/hooks/useAuth';
 export const ResponsiveNavBar = () => {
   const { user } = useAuth();
 
-  return user ? (
+  return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: '#5E1600' }}>
         <Container maxWidth={false}>
@@ -25,13 +25,17 @@ export const ResponsiveNavBar = () => {
                 <img src={HYFLogo} height="40" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
               </Link>
             </Box>
-            <NavigationLinksDesktop />
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
-            <NavigationLinksMobile />
-            <NavBarActions />
+            {user && (
+              <>
+                <NavigationLinksDesktop />
+                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}></Box>
+                <NavigationLinksMobile />
+                <NavBarActions />
+              </>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
     </Box>
-  ) : null;
+  );
 };
