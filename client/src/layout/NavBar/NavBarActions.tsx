@@ -54,11 +54,6 @@ export const NavBarActions: React.FC = () => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        <MenuItem key="Login">
-          <Button href={`/login`} color="inherit">
-            Login
-          </Button>
-        </MenuItem>
         <MenuItem key="Logout">
           <Button onClick={() => logout()} color="inherit">
             Log out

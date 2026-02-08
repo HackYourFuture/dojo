@@ -17,7 +17,9 @@ import { useNavigate } from 'react-router-dom';
  * @returns {ReactNode} A React element that renders a nav bar to each page and a burger menu on smaller screens.
  */
 export const ResponsiveNavBar = () => {
-  return (
+  const { user } = useAuth();
+
+  return user ? (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: '#5E1600' }}>
         <Container maxWidth={false}>
@@ -36,5 +38,5 @@ export const ResponsiveNavBar = () => {
         </Container>
       </AppBar>
     </Box>
-  );
+  ) : null;
 };
