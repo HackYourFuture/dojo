@@ -14,16 +14,16 @@ export const NavBarActions: React.FC = () => {
   const navigate = useNavigate();
 
   /**
-   * Function to handel opening the user menu onClick event.
+   * Function to handle opening the user menu onClick event.
    *
-   * @param {HTMLElement} event the click event coming form user.
+   * @param {HTMLElement} event The click event coming from the user.
    */
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
   /**
-   * Function to handel closing the user menu onClick event.
+   * Function to handle closing the user menu onClick event.
    */
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
