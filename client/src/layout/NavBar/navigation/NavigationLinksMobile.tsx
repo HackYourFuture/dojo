@@ -11,16 +11,16 @@ export const NavigationLinksMobile: React.FC = () => {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
   /**
-   * Function to handel opening the navigation burger menu onClick event.
+   * Function to handle opening the navigation burger menu onClick event.
    *
-   * @param {HTMLElement} event the click event coming form user.
+   * @param {HTMLElement} event the click event coming from the user.
    */
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchor(event.currentTarget);
   };
 
   /**
-   * Function to handel closing the navigation burger menu onClick event.
+   * Function to handle closing the navigation burger menu onClick event.
    */
   const handleCloseNavMenu = () => {
     setMenuAnchor(null);
