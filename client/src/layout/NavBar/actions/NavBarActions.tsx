@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 
+import { DarkModeToggle } from '../../../features/dark-mode/DarkModeToggle';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../../auth/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +30,8 @@ export const NavBarActions: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 0 }}>
+    <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', gap: 1 }}>
+      <DarkModeToggle />
       <IconButton onClick={() => navigate('/search')} size="large" aria-label="search" color="inherit">
         <SearchIcon />
       </IconButton>
@@ -38,6 +40,7 @@ export const NavBarActions: React.FC = () => {
           <Avatar alt={user?.name ?? 'User image'} src={user?.imageUrl ?? ''} />
         </IconButton>
       </Tooltip>
+
       <Menu
         sx={{ mt: '45px' }}
         id="user-menu-appbar"

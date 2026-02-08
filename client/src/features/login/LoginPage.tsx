@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 import { ErrorBox } from '../../components';
 import HYFLogo from '../../assets/hyf-logo-red.png';
