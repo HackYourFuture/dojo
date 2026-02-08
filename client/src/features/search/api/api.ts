@@ -3,7 +3,7 @@ import { SearchResult, SearchResultResponse } from '../Search';
 
 export const getSearchResults = async (query: string): Promise<SearchResult[]> => {
   const response = await axios.get<SearchResultResponse>('/api/search', {
-    params: { query, limit: 20 },
+    params: { q: query, limit: 20 },
   });
   return response.data.hits.data;
 };
