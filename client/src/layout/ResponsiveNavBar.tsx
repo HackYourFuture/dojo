@@ -4,9 +4,9 @@ import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Too
 
 import HYFLogo from '../assets/hyf-logo-beige.png';
 import { Link } from 'react-router-dom';
-import { NavBarActions } from './NavBar/NavBarActions';
-import { NavigationLinksDesktop } from './NavBar/NavigationLinksDesktop';
-import { NavigationLinksMobile } from './NavBar/NavigationLinksMobile';
+import { NavBarActions } from './NavBar/actions/NavBarActions';
+import { NavigationLinksDesktop } from './NavBar/navigation/NavigationLinksDesktop';
+import { NavigationLinksMobile } from './NavBar/navigation/NavigationLinksMobile';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../auth/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';

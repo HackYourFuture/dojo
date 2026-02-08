@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 
 import SearchIcon from '@mui/icons-material/Search';
-import { useAuth } from '../../auth/hooks/useAuth';
+import { useAuth } from '../../../auth/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
