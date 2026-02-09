@@ -1,0 +1,280 @@
+import { EmploymentHistory, Strike, StrikeReason } from '../../../data/types/Trainee.ts';
+import { useState } from 'react';
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Button, Checkbox,
+  Fade,
+  FormControl, FormControlLabel,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { formatDate } from '../utils/dateHelper.ts';
+import { LoadingButton } from '@mui/lab';
+
+interface EmploymentDetailsModalProps {
+  isOpen: boolean;
+  error: string;
+  isLoading: boolean;
+  onClose: () => void;
+  onConfirmAdd: (employment: EmploymentHistory) => void;
+  onConfirmEdit: (employment: EmploymentHistory) => void;
+  initialEmployment: EmploymentHistory | null;
+}
+
+export const EmploymentDetailsModal = ({
+  isOpen,
+  isLoading,
+  error,
+  onClose,
+  onConfirmAdd,
+  onConfirmEdit,
+  initialEmployment,
+}: EmploymentDetailsModalProps) => {
+  const [employmentFields, setEmploymentFields] = useState<EmploymentHistory>({
+    id: initialEmployment?.id || '',
+    type: initialEmployment?.type || '',
+    companyName: initialEmployment?.companyName || '',
+    role: initialEmployment?.role || '',
+    startDate: initialEmployment?.startDate || new Date(),
+    endDate: initialEmployment?.endDate || new Date(),
+    feeCollected: initialEmployment?.feeCollected || false,
+    feeAmount: initialEmployment?.feeAmount || 0,
+    comments: initialEmployment?.comments || '',
+  } as EmploymentHistory);
+
+  // TODO: add logic to error handling
+  const [requiredFieldError, setRequiredFieldError] = useState({
+    type: false,
+    companyName: false,
+    role: false,
+    startDate: false,
+    feeCollected: false,
+  });
+  const isEditMode = Boolean(initialEmployment);
+
+  const handleClose = () => {
+    onClose();
+  };
+  const handleEmploymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setEmploymentFields((prevEmployment: EmploymentHistory) => ({
+      ...prevEmployment,
+      [name]: value,
+    }));
+  };
+
+  const handleEmploymentSelectChange = (e: SelectChangeEvent<string>) => {
+    const { name, value } = e.target;
+
+    setEmploymentFields((prevEmployment: EmploymentHistory) => ({
+      ...prevEmployment,
+      [name]: value,
+    }));
+  };
+
+  /*
+  const onConfirm = async () => {
+    if (employmentFields.reason === null) {
+      setReasonRequiredError(true);
+      return;
+    }
+    if (!employmentFields.comments) {
+      setCommentsRequiredError(true);
+      return;
+    }
+
+    if (initialStrike) {
+      onConfirmEdit(employmentFields);
+    } else {
+      onConfirmAdd(employmentFields);
+    }
+  };
+
+  const onChangeComments = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCommentsRequiredError(false);
+    const { name, value } = e.target;
+
+    setStrikeFields((prevStrike) => ({
+      ...prevStrike,
+      [name]: value,
+    }));
+  };
+   */
+
+  return (
+    <Modal open={isOpen} closeAfterTransition slots={{ backdrop: Backdrop }} slotProps={{ backdrop: { timeout: 500 } }}>
+      <Fade in={isOpen}>
+        <Box
+          minWidth={550}
+          component="form"
+          display="flex"
+          flexDirection="column"
+          gap={3}
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" mb={0.5}>
+            {isEditMode ? 'Edit employment' : 'Add a new employment'}
+          </Typography>
+          <Box display="flex" flexDirection="row" gap={2}>
+            <FormControl fullWidth>
+              <TextField
+                disabled={isLoading}
+                id="companyName"
+                name="companyName"
+                label="Company name*"
+                type="text"
+                placeholder="HackYourFuture"
+                value={employmentFields.companyName}
+                slotProps={{ inputLabel: { shrink: true } }}
+                onChange={handleEmploymentChange}
+                fullWidth
+              />
+              {requiredFieldError.companyName && <FormHelperText error>Company name is required</FormHelperText>}
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="employmentType" error={requiredFieldError.type}>
+                Type*
+              </InputLabel>
+              <Select
+                disabled={isLoading}
+                name="employmentType"
+                id="employmentType"
+                label="Type"
+                value={employmentFields.type || ''}
+                error={requiredFieldError.type}
+                onChange={handleEmploymentSelectChange}
+              >
+                <MenuItem value={StrikeReason.LateSubmission}>Internship</MenuItem>
+                <MenuItem value={StrikeReason.MissedSubmission}>Job</MenuItem>
+              </Select>
+              {requiredFieldError.type && <FormHelperText error>Type is required</FormHelperText>}
+            </FormControl>
+          </Box>
+          <FormControl fullWidth>
+            <TextField
+              disabled={isLoading}
+              id="role"
+              name="role"
+              label="Role*"
+              type="text"
+              placeholder="Fullstack Developer"
+              value={employmentFields.role}
+              slotProps={{ inputLabel: { shrink: true } }}
+              onChange={handleEmploymentChange}
+              fullWidth
+            />
+            {requiredFieldError.role && <FormHelperText error>Role is required</FormHelperText>}
+          </FormControl>
+          <Box display="flex" flexDirection="row" gap={2}>
+            <FormControl fullWidth>
+              <TextField
+                disabled={isLoading}
+                id="startDate"
+                name="startDate"
+                label="Start date*"
+                type="date"
+                value={formatDate(employmentFields.startDate)}
+                slotProps={{ inputLabel: { shrink: true } }}
+                onChange={handleEmploymentChange}
+                fullWidth
+              />
+              {requiredFieldError.startDate && <FormHelperText error>Start date is required</FormHelperText>}
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                disabled={isLoading}
+                id="endDate"
+                name="endDate"
+                label="End date"
+                type="date"
+                value={formatDate(employmentFields.endDate)}
+                slotProps={{ inputLabel: { shrink: true } }}
+                onChange={handleEmploymentChange}
+                fullWidth
+              />
+            </FormControl>
+          </Box>
+          <Box display="flex" flexDirection="row" gap={2}>
+            <FormControl fullWidth>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    disabled={isLoading}
+                    id="feeCollected"
+                    name="feeCollected"
+                    checked={employmentFields.feeCollected}
+                    onChange={handleEmploymentChange}
+                  />
+                }
+                label="Fee collected"
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                disabled={isLoading}
+                id="feeAmount"
+                name="feeAmount"
+                label="Fee amount"
+                type="number"
+                placeholder="4000" // TODO: add InputAdornment to display EUR sign
+                value={employmentFields.feeAmount}
+                slotProps={{ inputLabel: { shrink: true } }}
+                onChange={handleEmploymentChange}
+                fullWidth
+              />
+            </FormControl>
+          </Box>
+          <FormControl fullWidth>
+            <TextField
+              required
+              sx={{
+                lineHeight: 2,
+              }}
+              disabled={isLoading}
+              id="comments"
+              name="comments"
+              label="Comments"
+              type="text"
+              multiline
+              minRows={2}
+              maxRows={4}
+              error={commentsRequiredError}
+              helperText={commentsRequiredError ? 'Comments are required' : ''}
+              value={strikeFields.comments}
+              InputLabelProps={{ shrink: true }}
+              onChange={onChangeComments}
+              fullWidth
+            />
+          </FormControl>
+          {error && <Alert severity="error">{error}</Alert>}
+
+          <Box display="flex" flexDirection="row" gap={2} alignSelf="flex-end">
+            <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
+              Cancel
+            </Button>
+            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
+              Save
+            </LoadingButton>
+          </Box>
+        </Box>
+      </Fade>
+    </Modal>
+  );
+};

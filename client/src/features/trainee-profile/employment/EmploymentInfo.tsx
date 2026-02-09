@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Divider,
   FormControl,
   InputAdornment,
@@ -10,17 +11,19 @@ import {
   ListItemText,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { JobPath } from '../../../data/types/Trainee';
+import { EmploymentHistory, JobPath } from '../../../data/types/Trainee';
 import LinkIcon from '@mui/icons-material/Link';
-import React from 'react';
+import React, { useState } from 'react';
 import { formatDate } from '../utils/dateHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
+import AddIcon from '@mui/icons-material/Add';
 
 const NoIcon = () => null;
 
@@ -30,10 +33,20 @@ const NoIcon = () => null;
  * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
  */
 export const EmploymentInfo = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [employmentToEdit, setEmploymentToEdit] = useState<EmploymentHistory | null>(null);
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
   const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
+
+  /**
+   * Function to enable adding entries.
+   */
+  const onClickAdd = () => {
+    setEmploymentToEdit(null);
+    setIsModalOpen(true);
+  };
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
@@ -69,21 +82,23 @@ export const EmploymentInfo = () => {
             name="cvURL"
             label="CV"
             type="url"
+            placeholder="https://cv.example.com"
             value={editedFields?.cvURL || ''}
-            InputProps={{
-              readOnly: isEditing ? false : true,
-              endAdornment: (
-                <InputAdornment position="start">
-                  {!isEditing && editedFields?.cvURL && (
-                    <Link href={editedFields?.cvURL} target="_blank">
-                      <LinkIcon sx={{ color: 'action.active' }} />
-                    </Link>
-                  )}
-                </InputAdornment>
-              ),
-            }}
-            InputLabelProps={{
-              shrink: true,
+            // TODO: get back to this when get response from Stas
+            slotProps={{
+              input: {
+                readOnly: !isEditing,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && editedFields?.cvURL && (
+                      <Link href={editedFields?.cvURL} target="_blank">
+                        <LinkIcon sx={{ color: 'action.active' }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
+              },
+              inputLabel: { shrink: true },
             }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
@@ -99,6 +114,7 @@ export const EmploymentInfo = () => {
             name="availability"
             label="Availability"
             type="text"
+            placeholder="From next month, fulltime"
             value={editedFields?.availability || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -116,6 +132,7 @@ export const EmploymentInfo = () => {
             name="preferredRole"
             label="Preferred role"
             type="text"
+            placeholder="Backend"
             value={editedFields?.preferredRole || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -131,6 +148,7 @@ export const EmploymentInfo = () => {
             name="preferredLocation"
             label="Preferred location"
             type="text"
+            placeholder="Randstad, Utrecht"
             value={editedFields?.preferredLocation || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -166,6 +184,7 @@ export const EmploymentInfo = () => {
             name="extraTechnologies"
             label="Extra technologies"
             type="text"
+            placeholder="C#, C++, Vue.js"
             value={editedFields?.extraTechnologies || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -181,6 +200,9 @@ export const EmploymentInfo = () => {
           <Typography variant="h6" padding="16px">
             Employment history ({editedFields?.employmentHistory.length || 0})
           </Typography>
+          <Stack direction="row" spacing={2}>
+            <Button startIcon={<AddIcon />} onClick={onClickAdd}>New entry</Button>
+          </Stack>
         </Box>
 
         <List
@@ -229,6 +251,6 @@ export const EmploymentInfo = () => {
       </div>
     </Box>
   );
-};
+};;
 
 export default EmploymentInfo;
