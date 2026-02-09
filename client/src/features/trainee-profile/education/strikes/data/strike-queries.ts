@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-
 import { Strike } from '../../../../../data/types/Trainee';
-import axios from 'axios';
+import { getStrikes, addStrike, deleteStrike, editStrike } from '../api/api';
 
 /**
  * Hook to add a strike to a trainee.
@@ -10,11 +9,7 @@ import axios from 'axios';
  */
 export const useAddStrike = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (strike: Strike) => {
-      return axios.post(`/api/trainees/${traineeId}/strikes`, strike).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to add strike');
-      });
-    },
+    mutationFn: (strike: Strike) => addStrike(traineeId, strike),
   });
 };
 
@@ -27,8 +22,8 @@ export const useGetStrikes = (traineeId: string) => {
   return useQuery({
     queryKey: ['strikes', traineeId],
     queryFn: async () => {
-      const { data } = await axios.get<Strike[]>(`/api/trainees/${traineeId}/strikes`);
-      return orderStrikesByDateDesc(data as Strike[]);
+      const data = await getStrikes(traineeId);
+      return orderStrikesByDateDesc(data);
     },
     enabled: !!traineeId,
     refetchOnWindowFocus: false,
@@ -43,9 +38,7 @@ export const useGetStrikes = (traineeId: string) => {
 
 export const useDeleteStrike = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (strikeId: string) => {
-      return axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
-    },
+    mutationFn: (strikeId: string) => deleteStrike(traineeId, strikeId),
   });
 };
 
@@ -55,11 +48,7 @@ export const useDeleteStrike = (traineeId: string) => {
  */
 export const useEditStrike = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (strike: Strike) => {
-      return axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to edit strike');
-      });
-    },
+    mutationFn: (strike: Strike) => editStrike(traineeId, strike),
   });
 };
 
