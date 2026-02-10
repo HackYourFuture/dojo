@@ -1,7 +1,8 @@
-import { Trainee } from '../../../../data/types/Trainee';
+import { getTrainee, updateTrainee } from '../api/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getTraineeInfo, saveTraineeInfo } from '../api/api';
-import { SaveTraineeRequestData } from '../api/types';
+
+import { Trainee } from '../../../../data/types/Trainee';
+import { UpdateTraineeRequestData } from '../api/types';
 
 /**
  * A React Query hook that fetches trainee information data form api.
@@ -11,7 +12,7 @@ import { SaveTraineeRequestData } from '../api/types';
 export const useTraineeInfoData = (traineeId: string) => {
   return useQuery<Trainee, Error>({
     queryKey: ['traineeInfo', traineeId],
-    queryFn: () => getTraineeInfo(traineeId),
+    queryFn: () => getTrainee(traineeId),
     enabled: !!traineeId,
     //Added because it keeps rendering
     refetchOnMount: false, // Prevent refetching on component mount
@@ -27,8 +28,8 @@ export const useTraineeInfoData = (traineeId: string) => {
  */
 export const useSaveTraineeInfo = (traineeId: string) => {
   return useMutation({
-    mutationFn: (dataToSave: SaveTraineeRequestData) => saveTraineeInfo(traineeId, dataToSave),
+    mutationFn: (dataToSave: UpdateTraineeRequestData) => updateTrainee(traineeId, dataToSave),
   });
 };
 
-export type { SaveTraineeRequestData };
+export type { UpdateTraineeRequestData };

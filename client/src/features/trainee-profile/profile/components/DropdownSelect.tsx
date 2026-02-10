@@ -1,45 +1,51 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Gender } from '../../../../data/types/Trainee';
 import { capitalize } from '../../utils/stringHelper';
 
-type GenderSelectProps = {
+type CustomSelectProps = {
+  inputLabel: string;
   disabled?: boolean;
-  isEditing: boolean;
-  gender?: Gender | null;
+  id: string;
+  label: string;
+  name: string;
+  value?: string | number; //currently selected value
+  options: string[]; // array of values to show in the dropdown
+  isEditing?: boolean;
   error?: string;
-  onChange: (event: SelectChangeEvent) => void;
+  onChange: (event: SelectChangeEvent<string | number>) => void;
 };
 
-const genderOptions: Gender[] = Object.values(Gender);
-
-// TODO: User the generic select
-export const GenderSelect: React.FC<GenderSelectProps> = ({
+export const DropdownSelect = ({
   disabled = false,
-  isEditing,
-  gender = '',
+  inputLabel,
+  id,
+  label,
+  name,
+  value = '',
+  options,
+  isEditing = false,
   error,
   onChange = () => {},
-}) => {
+}: CustomSelectProps) => {
   const NoIcon = () => null;
 
   return (
     <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-      <InputLabel htmlFor="gender">Gender</InputLabel>
+      <InputLabel htmlFor={label}>{inputLabel}</InputLabel>
       <Select
         disabled={disabled}
         error={!!error}
-        name="gender"
-        id="gender"
-        label="Gender"
-        value={gender || ''}
+        id={id}
+        label={label}
+        name={name}
+        value={value}
         inputProps={{ readOnly: isEditing ? false : true }}
         IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
         startAdornment=" "
         onChange={onChange}
       >
-        {genderOptions.map((option) => (
+        {options.map((option) => (
           <MenuItem key={option} value={option}>
             {capitalize(option)}
           </MenuItem>

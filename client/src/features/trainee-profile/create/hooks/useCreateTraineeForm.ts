@@ -1,44 +1,37 @@
 import { Gender, JobPath, LearningStatus } from '../../../../data/types/Trainee';
+import { SubmitEventHandler, useState } from 'react';
 
 import { SelectChangeEvent } from '@mui/material';
-import { useState } from 'react';
+import { useCreateTraineeProfile } from '../data/mutations';
+import { validateForm } from '../lib/formHelper';
 
-type FormState = {
+export type FormState = {
   firstName: string;
   lastName: string;
   gender: Gender | null;
   email: string;
-  startCohort?: number;
+  cohort: number;
   learningStatus: LearningStatus;
   jobPath: JobPath;
 };
 
-type FormErrors = {
-  [K in keyof FormState]?: string;
+export type FormErrors = {
+  [K in keyof FormState]?: string | null;
 };
 export const useCreateTraineeForm = () => {
+  const { mutate: createTrainee, isPending, data } = useCreateTraineeProfile();
   // fixme: rename the formState to something more specific like createTraineeFormState
   const [formState, setFormState] = useState<FormState>({
     firstName: '',
     lastName: '',
     gender: null,
     email: '',
-    startCohort: undefined,
+    cohort: 0,
     learningStatus: LearningStatus.Studying,
     jobPath: JobPath.NotGraduated,
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
-
-  const validate = () => {
-    const newErrors: FormErrors = {};
-    if (!formState.firstName) newErrors.firstName = 'First name is required';
-    if (!formState.lastName) newErrors.lastName = 'Last name is required';
-    if (!formState.email) newErrors.email = 'Email is required';
-    if (!formState.gender) newErrors.gender = 'Gender is required';
-    if (!formState.startCohort) newErrors.startCohort = 'Start cohort is required';
-    return newErrors;
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,33 +41,43 @@ export const useCreateTraineeForm = () => {
     }));
   };
 
-  const onSelectGender = (event: SelectChangeEvent) => {
-    const genderValue = event.target.value as Gender;
+  const handleSelect = (event: SelectChangeEvent<String | number>) => {
+    const { name, value } = event.target;
+
     setFormState((prevState) => ({
       ...prevState,
-      gender: genderValue,
+      [name]: value,
     }));
   };
-  const handleSubmit = (event: React.SubmitEventHandler<HTMLFormElement>) => {
-    // event.preventDefault();
 
+  // TODO: move this to the component
+  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
     setErrors({});
-    const errors = validate();
-    console.log(errors);
+    const errors = validateForm(formState);
     setErrors(errors);
-    if (Object.keys(errors).length > 0) {
-      // Handle validation errors, e.g., set error state or display messages
-      console.log('Validation errors:', errors);
+
+    const hasErrors = Object.values(errors).some((error) => error != null);
+
+    if (hasErrors) {
+      console.log('form has errors, not submitting', errors);
       return;
     }
-    console.log(' no errors, submit, yay');
+
+    createTrainee(formState);
+    // TODO: Navigate to the profile of the new trainee
+    //TODO: handle modal opening and closing
+    // TODO: where to put the button??
+    // TODO: test updating existing profile
   };
   return {
     formState,
-    onSelectGender,
+    onSelectGender: handleSelect,
     handleChange,
+    handleSelect,
     setFormState,
     handleSubmit,
     errors,
+    isPending,
   };
 };

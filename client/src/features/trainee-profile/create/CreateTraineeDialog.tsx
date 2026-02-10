@@ -1,19 +1,18 @@
 import { Background, Gender, JobPath, LearningStatus } from '../../../data/types/Trainee';
 import { Box, Button, Dialog, SelectChangeEvent, Stack, Typography } from '@mui/material';
 
+import { DropdownSelect } from '../profile/components/DropdownSelect';
 import { GenderSelect } from '../profile/components/GenderSelect';
 import TextFieldWrapper from './components/TextFieldWrapper';
 import { useCreateTraineeForm } from './hooks/useCreateTraineeForm';
 
-let counter = 0;
-
 export const CreateTraineeDialog: React.FC = () => {
-  const { formState, setFormState, onSelectGender, handleChange, handleSubmit, errors } = useCreateTraineeForm();
+  const { formState, onSelectGender, handleChange, handleSelect, handleSubmit, errors, isPending } =
+    useCreateTraineeForm();
 
-  console.log('reloading', counter++);
   return (
     <Dialog open={true} onClose={() => {}} fullWidth maxWidth="sm">
-      <Box padding={5} sx={{ backgroundColor: 'Background.paper' }}>
+      <Box padding={5} sx={{ backgroundColor: 'background.paper' }}>
         <Typography variant="h4" gutterBottom>
           New trainee profile
         </Typography>
@@ -22,6 +21,7 @@ export const CreateTraineeDialog: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
             <TextFieldWrapper
+              disabled={isPending}
               id="firstName"
               name="firstName"
               error={!!errors.firstName}
@@ -31,6 +31,7 @@ export const CreateTraineeDialog: React.FC = () => {
               onChange={handleChange}
             />
             <TextFieldWrapper
+              disabled={isPending}
               id="lastName"
               name="lastName"
               error={!!errors.lastName}
@@ -39,11 +40,17 @@ export const CreateTraineeDialog: React.FC = () => {
               value={formState.lastName}
               onChange={handleChange}
             />
-            <GenderSelect error={errors.gender} isEditing={true} gender={formState.gender} onChange={onSelectGender} />
+            <GenderSelect
+              disabled={isPending}
+              error={errors.gender || ''}
+              isEditing={true}
+              gender={formState.gender}
+              onChange={onSelectGender}
+            />
             <TextFieldWrapper
+              disabled={isPending}
               id="email"
               name="email"
-              type="email"
               error={!!errors.email}
               helperText={errors.email}
               label="Email"
@@ -51,36 +58,48 @@ export const CreateTraineeDialog: React.FC = () => {
               onChange={handleChange}
             />
             <TextFieldWrapper
-              id="startCohort"
-              name="startCohort"
+              disabled={isPending}
+              id="cohort"
+              name="cohort"
               type="number"
-              error={!!errors.startCohort}
-              helperText={errors.startCohort}
+              error={!!errors.cohort}
+              helperText={errors.cohort}
               label="Start cohort"
-              value={formState.startCohort}
+              value={formState.cohort}
               onChange={handleChange}
+              maxLength={3}
             />
-            <TextFieldWrapper
+            <DropdownSelect
+              disabled={isPending}
+              inputLabel="Learning status"
               id="learningStatus"
               name="learningStatus"
               label="Learning status"
-              onChange={handleChange}
+              options={Object.values(LearningStatus)}
+              isEditing
               value={formState.learningStatus}
+              error={errors.learningStatus || ''}
+              onChange={handleSelect}
             />
-            <TextFieldWrapper
+            <DropdownSelect
+              disabled={isPending}
+              inputLabel="Job path"
               id="jobPath"
               name="jobPath"
-              label="Job path"
+              label="jobPath"
+              options={Object.values(JobPath)}
+              isEditing
               value={formState.jobPath}
-              onChange={handleChange}
+              error={errors.jobPath || ''}
+              onChange={handleSelect}
             />
           </Stack>
           <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
-            <Button type="submit" variant="contained" color="primary">
-              Create
-            </Button>
-            <Button variant="outlined" color="secondary">
+            <Button variant="outlined" color="secondary" disabled={isPending} onClick={() => {}}>
               Cancel
+            </Button>
+            <Button type="submit" variant="contained" color="primary" loading={isPending} disabled={isPending}>
+              Create
             </Button>
           </Stack>
         </form>
