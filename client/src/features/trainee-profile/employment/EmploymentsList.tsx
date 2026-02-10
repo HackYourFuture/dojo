@@ -1,28 +1,18 @@
-import { Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-
-import { AvatarWithTooltip } from '../components/AvatarWithTooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { EmploymentHistory } from '../../../data/types/Trainee.ts';
+import { Box, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import MarkdownText from '../../components/MarkdownText';
-import { Strike } from '../../../../data/types/Trainee';
-import { formatDateForDisplay } from '../../utils/dateHelper';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MarkdownText from '../components/MarkdownText.tsx';
+import React from 'react';
+import { formatDateForDisplay } from '../utils/dateHelper.ts';
 
-interface StrikesListProps {
-  strikes: Strike[];
+interface EmploymentsListProps {
+  employments: EmploymentHistory[];
   onClickEdit: (id: string) => void;
   onClickDelete: (id: string) => void;
 }
 
-export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, onClickDelete }) => {
-  /**
-   * Formats the strike reason to a readable format
-   * with the first letter capitalized
-   * @param reason - The strike reason to format
-   * @returns The formatted strike reason
-   */
-  const formatStrikeReason = (reason: string): string => {
-    return reason.split('-').join(' ').charAt(0).toUpperCase() + reason.split('-').join(' ').slice(1).toLowerCase();
-  };
+export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, onClickEdit, onClickDelete }) => {
 
   const handleEdit = (id: string) => {
     onClickEdit(id);
@@ -54,14 +44,14 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
         scrollbarWidth: 'thin',
       }}
     >
-      {strikes.length === 0 ? (
+      {employments.length === 0 ? (
         <Typography variant="body1" color="#CCCCCC" padding="16px">
-          No strikes found
+          No employments found
         </Typography>
       ) : (
-        strikes.map((strike: Strike, index: number) => {
+        employments.map((employment: EmploymentHistory, index: number) => {
           return (
-            <Box key={strike.id}>
+            <Box key={employment.id}>
               <ListItem
                 alignItems="flex-start"
                 disablePadding
@@ -69,18 +59,12 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                   bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
                 }}
               >
-                <ListItemAvatar
+                <ListItemText
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
                     paddingLeft: 2,
                     paddingRight: 2,
                     paddingTop: 1,
                   }}
-                >
-                  <AvatarWithTooltip imageUrl={strike.reporter.imageUrl} name={strike.reporter.name} />
-                </ListItemAvatar>
-                <ListItemText
                   primary={
                     <Box
                       display="flex"
@@ -90,17 +74,23 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                       paddingTop={1}
                       paddingBottom={1}
                     >
-                      {formatStrikeReason(strike.reason || '')}
-                      <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
+                      <Typography>{employment.companyName}</Typography>
                     </Box>
                   }
                   secondary={
                     <Box mt={-2}>
-                      <MarkdownText>{strike.comments}</MarkdownText>
+                      <MarkdownText>{employment.role + ' • ' + employment.type}</MarkdownText>
+                      <MarkdownText>
+                        {'Start: ' +
+                          formatDateForDisplay(employment.startDate) +
+                          (employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : '')}
+                      </MarkdownText>
+                      <Typography>{employment.comments}</Typography>
+                      <Typography>{"€" + employment.feeAmount || "---"}</Typography>
                     </Box>
                   }
                 />
-                {renderActions(strike.id)}
+                {renderActions(employment.id)}
               </ListItem>
             </Box>
           );

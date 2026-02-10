@@ -47,18 +47,18 @@ export const EmploymentDetailsModal = ({
     companyName: initialEmployment?.companyName || '',
     role: initialEmployment?.role || '',
     startDate: initialEmployment?.startDate || new Date(),
-    endDate: initialEmployment?.endDate || new Date(),
+    endDate: initialEmployment?.endDate,
     feeCollected: initialEmployment?.feeCollected || false,
     feeAmount: initialEmployment?.feeAmount || 0,
     comments: initialEmployment?.comments || '',
   } as EmploymentHistory);
 
-  // TODO: add logic to error handling
   const [requiredFieldError, setRequiredFieldError] = useState({
     type: false,
     companyName: false,
     role: false,
     startDate: false,
+    feeAmount: false,
   });
   const isEditMode = Boolean(initialEmployment);
 
@@ -73,6 +73,13 @@ export const EmploymentDetailsModal = ({
       [name]: value,
     }));
   };
+  const handleEmploymentCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setEmploymentFields((prevEmployment: EmploymentHistory) => ({
+      ...prevEmployment,
+      [name]: checked,
+    }));
+  }
 
   const handleEmploymentSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
@@ -84,10 +91,17 @@ export const EmploymentDetailsModal = ({
   };
 
   const onConfirm = async () => {
-    if (!employmentFields.companyName) setRequiredFieldError({ ...requiredFieldError, companyName: true });
-    if (!employmentFields.type) setRequiredFieldError({ ...requiredFieldError, type: true });
-    if (!employmentFields.role) setRequiredFieldError({ ...requiredFieldError, role: true });
-    if (!employmentFields.startDate) setRequiredFieldError({ ...requiredFieldError, startDate: true });
+    const newErrors = {
+      type: !employmentFields.type,
+      companyName: !employmentFields.companyName,
+      role: !employmentFields.role,
+      startDate: !employmentFields.startDate,
+      feeAmount: employmentFields.feeCollected && (!employmentFields.feeAmount || employmentFields.feeAmount <= 0),
+    }
+
+    setRequiredFieldError(newErrors);
+    const errors = Object.values(newErrors).some(Boolean)
+    if (errors) return;
 
     if (initialEmployment) {
       onConfirmEdit(employmentFields);
@@ -125,7 +139,7 @@ export const EmploymentDetailsModal = ({
                 disabled={isLoading}
                 id="companyName"
                 name="companyName"
-                label="Company name*"
+                label="Company name"
                 type="text"
                 placeholder="HackYourFuture"
                 value={employmentFields.companyName}
@@ -138,13 +152,13 @@ export const EmploymentDetailsModal = ({
             </FormControl>
             <FormControl fullWidth>
               <InputLabel htmlFor="employmentType" error={requiredFieldError.type}>
-                Type*
+                Type
               </InputLabel>
               <Select
                 required
                 disabled={isLoading}
-                name="employmentType"
-                id="employmentType"
+                name="type"
+                id="type"
                 label="Type"
                 value={employmentFields.type || ''}
                 error={requiredFieldError.type}
@@ -162,7 +176,7 @@ export const EmploymentDetailsModal = ({
               disabled={isLoading}
               id="role"
               name="role"
-              label="Role*"
+              label="Role"
               type="text"
               placeholder="Fullstack Developer"
               value={employmentFields.role}
@@ -180,7 +194,7 @@ export const EmploymentDetailsModal = ({
                 disabled={isLoading}
                 id="startDate"
                 name="startDate"
-                label="Start date*"
+                label="Start date"
                 type="date"
                 value={formatDate(employmentFields.startDate)}
                 slotProps={{ inputLabel: { shrink: true } }}
@@ -213,7 +227,7 @@ export const EmploymentDetailsModal = ({
                     id="feeCollected"
                     name="feeCollected"
                     checked={employmentFields.feeCollected}
-                    onChange={handleEmploymentChange}
+                    onChange={handleEmploymentCheckChange}
                   />
                 }
                 label="Fee collected"
@@ -233,10 +247,11 @@ export const EmploymentDetailsModal = ({
                   inputLabel: { shrink: true },
                   input: { startAdornment: <InputAdornment position="start">€</InputAdornment> },
                 }}
-                //TODO: error logic, right now it doesn't take into account if feeAmount is set
+                error={requiredFieldError.feeAmount}
                 onChange={handleEmploymentChange}
                 fullWidth
               />
+              {requiredFieldError.feeAmount && <FormHelperText error>Fee amount is required</FormHelperText>}
             </FormControl>
           </Box>
           <FormControl fullWidth>
