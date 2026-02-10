@@ -18,12 +18,14 @@ import {
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { EmploymentHistory, JobPath } from '../../../data/types/Trainee';
+import { EmploymentHistory, JobPath, Strike } from '../../../data/types/Trainee';
 import LinkIcon from '@mui/icons-material/Link';
 import React, { useState } from 'react';
 import { formatDate } from '../utils/dateHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 import AddIcon from '@mui/icons-material/Add';
+import { EmploymentDetailsModal } from './EmploymentDetailsModal.tsx';
+import { useQueryClient } from '@tanstack/react-query';
 
 const NoIcon = () => null;
 
@@ -34,11 +36,62 @@ const NoIcon = () => null;
  */
 export const EmploymentInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [modalError, setModalError] = useState<string>('');
   const [employmentToEdit, setEmploymentToEdit] = useState<EmploymentHistory | null>(null);
-  const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
+  const { traineeId, trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
+  const { mutate: addEmployment, isPending: addEmploymentLoading } = useAddEmployment(traineeId);
+  const { mutate: deleteEmployment, isPending: deleteEmploymentLoading, error: deleteEmploymentError } = useDeleteEmployment(traineeId);
+  const { mutate: editEmployment, isPending: editEmploymentLoading } = useEditEmployment(traineeId);
+  const { data: employments, isPending: employmentsLoading, error: employmentsError } = useGetEmployment(traineeId);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
   const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
+
+  const [idToDelete, setIdToDelete] = useState<string>('');
+  const queryClient = useQueryClient();
+  const handleSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['employmentHistory', traineeId] });
+    setIsModalOpen(false);
+  };
+
+  const getErrorMessage = (error: Error | unknown) => {
+    return (error as Error).message || 'Unknown error';
+  };
+
+  const onClickEdit = (id: string) => {
+    const employment = employments?.find((employment: EmploymentHistory) => employment.id === id) || null;
+
+    setEmploymentToEdit(employment);
+    setIsModalOpen(true);
+  };
+
+  const onConfirmAdd = async (strike: Strike) => {
+    if (modalError) setModalError('');
+    addStrike(strike, {
+      onSuccess: handleSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onConfirmEdit = (strike: Strike) => {
+    if (modalError) setModalError('');
+    editStrike(strike, {
+      onSuccess: handleSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onClickDelete = (id: string) => {
+    setIdToDelete(id);
+    setIsConfirmationDialogOpen(true);
+  };
 
   /**
    * Function to enable adding entries.
@@ -46,6 +99,28 @@ export const EmploymentInfo = () => {
   const onClickAdd = () => {
     setEmploymentToEdit(null);
     setIsModalOpen(true);
+  };
+
+  /**
+   * Function to cancel adding strikes.
+   */
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setStrikeToEdit(null);
+    setModalError('');
+  };
+
+  const onCancelDelete = () => {
+    setIsConfirmationDialogOpen(false);
+  };
+
+  const onConfirmDelete = () => {
+    deleteStrike(idToDelete, {
+      onSuccess: () => {
+        setIsConfirmationDialogOpen(false);
+        queryClient.invalidateQueries({ queryKey: ['strikes', traineeId] });
+      },
+    });
   };
 
   return (
@@ -59,7 +134,7 @@ export const EmploymentInfo = () => {
             id="jobPath"
             label="Job path"
             value={editedFields?.jobPath || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
+            slotProps={{ input: { readOnly: isEditing } }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -201,7 +276,9 @@ export const EmploymentInfo = () => {
             Employment history ({editedFields?.employmentHistory.length || 0})
           </Typography>
           <Stack direction="row" spacing={2}>
-            <Button startIcon={<AddIcon />} onClick={onClickAdd}>New entry</Button>
+            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+              New entry
+            </Button>
           </Stack>
         </Box>
 
@@ -230,6 +307,15 @@ export const EmploymentInfo = () => {
             </React.Fragment>
           ))}
         </List>
+        <EmploymentDetailsModal
+          isOpen={isModalOpen}
+          error={modalError}
+          isLoading={addEmploymentLoading || editEmploymentLoading}
+          onClose={closeModal}
+          onConfirmAdd={onConfirmAdd}
+          onConfirmEdit={onConfirmEdit}
+          initialEmployment={employmentToEdit}
+        />
       </div>
 
       <div style={{ width: '100%' }}>
@@ -251,6 +337,6 @@ export const EmploymentInfo = () => {
       </div>
     </Box>
   );
-};;
+};;;
 
 export default EmploymentInfo;

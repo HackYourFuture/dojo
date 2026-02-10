@@ -1,13 +1,16 @@
-import { EmploymentHistory, Strike, StrikeReason } from '../../../data/types/Trainee.ts';
-import { useState } from 'react';
+import { EmploymentHistory, EmploymentType } from '../../../data/types/Trainee.ts';
+import React, { useState } from 'react';
 import {
   Alert,
   Backdrop,
   Box,
-  Button, Checkbox,
+  Button,
+  Checkbox,
   Fade,
-  FormControl, FormControlLabel,
+  FormControl,
+  FormControlLabel,
   FormHelperText,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Modal,
@@ -56,7 +59,6 @@ export const EmploymentDetailsModal = ({
     companyName: false,
     role: false,
     startDate: false,
-    feeCollected: false,
   });
   const isEditMode = Boolean(initialEmployment);
 
@@ -81,34 +83,18 @@ export const EmploymentDetailsModal = ({
     }));
   };
 
-  /*
   const onConfirm = async () => {
-    if (employmentFields.reason === null) {
-      setReasonRequiredError(true);
-      return;
-    }
-    if (!employmentFields.comments) {
-      setCommentsRequiredError(true);
-      return;
-    }
+    if (!employmentFields.companyName) setRequiredFieldError({ ...requiredFieldError, companyName: true });
+    if (!employmentFields.type) setRequiredFieldError({ ...requiredFieldError, type: true });
+    if (!employmentFields.role) setRequiredFieldError({ ...requiredFieldError, role: true });
+    if (!employmentFields.startDate) setRequiredFieldError({ ...requiredFieldError, startDate: true });
 
-    if (initialStrike) {
+    if (initialEmployment) {
       onConfirmEdit(employmentFields);
     } else {
       onConfirmAdd(employmentFields);
     }
   };
-
-  const onChangeComments = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommentsRequiredError(false);
-    const { name, value } = e.target;
-
-    setStrikeFields((prevStrike) => ({
-      ...prevStrike,
-      [name]: value,
-    }));
-  };
-   */
 
   return (
     <Modal open={isOpen} closeAfterTransition slots={{ backdrop: Backdrop }} slotProps={{ backdrop: { timeout: 500 } }}>
@@ -135,6 +121,7 @@ export const EmploymentDetailsModal = ({
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
               <TextField
+                required
                 disabled={isLoading}
                 id="companyName"
                 name="companyName"
@@ -143,6 +130,7 @@ export const EmploymentDetailsModal = ({
                 placeholder="HackYourFuture"
                 value={employmentFields.companyName}
                 slotProps={{ inputLabel: { shrink: true } }}
+                error={requiredFieldError.companyName}
                 onChange={handleEmploymentChange}
                 fullWidth
               />
@@ -153,6 +141,7 @@ export const EmploymentDetailsModal = ({
                 Type*
               </InputLabel>
               <Select
+                required
                 disabled={isLoading}
                 name="employmentType"
                 id="employmentType"
@@ -161,14 +150,15 @@ export const EmploymentDetailsModal = ({
                 error={requiredFieldError.type}
                 onChange={handleEmploymentSelectChange}
               >
-                <MenuItem value={StrikeReason.LateSubmission}>Internship</MenuItem>
-                <MenuItem value={StrikeReason.MissedSubmission}>Job</MenuItem>
+                <MenuItem value={EmploymentType.Internship}>Internship</MenuItem>
+                <MenuItem value={EmploymentType.Job}>Job</MenuItem>
               </Select>
               {requiredFieldError.type && <FormHelperText error>Type is required</FormHelperText>}
             </FormControl>
           </Box>
           <FormControl fullWidth>
             <TextField
+              required
               disabled={isLoading}
               id="role"
               name="role"
@@ -177,6 +167,7 @@ export const EmploymentDetailsModal = ({
               placeholder="Fullstack Developer"
               value={employmentFields.role}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={requiredFieldError.role}
               onChange={handleEmploymentChange}
               fullWidth
             />
@@ -185,6 +176,7 @@ export const EmploymentDetailsModal = ({
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
               <TextField
+                required
                 disabled={isLoading}
                 id="startDate"
                 name="startDate"
@@ -192,6 +184,7 @@ export const EmploymentDetailsModal = ({
                 type="date"
                 value={formatDate(employmentFields.startDate)}
                 slotProps={{ inputLabel: { shrink: true } }}
+                error={requiredFieldError.startDate}
                 onChange={handleEmploymentChange}
                 fullWidth
               />
@@ -228,14 +221,19 @@ export const EmploymentDetailsModal = ({
             </FormControl>
             <FormControl fullWidth>
               <TextField
+                required={employmentFields.feeCollected}
                 disabled={isLoading}
                 id="feeAmount"
                 name="feeAmount"
                 label="Fee amount"
                 type="number"
-                placeholder="4000" // TODO: add InputAdornment to display EUR sign
+                placeholder="4000"
                 value={employmentFields.feeAmount}
-                slotProps={{ inputLabel: { shrink: true } }}
+                slotProps={{
+                  inputLabel: { shrink: true },
+                  input: { startAdornment: <InputAdornment position="start">€</InputAdornment> },
+                }}
+                //TODO: error logic, right now it doesn't take into account if feeAmount is set
                 onChange={handleEmploymentChange}
                 fullWidth
               />
@@ -243,7 +241,6 @@ export const EmploymentDetailsModal = ({
           </Box>
           <FormControl fullWidth>
             <TextField
-              required
               sx={{
                 lineHeight: 2,
               }}
@@ -255,11 +252,9 @@ export const EmploymentDetailsModal = ({
               multiline
               minRows={2}
               maxRows={4}
-              error={commentsRequiredError}
-              helperText={commentsRequiredError ? 'Comments are required' : ''}
-              value={strikeFields.comments}
-              InputLabelProps={{ shrink: true }}
-              onChange={onChangeComments}
+              value={employmentFields.comments}
+              slotProps={{ inputLabel: { shrink: true } }}
+              onChange={handleEmploymentChange}
               fullWidth
             />
           </FormControl>
