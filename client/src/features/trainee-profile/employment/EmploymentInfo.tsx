@@ -298,6 +298,7 @@ export const EmploymentInfo = () => {
           <EmploymentsList employments={employments || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
         )}
         <EmploymentDetailsModal
+          key={employmentToEdit?.id || `add-employment-${isModalOpen}`}
           isOpen={isModalOpen}
           error={modalError}
           isLoading={addEmploymentLoading || editEmploymentLoading}
@@ -326,6 +327,6 @@ export const EmploymentInfo = () => {
       </div>
     </Box>
   );
-};;;
+};
 
 export default EmploymentInfo;

@@ -124,7 +124,7 @@ export const EmploymentDetailsModal = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
+            backgroundColor: 'background.paper',
             boxShadow: 24,
             p: 4,
           }}

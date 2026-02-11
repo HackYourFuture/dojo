@@ -1,8 +1,7 @@
 import { EmploymentHistory } from '../../../data/types/Trainee.ts';
-import { Box, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MarkdownText from '../components/MarkdownText.tsx';
 import React from 'react';
 import { formatDateForDisplay } from '../utils/dateHelper.ts';
 
@@ -13,6 +12,15 @@ interface EmploymentsListProps {
 }
 
 export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, onClickEdit, onClickDelete }) => {
+
+  /**
+   * Formats text to have the first letter capitalized
+   * @param string - The string to format
+   * @returns The formatted string
+   */
+  const formatText = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   const handleEdit = (id: string) => {
     onClickEdit(id);
@@ -38,7 +46,7 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
     <List
       sx={{
         width: '100%',
-        bgcolor: 'background.paper',
+        backgroundColor: 'background.paper',
         maxHeight: 300,
         overflow: 'auto',
         scrollbarWidth: 'thin',
@@ -56,14 +64,12 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
                 alignItems="flex-start"
                 disablePadding
                 sx={{
-                  bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
+                  backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
                 }}
               >
                 <ListItemText
                   sx={{
-                    paddingLeft: 2,
-                    paddingRight: 2,
-                    paddingTop: 1,
+                    px: 2,
                   }}
                   primary={
                     <Box
@@ -71,26 +77,32 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
                       flexDirection="row"
                       justifyContent="space-between"
                       width="100%"
-                      paddingTop={1}
-                      paddingBottom={1}
+                      py={1}
                     >
-                      <Typography>{employment.companyName}</Typography>
+                      <Typography variant="h6">{employment.companyName}</Typography>
                     </Box>
                   }
                   secondary={
-                    <Box mt={-2}>
-                      <MarkdownText>{employment.role + ' • ' + employment.type}</MarkdownText>
-                      <MarkdownText>
-                        {'Start: ' +
-                          formatDateForDisplay(employment.startDate) +
-                          (employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : '')}
-                      </MarkdownText>
-                      <Typography>{employment.comments}</Typography>
-                      <Typography>{"€" + employment.feeAmount || "---"}</Typography>
+                    <Box mt={-2} py={1}>
+                      <Box>
+                        <Typography variant="body2">
+                          {employment.role} • {formatText(employment.type)}
+                        </Typography>
+                        <Typography variant="body2">
+                          Start: {formatDateForDisplay(employment.startDate)}
+                          {employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : ''}
+                        </Typography>
+                      </Box>
+                      <Typography variant="subtitle1">{employment.comments}</Typography>
                     </Box>
                   }
                 />
-                {renderActions(employment.id)}
+                <Box>
+                  {renderActions(employment.id)}
+                  <Tooltip title="Education fee">
+                    <Typography>€ {employment.feeAmount || '---'}</Typography>
+                  </Tooltip>
+                </Box>
               </ListItem>
             </Box>
           );
