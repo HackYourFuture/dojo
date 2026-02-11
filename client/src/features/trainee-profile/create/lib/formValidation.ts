@@ -1,4 +1,4 @@
-import { FormErrors, FormState } from './../components/NewTraineeForm';
+import { FormErrors, FormState } from '../components/NewTraineeForm';
 
 const FIELD_REQUIRED_ERROR = 'This field is required';
 

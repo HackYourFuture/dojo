@@ -5,7 +5,7 @@ import { JobPath, LearningStatus } from '../../../data/types/Trainee';
 import { useCreateTraineeProfile } from './data/mutations';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { validateAndCollectFormErrors } from './lib/formHelper';
+import { validateAndCollectFormErrors } from './lib/formValidation';
 
 interface AddTraineeDialogProps {
   isOpen: boolean;
