@@ -1,11 +1,11 @@
+import { ErrorBox, Loader } from '../../components';
+
 import { ActionsCard } from './components/ActionsCard';
 import Box from '@mui/material/Box';
 import { Cohort } from '../cohorts/Cohorts';
 import CohortAccordion from './components/CohortAccordion';
 import Container from '@mui/material/Container';
-import { Loader } from '../../components';
 import Stack from '@mui/material/Stack';
-import { StyledErrorBox } from '../../components/StyledErrorBox';
 import Typography from '@mui/material/Typography';
 import { useCohortsData } from './data/useCohortsData';
 import { useEffect } from 'react';
@@ -31,9 +31,13 @@ const CohortsPage = () => {
           </Box>
         )}
         {isError && (
-          <StyledErrorBox
-            message={error instanceof Error ? error.message : 'An unknown error occurred while fetching cohorts data.'}
-          />
+          <Box width="50%" margin="auto" marginTop="2rem" marginBottom="2rem">
+            <ErrorBox
+              errorMessage={
+                error instanceof Error ? error.message : 'An unknown error occurred while fetching cohorts data.'
+              }
+            />
+          </Box>
         )}
 
         <Stack direction="column" spacing={2}>

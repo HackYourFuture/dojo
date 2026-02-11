@@ -5,7 +5,7 @@ import { JobPath, LearningStatus } from '../../../data/types/Trainee';
 import { useCreateTraineeProfile } from './data/mutations';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { validateForm } from './lib/formHelper';
+import { validateAndCollectFormErrors } from './lib/formHelper';
 
 interface AddTraineeDialogProps {
   isOpen: boolean;
@@ -21,6 +21,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
     learningStatus: LearningStatus.Studying,
     jobPath: JobPath.NotGraduated,
   };
+
   const navigate = useNavigate();
   const {
     mutate: createTrainee,
@@ -30,12 +31,12 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
     onSuccess: (profilePath: string) => onSuccess(profilePath),
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<FormErrors | null>(null);
 
   const [formState, setFormState] = useState<FormState>(initialState);
   const onClose = () => {
     setFormState(initialState);
-    setErrors({});
+    setErrors(null);
     handleClose();
   };
 
@@ -62,16 +63,12 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
 
   const handleSubmit: React.ComponentProps<'form'>['onSubmit'] = (event) => {
     event.preventDefault();
-    setErrors({});
-    const errors = validateForm(formState);
-    setErrors(errors);
+    const errors = validateAndCollectFormErrors(formState);
 
-    const hasErrors = Object.values(errors).some((error) => error != null);
-
-    if (hasErrors) {
+    if (errors) {
+      setErrors(errors);
       return;
     }
-
     createTrainee(formState);
   };
 

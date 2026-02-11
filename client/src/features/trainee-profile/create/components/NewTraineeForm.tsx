@@ -17,13 +17,17 @@ export type FormState = {
 };
 
 export type FormErrors = {
-  [K in keyof FormState]?: string | null;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
+  email?: string;
+  cohort?: string;
 };
 
 export const NewTraineeForm: React.FC<{
   isLoading: boolean;
   formState: FormState;
-  errors: FormErrors;
+  errors: FormErrors | null;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClose: () => void;
   handleSelect: (event: SelectChangeEvent<string | number>) => void;
@@ -36,8 +40,8 @@ export const NewTraineeForm: React.FC<{
           disabled={isLoading}
           id="firstName"
           name="firstName"
-          error={!!errors.firstName}
-          helperText={errors.firstName}
+          error={!!errors?.firstName}
+          helperText={errors?.firstName}
           label="First name"
           value={formState.firstName}
           onChange={handleChange}
@@ -46,8 +50,8 @@ export const NewTraineeForm: React.FC<{
           disabled={isLoading}
           id="lastName"
           name="lastName"
-          error={!!errors.lastName}
-          helperText={errors.lastName}
+          error={!!errors?.lastName}
+          helperText={errors?.lastName}
           label="Last name"
           value={formState.lastName}
           onChange={handleChange}
@@ -56,15 +60,15 @@ export const NewTraineeForm: React.FC<{
           disabled={isLoading}
           isEditing
           value={formState.gender || undefined}
-          error={errors.gender || ''}
+          error={errors?.gender || ''}
           onChange={handleSelect}
         />
         <TextFieldWrapper
           disabled={isLoading}
           id="email"
           name="email"
-          error={!!errors.email}
-          helperText={errors.email}
+          error={!!errors?.email}
+          helperText={errors?.email}
           label="Email"
           value={formState.email}
           onChange={handleChange}
@@ -74,28 +78,16 @@ export const NewTraineeForm: React.FC<{
           id="cohort"
           name="cohort"
           type="number"
-          error={!!errors.cohort}
-          helperText={errors.cohort}
+          error={!!errors?.cohort}
+          helperText={errors?.cohort}
           label="Start cohort"
           value={formState.cohort}
           onChange={handleChange}
           maxLength={3}
         />
 
-        <LearningStatusSelect
-          disabled={isLoading}
-          isEditing
-          value={formState.learningStatus}
-          error={errors.learningStatus || ''}
-          onChange={handleSelect}
-        />
-        <JobPathSelect
-          disabled={isLoading}
-          isEditing
-          value={formState.jobPath}
-          error={errors.jobPath || ''}
-          onChange={handleSelect}
-        />
+        <LearningStatusSelect disabled={isLoading} isEditing value={formState.learningStatus} onChange={handleSelect} />
+        <JobPathSelect disabled={isLoading} isEditing value={formState.jobPath} onChange={handleSelect} />
       </Stack>
       <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
         <Button variant="outlined" color="secondary" disabled={isLoading} onClick={handleClose}>

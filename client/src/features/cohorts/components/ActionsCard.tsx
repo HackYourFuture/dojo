@@ -1,7 +1,7 @@
+import { Box, Button } from '@mui/material';
+
 import { Add } from '@mui/icons-material';
 import { AddTraineeDialog } from '../../trainee-profile/create/AddTraineeDialog';
-import { Box } from '@mui/material';
-import { ButtonWithIcon } from '../../../components/ButtonWithIcon';
 import { useState } from 'react';
 
 export const ActionsCard = () => {
@@ -17,7 +17,9 @@ export const ActionsCard = () => {
   return (
     <Box sx={{ my: 2, paddingTop: 2, paddingBottom: 2, display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
       <AddTraineeDialog isOpen={isAddTraineeDialogOpen} handleClose={handleCloseAddTraineeDialog} />
-      <ButtonWithIcon text="Add Trainee" startIcon={<Add />} onClick={handleOpenAddTraineeDialog} />
+      <Button variant="contained" startIcon={<Add />} onClick={handleOpenAddTraineeDialog}>
+        Add Trainee
+      </Button>
     </Box>
   );
 };
