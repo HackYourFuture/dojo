@@ -1,5 +1,5 @@
 import { Add } from '@mui/icons-material';
-import { AddTraineeDialog } from '../../trainee-profile/create/CreateTraineeDialog';
+import { AddTraineeDialog } from '../../trainee-profile/create/AddTraineeDialog';
 import { ButtonWithIcon } from '../../../components/ButtonWithIcon';
 import { Card } from '@mui/material';
 import { useState } from 'react';
