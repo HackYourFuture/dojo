@@ -72,14 +72,8 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
                     px: 2,
                   }}
                   primary={
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      justifyContent="space-between"
-                      width="100%"
-                      py={1}
-                    >
-                      <Typography variant="h6">{employment.companyName}</Typography>
+                    <Box width="100%" pt={1} pb={2}>
+                      {employment.companyName}
                     </Box>
                   }
                   secondary={
@@ -93,7 +87,7 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
                           {employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : ''}
                         </Typography>
                       </Box>
-                      <Typography variant="subtitle1">{employment.comments}</Typography>
+                      {employment.comments && <Typography variant="subtitle1" pt={1}>{employment.comments}</Typography>}
                     </Box>
                   }
                 />
