@@ -34,7 +34,7 @@ export const DropdownSelect = ({
   const NoIcon = () => null;
 
   return (
-    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
+    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch' }}>
       <InputLabel htmlFor={label}>{inputLabel}</InputLabel>
       <Select
         disabled={disabled}
@@ -53,8 +53,8 @@ export const DropdownSelect = ({
             {option.label}
           </MenuItem>
         ))}
-        <FormHelperText error={!!error}>{error}</FormHelperText>
       </Select>
+      {!!error && <FormHelperText error>{error}</FormHelperText>}
     </FormControl>
   );
 };

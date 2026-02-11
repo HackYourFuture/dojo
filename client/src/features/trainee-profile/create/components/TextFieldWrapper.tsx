@@ -20,7 +20,7 @@ const TextFieldWrapper: React.FC<TextFieldWrapperProps> = (props) => {
   return (
     <Stack>
       <TextField
-        type="text"
+        type="text" //defaults to text. This could be overriden by passing type in props
         {...props}
         onChange={handleChange}
         value={props.value ?? ''}

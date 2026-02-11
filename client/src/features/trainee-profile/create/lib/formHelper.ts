@@ -18,7 +18,7 @@ const validateEmail = (email: string) => {
 
 const validateCohort = (cohort: number | undefined) => {
   if (cohort === undefined) return FIELD_REQUIRED_ERROR;
-  if (cohort < 0) return 'Cohort must be a positive number';
+  if (cohort <= 0) return 'Cohort must be a positive number';
   return null;
 };
 

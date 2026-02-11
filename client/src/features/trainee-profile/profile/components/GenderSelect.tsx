@@ -9,6 +9,7 @@ const genderOptions = Object.values(Gender).map((gender) => ({
 }));
 
 type GenderSelectProps = {
+  initialValue?: string;
   disabled?: boolean;
   isEditing: boolean;
   value?: string;
@@ -18,6 +19,6 @@ type GenderSelectProps = {
 
 export const GenderSelect: React.FC<GenderSelectProps> = (props) => {
   return (
-    <DropdownSelect {...props} options={genderOptions} name="gender" id="gender" label="Gender" inputLabel="gender" />
+    <DropdownSelect {...props} options={genderOptions} name="gender" id="gender" label="gender" inputLabel="Gender" />
   );
 };

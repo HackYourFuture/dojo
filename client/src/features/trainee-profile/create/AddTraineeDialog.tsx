@@ -1,10 +1,10 @@
 import { Alert, Box, Dialog, SelectChangeEvent, Typography } from '@mui/material';
 import { FormErrors, FormState, NewTraineeForm } from './components/NewTraineeForm';
 import { JobPath, LearningStatus } from '../../../data/types/Trainee';
-import { SubmitEventHandler, useState } from 'react';
 
 import { useCreateTraineeProfile } from './data/mutations';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { validateForm } from './lib/formHelper';
 
 interface AddTraineeDialogProps {
@@ -12,6 +12,15 @@ interface AddTraineeDialogProps {
   handleClose: () => void;
 }
 export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, handleClose }) => {
+  const initialState = {
+    firstName: '',
+    lastName: '',
+    gender: null,
+    email: '',
+    cohort: 0,
+    learningStatus: LearningStatus.Studying,
+    jobPath: JobPath.NotGraduated,
+  };
   const navigate = useNavigate();
   const {
     mutate: createTrainee,
@@ -23,18 +32,15 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const [formState, setFormState] = useState<FormState>({
-    firstName: '',
-    lastName: '',
-    gender: null,
-    email: '',
-    cohort: 0,
-    learningStatus: LearningStatus.Studying,
-    jobPath: JobPath.NotGraduated,
-  });
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const onClose = () => {
+    setFormState(initialState);
+    setErrors({});
+    handleClose();
+  };
 
   const onSuccess = (path: string) => {
-    handleClose();
+    onClose();
     navigate(path);
   };
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +60,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
     }));
   };
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
+  const handleSubmit: React.ComponentProps<'form'>['onSubmit'] = (event) => {
     event.preventDefault();
     setErrors({});
     const errors = validateForm(formState);
@@ -82,12 +88,14 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
           handleChange={handleTextChange}
           handleSelect={handleSelectChange}
           handleSubmit={handleSubmit}
-          handleClose={handleClose}
+          handleClose={onClose}
         />
 
         {submitError && (
           <Box paddingTop={2}>
-            <Alert severity="error">An error occurred while creating the trainee profile: {submitError.message}</Alert>
+            <Alert severity="error">
+              An error occurred while creating the trainee profile: {submitError?.message && 'unknown'}
+            </Alert>
           </Box>
         )}
       </Box>

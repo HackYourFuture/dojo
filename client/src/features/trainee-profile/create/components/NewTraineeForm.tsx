@@ -4,7 +4,6 @@ import { Gender, JobPath, LearningStatus } from '../../../../data/types/Trainee'
 import { GenderSelect } from '../../profile/components/GenderSelect';
 import { JobPathSelect } from '../../profile/components/JobPathSelect';
 import { LearningStatusSelect } from '../../profile/components/LearningStatusSelect';
-import { SubmitEventHandler } from 'react';
 import TextFieldWrapper from './TextFieldWrapper';
 
 export type FormState = {
@@ -28,7 +27,7 @@ export const NewTraineeForm: React.FC<{
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClose: () => void;
   handleSelect: (event: SelectChangeEvent<string | number>) => void;
-  handleSubmit: SubmitEventHandler<HTMLFormElement>;
+  handleSubmit: React.ComponentProps<'form'>['onSubmit'];
 }> = ({ isLoading, formState, errors, handleChange, handleSelect, handleSubmit, handleClose }) => {
   return (
     <form onSubmit={handleSubmit}>

@@ -16,11 +16,7 @@ export const ActionsCard = () => {
   };
   return (
     <Box sx={{ my: 2, paddingTop: 2, paddingBottom: 2, display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
-      <AddTraineeDialog
-        key={`add-trainee-open-${isAddTraineeDialogOpen}`}
-        isOpen={isAddTraineeDialogOpen}
-        handleClose={handleCloseAddTraineeDialog}
-      />
+      <AddTraineeDialog isOpen={isAddTraineeDialogOpen} handleClose={handleCloseAddTraineeDialog} />
       <ButtonWithIcon text="Add Trainee" startIcon={<Add />} onClick={handleOpenAddTraineeDialog} />
     </Box>
   );
