@@ -27,7 +27,7 @@ export const NewTraineeForm: React.FC<{
   errors: FormErrors;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClose: () => void;
-  handleSelect: (event: SelectChangeEvent<String | number>) => void;
+  handleSelect: (event: SelectChangeEvent<string | number>) => void;
   handleSubmit: SubmitEventHandler<HTMLFormElement>;
 }> = ({ isLoading, formState, errors, handleChange, handleSelect, handleSubmit, handleClose }) => {
   return (

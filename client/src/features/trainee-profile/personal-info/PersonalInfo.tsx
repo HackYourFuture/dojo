@@ -1,6 +1,6 @@
 import { Background, EducationLevel, EnglishLevel, Pronouns, ResidencyStatus } from '../../../data/types/Trainee';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { createSelectChangeHandler, createTextChangeHandler, formatTextToFriendly } from '../utils/formHelper';
+import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { GenderSelect } from '../profile/components/GenderSelect';

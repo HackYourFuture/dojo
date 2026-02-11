@@ -45,7 +45,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
     }));
   };
 
-  const handleSelectChange = (event: SelectChangeEvent<String | number>) => {
+  const handleSelectChange = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
 
     setFormState((prevState: FormState) => ({
