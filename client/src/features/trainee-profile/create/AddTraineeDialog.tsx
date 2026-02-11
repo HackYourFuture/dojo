@@ -7,13 +7,11 @@ import { useCreateTraineeProfile } from './data/mutations';
 import { useNavigate } from 'react-router-dom';
 import { validateForm } from './lib/formHelper';
 
-// TODO: rename
-
-interface CreateTraineeDialogProps {
+interface AddTraineeDialogProps {
   isOpen: boolean;
   handleClose: () => void;
 }
-export const CreateTraineeDialog: React.FC<CreateTraineeDialogProps> = ({ isOpen, handleClose }) => {
+export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, handleClose }) => {
   const navigate = useNavigate();
   const {
     mutate: createTrainee,
