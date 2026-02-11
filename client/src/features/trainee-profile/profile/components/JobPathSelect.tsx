@@ -1,10 +1,11 @@
+import { formatJobPathToLabel, formatTextToFriendly } from '../../utils/formHelper';
+
 import { DropdownSelect } from './DropdownSelect';
 import { JobPath } from '../../../../data/types/Trainee';
 import { SelectChangeEvent } from '@mui/material';
-import { formatTextToFriendly } from '../../utils/formHelper';
 
 const options = Object.values(JobPath).map((status) => ({
-  label: formatTextToFriendly(status),
+  label: formatJobPathToLabel(status),
   value: status,
 }));
 
