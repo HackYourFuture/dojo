@@ -1,13 +1,28 @@
-import { Box, Dialog, SelectChangeEvent, Typography } from '@mui/material';
+import { Alert, Box, Button, Dialog, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { FormErrors, FormState, NewTraineeForm } from './components/NewTraineeForm';
 import { JobPath, LearningStatus } from '../../../data/types/Trainee';
 import { SubmitEventHandler, useState } from 'react';
 
 import { useCreateTraineeProfile } from './data/mutations';
+import { useNavigate } from 'react-router-dom';
 import { validateForm } from './lib/formHelper';
 
-export const CreateTraineeDialog: React.FC = () => {
-  const { mutate: createTrainee, isPending, data } = useCreateTraineeProfile();
+// TODO: rename
+
+interface CreateTraineeDialogProps {
+  isOpen: boolean;
+  handleClose: () => void;
+}
+export const CreateTraineeDialog: React.FC<CreateTraineeDialogProps> = ({ isOpen, handleClose }) => {
+  const navigate = useNavigate();
+  const {
+    mutate: createTrainee,
+    isPending,
+    error: submitError,
+  } = useCreateTraineeProfile({
+    onSuccess: (profilePath: string) => onSuccess(profilePath),
+  });
+
   const [errors, setErrors] = useState<FormErrors>({});
 
   const [formState, setFormState] = useState<FormState>({
@@ -20,6 +35,10 @@ export const CreateTraineeDialog: React.FC = () => {
     jobPath: JobPath.NotGraduated,
   });
 
+  const onSuccess = (path: string) => {
+    handleClose();
+    navigate(path);
+  };
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormState((prevState: FormState) => ({
@@ -46,7 +65,6 @@ export const CreateTraineeDialog: React.FC = () => {
     const hasErrors = Object.values(errors).some((error) => error != null);
 
     if (hasErrors) {
-      console.log('form has errors, not submitting', errors);
       return;
     }
 
@@ -54,7 +72,7 @@ export const CreateTraineeDialog: React.FC = () => {
   };
 
   return (
-    <Dialog open={true} onClose={() => {}} fullWidth maxWidth="sm">
+    <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="sm">
       <Box padding={5} sx={{ backgroundColor: 'background.paper' }}>
         <Typography variant="h4" gutterBottom>
           New trainee profile
@@ -66,7 +84,14 @@ export const CreateTraineeDialog: React.FC = () => {
           handleChange={handleTextChange}
           handleSelect={handleSelectChange}
           handleSubmit={handleSubmit}
+          handleClose={handleClose}
         />
+
+        {submitError && (
+          <Box paddingTop={2}>
+            <Alert severity="error">An error occurred while creating the trainee profile: {submitError.message}</Alert>
+          </Box>
+        )}
       </Box>
     </Dialog>
   );

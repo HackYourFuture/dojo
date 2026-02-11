@@ -24,9 +24,10 @@ export const NewTraineeForm: React.FC<{
   formState: FormState;
   errors: FormErrors;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleClose: () => void;
   handleSelect: (event: SelectChangeEvent<String | number>) => void;
   handleSubmit: SubmitEventHandler<HTMLFormElement>;
-}> = ({ isLoading, formState, errors, handleChange, handleSelect, handleSubmit }) => {
+}> = ({ isLoading, formState, errors, handleChange, handleSelect, handleSubmit, handleClose }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing={2}>
@@ -110,7 +111,7 @@ export const NewTraineeForm: React.FC<{
         />
       </Stack>
       <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
-        <Button variant="outlined" color="secondary" disabled={isLoading} onClick={() => {}}>
+        <Button variant="outlined" color="secondary" disabled={isLoading} onClick={handleClose}>
           Cancel
         </Button>
         <Button type="submit" variant="contained" color="primary" loading={isLoading} disabled={isLoading}>

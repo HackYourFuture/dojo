@@ -1,10 +1,11 @@
-import { ErrorBox, Loader } from '../../components';
-
+import { ActionsCard } from './components/ActionsCard';
 import Box from '@mui/material/Box';
 import { Cohort } from '../cohorts/Cohorts';
 import CohortAccordion from './components/CohortAccordion';
 import Container from '@mui/material/Container';
+import { Loader } from '../../components';
 import Stack from '@mui/material/Stack';
+import { StyledErrorBox } from '../../components/StyledErrorBox';
 import Typography from '@mui/material/Typography';
 import { useCohortsData } from './data/useCohortsData';
 import { useEffect } from 'react';
@@ -17,34 +18,31 @@ const CohortsPage = () => {
     document.title = 'Cohorts | Dojo';
   }, []);
 
-  const { isLoading, isError, data, error, isFetching } = useCohortsData();
-
-  if (isLoading || isFetching) {
-    return <Loader />;
-  }
-
-  if (isError && error instanceof Error) {
-    return (
-      //fixme: make this reusable
-      <Box width="50%" margin="auto" marginTop="2rem">
-        return <ErrorBox errorMessage={error.message} />;
-      </Box>
-    );
-  }
+  const { isError, data, error, isPending } = useCohortsData();
 
   return (
     <Container fixed>
       <Box p={2}>
         <Typography variant="h4">Cohorts Overview</Typography>
-        <Box display="flex" alignItems="start" justifyContent="start" p={2}>
-          <Stack direction="column" spacing={2}>
-            {data?.sort(compareCohort).map((cohort: Cohort, index: number) => (
-              <div key={index}>
-                <CohortAccordion cohortInfo={cohort}></CohortAccordion>
-              </div>
-            ))}
-          </Stack>
-        </Box>
+        <ActionsCard />
+        {isPending && (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+            <Loader />
+          </Box>
+        )}
+        {isError && (
+          <StyledErrorBox
+            message={error instanceof Error ? error.message : 'An unknown error occurred while fetching cohorts data.'}
+          />
+        )}
+
+        <Stack direction="column" spacing={2}>
+          {data?.sort(compareCohort).map((cohort: Cohort, index: number) => (
+            <Box key={index}>
+              <CohortAccordion cohortInfo={cohort}></CohortAccordion>
+            </Box>
+          ))}
+        </Stack>
       </Box>
     </Container>
   );
