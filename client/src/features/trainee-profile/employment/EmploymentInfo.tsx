@@ -16,7 +16,7 @@ import {
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { JobPath } from '../../../data/types/Trainee';
+import { JobPathSelect } from '../profile/components/JobPathSelect';
 import LinkIcon from '@mui/icons-material/Link';
 import React from 'react';
 import { formatDate } from '../utils/dateHelper';
@@ -39,28 +39,7 @@ export const EmploymentInfo = () => {
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
       <div style={{ width: '100%' }}>
         {/* Job path */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-          <InputLabel htmlFor="jobPath">Job path</InputLabel>
-          <Select
-            name="jobPath"
-            id="jobPath"
-            label="Job path"
-            value={editedFields?.jobPath || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value={JobPath.NotGraduated}>Not graduated</MenuItem>
-            <MenuItem value={JobPath.Searching}>Searching</MenuItem>
-            <MenuItem value={JobPath.Internship}>Internship</MenuItem>
-            <MenuItem value={JobPath.TechJob}>Tech job</MenuItem>
-            <MenuItem value={JobPath.NonTechJob}>Non-tech job</MenuItem>
-            <MenuItem value={JobPath.NotSearching}>Not searching</MenuItem>
-            <MenuItem value={JobPath.OtherStudies}>Other studies</MenuItem>
-            <MenuItem value={JobPath.NoLongerHelping}>No longer helping</MenuItem>
-          </Select>
-        </FormControl>
+        <JobPathSelect isEditing={isEditing} value={editedFields.jobPath} onChange={handleSelectChange} />
 
         {/* CV */}
         <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>

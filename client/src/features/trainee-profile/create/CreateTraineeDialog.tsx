@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Dialog, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import { Alert, Box, Dialog, SelectChangeEvent, Typography } from '@mui/material';
 import { FormErrors, FormState, NewTraineeForm } from './components/NewTraineeForm';
 import { JobPath, LearningStatus } from '../../../data/types/Trainee';
 import { SubmitEventHandler, useState } from 'react';

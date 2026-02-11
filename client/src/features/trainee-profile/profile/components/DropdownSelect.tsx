@@ -9,12 +9,16 @@ type CustomSelectProps = {
   label: string;
   name: string;
   value?: string; //currently selected value
-  options: string[]; // array of values to show in the dropdown
+  options: MenuItemType[]; // array of values to show in the dropdown
   isEditing?: boolean;
   error?: string;
   onChange: (event: SelectChangeEvent<string>) => void;
 };
 
+export type MenuItemType = {
+  label: string; //To be displayed to the user
+  value: string;
+};
 export const DropdownSelect = ({
   disabled = false,
   inputLabel,
@@ -44,9 +48,9 @@ export const DropdownSelect = ({
         startAdornment=" "
         onChange={onChange}
       >
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+        {options.map((option: MenuItemType) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
           </MenuItem>
         ))}
         <FormHelperText error={!!error}>{error}</FormHelperText>

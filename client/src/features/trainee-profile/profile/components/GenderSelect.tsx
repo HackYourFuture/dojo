@@ -3,6 +3,11 @@ import { Gender } from '../../../../data/types/Trainee';
 import { SelectChangeEvent } from '@mui/material';
 import { formatTextToFriendly } from '../../utils/formHelper';
 
+const genderOptions = Object.values(Gender).map((gender) => ({
+  label: formatTextToFriendly(gender),
+  value: gender,
+}));
+
 type GenderSelectProps = {
   disabled?: boolean;
   isEditing: boolean;
@@ -10,8 +15,6 @@ type GenderSelectProps = {
   error?: string;
   onChange: (event: SelectChangeEvent<string>) => void;
 };
-
-const genderOptions = Object.values(Gender).map((gender) => formatTextToFriendly(gender));
 
 export const GenderSelect: React.FC<GenderSelectProps> = (props) => {
   return (

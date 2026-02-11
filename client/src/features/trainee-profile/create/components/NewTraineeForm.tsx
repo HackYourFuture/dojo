@@ -1,8 +1,9 @@
 import { Button, SelectChangeEvent, Stack } from '@mui/material';
 import { Gender, JobPath, LearningStatus } from '../../../../data/types/Trainee';
 
-import { DropdownSelect } from '../../profile/components/DropdownSelect';
 import { GenderSelect } from '../../profile/components/GenderSelect';
+import { JobPathSelect } from '../../profile/components/JobPathSelect';
+import { LearningStatusSelect } from '../../profile/components/LearningStatusSelect';
 import { SubmitEventHandler } from 'react';
 import TextFieldWrapper from './TextFieldWrapper';
 
@@ -81,25 +82,16 @@ export const NewTraineeForm: React.FC<{
           onChange={handleChange}
           maxLength={3}
         />
-        <DropdownSelect
+
+        <LearningStatusSelect
           disabled={isLoading}
-          inputLabel="Learning status"
-          id="learningStatus"
-          name="learningStatus"
-          label="Learning status"
-          options={Object.values(LearningStatus)}
           isEditing
           value={formState.learningStatus}
           error={errors.learningStatus || ''}
           onChange={handleSelect}
         />
-        <DropdownSelect
+        <JobPathSelect
           disabled={isLoading}
-          inputLabel="Job path"
-          id="jobPath"
-          name="jobPath"
-          label="jobPath"
-          options={Object.values(JobPath)}
           isEditing
           value={formState.jobPath}
           error={errors.jobPath || ''}

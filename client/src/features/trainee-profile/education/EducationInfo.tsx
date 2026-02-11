@@ -3,6 +3,7 @@ import { LearningStatus, QuitReason, Trainee } from '../../../data/types/Trainee
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { LearningStatusSelect } from '../profile/components/LearningStatusSelect';
 import React from 'react';
 import { StrikesComponent } from './strikes/StrikesComponent';
 import { TestsComponent } from './tests/TestsComponent';
@@ -71,6 +72,8 @@ const EducationInfo = () => {
         </FormControl>
 
         {/* Learning status */}
+        <LearningStatusSelect isEditing={isEditing} value={editedFields.learningStatus} onChange={handleSelectChange} />
+
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
           <InputLabel htmlFor="learningStatus">Learning status</InputLabel>
           <Select
