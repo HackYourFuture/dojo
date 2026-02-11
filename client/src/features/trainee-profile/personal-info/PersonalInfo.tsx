@@ -1,13 +1,6 @@
-import {
-  Background,
-  EducationLevel,
-  EnglishLevel,
-  Gender,
-  Pronouns,
-  ResidencyStatus,
-} from '../../../data/types/Trainee';
+import { Background, EducationLevel, EnglishLevel, Pronouns, ResidencyStatus } from '../../../data/types/Trainee';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
+import { createSelectChangeHandler, createTextChangeHandler, formatTextToFriendly } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { GenderSelect } from '../profile/components/GenderSelect';
@@ -89,7 +82,12 @@ const PersonalInfo = () => {
 
       <div style={{ width: '100%' }}>
         {/* Gender */}
-        <GenderSelect isEditing={isEditing} gender={editedFields?.gender} onChange={handleSelectChange} />
+        <GenderSelect
+          disabled={false}
+          isEditing={isEditing}
+          value={editedFields?.gender}
+          onChange={handleSelectChange}
+        />
 
         {/* Pronouns */}
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>

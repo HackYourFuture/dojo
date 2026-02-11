@@ -1,7 +1,6 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { capitalize } from '../../utils/stringHelper';
 
 type CustomSelectProps = {
   inputLabel: string;
@@ -9,11 +8,11 @@ type CustomSelectProps = {
   id: string;
   label: string;
   name: string;
-  value?: string | number; //currently selected value
+  value?: string; //currently selected value
   options: string[]; // array of values to show in the dropdown
   isEditing?: boolean;
   error?: string;
-  onChange: (event: SelectChangeEvent<string | number>) => void;
+  onChange: (event: SelectChangeEvent<string>) => void;
 };
 
 export const DropdownSelect = ({
@@ -47,7 +46,7 @@ export const DropdownSelect = ({
       >
         {options.map((option) => (
           <MenuItem key={option} value={option}>
-            {capitalize(option)}
+            {option}
           </MenuItem>
         ))}
         <FormHelperText error={!!error}>{error}</FormHelperText>

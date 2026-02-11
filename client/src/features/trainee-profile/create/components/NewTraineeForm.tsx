@@ -2,6 +2,7 @@ import { Button, SelectChangeEvent, Stack } from '@mui/material';
 import { Gender, JobPath, LearningStatus } from '../../../../data/types/Trainee';
 
 import { DropdownSelect } from '../../profile/components/DropdownSelect';
+import { GenderSelect } from '../../profile/components/GenderSelect';
 import { SubmitEventHandler } from 'react';
 import TextFieldWrapper from './TextFieldWrapper';
 
@@ -51,13 +52,8 @@ export const NewTraineeForm: React.FC<{
           value={formState.lastName}
           onChange={handleChange}
         />
-        <DropdownSelect
+        <GenderSelect
           disabled={isLoading}
-          inputLabel="Gender"
-          id="gender"
-          name="gender"
-          label="gennder"
-          options={Object.values(Gender)}
           isEditing
           value={formState.gender || undefined}
           error={errors.gender || ''}
