@@ -1,26 +1,31 @@
 import {
+  Alert,
   Box,
-  Divider,
+  Button,
+  CircularProgress,
   FormControl,
   InputAdornment,
   InputLabel,
   Link,
-  List,
-  ListItem,
-  ListItemText,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { JobPath } from '../../../data/types/Trainee';
+import { EmploymentHistory, JobPath } from '../../../data/types/Trainee';
 import LinkIcon from '@mui/icons-material/Link';
-import React from 'react';
-import { formatDate } from '../utils/dateHelper';
+import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
+import AddIcon from '@mui/icons-material/Add';
+import { EmploymentDetailsModal } from './EmploymentDetailsModal';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAddEmployment, useDeleteEmployment, useEditEmployment, useGetEmployments } from './data/employment-queries';
+import { EmploymentsList } from './EmploymentsList';
+import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 
 const NoIcon = () => null;
 
@@ -30,13 +35,105 @@ const NoIcon = () => null;
  * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
  */
 export const EmploymentInfo = () => {
-  const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [modalError, setModalError] = useState<string>('');
+  const [employmentToEdit, setEmploymentToEdit] = useState<EmploymentHistory | null>(null);
+  const { traineeId, trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
+  const { mutate: addEmployment, isPending: addEmploymentLoading } = useAddEmployment(traineeId);
+  const { mutate: deleteEmployment, isPending: deleteEmploymentLoading, error: deleteEmploymentError } = useDeleteEmployment(traineeId);
+  const { mutate: editEmployment, isPending: editEmploymentLoading } = useEditEmployment(traineeId);
+  const { data: employments, isPending: employmentsLoading, error: employmentsError } = useGetEmployments(traineeId);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
+
   const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
 
+  const [idToDelete, setIdToDelete] = useState<string>('');
+  const queryClient = useQueryClient();
+  const handleSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['employmentHistory', traineeId] });
+    setIsModalOpen(false);
+  };
+
+  const getErrorMessage = (error: Error | unknown) => {
+    return (error as Error).message || 'Unknown error';
+  };
+
+  const onClickEdit = (id: string) => {
+    const employment = employments?.find((employment: EmploymentHistory) => employment.id === id) || null;
+
+    setEmploymentToEdit(employment);
+    setIsModalOpen(true);
+  };
+
+  const onConfirmAdd = async (employment: EmploymentHistory) => {
+    if (modalError) setModalError('');
+    addEmployment(employment, {
+      onSuccess: handleSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onConfirmEdit = (employment: EmploymentHistory) => {
+    if (modalError) setModalError('');
+    editEmployment(employment, {
+      onSuccess: handleSuccess,
+      onError: (e) => {
+        setModalError((e as Error).message);
+      },
+    });
+  };
+
+  const onClickDelete = (id: string) => {
+    setIdToDelete(id);
+    setIsConfirmationDialogOpen(true);
+  };
+
+  /**
+   * Function to enable adding entries.
+   */
+  const onClickAdd = () => {
+    setEmploymentToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  /**
+   * Function to cancel adding employments.
+   */
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEmploymentToEdit(null);
+    setModalError('');
+  };
+
+  const onCancelDelete = () => {
+    setIsConfirmationDialogOpen(false);
+  };
+
+  const onConfirmDelete = () => {
+    deleteEmployment(idToDelete, {
+      onSuccess: () => {
+        setIsConfirmationDialogOpen(false);
+        queryClient.invalidateQueries({ queryKey: ['employmentHistory', traineeId] });
+      },
+    });
+  };
+
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
+      <ConfirmationDialog
+        confirmButtonText="Delete"
+        isOpen={isConfirmationDialogOpen}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this employment history entry?"
+        isLoading={deleteEmploymentLoading}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
+      />
       <div style={{ width: '100%' }}>
         {/* Job path */}
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
@@ -46,7 +143,7 @@ export const EmploymentInfo = () => {
             id="jobPath"
             label="Job path"
             value={editedFields?.jobPath || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
+            slotProps={{ input: { readOnly: !isEditing } }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -69,21 +166,22 @@ export const EmploymentInfo = () => {
             name="cvURL"
             label="CV"
             type="url"
+            placeholder="https://cv.example.com"
             value={editedFields?.cvURL || ''}
-            InputProps={{
-              readOnly: isEditing ? false : true,
-              endAdornment: (
-                <InputAdornment position="start">
-                  {!isEditing && editedFields?.cvURL && (
-                    <Link href={editedFields?.cvURL} target="_blank">
-                      <LinkIcon sx={{ color: 'action.active' }} />
-                    </Link>
-                  )}
-                </InputAdornment>
-              ),
-            }}
-            InputLabelProps={{
-              shrink: true,
+            slotProps={{
+              input: {
+                readOnly: !isEditing,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && editedFields?.cvURL && (
+                      <Link href={editedFields?.cvURL} target="_blank">
+                        <LinkIcon sx={{ color: 'action.active' }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
+              },
+              inputLabel: { shrink: true },
             }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
@@ -99,9 +197,9 @@ export const EmploymentInfo = () => {
             name="availability"
             label="Availability"
             type="text"
+            placeholder="From next month, fulltime"
             value={editedFields?.availability || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -116,9 +214,9 @@ export const EmploymentInfo = () => {
             name="preferredRole"
             label="Preferred role"
             type="text"
+            placeholder="Backend"
             value={editedFields?.preferredRole || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -131,9 +229,9 @@ export const EmploymentInfo = () => {
             name="preferredLocation"
             label="Preferred location"
             type="text"
+            placeholder="Randstad, Utrecht"
             value={editedFields?.preferredLocation || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -147,7 +245,7 @@ export const EmploymentInfo = () => {
             id="drivingLicense"
             label="Driving license"
             value={editedFields?.drivingLicense == null ? '' : editedFields?.drivingLicense}
-            inputProps={{ readOnly: isEditing ? false : true }}
+            slotProps={{ input: { readOnly: !isEditing } }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -166,48 +264,49 @@ export const EmploymentInfo = () => {
             name="extraTechnologies"
             label="Extra technologies"
             type="text"
+            placeholder="C#, C++, Vue.js"
             value={editedFields?.extraTechnologies || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '70ch' }}>
         {/* Employment history */}
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" padding="16px">
-            Employment history ({editedFields?.employmentHistory.length || 0})
+            Employment history
           </Typography>
+          <Stack direction="row" spacing={2}>
+            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+              Add Employment
+            </Button>
+          </Stack>
         </Box>
 
-        <List
-          sx={{
-            width: '100%',
-            bgcolor: 'background.paper',
-          }}
-        >
-          {editedFields?.employmentHistory.map((employmentHistory, index) => (
-            <React.Fragment key={employmentHistory.id}>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={formatDate(employmentHistory.startDate)}
-                disablePadding
-                sx={{
-                  paddingBottom: '16px',
-                }}
-              >
-                <ListItemText
-                  primary={`${employmentHistory.role} at ${employmentHistory.companyName} (${employmentHistory.type})`}
-                  secondary={employmentHistory.comments}
-                />
-              </ListItem>
-              {index < editedFields?.employmentHistory.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
-            </React.Fragment>
-          ))}
-        </List>
+        {employmentsError || deleteEmploymentError ? (
+          <Alert severity="error">
+            Oopsie! Something went wrong: {getErrorMessage(employmentsError || deleteEmploymentError)}
+          </Alert>
+        ) : employmentsLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <EmploymentsList employments={employments || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
+        )}
+        <EmploymentDetailsModal
+          key={employmentToEdit?.id || `add-employment-${isModalOpen}`}
+          isOpen={isModalOpen}
+          error={modalError}
+          isLoading={addEmploymentLoading || editEmploymentLoading}
+          onClose={closeModal}
+          onConfirmAdd={onConfirmAdd}
+          onConfirmEdit={onConfirmEdit}
+          initialEmployment={employmentToEdit}
+        />
       </div>
 
       <div style={{ width: '100%' }}>
@@ -220,8 +319,7 @@ export const EmploymentInfo = () => {
             type="text"
             multiline
             value={editedFields?.comments || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
