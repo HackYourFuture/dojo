@@ -1,9 +1,9 @@
-import { EmploymentHistory } from '../../../data/types/Trainee.ts';
+import { EmploymentHistory } from '../../../data/types/Trainee';
 import { Box, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
-import { formatDateForDisplay } from '../utils/dateHelper.ts';
+import { formatDateForDisplay } from '../utils/dateHelper';
 
 interface EmploymentsListProps {
   employments: EmploymentHistory[];

@@ -21,11 +21,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 import AddIcon from '@mui/icons-material/Add';
-import { EmploymentDetailsModal } from './EmploymentDetailsModal.tsx';
+import { EmploymentDetailsModal } from './EmploymentDetailsModal';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAddEmployment, useDeleteEmployment, useEditEmployment, useGetEmployments } from './data/employment-queries.ts';
+import { useAddEmployment, useDeleteEmployment, useEditEmployment, useGetEmployments } from './data/employment-queries';
 import { EmploymentsList } from './EmploymentsList';
-import { ConfirmationDialog } from '../../../components/ConfirmationDialog.tsx';
+import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 
 const NoIcon = () => null;
 
@@ -143,7 +143,7 @@ export const EmploymentInfo = () => {
             id="jobPath"
             label="Job path"
             value={editedFields?.jobPath || ''}
-            slotProps={{ input: { readOnly: isEditing } }}
+            slotProps={{ input: { readOnly: !isEditing } }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -199,7 +199,7 @@ export const EmploymentInfo = () => {
             type="text"
             placeholder="From next month, fulltime"
             value={editedFields?.availability || ''}
-            slotProps={{ input: { readOnly: isEditing }, inputLabel: { shrink: true } }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -216,7 +216,7 @@ export const EmploymentInfo = () => {
             type="text"
             placeholder="Backend"
             value={editedFields?.preferredRole || ''}
-            slotProps={{ input: { readOnly: isEditing }, inputLabel: { shrink: true } }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -231,7 +231,7 @@ export const EmploymentInfo = () => {
             type="text"
             placeholder="Randstad, Utrecht"
             value={editedFields?.preferredLocation || ''}
-            slotProps={{ input: { readOnly: isEditing }, inputLabel: { shrink: true } }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -245,7 +245,7 @@ export const EmploymentInfo = () => {
             id="drivingLicense"
             label="Driving license"
             value={editedFields?.drivingLicense == null ? '' : editedFields?.drivingLicense}
-            slotProps={{ input: { readOnly: isEditing } }}
+            slotProps={{ input: { readOnly: !isEditing } }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -266,22 +266,22 @@ export const EmploymentInfo = () => {
             type="text"
             placeholder="C#, C++, Vue.js"
             value={editedFields?.extraTechnologies || ''}
-            slotProps={{ input: { readOnly: isEditing }, inputLabel: { shrink: true } }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '70ch' }}>
         {/* Employment history */}
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" padding="16px">
-            Employment history ({editedFields?.employmentHistory.length || 0})
+            Employment history
           </Typography>
           <Stack direction="row" spacing={2}>
             <Button startIcon={<AddIcon />} onClick={onClickAdd}>
-              New entry
+              Add Employment
             </Button>
           </Stack>
         </Box>
@@ -319,7 +319,7 @@ export const EmploymentInfo = () => {
             type="text"
             multiline
             value={editedFields?.comments || ''}
-            slotProps={{ input: { readOnly: isEditing }, inputLabel: { shrink: true } }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />

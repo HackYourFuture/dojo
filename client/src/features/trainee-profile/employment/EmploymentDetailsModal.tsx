@@ -1,4 +1,4 @@
-import { EmploymentHistory, EmploymentType } from '../../../data/types/Trainee.ts';
+import { EmploymentHistory, EmploymentType } from '../../../data/types/Trainee';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { formatDate } from '../utils/dateHelper.ts';
+import { formatDate } from '../utils/dateHelper';
 import { LoadingButton } from '@mui/lab';
 
 interface EmploymentDetailsModalProps {
@@ -49,7 +49,7 @@ export const EmploymentDetailsModal = ({
     startDate: initialEmployment?.startDate || new Date(),
     endDate: initialEmployment?.endDate,
     feeCollected: initialEmployment?.feeCollected || false,
-    feeAmount: initialEmployment?.feeAmount || 0,
+    feeAmount: initialEmployment?.feeAmount || undefined,
     comments: initialEmployment?.comments || '',
   } as EmploymentHistory);
 

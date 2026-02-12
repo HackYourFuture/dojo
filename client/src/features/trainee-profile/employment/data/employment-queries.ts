@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-
 import {EmploymentHistory} from '../../../../data/types/Trainee';
-import axios from 'axios';
+import { addEmployment, deleteEmployment, editEmployment, getEmployments } from '../api/api';
 
 /**
  * Hook to add employment to a trainee.
@@ -10,25 +9,21 @@ import axios from 'axios';
  */
 export const useAddEmployment = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (employment: EmploymentHistory) => {
-      return axios.post(`/api/trainees/${traineeId}/employment-history`, employment).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to add employment');
-      });
-    },
+    mutationFn: (employment: EmploymentHistory) => addEmployment(traineeId, employment),
   });
 };
 
 /**
  * Hook to get employments of a trainee.
  * @param {string} traineeId the id of the trainee to get the employments from.
- * @returns {UseQueryResult<Emp[EmploymentHistory[], Error>} the employments of the trainee.
+ * @returns {UseQueryResult<EmploymentHistory[], Error>} the employments of the trainee.
  */
 export const useGetEmployments = (traineeId: string) => {
   return useQuery({
     queryKey: ['employmentHistory', traineeId],
     queryFn: async () => {
-      const { data } = await axios.get<EmploymentHistory[]>(`/api/trainees/${traineeId}/employment-history`);
-      return orderEmploymentsByDateDesc(data as EmploymentHistory[]);
+      const data = await getEmployments(traineeId);
+      return orderEmploymentsByDateDesc(data);
     },
     enabled: !!traineeId,
     refetchOnWindowFocus: false,
@@ -43,9 +38,7 @@ export const useGetEmployments = (traineeId: string) => {
 
 export const useDeleteEmployment = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (employmentId: string) => {
-      return axios.delete(`/api/trainees/${traineeId}/employment-history/${employmentId}`);
-    },
+    mutationFn: (employmentId: string) => deleteEmployment(traineeId, employmentId),
   });
 };
 
@@ -55,11 +48,7 @@ export const useDeleteEmployment = (traineeId: string) => {
  */
 export const useEditEmployment = (traineeId: string) => {
   return useMutation({
-    mutationFn: async (employment: EmploymentHistory) => {
-      return axios.put(`/api/trainees/${traineeId}/employment-history/${employment.id}`, employment).catch((error) => {
-        throw new Error(error.response?.data?.error || 'Failed to edit employment');
-      });
-    },
+    mutationFn: (employment: EmploymentHistory) => editEmployment(traineeId, employment),
   });
 };
 
