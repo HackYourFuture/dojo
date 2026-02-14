@@ -35,7 +35,7 @@ export const NewTraineeForm: React.FC<{
 }> = ({ isLoading, formState, errors, handleChange, handleSelect, handleSubmit, handleClose }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing={2}>
+      <Stack spacing={2} pt={2}>
         <TextFieldWrapper
           disabled={isLoading}
           id="firstName"
@@ -73,21 +73,28 @@ export const NewTraineeForm: React.FC<{
           value={formState.email}
           onChange={handleChange}
         />
-        <TextFieldWrapper
-          disabled={isLoading}
-          id="cohort"
-          name="cohort"
-          type="number"
-          error={!!errors?.cohort}
-          helperText={errors?.cohort}
-          label="Start cohort"
-          value={formState.cohort}
-          onChange={handleChange}
-          maxLength={3}
-        />
+        <Stack direction="row" spacing={2} pb={2}>
+          <TextFieldWrapper
+            disabled={isLoading}
+            id="cohort"
+            name="cohort"
+            type="number"
+            error={!!errors?.cohort}
+            helperText={errors?.cohort}
+            label="Start cohort"
+            value={formState.cohort}
+            onChange={handleChange}
+            maxLength={3}
+          />
 
-        <LearningStatusSelect disabled={isLoading} isEditing value={formState.learningStatus} onChange={handleSelect} />
-        <JobPathSelect disabled={isLoading} isEditing value={formState.jobPath} onChange={handleSelect} />
+          <LearningStatusSelect
+            disabled={isLoading}
+            isEditing
+            value={formState.learningStatus}
+            onChange={handleSelect}
+          />
+          <JobPathSelect disabled={isLoading} isEditing value={formState.jobPath} onChange={handleSelect} />
+        </Stack>
       </Stack>
       <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
         <Button variant="outlined" color="secondary" disabled={isLoading} onClick={handleClose}>
