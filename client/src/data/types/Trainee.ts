@@ -112,6 +112,7 @@ export interface Trainee {
   readonly createdAt: Date;
   readonly updatedAt: Date;
   displayName: string;
+  profilePath: string;
   imageURL?: string;
   thumbnailURL?: string;
   personalInfo: TraineePersonalInfo;

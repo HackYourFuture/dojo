@@ -1,13 +1,13 @@
-import axios from 'axios';
 import { Trainee } from '../../../../data/types/Trainee';
-import { SaveTraineeRequestData } from './types';
+import { UpdateTraineeRequestData } from './types';
+import axios from 'axios';
 
-export const getTraineeInfo = async (traineeId: string) => {
+export const getTrainee = async (traineeId: string) => {
   const { data } = await axios.get<Trainee>(`/api/trainees/${traineeId}`);
   return data;
 };
 
-export const saveTraineeInfo = async (traineeId: string, dataToSave: SaveTraineeRequestData) => {
+export const updateTrainee = async (traineeId: string, dataToSave: UpdateTraineeRequestData) => {
   const { data } = await axios.patch<Trainee>(`/api/trainees/${traineeId}`, dataToSave);
   return data;
 };
