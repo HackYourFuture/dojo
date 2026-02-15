@@ -4,7 +4,7 @@ import { AvatarWithTooltip } from '../components/AvatarWithTooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MarkdownText from '../../components/MarkdownText';
-import { Strike } from '../../../../data/types/Trainee';
+import { Strike } from './models/strike';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import React from 'react';
 
@@ -78,7 +78,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                     pt: 1,
                   }}
                 >
-                  <AvatarWithTooltip imageUrl={strike.reporter.imageUrl} name={strike.reporter.name} />
+                  <AvatarWithTooltip imageUrl={strike.reporterImageUrl || ''} name={(strike.reporterName = '')} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={

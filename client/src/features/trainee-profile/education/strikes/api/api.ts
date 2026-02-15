@@ -1,4 +1,3 @@
-import { Strike } from '../models/strike';
 import { StrikeRequest } from './types';
 import axios from 'axios';
 
