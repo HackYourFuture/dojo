@@ -14,11 +14,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Strike, StrikeInput, StrikeReason } from './models/strike';
+import { Strike, StrikeReason } from './models/strike';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
 import { useState } from 'react';
+
+type StrikeInput = Omit<Strike, 'reporterName' | 'reporterImageUrl' | 'reason'> & {
+  reason: StrikeReason | null; //optional for form handling
+};
 
 interface StrikeDetailsModalProps {
   isOpen: boolean;
@@ -81,10 +85,17 @@ export const StrikeDetailsModal = ({
       return;
     }
 
+    const strikeToSave: Strike = {
+      id: strikeFields.id,
+      date: strikeFields.date,
+      reason: strikeFields.reason!,
+      comments: strikeFields.comments,
+    };
+
     if (initialStrike) {
-      onConfirmEdit(strikeFields);
+      onConfirmEdit(strikeToSave);
     } else {
-      onConfirmAdd(strikeFields);
+      onConfirmAdd(strikeToSave);
     }
   };
 

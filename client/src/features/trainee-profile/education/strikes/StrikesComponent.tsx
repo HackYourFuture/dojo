@@ -1,13 +1,12 @@
 import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import { Strike, StrikeInput } from './models/strike';
 import { useAddStrike, useDeleteStrike, useEditStrike } from './data/mutations';
 
 import AddIcon from '@mui/icons-material/Add';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
+import { Strike } from './models/strike';
 import { StrikeDetailsModal } from './StrikeDetailsModal';
 import { StrikesList } from './StrikesList';
 import { useGetStrikes } from './data/strike-queries';
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 
@@ -24,9 +23,7 @@ export const StrikesComponent = () => {
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   const [idToDelete, setIdToDelete] = useState<string>('');
-  const queryClient = useQueryClient();
   const handleSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['strikes', traineeId] });
     setIsModalOpen(false);
   };
 
@@ -41,7 +38,7 @@ export const StrikesComponent = () => {
     setIsModalOpen(true);
   };
 
-  const onConfirmAdd = async (strike: StrikeInput) => {
+  const onConfirmAdd = async (strike: Strike) => {
     if (modalError) setModalError('');
     addStrike(strike, {
       onSuccess: handleSuccess,
@@ -91,7 +88,6 @@ export const StrikesComponent = () => {
     deleteStrike(idToDelete, {
       onSuccess: () => {
         setIsConfirmationDialogOpen(false);
-        // queryClient.invalidateQueries({ queryKey: ['strikes', traineeId] });
       },
     });
   };

@@ -7,10 +7,6 @@ export type Strike = {
   reporterImageUrl?: string;
 };
 
-export type StrikeInput = Omit<Strike, 'reporterName' | 'reporterImageUrl' | 'reason'> & {
-  reason: StrikeReason | null; //optional for form handling
-};
-
 export enum StrikeReason {
   LateSubmission = 'late-submission',
   MissedSubmission = 'missed-submission',
