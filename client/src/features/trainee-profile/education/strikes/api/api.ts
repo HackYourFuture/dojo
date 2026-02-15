@@ -1,8 +1,9 @@
-import { StrikeRequest } from './types';
+import { StrikeRequest, StrikeResponse } from './types';
+
 import axios from 'axios';
 
 export const getStrikes = async (traineeId: string) => {
-  const { data } = await axios.get(`/api/trainees/${traineeId}/strikes`);
+  const { data } = await axios.get<StrikeResponse[]>(`/api/trainees/${traineeId}/strikes`);
   return data;
 };
 
@@ -15,5 +16,5 @@ export const addStrike = async (traineeId: string, strike: StrikeRequest) => {
 };
 
 export const editStrike = async (traineeId: string, strike: StrikeRequest) => {
-  await axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike);
+  await axios.put(`/api/trainees/${traineeId}/strikes/${strike.id!}`, strike);
 };

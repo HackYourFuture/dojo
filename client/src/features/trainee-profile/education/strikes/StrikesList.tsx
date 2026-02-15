@@ -78,7 +78,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                     pt: 1,
                   }}
                 >
-                  <AvatarWithTooltip imageUrl={strike.reporterImageUrl || ''} name={(strike.reporterName = '')} />
+                  <AvatarWithTooltip imageUrl={strike.reporterImageUrl || ''} name={strike.reporterName || ''} />
                 </ListItemAvatar>
                 <ListItemText
                   primary={

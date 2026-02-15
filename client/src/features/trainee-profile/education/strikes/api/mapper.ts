@@ -23,23 +23,13 @@ export const mapDomainToStrikeRequest = (strike: Strike): StrikeRequest => {
   }
   return request;
 };
-const mapStringToStrikeReason = (reason: string): StrikeReason => {
-  switch (reason) {
-    case 'late-submission':
-      return StrikeReason.LateSubmission;
-    case 'missed-submission':
-      return StrikeReason.MissedSubmission;
-    case 'incomplete-submission':
-      return StrikeReason.IncompleteSubmission;
-    case 'late-attendance':
-      return StrikeReason.LateAttendance;
-    case 'absence':
-      return StrikeReason.Absence;
-    case 'pending-feedback':
-      return StrikeReason.PendingFeedback;
-    case 'other':
-      return StrikeReason.Other;
-    default:
-      throw new Error(`Unknown strike reason: ${reason}`);
+
+export const mapStringToStrikeReason = (reason: string): StrikeReason => {
+  // Check if the string is one of the valid values in the StrikeReason enum
+  const isValid = Object.values(StrikeReason).includes(reason as StrikeReason);
+
+  if (isValid) {
+    return reason as StrikeReason;
   }
+  throw new Error(`Invalid strike reason: ${reason}`);
 };
