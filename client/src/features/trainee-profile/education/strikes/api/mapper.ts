@@ -13,11 +13,16 @@ export const mapStrikeToDomain = (dto: StrikeResponse): Strike => {
 };
 
 export const mapDomainToStrikeRequest = (strike: Strike): StrikeRequest => {
-  return {
+  console.log(strike);
+  const request: StrikeRequest = {
     reason: strike.reason,
     date: strike.date.toISOString(),
     comments: strike.comments,
   };
+  if (strike.id) {
+    request.id = strike.id;
+  }
+  return request;
 };
 const mapStringToStrikeReason = (reason: string): StrikeReason => {
   switch (reason) {

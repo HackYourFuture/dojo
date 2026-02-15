@@ -53,16 +53,6 @@ export enum LearningStatus {
   Quit = 'quit',
 }
 
-export enum StrikeReason {
-  LateSubmission = 'late-submission',
-  MissedSubmission = 'missed-submission',
-  IncompleteSubmission = 'incomplete-submission',
-  LateAttendance = 'late-attendance',
-  Absence = 'absence',
-  PendingFeedback = 'pending-feedback',
-  Other = 'other',
-}
-
 export enum QuitReason {
   Technical = 'technical',
   SocialSkills = 'social-skills',
@@ -178,15 +168,6 @@ export interface TraineeEmploymentInfo {
   extraTechnologies?: string;
   employmentHistory: EmploymentHistory[];
   comments?: string;
-}
-
-export interface Strike {
-  readonly id: string;
-  date: Date;
-  reporterID: string;
-  reason: StrikeReason | null;
-  comments: string;
-  reporter: ReporterWithId;
 }
 
 export interface Assignment {

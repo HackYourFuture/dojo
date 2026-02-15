@@ -1,6 +1,7 @@
 import { StrikeReason } from '../models/strike';
 
 export interface StrikeRequest {
+  id?: string;
   reason: StrikeReason;
   date: string; // ISO String for backend
   comments: string;
