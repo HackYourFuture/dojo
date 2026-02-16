@@ -7,8 +7,8 @@ import {
   TraineePersonalInfo,
 } from '../../../data/types/Trainee';
 
-import { SaveTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
 import { TraineeProfileContext } from './useTraineeProfileContext';
+import { UpdateTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
 
 type TraineeInfoType = TraineePersonalInfo | TraineeContactInfo | TraineeEmploymentInfo | TraineeEducationInfo;
 
@@ -32,10 +32,10 @@ export const TraineeProfileProvider = ({
 
   /**
    * Function to get the changes made to the trainee's profile (every tab)
-   * @returns  {SaveTraineeRequestData} - Object with the changes made to the trainee's profile.
+   * @returns  {UpdateTraineeRequestData} - Object with the changes made to the trainee's profile.
    *                                     The object is structured as follows: { personalInfo, contactInfo, educationInfo, employmentInfo }
    */
-  const getTraineeInfoChanges = (): SaveTraineeRequestData => {
+  const getTraineeInfoChanges = (): UpdateTraineeRequestData => {
     const personalInfo: Partial<TraineePersonalInfo> | null = getChangedFields(
       originalTrainee.personalInfo,
       trainee.personalInfo
@@ -53,7 +53,7 @@ export const TraineeProfileProvider = ({
       trainee.educationInfo
     );
 
-    const dataToSave: SaveTraineeRequestData = {};
+    const dataToSave: UpdateTraineeRequestData = {};
 
     // add the changed fields to the dataToSave object if not null
     if (personalInfo) dataToSave.personalInfo = personalInfo;

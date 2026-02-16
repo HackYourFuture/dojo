@@ -5,7 +5,7 @@ import {
   TraineePersonalInfo,
 } from '../../../../data/types/Trainee';
 
-export interface SaveTraineeRequestData {
+export interface UpdateTraineeRequestData {
   personalInfo?: Partial<TraineePersonalInfo>;
   contactInfo?: Partial<TraineeContactInfo>;
   educationInfo?: Partial<TraineeEducationInfo>;

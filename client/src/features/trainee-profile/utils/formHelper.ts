@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactNode } from 'react';
-import { Trainee, TraineeInfoType } from '../../../data/types/Trainee';
+import { JobPath, Trainee, TraineeInfoType } from '../../../data/types/Trainee';
 
 import { SelectChangeEvent } from '@mui/material';
 
@@ -55,7 +55,13 @@ export const createTextChangeHandler = (
  * @param value
  * @returns
  */
+// TODO: rename this function
 export const formatTextToFriendly = (value: string): string => {
   // replace '-' with ' ' in the type string and capitilzie first letter
   return value.replace(/-/g, ' ').replace(/^\w/, (char) => char.toUpperCase());
+};
+
+export const formatJobPathToLabel = (jobPath: JobPath): string => {
+  if (jobPath === JobPath.NonTechJob) return 'Non-tech job';
+  return formatTextToFriendly(jobPath);
 };

@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 
-import { SaveTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
 import { Trainee } from '../../../data/types/Trainee';
+import { UpdateTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
 
 export type TraineeProfileContextType = {
   traineeId: string;
@@ -12,7 +12,7 @@ export type TraineeProfileContextType = {
   setIsEditMode: (isEditMode: boolean) => void;
   isSavingProfile: boolean;
   setIsSavingProfile: React.Dispatch<React.SetStateAction<boolean>>;
-  getTraineeInfoChanges: (trainee: Trainee) => SaveTraineeRequestData;
+  getTraineeInfoChanges: (trainee: Trainee) => UpdateTraineeRequestData;
 };
 
 export const TraineeProfileContext = createContext<TraineeProfileContextType>({
@@ -24,7 +24,7 @@ export const TraineeProfileContext = createContext<TraineeProfileContextType>({
   setIsEditMode: () => {},
   isSavingProfile: false,
   setIsSavingProfile: () => {},
-  getTraineeInfoChanges: () => ({}) as SaveTraineeRequestData,
+  getTraineeInfoChanges: () => ({}) as UpdateTraineeRequestData,
 });
 
 export const useTraineeProfileContext = () => useContext(TraineeProfileContext);

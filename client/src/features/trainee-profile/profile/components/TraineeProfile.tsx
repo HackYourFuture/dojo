@@ -1,6 +1,6 @@
 import { Box, Snackbar } from '@mui/material';
 import {
-  SaveTraineeRequestData,
+  UpdateTraineeRequestData,
   useSaveTraineeInfo,
   useTraineeInfoData,
 } from '../../personal-info/data/useTraineeInfoData';
@@ -62,7 +62,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
    * Shows a snackbar with the result of the save operation and refreshes the trainee data.
    * @param editedFields
    */
-  const saveTraineeData = async (editedFields: SaveTraineeRequestData) => {
+  const saveTraineeData = async (editedFields: UpdateTraineeRequestData) => {
     mutate(editedFields, {
       onSuccess: (data: Trainee) => {
         setSnackbarSeverity('success');
@@ -91,7 +91,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
       return;
     }
 
-    const changedFields: SaveTraineeRequestData = getTraineeInfoChanges(traineeData!);
+    const changedFields: UpdateTraineeRequestData = getTraineeInfoChanges(traineeData!);
     saveTraineeData(changedFields);
   };
 
