@@ -5,37 +5,30 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { formatDateForDisplay } from '../utils/dateHelper';
 
-interface EmploymentsListProps {
-  employments: EmploymentHistory[];
+interface EmploymentHistoryListProps {
+  employmentHistory: EmploymentHistory[];
   onClickEdit: (id: string) => void;
   onClickDelete: (id: string) => void;
 }
 
-export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, onClickEdit, onClickDelete }) => {
+export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({ employmentHistory, onClickEdit, onClickDelete }) => {
 
   /**
    * Formats text to have the first letter capitalized
    * @param string - The string to format
    * @returns The formatted string
    */
-  const formatText = (string: string): string => {
+  const capitalize = (string: string): string => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-
-  const handleEdit = (id: string) => {
-    onClickEdit(id);
-  };
-  const handleDelete = (id: string) => {
-    onClickDelete(id);
-  };
 
   const renderActions = (id: string) => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
-        <IconButton aria-label="edit" onClick={() => handleEdit(id)}>
+        <IconButton aria-label="edit" onClick={() => onClickEdit(id)}>
           <EditIcon />
         </IconButton>
-        <IconButton aria-label="delete" onClick={() => handleDelete(id)}>
+        <IconButton aria-label="delete" onClick={() => onClickDelete(id)}>
           <DeleteIcon />
         </IconButton>
       </Box>
@@ -52,12 +45,12 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
         scrollbarWidth: 'thin',
       }}
     >
-      {employments.length === 0 ? (
+      {employmentHistory.length === 0 ? (
         <Typography variant="body1" color="#CCCCCC" padding="16px">
-          No employments found
+          No employment history found
         </Typography>
       ) : (
-        employments.map((employment: EmploymentHistory, index: number) => {
+        employmentHistory.map((employment: EmploymentHistory, index: number) => {
           return (
             <Box key={employment.id}>
               <ListItem
@@ -80,7 +73,7 @@ export const EmploymentsList: React.FC<EmploymentsListProps> = ({ employments, o
                     <Box mt={-2} py={1}>
                       <Box>
                         <Typography variant="body2">
-                          {employment.role} • {formatText(employment.type)}
+                          {employment.role} • {capitalize(employment.type)}
                         </Typography>
                         <Typography variant="body2">
                           Start: {formatDateForDisplay(employment.startDate)}

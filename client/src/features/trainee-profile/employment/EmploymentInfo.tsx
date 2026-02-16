@@ -1,31 +1,19 @@
 import {
-  Alert,
   Box,
-  Button,
-  CircularProgress,
   FormControl,
   InputAdornment,
   InputLabel,
   Link,
   MenuItem,
   Select,
-  Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
-
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { EmploymentHistory, JobPath } from '../../../data/types/Trainee';
+import { JobPath } from '../../../data/types/Trainee';
 import LinkIcon from '@mui/icons-material/Link';
-import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
-import AddIcon from '@mui/icons-material/Add';
-import { EmploymentDetailsModal } from './EmploymentDetailsModal';
-import { useQueryClient } from '@tanstack/react-query';
-import { useAddEmployment, useDeleteEmployment, useEditEmployment, useGetEmployments } from './data/employment-queries';
-import { EmploymentsList } from './EmploymentsList';
-import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
+import { EmploymentHistoryGroup } from './history/EmploymentHistoryGroup';
 
 const NoIcon = () => null;
 
@@ -35,105 +23,15 @@ const NoIcon = () => null;
  * @returns {ReactNode} A React element that renders trainee employment information with view, add, and edit logic.
  */
 export const EmploymentInfo = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const [modalError, setModalError] = useState<string>('');
-  const [employmentToEdit, setEmploymentToEdit] = useState<EmploymentHistory | null>(null);
-  const { traineeId, trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
+  const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
-  const { mutate: addEmployment, isPending: addEmploymentLoading } = useAddEmployment(traineeId);
-  const { mutate: deleteEmployment, isPending: deleteEmploymentLoading, error: deleteEmploymentError } = useDeleteEmployment(traineeId);
-  const { mutate: editEmployment, isPending: editEmploymentLoading } = useEditEmployment(traineeId);
-  const { data: employments, isPending: employmentsLoading, error: employmentsError } = useGetEmployments(traineeId);
-  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
 
-  const [idToDelete, setIdToDelete] = useState<string>('');
-  const queryClient = useQueryClient();
-  const handleSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['employmentHistory', traineeId] });
-    setIsModalOpen(false);
-  };
-
-  const getErrorMessage = (error: Error | unknown) => {
-    return (error as Error).message || 'Unknown error';
-  };
-
-  const onClickEdit = (id: string) => {
-    const employment = employments?.find((employment: EmploymentHistory) => employment.id === id) || null;
-
-    setEmploymentToEdit(employment);
-    setIsModalOpen(true);
-  };
-
-  const onConfirmAdd = async (employment: EmploymentHistory) => {
-    if (modalError) setModalError('');
-    addEmployment(employment, {
-      onSuccess: handleSuccess,
-      onError: (e) => {
-        setModalError((e as Error).message);
-      },
-    });
-  };
-
-  const onConfirmEdit = (employment: EmploymentHistory) => {
-    if (modalError) setModalError('');
-    editEmployment(employment, {
-      onSuccess: handleSuccess,
-      onError: (e) => {
-        setModalError((e as Error).message);
-      },
-    });
-  };
-
-  const onClickDelete = (id: string) => {
-    setIdToDelete(id);
-    setIsConfirmationDialogOpen(true);
-  };
-
-  /**
-   * Function to enable adding entries.
-   */
-  const onClickAdd = () => {
-    setEmploymentToEdit(null);
-    setIsModalOpen(true);
-  };
-
-  /**
-   * Function to cancel adding employments.
-   */
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setEmploymentToEdit(null);
-    setModalError('');
-  };
-
-  const onCancelDelete = () => {
-    setIsConfirmationDialogOpen(false);
-  };
-
-  const onConfirmDelete = () => {
-    deleteEmployment(idToDelete, {
-      onSuccess: () => {
-        setIsConfirmationDialogOpen(false);
-        queryClient.invalidateQueries({ queryKey: ['employmentHistory', traineeId] });
-      },
-    });
-  };
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <ConfirmationDialog
-        confirmButtonText="Delete"
-        isOpen={isConfirmationDialogOpen}
-        title="Confirm Delete"
-        message="Are you sure you want to delete this employment history entry?"
-        isLoading={deleteEmploymentLoading}
-        onConfirm={onConfirmDelete}
-        onCancel={onCancelDelete}
-      />
       <div style={{ width: '100%' }}>
         {/* Job path */}
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
@@ -273,41 +171,8 @@ export const EmploymentInfo = () => {
         </FormControl>
       </div>
 
-      <div style={{ width: '70ch' }}>
-        {/* Employment history */}
-        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" padding="16px">
-            Employment history
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
-              Add Employment
-            </Button>
-          </Stack>
-        </Box>
-
-        {employmentsError || deleteEmploymentError ? (
-          <Alert severity="error">
-            Oopsie! Something went wrong: {getErrorMessage(employmentsError || deleteEmploymentError)}
-          </Alert>
-        ) : employmentsLoading ? (
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <CircularProgress />
-          </Box>
-        ) : (
-          <EmploymentsList employments={employments || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
-        )}
-        <EmploymentDetailsModal
-          key={employmentToEdit?.id || `add-employment-${isModalOpen}`}
-          isOpen={isModalOpen}
-          error={modalError}
-          isLoading={addEmploymentLoading || editEmploymentLoading}
-          onClose={closeModal}
-          onConfirmAdd={onConfirmAdd}
-          onConfirmEdit={onConfirmEdit}
-          initialEmployment={employmentToEdit}
-        />
-      </div>
+      {/* Employment history */}
+      <EmploymentHistoryGroup />
 
       <div style={{ width: '100%' }}>
         {/* Comments */}
