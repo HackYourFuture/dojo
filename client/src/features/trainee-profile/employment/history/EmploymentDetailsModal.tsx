@@ -243,7 +243,7 @@ export const EmploymentDetailsModal = ({
                 label="Fee amount"
                 type="number"
                 placeholder="4000"
-                value={employmentFields.feeAmount ?? ""}
+                value={employmentFields.feeAmount ?? undefined}
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { startAdornment: <InputAdornment position="start">€</InputAdornment> },
