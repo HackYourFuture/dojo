@@ -1,6 +1,5 @@
 import { Strike } from '../models/strike';
 import { getStrikes } from '../api/api';
-import { mapStrikeToDomain } from '../api/mapper';
 import { strikeKeys } from './keys';
 import { useQuery } from '@tanstack/react-query';
 
@@ -13,9 +12,7 @@ export const useGetStrikes = (traineeId: string) => {
   return useQuery({
     queryKey: strikeKeys.list(traineeId),
     queryFn: async () => {
-      const data = await getStrikes(traineeId);
-
-      const strikes = data.map((strike) => mapStrikeToDomain(strike));
+      const strikes = await getStrikes(traineeId);
       return orderStrikesByDateDesc(strikes);
     },
     enabled: !!traineeId,
