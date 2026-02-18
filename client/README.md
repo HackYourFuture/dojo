@@ -169,8 +169,8 @@ export const strikeKeys = {
 💡 **Note:** This function creates two query keys for us.
 
 1.  all: the key looks like this: ['strikes']
-2.  list: the key looks like this: ['stikes', 'list', `traineeId`].
-    And when invalidating the cache, if you do `queryKey: strikeKeys.list(traineeId)`, it invalidates the cache for this specific traineeId. But if you call `queryKey: strikeKeys.all()`, it will invalidate all the cache queries that start with 'strikes'. Which is pretty cool :)
+2.  list: the key looks like this: ['strikes', 'list', `traineeId`].
+    And when invalidating the cache, if you use `queryKey: strikeKeys.list(traineeId)`, it invalidates the cache for this specific traineeId. But if you call `queryKey: strikeKeys.all()`, it will invalidate all the cache queries that start with 'strikes'. Which is pretty cool :)
 
 `api/api.ts`:
 
@@ -251,7 +251,7 @@ export const addStrike = async (traineeId: string, strike: Strike) => {
 };
 ```
 
-Adn to use it in the component:
+And to use it in the component:
 
 ```typescript
 import { useAddStrike } from './data/mutations';
