@@ -166,11 +166,11 @@ export const strikeKeys = {
 };
 ```
 
-> 💡 **Note:** This function creates two query keys for us.
->
-> 1. all: the key looks like this: ['strikes']
-> 2. list: the key looks like this: ['stikes', 'list', `traineeId`].
->    And when invalidating the cache, if you do `queryKey: strikeKeys.list(traineeId)`, it invalidates the cache for this specific traineeId. But if you call `queryKey: strikeKeys.all()`, it will invalidate all the cache queries that start with 'strikes'. Which is pretty cool :)
+💡 **Note:** This function creates two query keys for us.
+
+1.  all: the key looks like this: ['strikes']
+2.  list: the key looks like this: ['stikes', 'list', `traineeId`].
+    And when invalidating the cache, if you do `queryKey: strikeKeys.list(traineeId)`, it invalidates the cache for this specific traineeId. But if you call `queryKey: strikeKeys.all()`, it will invalidate all the cache queries that start with 'strikes'. Which is pretty cool :)
 
 `api/api.ts`:
 
@@ -239,6 +239,19 @@ export const useAddStrike = (traineeId: string) => {
   });
 };
 ```
+
+It’s important to invalidate the relevant query after a mutation completes. While the mutation is still pending, React Query will keep the loading state active until the operation finishes and the cache is refreshed.
+
+```typescript
+// api.ts
+export const addStrike = async (traineeId: string, strike: Strike) => {
+  const strikeRequest = mapDomainToStrikeRequest(strike);
+  const { data } = await axios.post<StrikeResponse>(`/api/trainees/${traineeId}/strikes`, strikeRequest);
+  return mapStrikeToDomain(data);
+};
+```
+
+Adn to use it in the component:
 
 ```typescript
 import { useAddStrike } from './data/mutations';
