@@ -1,4 +1,4 @@
-import { EmploymentHistory, EmploymentType } from '../../../data/types/Trainee';
+import { EmploymentHistory, EmploymentType } from '../../../../data/types/Trainee';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { formatDate } from '../utils/dateHelper';
+import { formatDate } from '../../utils/dateHelper';
 import { LoadingButton } from '@mui/lab';
 
 interface EmploymentDetailsModalProps {
