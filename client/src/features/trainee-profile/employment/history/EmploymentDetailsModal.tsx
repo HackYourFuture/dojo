@@ -220,7 +220,7 @@ export const EmploymentDetailsModal = ({
           </Box>
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
-              <FormControlLabel
+              <FormControlLabel sx={{ pl: 1 }}
                 control={
                   <Checkbox
                     disabled={isLoading}
@@ -235,6 +235,7 @@ export const EmploymentDetailsModal = ({
             </FormControl>
             <FormControl fullWidth>
               <TextField
+                sx={{ visibility: employmentFields.feeCollected ? 'visible' : 'hidden' }}
                 required={employmentFields.feeCollected}
                 disabled={isLoading}
                 id="feeAmount"

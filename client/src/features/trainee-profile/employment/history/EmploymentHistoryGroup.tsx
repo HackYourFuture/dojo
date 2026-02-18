@@ -2,6 +2,7 @@ import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/ma
 import AddIcon from '@mui/icons-material/Add';
 import { useGetEmploymentHistory, employmentHistoryKeys } from '../data/employment-queries';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { EmploymentHistory } from '../../../../data/types/Trainee';
 import { EmploymentHistoryList } from './EmploymentHistoryList';
 import { EmploymentDetailsModal } from './EmploymentDetailsModal';
@@ -29,8 +30,9 @@ export const EmploymentHistoryGroup = () => {
   const [idToDelete, setIdToDelete] = useState<string>('');
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
+  const queryClient = useQueryClient();
   const handleSuccess = () => {
-    employmentHistoryKeys.byQuery(traineeId)
+    queryClient.invalidateQueries({ queryKey: employmentHistoryKeys.byQuery(traineeId) })
     setIsModalOpen(false);
   };
 
@@ -94,6 +96,7 @@ export const EmploymentHistoryGroup = () => {
   const onConfirmDelete = () => {
     deleteEmployment(idToDelete, {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: employmentHistoryKeys.byQuery(traineeId) })
         employmentHistoryKeys.byQuery(traineeId)
         setIsConfirmationDialogOpen(false);
       },

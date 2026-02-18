@@ -60,30 +60,35 @@ export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({ em
                   backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
                 }}
               >
-                <ListItemText
-                  sx={{
-                    px: 2,
-                  }}
-                  primary={
-                    <Box width="100%" pt={1} pb={2}>
-                      {employment.companyName}
-                    </Box>
-                  }
-                  secondary={
-                    <Box mt={-2} py={1}>
-                      <Box>
-                        <Typography variant="body2">
-                          {employment.role} • {capitalize(employment.type)}
-                        </Typography>
-                        <Typography variant="body2">
-                          Start: {formatDateForDisplay(employment.startDate)}
-                          {employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : ''}
-                        </Typography>
+                <Box sx={{ px: 2 }} width="100%">
+                  <ListItemText
+                    sx={{ px: 2 }}
+                    primary={
+                      <Box width="100%" pt={1} pb={2} fontWeight="bold">
+                        {employment.companyName}
                       </Box>
-                      {employment.comments && <Typography variant="subtitle1" pt={1}>{employment.comments}</Typography>}
-                    </Box>
-                  }
-                />
+                    }
+                    secondary={
+                      <Box mt={-2} py={1}>
+                          <Typography variant="body2">
+                            {employment.role} • {capitalize(employment.type)}
+                          </Typography>
+                          <Typography variant="body2">
+                            Start: {formatDateForDisplay(employment.startDate)}
+                            {employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : ''}
+                          </Typography>
+                      </Box>
+                    }
+                  />
+                  <ListItemText
+                    sx={{ px: 2, }}
+                    primary={
+                      <Box width="100%" pb={2}>
+                        {employment.comments && <Typography variant="subtitle1" pt={1}>{employment.comments}</Typography>}
+                      </Box>
+                    }
+                    />
+                </Box>
                 <Box>
                   {renderActions(employment.id)}
                   <Tooltip title="Education fee">
