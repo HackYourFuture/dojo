@@ -18,8 +18,7 @@ export const useAddStrike = (traineeId: string) => {
 
   return useMutation({
     mutationFn: (strike: Strike) => {
-      const request = mapDomainToStrikeRequest(strike);
-      return addStrike(traineeId, request);
+      return addStrike(traineeId, strike);
     },
     onSuccess: async () => await invalidateStrikesQuery(queryClient, traineeId),
   });
@@ -47,8 +46,7 @@ export const useEditStrike = (traineeId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (strike: Strike) => {
-      const request = mapDomainToStrikeRequest(strike);
-      return editStrike(traineeId, request);
+      return editStrike(traineeId, strike);
     },
     onSuccess: async () => await invalidateStrikesQuery(queryClient, traineeId),
   });
