@@ -2,7 +2,6 @@ import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { addStrike, deleteStrike, editStrike } from '../api/api';
 
 import { Strike } from '../models/strike';
-import { mapDomainToStrikeRequest } from '../api/mapper';
 import { strikeKeys } from './keys';
 
 const invalidateStrikesQuery = (queryClient: QueryClient, traineeId: string) => {
