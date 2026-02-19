@@ -83,7 +83,7 @@ export const EmploymentDetailsModal = ({
 
   const handleEmploymentSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
-
+    // TODO: add logic that would remove feeAmount when feeCollected is false
     setEmploymentFields((prevEmployment: EmploymentHistory) => ({
       ...prevEmployment,
       [name]: value,
@@ -243,7 +243,7 @@ export const EmploymentDetailsModal = ({
                 label="Fee amount"
                 type="number"
                 placeholder="4000"
-                value={employmentFields.feeAmount ?? undefined}
+                value={employmentFields.feeAmount}
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { startAdornment: <InputAdornment position="start">€</InputAdornment> },
