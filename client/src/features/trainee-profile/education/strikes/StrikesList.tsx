@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import MarkdownText from '../../components/MarkdownText';
 import { Strike } from '../../../../data/types/Trainee';
 import { formatDateForDisplay } from '../../utils/dateHelper';
+import React from 'react';
 
 interface StrikesListProps {
   strikes: Strike[];
@@ -33,7 +34,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
 
   const renderActions = (id: string) => {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', pr: 1 }}>
         <IconButton aria-label="edit" onClick={() => handleEdit(id)}>
           <EditIcon />
         </IconButton>
@@ -48,7 +49,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
     <List
       sx={{
         width: '100%',
-        bgcolor: 'background.paper',
+        backgroundColor: 'background.paper',
         maxHeight: 300,
         overflow: 'auto',
         scrollbarWidth: 'thin',
@@ -66,16 +67,15 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 alignItems="flex-start"
                 disablePadding
                 sx={{
-                  bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
+                  backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
                 }}
               >
                 <ListItemAvatar
                   sx={{
                     display: 'flex',
-                    alignIntems: 'center',
-                    paddingLeft: 2,
-                    paddingRight: 2,
-                    paddingTop: 1,
+                    alignItems: 'center',
+                    px: 2,
+                    pt: 1,
                   }}
                 >
                   <AvatarWithTooltip imageUrl={strike.reporter.imageUrl} name={strike.reporter.name} />
@@ -87,11 +87,10 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                       flexDirection="row"
                       justifyContent="space-between"
                       width="100%"
-                      paddingTop={1}
-                      paddingBottom={1}
+                      py={1}
                     >
                       {formatStrikeReason(strike.reason || '')}
-                      <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
+                      <Typography sx={{ pr: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
                     </Box>
                   }
                   secondary={

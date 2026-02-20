@@ -1,26 +1,19 @@
 import {
   Box,
-  Divider,
   FormControl,
   InputAdornment,
   InputLabel,
   Link,
-  List,
-  ListItem,
-  ListItemText,
   MenuItem,
   Select,
   TextField,
-  Typography,
 } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
-
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { JobPathSelect } from '../profile/components/JobPathSelect';
 import LinkIcon from '@mui/icons-material/Link';
-import React from 'react';
-import { formatDate } from '../utils/dateHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
+import { EmploymentHistoryGroup } from './history/EmploymentHistoryGroup';
 
 const NoIcon = () => null;
 
@@ -32,8 +25,10 @@ const NoIcon = () => null;
 export const EmploymentInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
+
   const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
+
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
@@ -48,21 +43,22 @@ export const EmploymentInfo = () => {
             name="cvURL"
             label="CV"
             type="url"
+            placeholder="https://cv.example.com"
             value={editedFields?.cvURL || ''}
-            InputProps={{
-              readOnly: isEditing ? false : true,
-              endAdornment: (
-                <InputAdornment position="start">
-                  {!isEditing && editedFields?.cvURL && (
-                    <Link href={editedFields?.cvURL} target="_blank">
-                      <LinkIcon sx={{ color: 'action.active' }} />
-                    </Link>
-                  )}
-                </InputAdornment>
-              ),
-            }}
-            InputLabelProps={{
-              shrink: true,
+            slotProps={{
+              input: {
+                readOnly: !isEditing,
+                endAdornment: (
+                  <InputAdornment position="start">
+                    {!isEditing && editedFields?.cvURL && (
+                      <Link href={editedFields?.cvURL} target="_blank">
+                        <LinkIcon sx={{ color: 'action.active' }} />
+                      </Link>
+                    )}
+                  </InputAdornment>
+                ),
+              },
+              inputLabel: { shrink: true },
             }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
@@ -78,9 +74,9 @@ export const EmploymentInfo = () => {
             name="availability"
             label="Availability"
             type="text"
+            placeholder="From next month, fulltime"
             value={editedFields?.availability || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -95,9 +91,9 @@ export const EmploymentInfo = () => {
             name="preferredRole"
             label="Preferred role"
             type="text"
+            placeholder="Backend"
             value={editedFields?.preferredRole || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -110,9 +106,9 @@ export const EmploymentInfo = () => {
             name="preferredLocation"
             label="Preferred location"
             type="text"
+            placeholder="Randstad, Utrecht"
             value={editedFields?.preferredLocation || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
@@ -126,7 +122,7 @@ export const EmploymentInfo = () => {
             id="drivingLicense"
             label="Driving license"
             value={editedFields?.drivingLicense == null ? '' : editedFields?.drivingLicense}
-            inputProps={{ readOnly: isEditing ? false : true }}
+            slotProps={{ input: { readOnly: !isEditing } }}
             IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
             startAdornment=" "
             onChange={handleSelectChange}
@@ -145,49 +141,17 @@ export const EmploymentInfo = () => {
             name="extraTechnologies"
             label="Extra technologies"
             type="text"
+            placeholder="C#, C++, Vue.js"
             value={editedFields?.extraTechnologies || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />
         </FormControl>
       </div>
 
-      <div style={{ width: '100%' }}>
-        {/* Employment history */}
-        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" padding="16px">
-            Employment history ({editedFields?.employmentHistory.length || 0})
-          </Typography>
-        </Box>
-
-        <List
-          sx={{
-            width: '100%',
-            bgcolor: 'background.paper',
-          }}
-        >
-          {editedFields?.employmentHistory.map((employmentHistory, index) => (
-            <React.Fragment key={employmentHistory.id}>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={formatDate(employmentHistory.startDate)}
-                disablePadding
-                sx={{
-                  paddingBottom: '16px',
-                }}
-              >
-                <ListItemText
-                  primary={`${employmentHistory.role} at ${employmentHistory.companyName} (${employmentHistory.type})`}
-                  secondary={employmentHistory.comments}
-                />
-              </ListItem>
-              {index < editedFields?.employmentHistory.length - 1 && <Divider sx={{ color: 'black' }} component="li" />}
-            </React.Fragment>
-          ))}
-        </List>
-      </div>
+      {/* Employment history */}
+      <EmploymentHistoryGroup />
 
       <div style={{ width: '100%' }}>
         {/* Comments */}
@@ -199,8 +163,7 @@ export const EmploymentInfo = () => {
             type="text"
             multiline
             value={editedFields?.comments || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
+            slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleTextChange}
           />

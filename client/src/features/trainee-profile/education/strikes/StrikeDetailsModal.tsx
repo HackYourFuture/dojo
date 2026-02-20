@@ -106,10 +106,8 @@ export const StrikeDetailsModal = ({
     <Modal
       open={isOpen}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
+      slots={{ backdrop: Backdrop }}
+      slotProps={{ backdrop: { timeout: 500 } }}
     >
       <Fade in={isOpen}>
         <Box
@@ -123,7 +121,7 @@ export const StrikeDetailsModal = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
+            backgroundColor: 'background.paper',
             boxShadow: 24,
             p: 4,
           }}
@@ -140,7 +138,7 @@ export const StrikeDetailsModal = ({
                 label="Date"
                 type="date"
                 value={formatDate(strikeFields.date)}
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: { shrink: true } }}
                 onChange={handleStrikeChange}
                 fullWidth
               />
@@ -187,7 +185,7 @@ export const StrikeDetailsModal = ({
               error={commentsRequiredError}
               helperText={commentsRequiredError ? 'Comments are required' : ''}
               value={strikeFields.comments}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ inputLabel: { shrink: true} }}
               onChange={onChangeComments}
               fullWidth
             />
