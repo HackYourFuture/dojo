@@ -78,6 +78,7 @@ export const EmploymentDetailsModal = ({
     setEmploymentFields((prevEmployment: EmploymentHistory) => ({
       ...prevEmployment,
       [name]: checked,
+      feeAmount: checked ? employmentFields.feeAmount : undefined,
     }));
   }
 
