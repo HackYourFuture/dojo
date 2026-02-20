@@ -14,11 +14,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Strike, StrikeReason } from '../../../../data/types/Trainee';
+import { Strike, StrikeReason } from './models/strike';
 
 import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
 import { useState } from 'react';
+
+type StrikeInput = Omit<Strike, 'reporterName' | 'reporterImageUrl' | 'reason'> & {
+  reason: StrikeReason | null; //optional for form handling
+};
 
 interface StrikeDetailsModalProps {
   isOpen: boolean;
@@ -39,13 +43,12 @@ export const StrikeDetailsModal = ({
   onConfirmEdit,
   initialStrike,
 }: StrikeDetailsModalProps) => {
-  const [strikeFields, setStrikeFields] = useState<Strike>({
+  const [strikeFields, setStrikeFields] = useState<StrikeInput>({
     id: initialStrike?.id || '',
-    date: initialStrike?.date || new Date(),
-    reporterID: initialStrike?.reporterID || '',
+    date: initialStrike ? new Date(initialStrike?.date) : new Date(),
     comments: initialStrike?.comments || '',
     reason: initialStrike?.reason || null,
-  } as Strike);
+  });
 
   const [commentsRequiredError, setCommentsRequiredError] = useState<boolean>(false);
   const [reasonRequiredError, setReasonRequiredError] = useState<boolean>(false);
@@ -57,7 +60,7 @@ export const StrikeDetailsModal = ({
   const handleStrikeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setStrikeFields((prevStrike: Strike) => ({
+    setStrikeFields((prevStrike: StrikeInput) => ({
       ...prevStrike,
       [name]: name === 'date' ? new Date(value) : value,
     }));
@@ -66,12 +69,10 @@ export const StrikeDetailsModal = ({
   const handleStrikeSelectChange = (event: SelectChangeEvent<string>) => {
     const { name, value } = event.target;
     setReasonRequiredError(false);
-    setStrikeFields(
-      (prevStrike: Strike): Strike => ({
-        ...prevStrike,
-        [name]: value,
-      })
-    );
+    setStrikeFields((prevStrike: StrikeInput) => ({
+      ...prevStrike,
+      [name]: value,
+    }));
   };
 
   const onConfirm = async () => {
@@ -84,10 +85,17 @@ export const StrikeDetailsModal = ({
       return;
     }
 
+    const strikeToSave: Strike = {
+      id: strikeFields.id,
+      date: strikeFields.date,
+      reason: strikeFields.reason!,
+      comments: strikeFields.comments,
+    };
+
     if (initialStrike) {
-      onConfirmEdit(strikeFields);
+      onConfirmEdit(strikeToSave);
     } else {
-      onConfirmAdd(strikeFields);
+      onConfirmAdd(strikeToSave);
     }
   };
 
@@ -96,7 +104,7 @@ export const StrikeDetailsModal = ({
     setCommentsRequiredError(false);
     const { name, value } = e.target;
 
-    setStrikeFields((prevStrike) => ({
+    setStrikeFields((prevStrike: StrikeInput) => ({
       ...prevStrike,
       [name]: value,
     }));

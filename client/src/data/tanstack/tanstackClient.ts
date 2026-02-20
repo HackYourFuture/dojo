@@ -43,17 +43,18 @@ export const resetNavigateTo = () => {
   navigateTo = null;
 };
 
+const handleError = (error: unknown) => {
+  const axiosError = error as AxiosError | undefined;
+  // If the backend returned 401, redirect to login using the stored navigate.
+  // If `navigateTo` is not set (e.g. during tests), this is a no-op.
+  if (axiosError?.response?.status === 401) {
+    navigateTo?.('/login', { replace: true });
+  }
+};
+
 // Centralized QueryCache. Global error handling happens here.
 const queryCache = new QueryCache({
-  onError(error: unknown) {
-    const axiosError = error as AxiosError | undefined;
-
-    // If the backend returned 401, redirect to login using the stored navigate.
-    // If `navigateTo` is not set (e.g. during tests), this is a no-op.
-    if (axiosError?.response?.status === 401) {
-      navigateTo?.('/login', { replace: true });
-    }
-  },
+  onError: handleError,
 });
 
 // App-wide QueryClient using the cache above. Import and pass this to
@@ -62,6 +63,6 @@ export const queryClient = new QueryClient({
   queryCache,
   defaultOptions: {
     queries: { retry: 1 },
-    mutations: { retry: 1 },
+    mutations: { retry: 1, onError: handleError },
   },
 });

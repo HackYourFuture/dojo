@@ -1,35 +1,28 @@
+import { mapDomainToStrikeRequest, mapStrikeToDomain } from './mapper';
+
+import { Strike } from '../models/strike';
+import { StrikeResponse } from './types';
 import axios from 'axios';
-import { Strike } from '../../../../../data/types/Trainee';
 
 export const getStrikes = async (traineeId: string) => {
-  const { data } = await axios.get<Strike[]>(`/api/trainees/${traineeId}/strikes`);
-  return data;
+  const { data } = await axios.get<StrikeResponse[]>(`/api/trainees/${traineeId}/strikes`);
+  return data.map((strike) => mapStrikeToDomain(strike));
 };
 
-export const addStrike = async (traineeId: string, strike: Strike) => {
-  try {
-    await axios.post(`/api/trainees/${traineeId}/strikes`, strike);
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || 'Failed to add strike');
-    }
-
-    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
-  }
-};
-
+// TODO: Move these to mutation file
 export const deleteStrike = async (traineeId: string, strikeId: string) => {
   await axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
 };
 
-export const editStrike = async (traineeId: string, strike: Strike) => {
-  try {
-    await axios.put(`/api/trainees/${traineeId}/strikes/${strike.id}`, strike);
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || 'Failed to edit strike');
-    }
+export const addStrike = async (traineeId: string, strike: Strike) => {
+  const strikeRequest = mapDomainToStrikeRequest(strike);
+  const { data } = await axios.post<StrikeResponse>(`/api/trainees/${traineeId}/strikes`, strikeRequest);
+  return mapStrikeToDomain(data);
+};
 
-    throw new Error(error instanceof Error ? error.message : 'An unexpected error occurred');
-  }
+export const editStrike = async (traineeId: string, strike: Strike) => {
+  const strikeRequest = mapDomainToStrikeRequest(strike);
+
+  const { data } = await axios.put<StrikeResponse>(`/api/trainees/${traineeId}/strikes/${strike.id!}`, strikeRequest);
+  return mapStrikeToDomain(data);
 };
