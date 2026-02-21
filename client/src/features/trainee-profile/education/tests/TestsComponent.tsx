@@ -6,7 +6,6 @@ import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
 import { Test } from '../../../../data/types/Trainee';
 import { TestDetailsModal } from './TestDetailsModal';
 import { TestsList } from './TestsList';
-import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 
@@ -23,9 +22,7 @@ export const TestsComponent = () => {
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   const [idToDelete, setIdToDelete] = useState<string>('');
-  const queryClient = useQueryClient();
   const handleSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['tests', traineeId] });
     setIsModalOpen(false);
     setInitialTest(null);
   };
@@ -91,7 +88,6 @@ export const TestsComponent = () => {
     deleteTest(idToDelete, {
       onSuccess: () => {
         setIsConfirmationDialogOpen(false);
-        queryClient.invalidateQueries({ queryKey: ['tests', traineeId] });
       },
     });
   };
