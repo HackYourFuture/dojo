@@ -10,8 +10,12 @@ import { testsQueryKeys } from './keys';
  * @param {Test} test the test to add.
  */
 export const useAddTest = (traineeId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (test: Test) => addTest(traineeId, test),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
+    },
   });
 };
 
@@ -43,8 +47,8 @@ export const useDeleteTest = (traineeId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (testId: string) => deleteTest(traineeId, testId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
     },
   });
 };
@@ -57,8 +61,8 @@ export const useEditTest = (traineeId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (test: Test) => editTest(traineeId, test),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
     },
   });
 };
