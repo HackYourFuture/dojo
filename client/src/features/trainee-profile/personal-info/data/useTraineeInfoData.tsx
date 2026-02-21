@@ -1,8 +1,9 @@
 import { getTrainee, updateTrainee } from '../api/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Trainee } from '../../../../data/types/Trainee';
 import { UpdateTraineeRequestData } from '../api/types';
+import { traineeQueryKeys } from './keys';
 
 /**
  * A React Query hook that fetches trainee information data form api.
@@ -11,7 +12,7 @@ import { UpdateTraineeRequestData } from '../api/types';
  */
 export const useTraineeInfoData = (traineeId: string) => {
   return useQuery<Trainee, Error>({
-    queryKey: ['traineeInfo', traineeId],
+    queryKey: traineeQueryKeys.details(traineeId),
     queryFn: () => getTrainee(traineeId),
     enabled: !!traineeId,
     //Added because it keeps rendering
@@ -27,8 +28,12 @@ export const useTraineeInfoData = (traineeId: string) => {
  * @param {string} traineeId trainee id
  */
 export const useSaveTraineeInfo = (traineeId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (dataToSave: UpdateTraineeRequestData) => updateTrainee(traineeId, dataToSave),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: traineeQueryKeys.details(traineeId) });
+    },
   });
 };
 

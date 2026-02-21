@@ -1,6 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { addTest, deleteTest, editTest, getTests } from '../api/api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { Test } from '../../../../../data/types/Trainee';
-import { getTests, addTest, deleteTest, editTest } from '../api/api';
+import { testsQueryKeys } from './keys';
 
 /**
  * Hook to add a test to a trainee.
@@ -8,8 +10,12 @@ import { getTests, addTest, deleteTest, editTest } from '../api/api';
  * @param {Test} test the test to add.
  */
 export const useAddTest = (traineeId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (test: Test) => addTest(traineeId, test),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
+    },
   });
 };
 
@@ -20,7 +26,7 @@ export const useAddTest = (traineeId: string) => {
  */
 export const useGetTests = (traineeId: string) => {
   return useQuery({
-    queryKey: ['tests', traineeId],
+    queryKey: testsQueryKeys.list(traineeId),
     queryFn: async () => {
       const data = await getTests(traineeId);
       return orderTestsByDateDesc(data);
@@ -38,8 +44,12 @@ export const useGetTests = (traineeId: string) => {
  * */
 
 export const useDeleteTest = (traineeId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (testId: string) => deleteTest(traineeId, testId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
+    },
   });
 };
 
@@ -48,8 +58,12 @@ export const useDeleteTest = (traineeId: string) => {
  * @param {string} traineeId the id of the trainee to edit the test of.
  */
 export const useEditTest = (traineeId: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (test: Test) => editTest(traineeId, test),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: testsQueryKeys.list(traineeId) });
+    },
   });
 };
 

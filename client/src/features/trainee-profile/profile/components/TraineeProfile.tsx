@@ -16,7 +16,6 @@ import PersonalInfo from '../../personal-info/PersonalInfo';
 import ProfileNav from './ProfileNav';
 import ProfileSidebar from '../ProfileSidebar';
 import { Trainee } from '../../../../data/types/Trainee';
-import { useQueryClient } from '@tanstack/react-query';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 
 interface TraineeProfileProps {
@@ -35,7 +34,6 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
   const { data: traineeData } = useTraineeInfoData(id);
   const { isPending: isSaveLoading, mutate } = useSaveTraineeInfo(id);
   const { isEditMode, setTrainee, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
-  const queryClient = useQueryClient();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
@@ -68,8 +66,6 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Trainee data saved successfully');
         setTrainee(data);
-
-        queryClient.invalidateQueries({ queryKey: ['traineeInfo', id] });
         setIsEditMode(false);
       },
       onError: (error: Error) => {
