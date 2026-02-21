@@ -1,6 +1,8 @@
+import { addInteraction, deleteInteraction, editInteraction, getInteractions } from '../api/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { Interaction } from '../Interactions';
-import { getInteractions, addInteraction, deleteInteraction, editInteraction } from '../api/api';
+import { interactionsQueryKeys } from './keys';
 
 /**
  * gets all interactions for a trainee
@@ -9,7 +11,7 @@ import { getInteractions, addInteraction, deleteInteraction, editInteraction } f
  */
 export const useGetInteractions = (traineeId: string) => {
   return useQuery({
-    queryKey: ['interactions', traineeId],
+    queryKey: interactionsQueryKeys.list(traineeId),
     queryFn: async () => {
       const interactions = await getInteractions(traineeId);
       return orderInteractionsByDateDesc(interactions);
@@ -34,8 +36,8 @@ export const useAddInteraction = (traineeId: string) => {
   // partial because not all fields are sent to the backend
   return useMutation({
     mutationFn: (interaction: Partial<Interaction>) => addInteraction(traineeId, interaction),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: interactionsQueryKeys.list(traineeId) });
     },
   });
 };
@@ -50,8 +52,8 @@ export const useDeleteInteraction = (traineeId: string) => {
 
   return useMutation({
     mutationFn: (interactionId: string) => deleteInteraction(traineeId, interactionId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: interactionsQueryKeys.list(traineeId) });
     },
   });
 };
@@ -65,8 +67,8 @@ export const useEditInteraction = (traineeId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (interaction: Interaction) => editInteraction(traineeId, interaction),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['interactions', traineeId] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: interactionsQueryKeys.list(traineeId) });
     },
   });
 };
