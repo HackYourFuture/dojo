@@ -14,10 +14,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Strike, StrikeReason } from './models/strike';
+import { Strike, StrikeReason } from '../models/strike';
 
 import { LoadingButton } from '@mui/lab';
-import { formatDate } from '../../utils/dateHelper';
+import { formatDate } from '../../../utils/dateHelper';
 import { useState } from 'react';
 
 type StrikeInput = Omit<Strike, 'reporterName' | 'reporterImageUrl' | 'reason'> & {
@@ -111,12 +111,7 @@ export const StrikeDetailsModal = ({
   };
 
   return (
-    <Modal
-      open={isOpen}
-      closeAfterTransition
-      slots={{ backdrop: Backdrop }}
-      slotProps={{ backdrop: { timeout: 500 } }}
-    >
+    <Modal open={isOpen} closeAfterTransition slots={{ backdrop: Backdrop }} slotProps={{ backdrop: { timeout: 500 } }}>
       <Fade in={isOpen}>
         <Box
           minWidth={550}
@@ -193,7 +188,7 @@ export const StrikeDetailsModal = ({
               error={commentsRequiredError}
               helperText={commentsRequiredError ? 'Comments are required' : ''}
               value={strikeFields.comments}
-              slotProps={{ inputLabel: { shrink: true} }}
+              slotProps={{ inputLabel: { shrink: true } }}
               onChange={onChangeComments}
               fullWidth
             />

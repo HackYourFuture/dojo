@@ -1,12 +1,12 @@
 import { Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 
-import { AvatarWithTooltip } from '../components/AvatarWithTooltip';
+import { AvatarWithTooltip } from '../../components/AvatarWithTooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import MarkdownText from '../../components/MarkdownText';
-import { Strike } from './models/strike';
-import { formatDateForDisplay } from '../../utils/dateHelper';
+import MarkdownText from '../../../components/MarkdownText';
 import React from 'react';
+import { Strike } from '../models/strike';
+import { formatDateForDisplay } from '../../../utils/dateHelper';
 
 interface StrikesListProps {
   strikes: Strike[];
@@ -82,13 +82,7 @@ export const StrikesList: React.FC<StrikesListProps> = ({ strikes, onClickEdit, 
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      justifyContent="space-between"
-                      width="100%"
-                      py={1}
-                    >
+                    <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" py={1}>
                       {formatStrikeReason(strike.reason || '')}
                       <Typography sx={{ pr: 2 }}>{formatDateForDisplay(strike.date)}</Typography>
                     </Box>

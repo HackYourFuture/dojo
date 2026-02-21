@@ -9,7 +9,6 @@ export const getStrikes = async (traineeId: string) => {
   return data.map((strike) => mapStrikeToDomain(strike));
 };
 
-// TODO: Move these to mutation file
 export const deleteStrike = async (traineeId: string, strikeId: string) => {
   await axios.delete(`/api/trainees/${traineeId}/strikes/${strikeId}`);
 };
