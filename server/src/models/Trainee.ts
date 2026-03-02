@@ -85,7 +85,7 @@ export enum TestType {
   ReactInterview = 'react-interview',
   FinalProjectInterview = 'final-project-interview',
   CoreMidTermInterview = 'core-mid-term-interview',
-  CoreEndTermInterview = 'core-end-interview',
+  CoreEndInterview = 'core-end-interview',
   FrontEndMidTermInterview = 'frontend-mid-term-interview',
   BackEndMidTermInterview = 'backend-mid-term-interview',
   CloudMidTermInterview = 'cloud-mid-term-interview',
