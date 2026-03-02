@@ -134,13 +134,13 @@ export const TestDetailsModal = ({
                 value={testFields.type ?? ''}
                 onChange={handleTestSelectChange}
               >
-                <MenuItem value={TestType.Presentation}>Presentation</MenuItem>
-                <MenuItem value={TestType.JavaScript}>JavaScript</MenuItem>
-                <MenuItem value={TestType.BrowsersInterview}>Browsers interview</MenuItem>
-                <MenuItem value={TestType.UsingApisInterview}>Using APIs interview</MenuItem>
-                <MenuItem value={TestType.NodeJS}>Node.js</MenuItem>
-                <MenuItem value={TestType.ReactInterview}>React interview</MenuItem>
-                <MenuItem value={TestType.FinalProjectInterview}>Final project interview</MenuItem>
+                <MenuItem value={TestType.CoreMidTermInterview}>Core mid-term interview</MenuItem>
+                <MenuItem value={TestType.CoreEndInterview}>Core end interview</MenuItem>
+                <MenuItem value={TestType.FrontEndMidTermInterview}>Frontend mid-term interview</MenuItem>
+                <MenuItem value={TestType.BackEndMidTermInterview}>Backend mid-term interview</MenuItem>
+                <MenuItem value={TestType.CloudMidTermInterview}>Cloud mid-term interview</MenuItem>
+                <MenuItem value={TestType.DataMidTermInterview}>Data mid-term interview</MenuItem>
+                <MenuItem value={TestType.TesterMidTermInterview}>Tester mid-term interview</MenuItem>
               </Select>
               {typeError && <FormHelperText>Type is required</FormHelperText>}
             </FormControl>
