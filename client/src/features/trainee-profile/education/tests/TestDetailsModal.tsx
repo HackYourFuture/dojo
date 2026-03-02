@@ -54,18 +54,6 @@ export const TestDetailsModal = ({
 
   const isEditMode = Boolean(initialTest);
 
-  const legacyTestTypes: TestType[] = [
-    TestType.Presentation,
-    TestType.JavaScript,
-    TestType.BrowsersInterview,
-    TestType.UsingApisInterview,
-    TestType.NodeJS,
-    TestType.ReactInterview,
-    TestType.FinalProjectInterview,
-  ];
-
-  const isLegacyTest = isEditMode && initialTest?.type !== undefined && legacyTestTypes.includes(initialTest.type);
-
   const handleClose = () => {
     onClose();
   };
@@ -146,25 +134,13 @@ export const TestDetailsModal = ({
                 value={testFields.type ?? ''}
                 onChange={handleTestSelectChange}
               >
-                {isLegacyTest
-                  ? [
-                      <MenuItem key={TestType.Presentation} value={TestType.Presentation}>Presentation</MenuItem>,
-                      <MenuItem key={TestType.JavaScript} value={TestType.JavaScript}>JavaScript</MenuItem>,
-                      <MenuItem key={TestType.BrowsersInterview} value={TestType.BrowsersInterview}>Browsers interview</MenuItem>,
-                      <MenuItem key={TestType.UsingApisInterview} value={TestType.UsingApisInterview}>Using APIs interview</MenuItem>,
-                      <MenuItem key={TestType.NodeJS} value={TestType.NodeJS}>Node.js</MenuItem>,
-                      <MenuItem key={TestType.ReactInterview} value={TestType.ReactInterview}>React interview</MenuItem>,
-                      <MenuItem key={TestType.FinalProjectInterview} value={TestType.FinalProjectInterview}>Final project interview</MenuItem>,
-                    ]
-                  : [
-                      <MenuItem key={TestType.CoreMidTermInterview} value={TestType.CoreMidTermInterview}>Core mid-term interview</MenuItem>,
-                      <MenuItem key={TestType.CoreEndInterview} value={TestType.CoreEndInterview}>Core end interview</MenuItem>,
-                      <MenuItem key={TestType.FrontEndMidTermInterview} value={TestType.FrontEndMidTermInterview}>Frontend mid-term interview</MenuItem>,
-                      <MenuItem key={TestType.BackEndMidTermInterview} value={TestType.BackEndMidTermInterview}>Backend mid-term interview</MenuItem>,
-                      <MenuItem key={TestType.CloudMidTermInterview} value={TestType.CloudMidTermInterview}>Cloud mid-term interview</MenuItem>,
-                      <MenuItem key={TestType.DataMidTermInterview} value={TestType.DataMidTermInterview}>Data mid-term interview</MenuItem>,
-                      <MenuItem key={TestType.TesterMidTermInterview} value={TestType.TesterMidTermInterview}>Tester mid-term interview</MenuItem>,
-                    ]}
+                <MenuItem value={TestType.CoreMidTermInterview}>Core mid-term interview</MenuItem>
+                <MenuItem value={TestType.CoreEndInterview}>Core end interview</MenuItem>
+                <MenuItem value={TestType.FrontEndMidTermInterview}>Frontend mid-term interview</MenuItem>
+                <MenuItem value={TestType.BackEndMidTermInterview}>Backend mid-term interview</MenuItem>
+                <MenuItem value={TestType.CloudMidTermInterview}>Cloud mid-term interview</MenuItem>
+                <MenuItem value={TestType.DataMidTermInterview}>Data mid-term interview</MenuItem>
+                <MenuItem value={TestType.TesterMidTermInterview}>Tester mid-term interview</MenuItem>
               </Select>
               {typeError && <FormHelperText>Type is required</FormHelperText>}
             </FormControl>
