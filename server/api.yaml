@@ -1658,6 +1658,13 @@ components:
             - nodejs
             - react-interview
             - final-project-interview
+            - core-mid-term-interview
+            - core-end-interview
+            - frontend-mid-term-interview
+            - backend-mid-term-interview
+            - cloud-mid-term-interview
+            - data-mid-term-interview
+            - tester-mid-term-interview
         score:
           type: number
           example: 8.6
