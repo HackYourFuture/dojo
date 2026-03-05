@@ -47,7 +47,7 @@ const ContactInfo = () => {
                 name="email"
                 label="Email"
                 type="email"
-                placeholder={isEditing ? 'john_doe@example.com' : ''}              
+                placeholder={isEditing ? 'john_doe@example.com' : ''}
                 value={editedFields.email || ''}
                 slotProps={{
                   input: {
@@ -178,7 +178,7 @@ const ContactInfo = () => {
               <TextField
                 id="githubHandle"
                 name="githubHandle"
-                label="Github Handle"
+                label="GitHub Handle"
                 type="text"
                 placeholder={isEditing ? 'john_doe' : ''}
                 value={editedFields.githubHandle || ''}
@@ -227,7 +227,7 @@ const ContactInfo = () => {
           <TextField
             id="linkedin"
             name="linkedin"
-            label="Linkedin"
+            label="LinkedIn"
             type="url"
             placeholder={isEditing ? 'https://www.linkedin.com/in/john_doe' : ''}
             value={editedFields.linkedin || ''}
