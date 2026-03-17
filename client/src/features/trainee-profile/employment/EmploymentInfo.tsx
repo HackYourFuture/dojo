@@ -43,7 +43,7 @@ export const EmploymentInfo = () => {
             name="cvURL"
             label="CV"
             type="url"
-            placeholder="https://cv.example.com"
+            placeholder={isEditing ? 'https://example.com/cv.pdf' : ''}
             value={editedFields?.cvURL || ''}
             slotProps={{
               input: {
@@ -74,7 +74,7 @@ export const EmploymentInfo = () => {
             name="availability"
             label="Availability"
             type="text"
-            placeholder="From next month, fulltime"
+            placeholder={isEditing ? 'From next month, fulltime' : ''}
             value={editedFields?.availability || ''}
             slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
@@ -91,7 +91,7 @@ export const EmploymentInfo = () => {
             name="preferredRole"
             label="Preferred role"
             type="text"
-            placeholder="Backend"
+            placeholder={isEditing ? 'Backend' : ''}
             value={editedFields?.preferredRole || ''}
             slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
@@ -106,7 +106,7 @@ export const EmploymentInfo = () => {
             name="preferredLocation"
             label="Preferred location"
             type="text"
-            placeholder="Randstad, Utrecht"
+            placeholder={isEditing ? 'Randstad, Utrecht' : ''}
             value={editedFields?.preferredLocation || ''}
             slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
@@ -141,7 +141,7 @@ export const EmploymentInfo = () => {
             name="extraTechnologies"
             label="Extra technologies"
             type="text"
-            placeholder="C#, C++, Vue.js"
+            placeholder={isEditing ? 'C#, C++, Vue.js' : ''}
             value={editedFields?.extraTechnologies || ''}
             slotProps={{ input: { readOnly: !isEditing }, inputLabel: { shrink: true } }}
             variant={isEditing ? 'outlined' : 'standard'}
