@@ -14,7 +14,7 @@ import InteractionsInfo from '../../interactions/InteractionsInfo';
 import MuiAlert from '@mui/material/Alert';
 import PersonalInfo from '../../personal-info/PersonalInfo';
 import ProfileNav from './ProfileNav';
-import ProfileSidebar from '../ProfileSidebar';
+import { ProfileSidebar } from '../ProfileSidebar';
 import { Trainee } from '../../../../data/types/Trainee';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 
@@ -28,7 +28,7 @@ interface TraineeProfileProps {
  * @param {string} id trainee id.
  * @returns {ReactNode} A React element that renders profile page tabs and sidebar.
  */
-const TraineeProfile = ({ id }: TraineeProfileProps) => {
+export const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
   const { data: traineeData } = useTraineeInfoData(id);
@@ -137,5 +137,3 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
     </Box>
   );
 };
-
-export default TraineeProfile;
