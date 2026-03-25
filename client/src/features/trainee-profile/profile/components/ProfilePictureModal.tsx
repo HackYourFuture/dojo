@@ -2,16 +2,17 @@ import { Avatar, Box, Fade, IconButton } from '@mui/material';
 import React from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Trainee } from '../../../../data/types/Trainee';
 
 interface ProfilePictureModalProps {
-  data: Trainee | undefined;
+  imageUrl?: string | undefined;
+  displayName?: string | undefined;
   onUploadModalOpen: () => void;
   onConfirmationDialogOpen: () => void;
 }
 
 export const ProfilePictureModal = ({
-  data,
+  imageUrl,
+  displayName,
   onUploadModalOpen,
   onConfirmationDialogOpen,
 }: ProfilePictureModalProps) => {
@@ -32,8 +33,8 @@ export const ProfilePictureModal = ({
       position="relative"
     >
       <Avatar
-        src={data?.imageURL}
-        alt={data?.displayName}
+        src={imageUrl}
+        alt={displayName}
         variant="square"
         sx={{
           width: '100%',

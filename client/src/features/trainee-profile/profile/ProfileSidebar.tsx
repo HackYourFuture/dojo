@@ -38,7 +38,12 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         paddingX={4}
         paddingY={4}
       >
-        <ProfilePictureModal data={data} onUploadModalOpen={() => null} onConfirmationDialogOpen={() => null} />
+        <ProfilePictureModal
+          imageUrl={data?.imageURL}
+          displayName={data?.displayName}
+          onUploadModalOpen={() => null}
+          onConfirmationDialogOpen={() => null}
+        />
 
         <Stack direction="column" spacing={1} justifyContent="center" alignItems="center">
           {/* Name */}
@@ -88,5 +93,3 @@ export const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
     </>
   );
 };
-
-export default ProfileSidebar;
