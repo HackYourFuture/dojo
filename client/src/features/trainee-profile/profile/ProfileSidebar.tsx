@@ -74,7 +74,7 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         )}
         {githubHandle && (
           <Link href={`https://github.com/${githubHandle}`} target="_blank" rel="noopener">
-            <IconButton aria-label="GitHub handel">
+            <IconButton aria-label="GitHub handle">
               <img src={githubLogo} alt="GitHub" width="32" height="32" style={{ borderRadius: '50%' }} />
             </IconButton>
           </Link>
