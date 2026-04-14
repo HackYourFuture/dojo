@@ -1,7 +1,7 @@
 import { ErrorBox, Loader } from '../../components';
 
 import { Box } from '@mui/material';
-import { TraineeProfile } from './profile/components/TraineeProfile';
+import TraineeProfile from './profile/components/TraineeProfile';
 import { TraineeProfileProvider } from './context/useTraineeProfileProvider';
 import { useParams } from 'react-router-dom';
 import { useTraineeInfoData } from './personal-info/data/useTraineeInfoData';
