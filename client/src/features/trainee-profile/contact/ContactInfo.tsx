@@ -24,7 +24,7 @@ const ContactInfo = () => {
 
   return (
     <Box display="flex" flexWrap="wrap" gap={4} padding="24px">
-      <Box width="100%" display="flex">
+      <Box width="90ch" display="flex">
         <Box width="50%">
           {/* Email */}
           <Box
@@ -47,7 +47,6 @@ const ContactInfo = () => {
                 name="email"
                 label="Email"
                 type="email"
-                placeholder={isEditing ? 'john_doe@example.com' : ''}
                 value={editedFields.email || ''}
                 slotProps={{
                   input: {
@@ -95,7 +94,7 @@ const ContactInfo = () => {
                 name="slackId"
                 label="Slack ID"
                 type="text"
-                placeholder={isEditing ? 'UXXXXXXXXXX' : ''}
+                placeholder="Format: UXXXXXXXXXX"
                 value={editedFields.slackId || ''}
                 slotProps={{
                   input: {
@@ -143,7 +142,6 @@ const ContactInfo = () => {
                 name="phone"
                 label="Phone"
                 type="tel"
-                placeholder={isEditing ? '+1234567890' : ''}
                 value={editedFields.phone || ''}
                 slotProps={{
                   input: {
@@ -178,9 +176,8 @@ const ContactInfo = () => {
               <TextField
                 id="githubHandle"
                 name="githubHandle"
-                label="GitHub Handle"
+                label="Github Handle"
                 type="text"
-                placeholder={isEditing ? 'john_doe' : ''}
                 value={editedFields.githubHandle || ''}
                 slotProps={{
                   input: {
@@ -212,7 +209,7 @@ const ContactInfo = () => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          width: '100%',
+          width: '90ch',
         }}
       >
         <LinkedInIcon sx={{ color: 'action.active', mr: 1 }} />
@@ -227,9 +224,8 @@ const ContactInfo = () => {
           <TextField
             id="linkedin"
             name="linkedin"
-            label="LinkedIn"
+            label="Linkedin"
             type="url"
-            placeholder={isEditing ? 'https://www.linkedin.com/in/john_doe' : ''}
             value={editedFields.linkedin || ''}
             slotProps={{
               input: {
@@ -258,7 +254,7 @@ const ContactInfo = () => {
         Emergency contact
       </Typography>
 
-      <Box width="100%" display="flex">
+      <Box width="90ch" display="flex">
         <Box width="50%">
           {/* Emergency Contact */}
           <Box
@@ -281,7 +277,6 @@ const ContactInfo = () => {
                 name="emergencyContactName"
                 label="Emergency Contact"
                 type="text"
-                placeholder={isEditing ? 'Steve Doe' : ''}
                 value={editedFields.emergencyContactName || ''}
                 slotProps={{
                   input: {
@@ -320,7 +315,6 @@ const ContactInfo = () => {
                 name="emergencyContactPhoneNum"
                 label="Emergency Contact Phone Number"
                 type="tel"
-                placeholder={isEditing ? '+1234567890' : ''}
                 value={editedFields.emergencyContactPhoneNum || ''}
                 slotProps={{
                   input: {

@@ -41,7 +41,6 @@ const PersonalInfo = () => {
             name="firstName"
             label="First name"
             type="text"
-            placeholder={isEditing ? 'John' : ''}
             value={editedFields?.firstName || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -57,7 +56,6 @@ const PersonalInfo = () => {
             name="lastName"
             label="Last name"
             type="text"
-            placeholder={isEditing ? 'Doe' : ''}
             value={editedFields?.lastName || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -73,7 +71,6 @@ const PersonalInfo = () => {
             name="preferredName"
             label="Preferred name"
             type="text"
-            placeholder={isEditing ? 'Johnny' : ''}
             value={editedFields?.preferredName || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -122,7 +119,6 @@ const PersonalInfo = () => {
             name="location"
             label="Location"
             type="text"
-            placeholder={isEditing ? 'Amsterdam' : ''}
             value={editedFields?.location || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -138,7 +134,6 @@ const PersonalInfo = () => {
             name="countryOfOrigin"
             label="Country of origin"
             type="text"
-            placeholder={isEditing ? 'Netherlands' : ''}
             value={editedFields?.countryOfOrigin || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}
@@ -314,7 +309,6 @@ const PersonalInfo = () => {
             name="educationBackground"
             label="Education background"
             type="text"
-            placeholder={isEditing ? 'Computer science' : ''}
             value={editedFields?.educationBackground || ''}
             InputProps={{ readOnly: isEditing ? false : true }}
             InputLabelProps={{ shrink: true }}

@@ -204,7 +204,6 @@ const EducationInfo = () => {
               name="techMentor"
               label="Technical Mentor"
               type="text"
-              placeholder={isEditing ? 'John Doe' : ''}
               value={editedFields?.techMentor ?? ''}
               slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
@@ -219,7 +218,6 @@ const EducationInfo = () => {
               name="hrMentor"
               label="HR Mentor"
               type="text"
-              placeholder={isEditing ? 'Jane Smith' : ''}
               value={editedFields?.hrMentor ?? ''}
               slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
@@ -234,7 +232,6 @@ const EducationInfo = () => {
               name="englishMentor"
               label="English Mentor"
               type="text"
-              placeholder={isEditing ? 'John Doe' : ''}
               value={editedFields?.englishMentor ?? ''}
               slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
