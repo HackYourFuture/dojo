@@ -1,6 +1,7 @@
 import { DropdownSelect } from './DropdownSelect';
 import { LearningStatus } from '../../../../data/types/Trainee';
 import { SelectChangeEvent } from '@mui/material';
+import { formatTextToFriendly } from '../../utils/formHelper';
 
 const learningStatusToLabel = (status?: LearningStatus | string): string => {
   switch (status) {
@@ -13,7 +14,7 @@ const learningStatusToLabel = (status?: LearningStatus | string): string => {
     case LearningStatus.Quit:
       return 'Quit';
     default:
-      return status ? String(status) : '';
+      return formatTextToFriendly(status ? String(status) : '');
   }
 };
 
