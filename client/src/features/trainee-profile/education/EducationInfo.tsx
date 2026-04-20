@@ -7,6 +7,7 @@ import { LearningStatusSelect } from '../profile/components/LearningStatusSelect
 import React from 'react';
 import { StrikesComponent } from './strikes/StrikesComponent';
 import { TestsComponent } from './tests/TestsComponent';
+import TrackSelect from './components/TrackSelect';
 import { formatDate } from '../utils/dateHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
@@ -46,10 +47,10 @@ const EducationInfo = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <div style={{ width: '100%' }}>
+    <Box display="flex" flexDirection="column" flexWrap="wrap" gap={4} padding="24px">
+      <Box display="grid" gridTemplateColumns="20ch 20ch 30ch" gap={2}>
         {/* Cohort */}
-        <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
+        <FormControl sx={{ my: 1 }}>
           <TextField
             id="currentCohort"
             name="currentCohort"
@@ -60,23 +61,49 @@ const EducationInfo = () => {
                 readOnly: isEditing ? false : true,
                 inputMode: 'numeric',
               },
+              htmlInput: {
+                pattern: '[0-9]*',
+                maxLength: 3,
+              },
               inputLabel: { shrink: true },
-            }}
-            inputProps={{
-              pattern: '[0-9]*',
-              maxLength: 3,
             }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleNumericChange}
           />
         </FormControl>
+        <TrackSelect
+          isEditing={isEditing}
+          value={editedFields.track}
+          onChange={handleSelectChange}
+          width="100%"
+          sx={{ mx: 0 }}
+        />
+
+        {/* Start date */}
+        <FormControl sx={{ my: 1 }}>
+          <TextField
+            id={editedFields?.startDate ? 'startDate' : 'dateEmpty'}
+            name="startDate"
+            label="Start date"
+            type="date"
+            value={formatDate(editedFields?.startDate)}
+            slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
+            variant={isEditing ? 'outlined' : 'standard'}
+            onChange={handleTextChange}
+          />
+        </FormControl>
 
         {/* Learning status */}
-        <LearningStatusSelect isEditing={isEditing} value={editedFields.learningStatus} onChange={handleSelectChange} />
+        <LearningStatusSelect
+          isEditing={isEditing}
+          value={editedFields.learningStatus}
+          onChange={handleSelectChange}
+          sx={{ mx: 0, width: '100%' }}
+        />
 
         {/* Quit date */}
-        {editedFields?.learningStatus === LearningStatus.Quit && (
-          <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
+        {editedFields?.learningStatus === LearningStatus.Quit ? (
+          <FormControl sx={{ my: 1, width: '100%' }}>
             <TextField
               id={editedFields?.quitDate ? 'quitDate' : 'dateEmpty'}
               name="quitDate"
@@ -91,11 +118,26 @@ const EducationInfo = () => {
               onChange={handleTextChange}
             />
           </FormControl>
+        ) : editedFields?.learningStatus === LearningStatus.Graduated ? (
+          <FormControl sx={{ my: 1, width: '100%' }}>
+            <TextField
+              id={editedFields?.graduationDate ? 'graduationDate' : 'dateEmpty'}
+              name="graduationDate"
+              label="Graduation date"
+              type="date"
+              value={formatDate(editedFields?.graduationDate)}
+              slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
+              variant={isEditing ? 'outlined' : 'standard'}
+              onChange={handleTextChange}
+            />
+          </FormControl>
+        ) : (
+          <Box />
         )}
 
         {/* Quit reason */}
-        {editedFields?.learningStatus === LearningStatus.Quit && (
-          <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
+        {editedFields?.learningStatus === LearningStatus.Quit ? (
+          <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ my: 1, width: '100%' }}>
             <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
             <Select
               name="quitReason"
@@ -116,27 +158,12 @@ const EducationInfo = () => {
               <MenuItem value={QuitReason.Other}>Other</MenuItem>
             </Select>
           </FormControl>
+        ) : (
+          <Box />
         )}
 
-        {/* Graduation date */}
-        {editedFields?.learningStatus === LearningStatus.Graduated && (
-          <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-            <TextField
-              id={editedFields?.graduationDate ? 'graduationDate' : 'dateEmpty'}
-              name="graduationDate"
-              label="Graduation date"
-              type="date"
-              value={formatDate(editedFields?.graduationDate)}
-              slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
-              variant={isEditing ? 'outlined' : 'standard'}
-              onChange={handleTextChange}
-            />
-          </FormControl>
-        )}
-      </div>
-      <div style={{ width: '100%' }}>
         {/* Start Cohort */}
-        <FormControl sx={{ mx: 2, my: 1, width: '11ch', gap: '2rem' }}>
+        <FormControl sx={{ my: 1 }}>
           <TextField
             id="startCohort"
             name="startCohort"
@@ -147,31 +174,18 @@ const EducationInfo = () => {
                 readOnly: isEditing ? false : true,
                 inputMode: 'numeric',
               },
+              htmlInput: {
+                pattern: '[0-9]*',
+                maxLength: 3,
+              },
               inputLabel: { shrink: true },
-            }}
-            inputProps={{
-              pattern: '[0-9]*',
-              maxLength: 3,
             }}
             variant={isEditing ? 'outlined' : 'standard'}
             onChange={handleNumericChange}
           />
         </FormControl>
-
-        {/* Start date */}
-        <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-          <TextField
-            id={editedFields?.startDate ? 'startDate' : 'dateEmpty'}
-            name="startDate"
-            label="Start date"
-            type="date"
-            value={formatDate(editedFields?.startDate)}
-            slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleTextChange}
-          />
-        </FormControl>
-      </div>
+      </Box>
+      {/* Mentors */}
       <div style={{ width: '100%' }}>
         <Typography variant="h6" padding="16px">
           Mentors

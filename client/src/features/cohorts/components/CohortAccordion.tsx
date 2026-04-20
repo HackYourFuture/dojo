@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import IconButton from '@mui/material/IconButton';
 import { LearningStatus } from '../../../data/types/Trainee';
+import { getTrackLabel } from '../../../data/labels/traineeLabels';
 import { Link } from 'react-router-dom';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
@@ -52,6 +53,9 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                 <TableCell sx={headerStyle} width={200}>
                   Status
                 </TableCell>
+                <TableCell sx={headerStyle} width={200}>
+                  Track
+                </TableCell>
                 <TableCell sx={headerStyle}>Location</TableCell>
                 <TableCell sx={headerStyle} width={50}>
                   Work Permit
@@ -82,6 +86,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                       <SidebarLearningStatus learningStatus={trainee.LearningStatus}></SidebarLearningStatus>
                     )}
                   </TableCell>
+                  <TableCell>{getTrackLabel(trainee.track)}</TableCell>
                   <TableCell>{trainee.location}</TableCell>
                   <TableCell>{convertToString(trainee.hasWorkPermit)}</TableCell>
                   <TableCell sx={{ color: getScoreColor(trainee.averageTestScore) }}>

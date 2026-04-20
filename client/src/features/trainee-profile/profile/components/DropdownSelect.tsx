@@ -1,4 +1,13 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  SxProps,
+  Theme,
+} from '@mui/material';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -13,6 +22,8 @@ type CustomSelectProps = {
   isEditing?: boolean;
   error?: string;
   onChange: (event: SelectChangeEvent<string>) => void;
+  width?: string | number;
+  sx?: SxProps<Theme>;
 };
 
 export type MenuItemType = {
@@ -30,11 +41,13 @@ export const DropdownSelect = ({
   isEditing = false,
   error,
   onChange = () => {},
+  width = '25ch',
+  sx,
 }: CustomSelectProps) => {
   const NoIcon = () => null;
 
   return (
-    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch' }}>
+    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, gap: '2rem', width, ...sx }}>
       <InputLabel htmlFor={label}>{inputLabel}</InputLabel>
       <Select
         disabled={disabled}
