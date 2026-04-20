@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { LearningStatus, QuitReason, Trainee } from '../../../data/types/Trainee';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
