@@ -178,11 +178,6 @@ class Main {
       res.status(404).json(new ResponseError('Not found'));
     });
 
-    // Serve client static files in production
-    if (this.isProduction) {
-      this.setupClientMiddleware();
-    }
-
     // Sentry must be setup after all routes but before the global error handler
     setupSentry(this.app);
 
@@ -201,13 +196,6 @@ class Main {
     const dbUrl: string = process.env.DB_URL ?? 'mongodb://localhost:27017/dojo';
     this.db = (await mongoose.connect(dbUrl, { enableUtf8Validation: true })).connection;
     console.log(`✅ Connected to database '${this.db.name}' on ${this.db.host}:${this.db.port}\n`);
-  }
-
-  setupClientMiddleware() {
-    this.app.use(express.static(path.join(__dirname, '../../client/dist')));
-    this.app.use((req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-    });
   }
 
   startServer(port: number) {

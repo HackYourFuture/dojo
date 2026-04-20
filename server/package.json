@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc && npm run sentry:sourcemaps",
     "dev": "nodemon -w src src/index.ts",
-    "start": "tsc && node dist/index.js",
+    "start": "node dist/index.js",
     "lint": "tsc --noEmit && eslint .",
     "lint:fix": "eslint --fix .",
     "setup": "npm install --include=dev",
