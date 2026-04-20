@@ -41,6 +41,7 @@ export const LearningStatusSelect: React.FC<LearningStatusSelectProps> = (props)
       id="learningStatus"
       label="learningStatus"
       inputLabel="Learning Status"
+      width={'15ch'}
     />
   );
 };

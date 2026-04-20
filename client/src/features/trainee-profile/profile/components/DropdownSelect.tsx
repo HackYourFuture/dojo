@@ -13,6 +13,7 @@ type CustomSelectProps = {
   isEditing?: boolean;
   error?: string;
   onChange: (event: SelectChangeEvent<string>) => void;
+  width?: string | number;
 };
 
 export type MenuItemType = {
@@ -30,11 +31,12 @@ export const DropdownSelect = ({
   isEditing = false,
   error,
   onChange = () => {},
+  width,
 }: CustomSelectProps) => {
   const NoIcon = () => null;
 
   return (
-    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch' }}>
+    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, gap: '2rem', width }}>
       <InputLabel htmlFor={label}>{inputLabel}</InputLabel>
       <Select
         disabled={disabled}
