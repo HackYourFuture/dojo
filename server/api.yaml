@@ -994,15 +994,7 @@ paths:
                           learningStatus:
                             $ref: '#/components/schemas/LearningStatus'
                           track:
-                            type: string
-                            enum:
-                              - frontend
-                              - backend
-                              - data
-                              - tester
-                              - cloud
-                              - core
-                              - fullstack-legacy
+                            $ref: '#/components/schemas/Track'
                           jobPath:
                             $ref: '#/components/schemas/JobPath'
 
@@ -1440,17 +1432,7 @@ components:
         learningStatus:
           $ref: '#/components/schemas/LearningStatus'
         track:
-          type: string
-          enum:
-            - frontend
-            - backend
-            - data
-            - tester
-            - cloud
-            - core
-            - fullstack-legacy
-          default: core
-          example: core
+          $ref: '#/components/schemas/Track'
         techMentor:
           type: string
           example: "John Doe"
@@ -1747,6 +1729,19 @@ components:
         - on-hold
         - quit
       example: studying | graduated | on-hold | quit
+
+    Track:
+      type: string
+      enum:
+        - frontend
+        - backend
+        - data
+        - tester
+        - cloud
+        - core
+        - fullstack-legacy
+      default: core
+      example: core
 
     JobPath:
       type: string
