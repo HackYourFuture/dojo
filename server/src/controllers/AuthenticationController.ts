@@ -111,7 +111,7 @@ export class AuthenticationController implements AuthenticationControllerType {
       'localhost',
       'dojo-test.hackyourfuture.net',
       'dojo.hackyourfuture.net',
-      'https://dojo-prod-c2au3.ondigitalocean.app',
+      'dojo-prod-c2au3.ondigitalocean.app',
     ];
 
     try {
