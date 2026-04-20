@@ -74,25 +74,6 @@ const EducationInfo = () => {
         {/* Learning status */}
         <LearningStatusSelect isEditing={isEditing} value={editedFields.learningStatus} onChange={handleSelectChange} />
 
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
-          <InputLabel htmlFor="learningStatus">Learning status</InputLabel>
-          <Select
-            name="learningStatus"
-            id="learningStatus"
-            label="Learning status"
-            value={editedFields?.learningStatus || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value={LearningStatus.Studying}>Studying</MenuItem>
-            <MenuItem value={LearningStatus.Graduated}>Graduated</MenuItem>
-            <MenuItem value={LearningStatus.OnHold}>On hold</MenuItem>
-            <MenuItem value={LearningStatus.Quit}>Quit</MenuItem>
-          </Select>
-        </FormControl>
-
         {/* Quit date */}
         {editedFields?.learningStatus === LearningStatus.Quit && (
           <FormControl sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}>
