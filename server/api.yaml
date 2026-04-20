@@ -993,6 +993,16 @@ paths:
                             type: string
                           learningStatus:
                             $ref: '#/components/schemas/LearningStatus'
+                          track:
+                            type: string
+                            enum:
+                              - frontend
+                              - backend
+                              - data
+                              - tester
+                              - cloud
+                              - core
+                              - fullstack-legacy
                           jobPath:
                             $ref: '#/components/schemas/JobPath'
 
@@ -1415,6 +1425,7 @@ components:
       required:
         - learningStatus
         - startCohort
+        - track
       properties:
         startCohort:
           type: number
@@ -1428,6 +1439,18 @@ components:
           maximum: 999
         learningStatus:
           $ref: '#/components/schemas/LearningStatus'
+        track:
+          type: string
+          enum:
+            - frontend
+            - backend
+            - data
+            - tester
+            - cloud
+            - core
+            - fullstack-legacy
+          default: core
+          example: core
         techMentor:
           type: string
           example: "John Doe"

@@ -19,6 +19,7 @@ interface TraineeSummary {
   githubHandle?: string;
   linkedIn?: string;
   LearningStatus: string;
+  track: string;
   JobPath: string;
   averageTestScore: number | null;
 }
@@ -73,6 +74,7 @@ export class CohortsController implements CohortsControllerType {
       githubHandle: trainee.contactInfo.githubHandle,
       linkedIn: trainee.contactInfo.linkedin,
       LearningStatus: trainee.educationInfo.learningStatus,
+      track: trainee.educationInfo.track,
       JobPath: trainee.employmentInfo.jobPath,
       averageTestScore: calculateAverageTestScore(trainee.educationInfo.tests),
     };
