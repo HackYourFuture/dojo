@@ -1,4 +1,3 @@
-import { LoadingButton } from '@mui/lab';
 import { Box, Button } from '@mui/material';
 
 export interface EditSaveButtonProps {
@@ -16,9 +15,9 @@ export const EditSaveButton = ({ isEditMode, isLoading, onCancel, onClickEditBut
           Cancel
         </Button>
       )}
-      <LoadingButton variant="contained" loading={isLoading} onClick={onClickEditButton}>
+      <Button variant="contained" loading={isLoading} onClick={onClickEditButton}>
         {isEditMode ? 'Save' : 'Edit'}
-      </LoadingButton>
+      </Button>
     </Box>
   );
 };

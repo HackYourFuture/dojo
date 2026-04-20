@@ -15,7 +15,6 @@ import { Interaction, InteractionType } from '../Interactions';
 
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
-import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
 import { useState } from 'react';
 
@@ -200,9 +199,9 @@ export const InteractionDetailsModal = ({
             <Button variant="outlined" disabled={isLoading} onClick={handleClose}>
               Cancel
             </Button>
-            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm}>
+            <Button loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm}>
               {isEditMode ? 'Save' : 'Add'}
-            </LoadingButton>
+            </Button>
           </Box>
         </Box>
       </Fade>

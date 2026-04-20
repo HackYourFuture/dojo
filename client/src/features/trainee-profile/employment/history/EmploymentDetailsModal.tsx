@@ -20,7 +20,6 @@ import {
   Typography,
 } from '@mui/material';
 import { formatDate } from '../../utils/dateHelper';
-import { LoadingButton } from '@mui/lab';
 
 interface EmploymentDetailsModalProps {
   isOpen: boolean;
@@ -281,9 +280,9 @@ export const EmploymentDetailsModal = ({
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>
-            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
+            <Button loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
               Save
-            </LoadingButton>
+            </Button>
           </Box>
         </Box>
       </Fade>
