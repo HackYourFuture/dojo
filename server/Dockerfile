@@ -1,5 +1,6 @@
 # Stage 1: Install all dependencies and compile TypeScript
 FROM node:alpine AS builder
+ARG SENTRY_AUTH_TOKEN
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
