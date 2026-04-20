@@ -7,7 +7,7 @@ import { LearningStatusSelect } from '../profile/components/LearningStatusSelect
 import React from 'react';
 import { StrikesComponent } from './strikes/StrikesComponent';
 import { TestsComponent } from './tests/TestsComponent';
-import TrackSelect from './TrackSelect';
+import TrackSelect from './components/TrackSelect';
 import { formatDate } from '../utils/dateHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
@@ -47,7 +47,7 @@ const EducationInfo = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" flexWrap="wrap" gap={4} padding="24px">
+    <Box display="flex" flexDirection="column" flexWrap="wrap" gap={4} padding="24px" alignItems="flex-start">
       <Box display={'flex'} flexDirection="column" flexWrap="wrap" gap={1}>
         <Stack direction="row" alignItems="center" flexWrap="wrap">
           {/* Cohort */}
@@ -62,11 +62,11 @@ const EducationInfo = () => {
                   readOnly: isEditing ? false : true,
                   inputMode: 'numeric',
                 },
+                htmlInput: {
+                  pattern: '[0-9]*',
+                  maxLength: 3,
+                },
                 inputLabel: { shrink: true },
-              }}
-              inputProps={{
-                pattern: '[0-9]*',
-                maxLength: 3,
               }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleNumericChange}
@@ -106,7 +106,7 @@ const EducationInfo = () => {
           {editedFields?.learningStatus === LearningStatus.Quit && (
             <FormControl
               variant={isEditing ? 'outlined' : 'standard'}
-              sx={{ mx: 2, my: 1, width: '20ch', gap: '2rem' }}
+              sx={{ mx: 2, my: 1, gap: '2rem', width: '25ch' }}
             >
               <InputLabel htmlFor="quitReason">Quit reason</InputLabel>
               <Select
@@ -160,11 +160,11 @@ const EducationInfo = () => {
                   readOnly: isEditing ? false : true,
                   inputMode: 'numeric',
                 },
+                htmlInput: {
+                  pattern: '[0-9]*',
+                  maxLength: 3,
+                },
                 inputLabel: { shrink: true },
-              }}
-              inputProps={{
-                pattern: '[0-9]*',
-                maxLength: 3,
               }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleNumericChange}

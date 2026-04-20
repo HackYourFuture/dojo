@@ -1,28 +1,8 @@
-import { DropdownSelect } from '../profile/components/DropdownSelect';
+import { DropdownSelect } from '../../profile/components/DropdownSelect';
 import React from 'react';
 import { SelectChangeEvent } from '@mui/material';
 import { Track } from '@/data/types/Trainee';
-
-const getTrackLabel = (track: Track): string => {
-  switch (track) {
-    case Track.Backend:
-      return 'Backend';
-    case Track.Frontend:
-      return 'Frontend';
-    case Track.Data:
-      return 'Data Science';
-    case Track.Tester:
-      return 'Tester';
-    case Track.Cloud:
-      return 'Cloud';
-    case Track.Core:
-      return 'Core';
-    case Track.FullstackLegacy:
-      return 'Fullstack Legacy';
-    default:
-      return track;
-  }
-};
+import { getTrackLabel } from '@/data/labels/traineeLabels';
 
 const trackOptions = Object.values(Track).map((track) => ({
   label: getTrackLabel(track),
