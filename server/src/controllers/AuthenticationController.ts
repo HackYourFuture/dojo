@@ -107,7 +107,12 @@ export class AuthenticationController implements AuthenticationControllerType {
   }
 
   private isValidRedirectURI(redirectURI: string) {
-    const allowedHosts = ['localhost', 'dojo-test.hackyourfuture.net', 'dojo.hackyourfuture.net'];
+    const allowedHosts = [
+      'localhost',
+      'dojo-test.hackyourfuture.net',
+      'dojo.hackyourfuture.net',
+      'https://dojo-prod-c2au3.ondigitalocean.app',
+    ];
 
     try {
       const url = new URL(redirectURI);
