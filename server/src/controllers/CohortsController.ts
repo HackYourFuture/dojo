@@ -74,7 +74,7 @@ export class CohortsController implements CohortsControllerType {
       githubHandle: trainee.contactInfo.githubHandle,
       linkedIn: trainee.contactInfo.linkedin,
       LearningStatus: trainee.educationInfo.learningStatus,
-      track: trainee.educationInfo.track ?? Track.Core,
+      track: trainee.educationInfo.track,
       JobPath: trainee.employmentInfo.jobPath,
       averageTestScore: calculateAverageTestScore(trainee.educationInfo.tests),
     };
