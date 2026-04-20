@@ -1,6 +1,6 @@
 import { DropdownSelect } from './DropdownSelect';
 import { LearningStatus } from '../../../../data/types/Trainee';
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, SxProps, Theme } from '@mui/material';
 import { learningStatusToLabel } from '../../../../data/labels/traineeLabels';
 
 const options = Object.values(LearningStatus).map((status) => ({
@@ -15,6 +15,7 @@ type LearningStatusSelectProps = {
   value?: string;
   error?: string;
   onChange: (event: SelectChangeEvent<string>) => void;
+  sx?: SxProps<Theme>;
 };
 
 export const LearningStatusSelect: React.FC<LearningStatusSelectProps> = (props) => {

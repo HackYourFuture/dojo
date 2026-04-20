@@ -71,7 +71,13 @@ const EducationInfo = () => {
             onChange={handleNumericChange}
           />
         </FormControl>
-        <TrackSelect isEditing={isEditing} value={editedFields.track} onChange={handleSelectChange} width="100%" />
+        <TrackSelect
+          isEditing={isEditing}
+          value={editedFields.track}
+          onChange={handleSelectChange}
+          width="100%"
+          sx={{ mx: 0 }}
+        />
 
         {/* Start date */}
         <FormControl sx={{ my: 1 }}>
@@ -88,7 +94,12 @@ const EducationInfo = () => {
         </FormControl>
 
         {/* Learning status */}
-        <LearningStatusSelect isEditing={isEditing} value={editedFields.learningStatus} onChange={handleSelectChange} />
+        <LearningStatusSelect
+          isEditing={isEditing}
+          value={editedFields.learningStatus}
+          onChange={handleSelectChange}
+          sx={{ mx: 0, width: '100%' }}
+        />
 
         {/* Quit date */}
         {editedFields?.learningStatus === LearningStatus.Quit ? (

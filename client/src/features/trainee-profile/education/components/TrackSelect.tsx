@@ -1,6 +1,6 @@
 import { DropdownSelect } from '../../profile/components/DropdownSelect';
 import React from 'react';
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent, SxProps, Theme } from '@mui/material';
 import { Track } from '@/data/types/Trainee';
 import { getTrackLabel } from '@/data/labels/traineeLabels';
 
@@ -18,6 +18,7 @@ type TrackSelectProps = {
   label?: string;
   inputLabel?: string;
   width?: string | number;
+  sx?: SxProps<Theme>;
 };
 
 export const TrackSelect: React.FC<TrackSelectProps> = ({
@@ -28,6 +29,8 @@ export const TrackSelect: React.FC<TrackSelectProps> = ({
   id = 'track',
   label = 'track',
   inputLabel = 'Track',
+  width,
+  sx,
 }) => {
   return (
     <DropdownSelect
@@ -39,7 +42,8 @@ export const TrackSelect: React.FC<TrackSelectProps> = ({
       id={id}
       label={label}
       inputLabel={inputLabel}
-      width={'20ch'}
+      width={width}
+      sx={sx}
     />
   );
 };
