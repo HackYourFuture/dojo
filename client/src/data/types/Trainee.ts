@@ -53,6 +53,16 @@ export enum LearningStatus {
   Quit = 'quit',
 }
 
+export enum Track {
+  Frontend = 'frontend',
+  Backend = 'backend',
+  Data = 'data',
+  Tester = 'tester',
+  Cloud = 'cloud',
+  Core = 'core',
+  FullstackLegacy = 'fullstack-legacy',
+}
+
 export enum QuitReason {
   Technical = 'technical',
   SocialSkills = 'social-skills',
@@ -153,6 +163,7 @@ export interface TraineeEducationInfo {
   startCohort: number;
   currentCohort?: number;
   learningStatus: LearningStatus;
+  track: Track;
   techMentor?: string;
   hrMentor?: string;
   englishMentor?: string;

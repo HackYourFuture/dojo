@@ -1,4 +1,4 @@
-import { LearningStatus } from '../../data/types/Trainee';
+import { LearningStatus, Track } from '../../data/types/Trainee';
 
 export interface Cohort {
   cohort: number | null;
@@ -17,6 +17,7 @@ export interface TraineeSummary {
   githubHandle?: string;
   linkedIn?: string;
   LearningStatus: LearningStatus;
+  track: Track;
   JobPath: string;
   strikes: number;
   averageTestScore: number | null;
