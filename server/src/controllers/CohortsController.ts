@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { TraineesRepository } from '../repositories';
-import { LearningStatus, calculateAverageTestScore, Trainee } from '../models';
+import { LearningStatus, Track, calculateAverageTestScore, Trainee } from '../models';
 
 interface Cohort {
   cohort: number | null;
@@ -19,7 +19,7 @@ interface TraineeSummary {
   githubHandle?: string;
   linkedIn?: string;
   LearningStatus: string;
-  track: string;
+  track: Track;
   JobPath: string;
   averageTestScore: number | null;
 }
@@ -74,7 +74,7 @@ export class CohortsController implements CohortsControllerType {
       githubHandle: trainee.contactInfo.githubHandle,
       linkedIn: trainee.contactInfo.linkedin,
       LearningStatus: trainee.educationInfo.learningStatus,
-      track: trainee.educationInfo.track,
+      track: trainee.educationInfo.track ?? Track.Core,
       JobPath: trainee.employmentInfo.jobPath,
       averageTestScore: calculateAverageTestScore(trainee.educationInfo.tests),
     };
