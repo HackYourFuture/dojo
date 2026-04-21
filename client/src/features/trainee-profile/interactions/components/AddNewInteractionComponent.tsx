@@ -1,4 +1,4 @@
-import { Alert, Box, Paper, SelectChangeEvent, Typography } from '@mui/material';
+import { Alert, Box, Button, Paper, SelectChangeEvent, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import FormDateTextField from './FormDateTextField';
@@ -6,7 +6,6 @@ import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
 import { Interaction } from '../Interactions';
 import { InteractionType } from '../Interactions';
-import { LoadingButton } from '@mui/lab';
 import { useAddInteraction } from '../data/interaction-queries';
 
 const types = Object.values(InteractionType);
@@ -110,7 +109,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
           required
         />
 
-        <LoadingButton
+        <Button
           sx={{ alignSelf: 'flex-start' }}
           variant="outlined"
           color="primary"
@@ -119,7 +118,7 @@ const AddNewInteractionComponent: React.FC<AddNewInteractionComponentProps> = ({
           disabled={isPending}
         >
           Add
-        </LoadingButton>
+        </Button>
         {error && <Alert severity="error">{error}</Alert>}
       </Box>
     </Paper>
