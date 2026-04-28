@@ -1,5 +1,5 @@
 # Stage 1: Install all dependencies and build the React app
-FROM node:lts-alpine AS builder
+FROM node:24-alpine AS builder
 ARG VITE_APP_CLIENTID
 RUN mkdir -p /app
 WORKDIR /app
