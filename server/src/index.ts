@@ -178,11 +178,6 @@ class Main {
       res.status(404).json(new ResponseError('Not found'));
     });
 
-    // Serve client static files in production
-    if (this.isProduction) {
-      this.setupClientMiddleware();
-    }
-
     // Sentry must be setup after all routes but before the global error handler
     setupSentry(this.app);
 
@@ -203,21 +198,10 @@ class Main {
     console.log(`✅ Connected to database '${this.db.name}' on ${this.db.host}:${this.db.port}\n`);
   }
 
-  setupClientMiddleware() {
-    this.app.use(express.static(path.join(__dirname, '../../client/dist')));
-    this.app.use((req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-    });
-  }
-
   startServer(port: number) {
     this.app.listen(port, () => {
       const mode = this.isProduction ? '🚀 Production' : '🛠️ Development';
       console.log(`🟢 Dojo Server is running. Mode: ${mode}`);
-
-      if (this.isProduction) {
-        console.log(`    📱 Client:   http://localhost:${port}`);
-      }
       console.log(`    🌐 Base URL: http://localhost:${port}/api`);
       console.log(`    📝 API docs: http://localhost:${port}/api-docs`);
       console.log('');
