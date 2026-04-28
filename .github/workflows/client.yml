@@ -1,4 +1,4 @@
-name: Build Client Image
+name: Build Client Container Image
 
 on:
   push:
