@@ -1,3 +1,7 @@
+# In this Dockerfile we use node:alpine for a lightweight images.
+# In case npm fails due to missing linux packages, try switching to node:lts
+# To get a a full Unbuntu release with more binaries.
+
 # Stage 1: Install all dependencies and compile TypeScript
 FROM node:alpine AS builder
 ARG SENTRY_AUTH_TOKEN
