@@ -202,10 +202,6 @@ class Main {
     this.app.listen(port, () => {
       const mode = this.isProduction ? '🚀 Production' : '🛠️ Development';
       console.log(`🟢 Dojo Server is running. Mode: ${mode}`);
-
-      if (this.isProduction) {
-        console.log(`    📱 Client:   http://localhost:${port}`);
-      }
       console.log(`    🌐 Base URL: http://localhost:${port}/api`);
       console.log(`    📝 API docs: http://localhost:${port}/api-docs`);
       console.log('');
