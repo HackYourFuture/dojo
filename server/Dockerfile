@@ -4,19 +4,19 @@
 
 # Stage 1: Install all dependencies and compile TypeScript
 FROM node:24-alpine AS builder
-ARG SENTRY_AUTH_TOKEN
 RUN mkdir -p /app
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build
+RUN --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN \
+  npm run build
 
 # Stage 2: Install only production dependencies
 FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --production && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Stage 3: Assemble everything and run the server
 FROM node:24-alpine
