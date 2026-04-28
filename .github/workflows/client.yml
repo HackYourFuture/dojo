@@ -51,6 +51,8 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./client
+          build-args: |
+            VITE_APP_CLIENTID=${{ vars.VITE_APP_CLIENTID }}
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
