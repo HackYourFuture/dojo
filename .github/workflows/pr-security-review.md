@@ -1,5 +1,4 @@
 ---
-description: Security engineer agent that reviews every PR for OWASP Top 10 vulnerabilities and posts inline comments on risky code lines.
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
@@ -9,6 +8,7 @@ permissions:
   contents: read
   pull-requests: read
   issues: read
+
 timeout-minutes: 15
 
 tools:
@@ -16,8 +16,7 @@ tools:
     toolsets: [pull_requests]
     allowed:
       - get_pull_request
-      - get_pull_request_files
-      - get_pull_request_diff
+      - pull_request_read
 
 safe-outputs:
   create-pull-request-review-comment:
@@ -37,7 +36,7 @@ Do **not** comment on code style, naming, performance, missing tests, TODOs, typ
 
 ## Process
 
-1. Fetch the PR diff using the GitHub tools: `get_pull_request`, `get_pull_request_files`, and `get_pull_request_diff` for PR #${{ github.event.pull_request.number }}.
+1. Fetch the PR metadata and diff using the GitHub tools: `get_pull_request` for high-level metadata and `pull_request_read` to retrieve the changed files and unified diff for PR #${{ github.event.pull_request.number }}.
 2. Classify each changed file as server, client, shared, config, or test.
 3. For each file, scan **only the added or modified lines** against the OWASP Top 10 checks (A01–A10), the A11 web-application-specific checks, and the React/frontend signals below.
 4. Collect findings in memory — do **not** post incrementally.
