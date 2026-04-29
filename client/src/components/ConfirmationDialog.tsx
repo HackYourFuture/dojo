@@ -1,7 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-import { LoadingButton } from '@mui/lab';
-
 interface ConfirmationDialogProps {
   isOpen: boolean;
   title: string;
@@ -31,9 +29,9 @@ export const ConfirmationDialog = ({
         <Button disabled={isLoading} onClick={onCancel}>
           Cancel
         </Button>
-        <LoadingButton disabled={isLoading} onClick={onConfirm} variant="contained" color="error">
+        <Button disabled={isLoading} loading={isLoading} onClick={onConfirm} variant="contained" color="error">
           {confirmButtonText}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

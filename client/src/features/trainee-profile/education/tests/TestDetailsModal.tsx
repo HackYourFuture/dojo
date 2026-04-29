@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import { Test, TestResult, TestType } from '../../../../data/types/Trainee';
 
-import { LoadingButton } from '@mui/lab';
 import { formatDate } from '../../utils/dateHelper';
 import { useState } from 'react';
 
@@ -219,9 +218,9 @@ export const TestDetailsModal = ({
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>
-            <LoadingButton loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
+            <Button loading={isLoading} disabled={isLoading} variant="contained" onClick={onConfirm} fullWidth>
               Save
-            </LoadingButton>
+            </Button>
           </Box>
         </Box>
       </Fade>
