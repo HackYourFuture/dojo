@@ -32,9 +32,24 @@ import {
   ProfilePictureController,
   EmploymentHistoryController,
   StrikeController,
-  DefaultUserController,
+  UserController,
   LetterController,
 } from './controllers';
+import {
+  AuthenticationHandler,
+  CohortsHandler,
+  DashboardHandler,
+  EmploymentHistoryHandler,
+  GeographyHandler,
+  InteractionHandler,
+  LetterHandler,
+  ProfilePictureHandler,
+  SearchHandler,
+  StrikeHandler,
+  TestHandler,
+  TraineeHandler,
+  UserHandler,
+} from './handlers';
 import { MongooseTraineesRepository, MongooseUserRepository, MongooseGeographyRepository } from './repositories';
 import {
   GoogleOAuthService,
@@ -86,8 +101,9 @@ class Main {
     }
 
     const tokenExpirationInDays = Number.parseInt(process.env.JWT_EXPIRATION_DAYS ?? '7');
+    const storageBaseURL = process.env.STORAGE_BASE_URL ?? '';
 
-    // Dependencies
+    // Services
     const googleOAuthService = new GoogleOAuthService(
       process.env.GOOGLE_OAUTH_CLIENTID ?? '',
       process.env.GOOGLE_OAUTH_CLIENTSECRET ?? ''
@@ -114,24 +130,16 @@ class Main {
     const pdfService = new PDFService(pdfServiceURL);
     console.log(`✅ PDF converter URL: ${pdfServiceURL}`);
     const letterGenerator = new LetterGenerator(pdfService, storageService);
+
+    // Repositories
     const userRepository = new MongooseUserRepository(this.db);
     const traineesRepository = new MongooseTraineesRepository(this.db);
     const geographyRepository = new MongooseGeographyRepository(this.db);
 
-    // setup controllers
-    const authenticationController = new AuthenticationController(
-      userRepository,
-      googleOAuthService,
-      tokenService,
-      tokenExpirationInDays
-    );
+    // Controllers (pure)
+    const authenticationController = new AuthenticationController(userRepository, googleOAuthService, tokenService);
     const traineeController = new TraineeController(traineesRepository, notificationService);
-    const profilePictureController = new ProfilePictureController(
-      traineesRepository,
-      storageService,
-      uploadService,
-      imageService
-    );
+    const profilePictureController = new ProfilePictureController(traineesRepository, storageService, imageService);
     const interactionController = new InteractionController(traineesRepository, userRepository, notificationService);
     const testController = new TestController(traineesRepository, notificationService);
     const employmentHistoryController = new EmploymentHistoryController(traineesRepository);
@@ -140,29 +148,44 @@ class Main {
     const geographyController = new GeographyController(geographyRepository);
     const dashboardController = new DashboardController();
     const cohortsController = new CohortsController(traineesRepository);
-    const userController = new DefaultUserController(userRepository);
+    const userController = new UserController(userRepository);
     const letterController = new LetterController(letterGenerator, traineesRepository);
 
-    // Setup custom middlewares
+    // Custom middlewares
     const authMiddleware = new AuthMiddleware(tokenService);
 
-    // Setup routers
-    const authenticationRouter = new AuthenticationRouter(authenticationController, authMiddleware);
+    // Handlers (HTTP layer)
+    const authenticationHandler = new AuthenticationHandler(authenticationController, tokenExpirationInDays);
+    const traineeHandler = new TraineeHandler(traineeController);
+    const interactionHandler = new InteractionHandler(interactionController);
+    const testHandler = new TestHandler(testController);
+    const strikeHandler = new StrikeHandler(strikeController);
+    const employmentHistoryHandler = new EmploymentHistoryHandler(employmentHistoryController);
+    const profilePictureHandler = new ProfilePictureHandler(profilePictureController, uploadService, storageBaseURL);
+    const letterHandler = new LetterHandler(letterController);
+    const searchHandler = new SearchHandler(searchController);
+    const geographyHandler = new GeographyHandler(geographyController);
+    const dashboardHandler = new DashboardHandler(dashboardController);
+    const cohortsHandler = new CohortsHandler(cohortsController);
+    const userHandler = new UserHandler(userController);
+
+    // Routers
+    const authenticationRouter = new AuthenticationRouter(authenticationHandler, authMiddleware);
     const traineeRouter = new TraineesRouter(
-      traineeController,
-      interactionController,
-      testController,
-      profilePictureController,
-      strikeController,
-      employmentHistoryController,
-      letterController,
+      traineeHandler,
+      interactionHandler,
+      testHandler,
+      profilePictureHandler,
+      strikeHandler,
+      employmentHistoryHandler,
+      letterHandler,
       [authMiddleware]
     );
-    const searchRouter = new SearchRouter(searchController, [authMiddleware]);
-    const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
-    const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);
-    const cohortsRouter = new CohortsRouter(cohortsController, [authMiddleware]);
-    const userRouter = new UserRouter(userController, [authMiddleware]);
+    const searchRouter = new SearchRouter(searchHandler, [authMiddleware]);
+    const geographyRouter = new GeographyRouter(geographyHandler, [authMiddleware]);
+    const dashboardRouter = new DashboardRouter(dashboardHandler, [authMiddleware]);
+    const cohortsRouter = new CohortsRouter(cohortsHandler, [authMiddleware]);
+    const userRouter = new UserRouter(userHandler, [authMiddleware]);
 
     // Define routes
     this.app.use('/api/auth', authenticationRouter.build());

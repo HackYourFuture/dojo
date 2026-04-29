@@ -1,11 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
-import { ResponseError, Trainee } from '../../models';
+import Stream from 'stream';
+import { Trainee } from '../../models';
 import { LetterData, LetterGeneratorType, LetterType } from '../../services';
 import { TraineesRepository } from '../../repositories';
-import sentry from '@sentry/node';
+import { BadRequestError, NotFoundError } from '../../errors';
+
+export interface GenerateLetterParams {
+  traineeId: string;
+  type: LetterType;
+}
+
+export interface GeneratedLetter {
+  stream: Stream.Readable;
+  fileName: string;
+  contentType: string;
+}
 
 export interface LetterControllerType {
-  generateLetter(req: Request, res: Response, next: NextFunction): Promise<void>;
+  generateLetter(params: GenerateLetterParams): Promise<GeneratedLetter>;
 }
 
 export class LetterController implements LetterControllerType {
@@ -14,35 +25,25 @@ export class LetterController implements LetterControllerType {
     private readonly traineeRepository: TraineesRepository
   ) {}
 
-  async generateLetter(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { type } = req.body as { type: LetterType };
-    const traineeID = String(req.params.id);
-
-    const trainee = await this.traineeRepository.getTrainee(traineeID);
+  async generateLetter({ traineeId, type }: GenerateLetterParams): Promise<GeneratedLetter> {
+    const trainee = await this.traineeRepository.getTrainee(traineeId);
     if (!trainee) {
-      const error = new ResponseError(`Trainee with ID ${traineeID} not found`);
-      res.status(404).json(error);
-      return;
+      throw new NotFoundError(`Trainee with ID ${traineeId} not found`);
     }
 
     if (!type || !Object.values(LetterType).includes(type)) {
-      const error = new ResponseError(`Invalid letter type provided. Available types: [${Object.values(LetterType)}]`);
-      res.status(400).json(error);
-      return;
+      throw new BadRequestError(
+        `Invalid letter type provided. Available types: [${Object.values(LetterType)}]`
+      );
     }
 
-    try {
-      const data = this.getLetterData(trainee, type);
-      const pdfStream = await this.letterGenerator.generateLetter(type, data);
-      res.status(200).header({
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${this.getLetterFileName(trainee, type)}"`,
-      });
-      pdfStream.pipe(res);
-    } catch (error) {
-      sentry.captureException(error);
-      next(error);
-    }
+    const data = this.getLetterData(trainee, type);
+    const stream = await this.letterGenerator.generateLetter(type, data);
+    return {
+      stream,
+      fileName: this.getLetterFileName(trainee, type),
+      contentType: 'application/pdf',
+    };
   }
 
   private getLetterData(trainee: Trainee, type: LetterType): LetterData {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ResponseError } from '../models';
-import { TOKEN_COOKIE_NAME } from '../controllers/AuthenticationController';
+import { TOKEN_COOKIE_NAME } from '../handlers/AuthenticationHandler';
 import { TokenService } from '../services/TokenService';
 import Middleware from './Middleware';
 import * as Sentry from '@sentry/node';

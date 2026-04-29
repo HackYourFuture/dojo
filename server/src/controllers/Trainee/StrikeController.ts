@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
 import { TraineesRepository } from '../../repositories';
-import { AuthenticatedUser, ResponseError, StrikeWithReporterID } from '../../models';
+import { StrikeWithReporter, StrikeWithReporterID } from '../../models';
 import { NotificationService } from '../../services';
 import { validateStrike } from '../../models/Strike';
 import { UserRepository } from '../../repositories/UserRepository';
+import { BadRequestError, NotFoundError } from '../../errors';
 
 export interface StrikeControllerType {
-  getStrikes(req: Request, res: Response, next: NextFunction): Promise<void>;
-  addStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
-  updateStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
-  deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getStrikes(traineeId: string): Promise<StrikeWithReporter[]>;
+  addStrike(traineeId: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
+  updateStrike(traineeId: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter>;
+  deleteStrike(traineeId: string, strikeId: string): Promise<void>;
 }
 
 export class StrikeController implements StrikeControllerType {
@@ -19,105 +19,60 @@ export class StrikeController implements StrikeControllerType {
     private readonly notificationService: NotificationService
   ) {}
 
-  async getStrikes(req: Request, res: Response, next: NextFunction) {
-    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
+  async getStrikes(traineeId: string): Promise<StrikeWithReporter[]> {
+    const trainee = await this.traineesRepository.getTrainee(traineeId);
     if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
+      throw new NotFoundError('Trainee not found');
     }
-
-    try {
-      const strikes = await this.traineesRepository.getStrikes(trainee.id);
-      res.status(200).json(strikes);
-    } catch (error: any) {
-      next(error);
-    }
+    return this.traineesRepository.getStrikes(trainee.id);
   }
 
-  async addStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
+  async addStrike(traineeId: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
+    const trainee = await this.traineesRepository.getTrainee(traineeId);
     if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
+      throw new NotFoundError('Trainee not found');
     }
 
-    const { reason, date, comments } = req.body;
-    const user = res.locals.user as AuthenticatedUser;
-    const reporterID = req.body.reporterID || user.id;
-    const newStrike = { reason, date, comments, reporterID } as StrikeWithReporterID;
-
-    // Validate new strike model before creation
     try {
-      validateStrike(newStrike);
-      const reporter = await this.userRepository.findUserByID(reporterID);
+      validateStrike(strike);
+      const reporter = await this.userRepository.findUserByID(strike.reporterID);
       if (!reporter) {
-        throw new Error(`Invalid reporter ID ${reporterID}. User not found.`);
+        throw new Error(`Invalid reporter ID ${strike.reporterID}. User not found.`);
       }
     } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
+      throw new BadRequestError(error.message);
     }
 
-    try {
-      const strike = await this.traineesRepository.addStrike(String(req.params.id), newStrike);
-      res.status(201).json(strike);
-      this.notificationService.strikeCreated(trainee, strike);
-    } catch (error: any) {
-      next(error);
-    }
+    const created = await this.traineesRepository.addStrike(traineeId, strike);
+    this.notificationService.strikeCreated(trainee, created);
+    return created;
   }
 
-  async updateStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
+  async updateStrike(traineeId: string, strike: StrikeWithReporterID): Promise<StrikeWithReporter> {
+    const trainee = await this.traineesRepository.getTrainee(traineeId);
     if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
+      throw new NotFoundError('Trainee not found');
     }
 
-    const strike = trainee.educationInfo.strikes.find((strike) => strike.id === String(req.params.strikeId));
-    if (!strike) {
-      res.status(404).send(new ResponseError('Strike not found'));
-      return;
-    }
-
-    const user = res.locals.user as AuthenticatedUser;
-    const strikeToUpdate: StrikeWithReporterID = {
-      id: String(req.params.strikeId),
-      reason: req.body.reason,
-      date: req.body.date,
-      comments: req.body.comments,
-      reporterID: req.body.reporterID || user.id,
-    };
-
-    // Validate new strike model after applying the changes
-    try {
-      validateStrike(strikeToUpdate);
-    } catch (error: any) {
-      res.status(400).send(new ResponseError(error.message));
-      return;
+    const existing = trainee.educationInfo.strikes.find((s) => s.id === strike.id);
+    if (!existing) {
+      throw new NotFoundError('Strike not found');
     }
 
     try {
-      const updatedStrike = await this.traineesRepository.updateStrike(String(req.params.id), strikeToUpdate);
-      res.status(200).json(updatedStrike);
+      validateStrike(strike);
     } catch (error: any) {
-      next(error);
-      return;
+      throw new BadRequestError(error.message);
     }
+
+    return this.traineesRepository.updateStrike(traineeId, strike);
   }
 
-  async deleteStrike(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const trainee = await this.traineesRepository.getTrainee(String(req.params.id));
+  async deleteStrike(traineeId: string, strikeId: string): Promise<void> {
+    const trainee = await this.traineesRepository.getTrainee(traineeId);
     if (!trainee) {
-      res.status(404).send(new ResponseError('Trainee not found'));
-      return;
+      throw new NotFoundError('Trainee not found');
     }
-    try {
-      await this.traineesRepository.deleteStrike(String(req.params.id), String(req.params.strikeId));
-      res.status(204).end();
-    } catch (error: any) {
-      next(error);
-      return;
-    }
+    await this.traineesRepository.deleteStrike(traineeId, strikeId);
   }
 }
