@@ -47,8 +47,7 @@ Do **not** comment on code style, naming, performance, missing tests, TODOs, typ
 4. Collect findings in memory — do **not** post incrementally.
 5. For each finding, emit a `create-pull-request-review-comment` safe output anchored to the exact offending line. All inline comments are automatically grouped into a single review, and any older reviews from this workflow on the same PR are dismissed — no manual hiding needed.
 6. After all inline comments are emitted, call `submit_pull_request_review` with event `COMMENT` to submit the review.
-7. If there are **no findings**, call `noop` with message `"Security review complete — no issues found in this diff."` and stop. Do **not** post a summary comment.
-8. If there **are** findings, emit one `add-comment` safe output with the compact summary described in the **Summary Comment** section below. Any previous summary comment from this workflow is automatically hidden.
+7. **Always** emit one `add-comment` safe output with the summary described in the **Summary Comment** section below. Any previous summary comment from this workflow is automatically hidden.
 
 If the combined diff exceeds ~50 files or ~3000 changed lines, prioritise files under `src/server/`, `routes/`, `controllers/`, `middleware/`, `auth/`, `api/`, and any file matching `*auth*`, `*login*`, `*token*`, `*password*`, `*upload*`. Note the partial scope in the summary.
 
@@ -243,31 +242,37 @@ For each finding, emit a `create-pull-request-review-comment` safe output anchor
 
 ## Summary Comment
 
-Only emit this comment when there are findings. If there are no findings, call `noop` instead — do not post any summary.
+Always emit this comment — a silent run is indistinguishable from a broken run.
 
-The comment must be **compact by default** with an expandable details section. Use this structure exactly:
+**If there are no findings**, post a single clean line:
+
+```
+✅ **Security Review — no issues found** [note partial scope here if applicable]
+```
+
+**If there are findings**, the comment must be compact by default with an expandable details section:
 
 ```
 **[POSTURE_EMOJI] Security Review — [N] issue(s) found**
 
-[One or two sentences: overall posture and any cross-cutting patterns observed, e.g. "No input validation on any new endpoint" or "Secrets logged in two separate files".]
+[One or two sentences: overall posture and any cross-cutting patterns, e.g. "No input validation on any new endpoint" or "Secrets logged in two separate files".]
 
 <details>
 <summary>View all findings ([N] issues)</summary>
 
 | File | Line | Severity | OWASP | Issue |
 |------|------|----------|-------|-------|
-| ... | ... | 🔴 Critical | A03 | SQL Injection | 
+| ... | ... | 🔴 Critical | A03 | SQL Injection |
 
 </details>
 ```
 
 Posture emoji:
-- ✅ **Pass** — no findings (use `noop` instead; never reaches this branch)
+- ✅ **Pass** — no findings
 - ⚠️ **Needs Attention** — Medium / Low findings only
 - 🛑 **Critical Issues Found** — any High or Critical finding
 
-Do **not** include: a list of clean files, a "skipped files" section, or any table rows for files with no issues. If partial scope was applied due to a large diff, note it in the one-line summary sentence only.
+Do **not** include: a list of clean files, a "skipped files" section, or any table rows for files with no issues. If partial scope was applied due to a large diff, note it in the summary sentence only.
 
 ## Tooling Notes
 
