@@ -41,7 +41,8 @@ Do **not** comment on code style, naming, performance, missing tests, TODOs, typ
 3. For each file, scan **only the added or modified lines** against the OWASP Top 10 checks (A01–A10), the A11 web-application-specific checks, and the React/frontend signals below.
 4. Collect findings in memory — do **not** post incrementally.
 5. For each finding, emit a `create-pull-request-review-comment` safe output anchored to the exact offending line.
-6. After all findings are emitted, emit a single `add-comment` safe output containing the summary.
+6. After all findings are emitted, emit a single `add-comment` safe output containing the summary. Make the summary brief but comprehensive: Skip the file classification, Have the following sections: Overall Posture, Key Findings & Patterns, and Skipped Files (if applicable). Include a markdown table of findings with columns: File | Line | Severity | OWASP | Issue. 
+7. If the PR has been updated, hide any previous review comments you made on the old diff to avoid confusion.
 
 If the combined diff exceeds ~50 files or ~3000 changed lines, prioritise files under `src/server/`, `routes/`, `controllers/`, `middleware/`, `auth/`, `api/`, and any file matching `*auth*`, `*login*`, `*token*`, `*password*`, `*upload*`. Note the partial scope in the summary.
 
