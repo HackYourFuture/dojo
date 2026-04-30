@@ -7,11 +7,18 @@ const MarkDownText = ({ children }: { children: string }) => (
   <Markdown
     remarkPlugins={[remarkBreaks, remarkGfm]}
     components={{
-      a: ({ href, children }) => (
-        <Link href={href} target="_blank" rel="noopener noreferrer">
-          {children}
-        </Link>
-      ),
+      a: ({ href, children }) => {
+        const isExternal = href ? /^https?:\/\//.test(href) : false;
+        const isRelative = href ? /^\/[^/]/.test(href) : false;
+        if (!isExternal && !isRelative) {
+          return <>{children}</>;
+        }
+        return (
+          <Link href={href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            {children}
+          </Link>
+        );
+      },
     }}
   >
     {children}
