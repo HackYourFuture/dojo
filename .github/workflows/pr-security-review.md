@@ -21,9 +21,14 @@ tools:
 safe-outputs:
   create-pull-request-review-comment:
     max: 30
+  submit-pull-request-review:
+    max: 1
+    allowed-events: [COMMENT]
+    supersede-older-reviews: true
   add-comment:
     max: 1
     target: triggering
+    hide-older-comments: true
 ---
 
 # PR Security Review
@@ -40,9 +45,10 @@ Do **not** comment on code style, naming, performance, missing tests, TODOs, typ
 2. Classify each changed file as server, client, shared, config, or test.
 3. For each file, scan **only the added or modified lines** against the OWASP Top 10 checks (A01–A10), the A11 web-application-specific checks, and the React/frontend signals below.
 4. Collect findings in memory — do **not** post incrementally.
-5. For each finding, emit a `create-pull-request-review-comment` safe output anchored to the exact offending line.
-6. After all findings are emitted, emit a single `add-comment` safe output containing the summary. Make the summary brief but comprehensive: Skip the file classification, Have the following sections: Overall Posture, Key Findings & Patterns, and Skipped Files (if applicable). Include a markdown table of findings with columns: File | Line | Severity | OWASP | Issue. 
-7. If the PR has been updated, hide any previous review comments you made on the old diff to avoid confusion.
+5. For each finding, emit a `create-pull-request-review-comment` safe output anchored to the exact offending line. All inline comments are automatically grouped into a single review, and any older reviews from this workflow on the same PR are dismissed — no manual hiding needed.
+6. After all inline comments are emitted, call `submit_pull_request_review` with event `COMMENT` to submit the review.
+7. If there are **no findings**, call `noop` with message `"Security review complete — no issues found in this diff."` and stop. Do **not** post a summary comment.
+8. If there **are** findings, emit one `add-comment` safe output with the compact summary described in the **Summary Comment** section below. Any previous summary comment from this workflow is automatically hidden.
 
 If the combined diff exceeds ~50 files or ~3000 changed lines, prioritise files under `src/server/`, `routes/`, `controllers/`, `middleware/`, `auth/`, `api/`, and any file matching `*auth*`, `*login*`, `*token*`, `*password*`, `*upload*`. Note the partial scope in the summary.
 
@@ -237,14 +243,31 @@ For each finding, emit a `create-pull-request-review-comment` safe output anchor
 
 ## Summary Comment
 
-After all inline comments have been emitted, emit a single `add-comment` safe output (targeting the triggering PR) containing:
+Only emit this comment when there are findings. If there are no findings, call `noop` instead — do not post any summary.
 
-- A markdown table of all findings: `File | Line | Severity | OWASP | Issue`
-- Overall posture: ✅ **Pass** | ⚠️ **Needs Attention** | 🛑 **Critical Issues Found**
-- Any cross-cutting patterns (e.g., "no input validation across any new endpoint", "secrets repeatedly logged")
-- If the diff was too large and you reviewed a subset, list which files were skipped
+The comment must be **compact by default** with an expandable details section. Use this structure exactly:
 
-If no findings: still emit the `add-comment` summary, confirming the PR passed the security review. **Always** post a summary comment, even on a clean review — a silent run is indistinguishable from a broken run.
+```
+**[POSTURE_EMOJI] Security Review — [N] issue(s) found**
+
+[One or two sentences: overall posture and any cross-cutting patterns observed, e.g. "No input validation on any new endpoint" or "Secrets logged in two separate files".]
+
+<details>
+<summary>View all findings ([N] issues)</summary>
+
+| File | Line | Severity | OWASP | Issue |
+|------|------|----------|-------|-------|
+| ... | ... | 🔴 Critical | A03 | SQL Injection | 
+
+</details>
+```
+
+Posture emoji:
+- ✅ **Pass** — no findings (use `noop` instead; never reaches this branch)
+- ⚠️ **Needs Attention** — Medium / Low findings only
+- 🛑 **Critical Issues Found** — any High or Critical finding
+
+Do **not** include: a list of clean files, a "skipped files" section, or any table rows for files with no issues. If partial scope was applied due to a large diff, note it in the one-line summary sentence only.
 
 ## Tooling Notes
 
