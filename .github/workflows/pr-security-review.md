@@ -19,6 +19,9 @@ tools:
       - pull_request_read
 
 safe-outputs:
+  github-app:
+    client-id: ${{ secrets.DOJO_SECURITY_REVIEW_APP_ID }}
+    private-key: ${{ secrets.DOJO_SECURITY_REVIEW_APP_PRIVATE_KEY }}
   create-pull-request-review-comment:
     max: 30
   submit-pull-request-review:
