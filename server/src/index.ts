@@ -158,7 +158,7 @@ class Main {
       letterController,
       [authMiddleware]
     );
-    const searchRouter = new SearchRouter(searchController, [authMiddleware]);
+    const searchRouter = new SearchRouter(searchController);
     const geographyRouter = new GeographyRouter(geographyController, [authMiddleware]);
     const dashboardRouter = new DashboardRouter(dashboardController, [authMiddleware]);
     const cohortsRouter = new CohortsRouter(cohortsController, [authMiddleware]);
