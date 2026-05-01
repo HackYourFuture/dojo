@@ -32,6 +32,7 @@ safe-outputs:
     max: 1
     target: triggering
     hide-older-comments: true
+    discussions: false
 ---
 
 # PR Security Review
