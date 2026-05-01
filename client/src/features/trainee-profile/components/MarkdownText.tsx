@@ -9,8 +9,7 @@ const MarkDownText = ({ children }: { children: string }) => (
     components={{
       a: ({ href, children }) => {
         const isExternal = href ? /^https?:\/\//.test(href) : false;
-        const isRelative = href ? /^\/[^/]/.test(href) : false;
-        if (!isExternal && !isRelative) {
+        if (!isExternal) {
           return <>{children}</>;
         }
         return (
