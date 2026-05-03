@@ -1,8 +1,7 @@
-import { Request, Response } from 'express';
 import { TraineesRepository } from '../repositories';
 import { LearningStatus, Track, calculateAverageTestScore, Trainee } from '../models';
 
-interface Cohort {
+export interface Cohort {
   cohort: number | null;
   trainees: TraineeSummary[];
 }
@@ -24,8 +23,13 @@ interface TraineeSummary {
   averageTestScore: number | null;
 }
 
+export interface GetCohortsParams {
+  start: number;
+  end: number;
+}
+
 export interface CohortsControllerType {
-  getCohorts(req: Request, res: Response): Promise<void>;
+  getCohorts(params: GetCohortsParams): Promise<Cohort[]>;
 }
 
 export class CohortsController implements CohortsControllerType {
@@ -34,13 +38,7 @@ export class CohortsController implements CohortsControllerType {
     this.traineesRepository = traineesRepository;
   }
 
-  async getCohorts(req: Request, res: Response) {
-    const MAX_POSSIBLE_COHORT = 999;
-    let start = Number.parseInt(req.query.start as string) || 0;
-    let end = Number.parseInt(req.query.end as string) || MAX_POSSIBLE_COHORT;
-    start = Math.max(start, 0);
-    end = Math.min(end, 999);
-
+  async getCohorts({ start, end }: GetCohortsParams): Promise<Cohort[]> {
     const trainees = await this.traineesRepository.getTraineesByCohort(start, end, true);
 
     // Group trainees by cohort
@@ -58,7 +56,7 @@ export class CohortsController implements CohortsControllerType {
         trainees: (trainees ?? []).map(this.getTraineeSummary.bind(this)),
       };
     });
-    res.status(200).json(result);
+    return result;
   }
 
   private getTraineeSummary(trainee: Trainee): TraineeSummary {

@@ -1,22 +1,30 @@
-import { Request, Response } from 'express';
+export interface Distribution {
+  label: string;
+  value: number;
+  percent: number;
+}
+
+export interface DashboardData {
+  demographics: {
+    genderDistribution: Distribution[];
+    countryOfOrigin: Distribution[];
+  };
+  program: {
+    graduations: Distribution[];
+    employment: Distribution[];
+  };
+}
 
 export interface DashboardControllerType {
-  getDashboard(req: Request, res: Response): Promise<void>;
+  getDashboard(): Promise<DashboardData>;
 }
 
 /**
- * A class provides methods for handling dashboard operations.
- *
- * @class
- * */
+ * Provides aggregated statistics for the dashboard view.
+ */
 export class DashboardController implements DashboardControllerType {
-  constructor() {}
-
-  /**
-   * Retrieve the dashboard data.
-   */
-  async getDashboard(req: Request, res: Response) {
-    const response = {
+  async getDashboard(): Promise<DashboardData> {
+    return {
       demographics: {
         genderDistribution: [
           { label: 'Man', value: 214, percent: 57.1 },
@@ -43,7 +51,5 @@ export class DashboardController implements DashboardControllerType {
         ],
       },
     };
-
-    res.status(200).json(response);
   }
 }

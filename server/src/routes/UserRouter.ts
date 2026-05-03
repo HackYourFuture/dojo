@@ -1,25 +1,22 @@
 import { Router } from 'express';
 import Middleware from '../middlewares/Middleware';
-
-import type { UserController } from '../controllers';
+import type { UserHandlerType } from '../handlers/UserHandler';
 import type RouterType from './Router';
 
 export class UserRouter implements RouterType {
   constructor(
-    private readonly userController: UserController,
+    private readonly handler: UserHandlerType,
     private readonly middlewares: Middleware[]
-  ) {
-    this.build = this.build.bind(this);
-  }
+  ) {}
 
-  build() {
+  build(): Router {
     const router = Router();
     this.middlewares.forEach((middleware) => router.use(middleware.handle.bind(middleware)));
 
-    router.get('/', this.userController.getAllUsers);
-    router.post('/', this.userController.createUser);
-    router.put('/:id', this.userController.updateUser);
-    router.delete('/:id', this.userController.deleteUser);
+    router.get('/', this.handler.getAllUsers.bind(this.handler));
+    router.post('/', this.handler.createUser.bind(this.handler));
+    router.put('/:id', this.handler.updateUser.bind(this.handler));
+    router.delete('/:id', this.handler.deleteUser.bind(this.handler));
 
     return router;
   }

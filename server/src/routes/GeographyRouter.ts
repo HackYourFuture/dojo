@@ -1,22 +1,22 @@
 import { Router } from 'express';
 import RouterType from './Router';
-import { GeographyControllerType } from '../controllers';
+import { GeographyHandlerType } from '../handlers/GeographyHandler';
 import Middleware from '../middlewares/Middleware';
 
 export class GeographyRouter implements RouterType {
-  private readonly geographyController: GeographyControllerType;
+  private readonly handler: GeographyHandlerType;
   private readonly middlewares: Middleware[];
 
-  constructor(geographyController: GeographyControllerType, middlewares: Middleware[] = []) {
-    this.geographyController = geographyController;
+  constructor(handler: GeographyHandlerType, middlewares: Middleware[] = []) {
+    this.handler = handler;
     this.middlewares = middlewares;
   }
 
   build(): Router {
     const router = Router();
     this.middlewares.forEach((middleware) => router.use(middleware.handle.bind(middleware)));
-    router.get('/cities', this.geographyController.getCities.bind(this.geographyController));
-    router.get('/countries', this.geographyController.getCountries.bind(this.geographyController));
+    router.get('/cities', this.handler.getCities.bind(this.handler));
+    router.get('/countries', this.handler.getCountries.bind(this.handler));
     return router;
   }
 }
