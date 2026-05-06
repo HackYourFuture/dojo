@@ -11,7 +11,7 @@ export const TraineeAvatar = ({ imageURL, altText }: TraineeAvatarProps) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  if (isError) {
+  if (imageURL.trim().length === 0 || isError) {
     return <Avatar sx={size} alt={altText} variant="square"></Avatar>;
   }
 
@@ -25,7 +25,7 @@ export const TraineeAvatar = ({ imageURL, altText }: TraineeAvatarProps) => {
         style={{
           width: `${isLoading ? 0 : size.width}px`,
           height: `${isLoading ? 0 : size.height}px`,
-          display: isLoading ? 'block' : 'block',
+          display: 'block',
         }}
         onError={() => {
           setIsLoading(false);
