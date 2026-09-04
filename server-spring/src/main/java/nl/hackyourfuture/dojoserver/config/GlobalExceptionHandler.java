@@ -31,11 +31,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Turns exceptions raised by Spring, the servlet container and the persistence layer into a
- * {@link DojoError}, alongside the {@link DojoException}s the application raises on purpose.
+ * Turns exceptions raised by Spring, the servlet container and the persistence
+ * layer into a
+ * {@link DojoError}, alongside the {@link DojoException}s the application
+ * raises on purpose.
  * <p>
- * Grouped by status code; method order is irrelevant since Spring picks the most specific match.
- * Anything unlisted becomes a 500 — watch the logs and promote the recurring ones.
+ * Grouped by status code; method order is irrelevant since Spring picks the
+ * most specific match.
+ * Anything unlisted becomes a 500 — watch the logs and promote the recurring
+ * ones.
  */
 @RestControllerAdvice
 @AllArgsConstructor
@@ -49,10 +53,10 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleValidationErrors(MethodArgumentNotValidException ex) {
         String details = Stream.concat(
-                        ex.getBindingResult().getFieldErrors().stream()
-                                .map(error -> error.getField() + " " + error.getDefaultMessage()),
-                        ex.getBindingResult().getGlobalErrors().stream()
-                                .map(error -> error.getDefaultMessage()))
+                ex.getBindingResult().getFieldErrors().stream()
+                        .map(error -> error.getField() + " " + error.getDefaultMessage()),
+                ex.getBindingResult().getGlobalErrors().stream()
+                        .map(error -> error.getDefaultMessage()))
                 .collect(Collectors.joining(", "));
         return buildDojoError(ex, "One or more fields are invalid: " + details);
     }
@@ -75,20 +79,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleMalformedMessage(Exception ex) {
-        return buildDojoError(ex, "Could not parse the request. Make sure that the message format is correct");
+        return buildDojoError(ex, "Could not parse the request. Make sure that the message format is correct.");
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        return buildDojoError(ex, "The value of '" + ex.getName() + "' has the wrong type. Please refer to the API documentation at '/api/docs' for the expected format.");
+        return buildDojoError(ex, "The value of '" + ex.getName()
+                + "' has the wrong type. Please refer to the API documentation at '/api/docs' for the expected format.");
     }
 
-    /** Parent of the missing-parameter, missing-header and missing-part exceptions. */
+    /**
+     * Parent of the missing-parameter, missing-header and missing-part exceptions.
+     */
     @ExceptionHandler(ServletRequestBindingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleMissingRequestData(Exception ex) {
-        return buildDojoError(ex, "The request is missing a required parameter, header or part. Please refer to the API documentation at '/api/docs'.");
+        return buildDojoError(ex,
+                "The request is missing a required parameter, header or part. Please refer to the API documentation at '/api/docs'.");
     }
 
     // ---------------------------------------------------------------- 401
@@ -109,10 +117,11 @@ public class GlobalExceptionHandler {
 
     // ---------------------------------------------------------------- 404
 
-    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+    @ExceptionHandler({ NoResourceFoundException.class, NoHandlerFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public DojoError handleNotFound(Exception ex) {
-        return buildDojoError(ex, "That endpoint does not exist. Please refer to the API documentation at '/api/docs' to get a list of available endpoints.");
+        return buildDojoError(ex,
+                "That endpoint does not exist. Please refer to the API documentation at '/api/docs' to get a list of available endpoints.");
     }
 
     // ---------------------------------------------------------------- 405
@@ -120,12 +129,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public DojoError handleMethodNotAllowed(Exception ex) {
-        return buildDojoError(ex, "Method not allowed. Please refer to the API documentation at '/api/docs' to get a list of possible methods.");
+        return buildDojoError(ex,
+                "Method not allowed. Please refer to the API documentation at '/api/docs' to get a list of possible methods.");
     }
 
     // ---------------------------------------------------------------- 406
 
-    /** No body on purpose: any we wrote would be in the format the caller just refused. */
+    /**
+     * No body on purpose: any we wrote would be in the format the caller just
+     * refused.
+     */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public void handleNotAcceptable(Exception ex) {
@@ -143,7 +156,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OptimisticLockingFailureException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public DojoError handleConcurrentUpdate(Exception ex) {
-        return buildDojoError(ex, "Someone else changed this record while you were editing it. Please reload and try again.");
+        return buildDojoError(ex,
+                "Someone else changed this record while you were editing it. Please reload and try again.");
     }
 
     // ---------------------------------------------------------------- 413
@@ -164,7 +178,10 @@ public class GlobalExceptionHandler {
 
     // -------------------------------------------------- deliberate errors
 
-    /** Each DojoException carries its own status. The message is ours, so prod sees it too. */
+    /**
+     * Each DojoException carries its own status. The message is ours, so prod sees
+     * it too.
+     */
     @ExceptionHandler(DojoException.class)
     public ResponseEntity<DojoError> handleDojoException(DojoException ex) {
         log.debug("Returning {}: {}", ex.getStatus(), ex.getMessage());
@@ -184,11 +201,14 @@ public class GlobalExceptionHandler {
 
     // ----------------------------------------------------------------
 
-    /** Exception text carries SQL, constraint names and personal data, so only dev sees it. */
+    /**
+     * Exception text carries SQL, constraint names and personal data, so only dev
+     * sees it.
+     */
     private DojoError buildDojoError(Exception ex, String message) {
         log.debug("Returning error response: {}", message, ex);
-        if(serverConfig.isDevelopment() && ex.getMessage() != null) {
-            return new DojoError(message + ". DEBUG INFO: "+ ex.getMessage());
+        if (serverConfig.isDevelopment() && ex.getMessage() != null) {
+            return new DojoError(message + ". DEBUG INFO: " + ex.getMessage());
         }
         return new DojoError(message);
     }

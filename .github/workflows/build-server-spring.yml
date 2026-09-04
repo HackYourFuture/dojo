@@ -63,4 +63,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=server-spring
-          cache-to: type=gha,scope=server,mode=max
+          cache-to: type=gha,scope=server-spring,mode=max

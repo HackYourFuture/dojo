@@ -11,7 +11,8 @@ public class RandomUtils {
     public static String generateRandomId() {
         return generateRandomId(STANDARD_ID_LENGTH);
     }
-        public static String generateRandomId(int length) {
+
+    public static String generateRandomId(int length) {
         return RANDOM.ints(length, 0, CHARACTERS.length())
                 .mapToObj(i -> String.valueOf(CHARACTERS.charAt(i)))
                 .collect(Collectors.joining());
