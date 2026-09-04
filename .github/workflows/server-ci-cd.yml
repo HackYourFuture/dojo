@@ -40,7 +40,6 @@ jobs:
         run: ./mvnw -B checkstyle:check
         working-directory: server-spring
 
-      # Runs even when Checkstyle failed, so one push reports both.
       - name: Formatting
         run: ./mvnw -B spotless:check
         working-directory: server-spring
