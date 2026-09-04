@@ -8,6 +8,7 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -167,7 +168,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DojoException.class)
     public ResponseEntity<DojoError> handleDojoException(DojoException ex) {
         log.debug("Returning {}: {}", ex.getStatus(), ex.getMessage());
-        return ResponseEntity.status(ex.getStatus()).body(new DojoError(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatus())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new DojoError(ex.getMessage()));
     }
 
     // ---------------------------------------------------------------- 500

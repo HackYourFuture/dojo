@@ -33,10 +33,15 @@ public class UserService {
     /** Loads and mutates: save() on a detached User would merge, inserting a row for a bad id. */
     @Transactional
     public UserResponse updateUser(String id, UserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new DojoNotFoundException("User", id));
+        User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
         
         user.setEmail(request.email().toLowerCase());
         return UserResponse.from(user);
+    }
+
+    @Transactional
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
+        userRepository.delete(user);
     }
 }

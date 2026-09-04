@@ -10,22 +10,7 @@
 	</parent>
 	<groupId>nl.hackyourfuture</groupId>
 	<artifactId>dojo-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<version>1.0.0</version>
 	<properties>
 		<java.version>25</java.version>
 	</properties>
