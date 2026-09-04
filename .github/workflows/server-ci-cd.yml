@@ -21,6 +21,29 @@ env:
   MINOR_VERSION: 0
   PATCH_VERSION: ${{ github.run_number }}
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      - name: Checkstyle
+        run: ./mvnw -B checkstyle:check
+        working-directory: server-spring
+
+      - name: Formatting
+        run: ./mvnw -B spotless:check
+        working-directory: server-spring
+
   build:
     runs-on: ubuntu-latest
     permissions:

@@ -13,6 +13,9 @@
 	<version>1.0.0</version>
 	<properties>
 		<java.version>25</java.version>
+		<checkstyle.version>14.1.0</checkstyle.version>
+		<maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+		<spotless-maven-plugin.version>3.10.2</spotless-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -140,6 +143,63 @@
 								</path>
 							</annotationProcessorPaths>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless-maven-plugin.version}</version>
+				<configuration>
+					<java>
+						<!-- Config is importable into IntelliJ: Code Style > Import Scheme > Eclipse XML Profile. -->
+						<eclipse>
+							<file>eclipse-formatter.xml</file>
+						</eclipse>
+						<removeUnusedImports/>
+						<!-- Everything else first, then javax, then java — IntelliJ's default order. -->
+						<importOrder>
+							<order>,javax,java</order>
+						</importOrder>
+						<!-- Escape hatch: // spotless:off ... // spotless:on around fluent chains. -->
+						<toggleOffOn/>
+						<trimTrailingWhitespace/>
+						<endWithNewline/>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<id>spotless-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven-checkstyle-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>${checkstyle.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+					<violationSeverity>error</violationSeverity>
+				</configuration>
+				<executions>
+					<execution>
+						<id>checkstyle-check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

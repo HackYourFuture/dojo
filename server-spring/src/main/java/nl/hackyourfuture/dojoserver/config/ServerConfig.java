@@ -18,11 +18,11 @@ public class ServerConfig {
     }
 
     public ServerEnvironment getServerEnvironment() {
-        if(env.acceptsProfiles(Profiles.of("prod"))) {
+        if (env.acceptsProfiles(Profiles.of("prod"))) {
             return ServerEnvironment.PRODUCTION;
-        } else if(env.acceptsProfiles(Profiles.of("test"))) {
+        } else if (env.acceptsProfiles(Profiles.of("test"))) {
             return ServerEnvironment.TEST;
-        } else if(env.acceptsProfiles(Profiles.of("dev"))) {
+        } else if (env.acceptsProfiles(Profiles.of("dev"))) {
             return ServerEnvironment.DEVELOPMENT;
         }
         return ServerEnvironment.PRODUCTION;

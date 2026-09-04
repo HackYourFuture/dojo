@@ -105,6 +105,46 @@ Throw a `DojoException` subclass for anything deliberate. Each carries its own s
   Key them on opaque ids, never on an email address or a name.
 - The 406 handler returns no body on purpose: any body would be in the format the caller refused.
 
+## Code style
+
+Spotless owns layout, using the Eclipse JDT formatter configured by `eclipse-formatter.xml`:
+4-space indent, 120 columns, and `join_wrapped_lines=false` — it fixes indentation and spacing but
+keeps the line breaks the author chose. That is why a hand-wrapped builder chain such as the one in
+`SecurityConfig` survives formatting instead of being flattened.
+
+Checkstyle (`checkstyle.xml`) owns the rest, and is deliberately small — imports, likely bugs,
+braces, naming. No rule in it touches whitespace or line length, because the formatter already
+decided those and cannot break a long string literal.
+
+```bash
+./mvnw spotless:apply                     # reformat
+./mvnw spotless:check checkstyle:check    # what CI runs
+```
+
+- Both are bound to the `verify` phase, not `validate`, so `spring-boot:run` and `./mvnw test`
+  stay fast.
+- `eclipse-formatter.xml` is an Eclipse XML profile, the one format IntelliJ imports natively
+  (Settings > Editor > Code Style > Import Scheme). One file configures both the CLI and the IDE,
+  so format-on-save needs no third-party plugin.
+- `.githooks/pre-commit` reformats staged Java files on commit and reports Checkstyle findings
+  without blocking — enabled with `git config core.hooksPath .githooks` from the repository root.
+- The formatter version is pinned by `spotless-maven-plugin`, which resolves the JDT for it. Do not
+  add a `<version>` inside `<eclipse>` — that field takes an Eclipse release like `4.36`, not the
+  Spotless artifact version.
+- Spotless's `ModuleHelper` touches `sun.misc.Unsafe` on every run, so JDK 24+ prints a
+  deprecation warning. It is harmless and Spotless's to fix; the pre-commit hook drops it with
+  `2>/dev/null` (Maven's own errors go to stdout under `-q`, so they still show). Do not add
+  `--sun-misc-unsafe-memory-access=allow` to `.mvn/jvm.config` — that hides the warning everywhere.
+- `// spotless:off` … `// spotless:on` is available but currently unused — the formatter respects
+  manual wrapping, so it is rarely needed.
+- `eclipse-formatter.xml` sets 32 of the 416 keys the JDT formatter accepts; the rest come from
+  Spotless's baseline. Keep entries that merely restate a baseline value — that baseline matches
+  none of the JDT's three published default maps exactly, so it is not something to rely on across
+  a Spotless or JDT upgrade.
+- **After editing `eclipse-formatter.xml`, delete `target/spotless-index`.** It is an up-to-date
+  cache keyed on source files, so a config-only change leaves `spotless:check` reporting clean on
+  stale results. CI is unaffected — it always starts from a fresh checkout.
+
 ## Migrations
 
 Flyway, in `src/main/resources/db/migration/`. `ddl-auto: validate` — the app refuses to start when
@@ -161,8 +201,14 @@ CORS is not configured, and is not needed: the React client proxies `/api` to th
 ```bash
 ./mvnw test           # needs a Postgres on localhost:5432
 ./mvnw package        # jar in target/
+./mvnw verify         # package plus Spotless and Checkstyle
 ```
 
 The Dockerfile is a two-stage build that runs as uid 1000 on port 7777 with
-`SPRING_PROFILES_ACTIVE=prod`. `.github/workflows/build-server-spring.yml` builds the image and
-pushes it to GHCR.
+`SPRING_PROFILES_ACTIVE=prod`. It runs `mvn package`, so the image build does not lint.
+
+`.github/workflows/build-server-spring.yml` holds both backend jobs: `lint` runs Checkstyle and
+`spotless:check` on a JDK with no database, and `build` builds the image and pushes it to GHCR.
+They run in parallel and share the workflow's path filters and concurrency group, which is why the
+lint job lives here rather than in `quality-checks.yml` — that one is the client's and has no path
+filter, so it would fire on client-only PRs.
