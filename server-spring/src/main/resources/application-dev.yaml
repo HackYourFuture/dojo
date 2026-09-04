@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: dojo-server-dev
+
+# API Docs
+scalar:
+  enabled: true
+
+# Health and metrics
+management:
+  endpoint:
+    health:
+      show-details: always

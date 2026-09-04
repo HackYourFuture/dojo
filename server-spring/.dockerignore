@@ -1,0 +1,36 @@
+# Test files and directories
+src/test/
+
+# Development and test configurations
+src/main/resources/application-dev.yaml
+src/main/resources/application-test.yaml
+
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Build artifacts
+target/
+build/
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+
+# Secrets
+.env
+
+# System
+.DS_Store
