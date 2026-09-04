@@ -3,7 +3,8 @@
 [ -n "$(git diff --cached --name-only --diff-filter=ACM -- 'server-spring/*.java')" ] || exit 0
 
 echo "Applying formatting to Java files..."
-(cd server-spring && ./mvnw -B -q spotless:apply) 2>/dev/null || true
+(cd server-spring && ./mvnw -B -q spotless:apply) >/dev/null 2>&1 \
+    || echo "spotless:apply failed — run it in server-spring to see why"
 git diff --cached --name-only --diff-filter=ACM -z -- 'server-spring/*.java' | xargs -0 git add --
 (cd server-spring && ./mvnw -B checkstyle:check) 2>&1 | grep -E '^\[ERROR\] .*\.java:' || true
 exit 0
