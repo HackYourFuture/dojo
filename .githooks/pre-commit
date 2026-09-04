@@ -1,0 +1,8 @@
+#!/bin/sh
+# Reformats staged Java files and re-stages them. Checkstyle findings are reported, never fatal.
+[ -n "$(git diff --cached --name-only --diff-filter=ACM -- 'server-spring/*.java')" ] || exit 0
+
+(cd server-spring && ./mvnw -B -q spotless:apply) 2>/dev/null || true
+git diff --cached --name-only --diff-filter=ACM -z -- 'server-spring/*.java' | xargs -0 git add --
+(cd server-spring && ./mvnw -B checkstyle:check) 2>&1 | grep -E '^\[ERROR\] .*\.java:' || true
+exit 0

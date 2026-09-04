@@ -8,10 +8,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nl.hackyourfuture.dojoserver.admin.user.dto.*;
+import nl.hackyourfuture.dojoserver.admin.user.dto.UserRequest;
+import nl.hackyourfuture.dojoserver.admin.user.dto.UserResponse;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -32,7 +41,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a new user", description = "Creates a new user account and returns it with its generated id.")
+    @Operation(summary = "Create a new user",
+            description = "Creates a new user account and returns it with its generated id.")
     @ApiResponse(responseCode = "201", description = "The user was created")
     @ApiResponse(
             responseCode = "400",
@@ -50,14 +60,11 @@ public class UserController {
     @ApiResponse(
             responseCode = "400",
             description = "The request body is invalid",
-            content = @Content(schema = @Schema(implementation = DojoError.class))
-    )
+            content = @Content(schema = @Schema(implementation = DojoError.class)))
     public UserResponse updateUser(
             @Parameter(
                     description = "ID of the user to update",
-                    example = "WTh1qLhy3K"
-            )
-            @PathVariable String id,
+                    example = "WTh1qLhy3K") @PathVariable String id,
             @Valid @RequestBody UserRequest request) {
         return userService.updateUser(id, request);
     }
@@ -69,14 +76,11 @@ public class UserController {
     @ApiResponse(
             responseCode = "404",
             description = "The user id was not found",
-            content = @Content(schema = @Schema(implementation = DojoError.class))
-    )
+            content = @Content(schema = @Schema(implementation = DojoError.class)))
     public void deleteUser(
             @Parameter(
                     description = "ID of the user to delete",
-                    example = "WTh1qLhy3K"
-            )
-            @PathVariable String id) {
+                    example = "WTh1qLhy3K") @PathVariable String id) {
         userService.deleteUser(id);
     }
 }

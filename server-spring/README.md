@@ -110,6 +110,28 @@ Two supporting pieces sit outside the features:
 DTOs never leak entities to the outside: controllers accept a request record and return a response
 record, and the entity stays inside the service and repository.
 
+## 🎨 Code style
+
+Spotless formats (Eclipse JDT, `eclipse-formatter.xml`), Checkstyle lints (`checkstyle.xml`).
+
+```bash
+./mvnw spotless:apply                     # reformat
+./mvnw spotless:check checkstyle:check    # what CI runs
+```
+
+One-time setup:
+
+1. From the repository root, enable the commit hook — it reformats staged Java files and prints
+   Checkstyle findings without blocking:
+
+   ```bash
+   git config core.hooksPath .githooks
+   ```
+
+2. Format on save in IntelliJ: *Settings → Editor → Code Style* → gear → *Import Scheme → Eclipse
+   XML Profile* → `eclipse-formatter.xml`, then tick *Settings → Tools → Actions on Save → Reformat
+   code*. No formatter plugin needed.
+
 ## 🗄️ Database migrations
 
 Schema changes live in `src/main/resources/db/migration` and are applied by Flyway at startup.

@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
 
     // ---------------------------------------------------------------- 404
 
-    @ExceptionHandler({ NoResourceFoundException.class, NoHandlerFoundException.class })
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public DojoError handleNotFound(Exception ex) {
         return buildDojoError(ex,

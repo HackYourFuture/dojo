@@ -22,8 +22,7 @@ public class OpenApiConfig {
                         .description("REST API for the HackYourFuture final project.")
                         .version("1.0.0"))
                 .servers(List.of(
-                        new Server().url("/").description("This server")
-                ));
+                        new Server().url("/").description("This server")));
     }
 
     /**

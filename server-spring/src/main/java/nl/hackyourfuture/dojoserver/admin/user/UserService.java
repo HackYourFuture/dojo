@@ -1,7 +1,8 @@
 package nl.hackyourfuture.dojoserver.admin.user;
 
 import lombok.RequiredArgsConstructor;
-import nl.hackyourfuture.dojoserver.admin.user.dto.*;
+import nl.hackyourfuture.dojoserver.admin.user.dto.UserRequest;
+import nl.hackyourfuture.dojoserver.admin.user.dto.UserResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class UserService {
     @Transactional
     public UserResponse updateUser(String id, UserRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
-        
+
         user.setEmail(request.email().toLowerCase());
         return UserResponse.from(user);
     }
