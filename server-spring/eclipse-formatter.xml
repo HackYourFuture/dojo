@@ -31,11 +31,20 @@
     <setting id="org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_type_declaration" value="16"/>
     <setting id="org.eclipse.jdt.core.formatter.alignment_for_assignment" value="16"/>
 
+    <!-- A ")" the author put on its own line stays there. join_wrapped_lines does not cover this. -->
+    <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation" value="preserve_positions"/>
+    <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_record_declaration" value="preserve_positions"/>
+    <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_method_delcaration" value="preserve_positions"/>
+    <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_method_invocation" value="preserve_positions"/>
+
+    <!-- 48 = one annotation per line, so a record component reads like a field. -->
+    <setting id="org.eclipse.jdt.core.formatter.alignment_for_annotations_on_parameter" value="48"/>
+
     <!-- Annotations on their own line, except on parameters. -->
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_type" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_method" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_field" value="insert"/>
-    <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_parameter" value="do not insert"/>
+    <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_parameter" value="insert"/>
     <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_local_variable" value="do not insert"/>
 
     <!-- The formatter keeps your wrapping, but blank-line conventions are still enforced. -->

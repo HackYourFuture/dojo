@@ -1,10 +1,13 @@
 create table users
 (
     id         TEXT        not null constraint users_pk primary key,
-    email      text        NOT NULL constraint users_email_unique unique,
+    email      text        not null,
+    name       text        not null,
+    image_url  text,
+    is_active  boolean     not null,
     created_at timestamptz not null,
     updated_at timestamptz not null
 );
 
--- The unique constraint above is case-sensitive, so this catches Alice@ vs alice@.
-create unique index users_email_lower_unique on users (lower(email));
+-- Email uniqueness is enforced case-insensitively via the index below (upper(email)).
+create unique index users_email_upper_unique on users (upper(email));

@@ -26,7 +26,10 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,9 +79,24 @@ public class GlobalExceptionHandler {
         return buildDojoError(ex, "One or more values are invalid: " + details);
     }
 
+    /**
+     * Jackson reports a wrong JSON type as a cause, so name the field instead of
+     * blaming the whole body.
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public DojoError handleMalformedMessage(Exception ex) {
+    public DojoError handleMalformedMessage(HttpMessageNotReadableException ex) {
+        if (ex.getCause() instanceof MismatchedInputException cause) {
+            String field = cause.getPath().stream()
+                    .map(JacksonException.Reference::getPropertyName)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining("."));
+            Class<?> expected = cause.getTargetType();
+            if (!field.isEmpty() && expected != null) {
+                return buildDojoError(ex, "The field '" + field + "' expects a " + expected.getSimpleName()
+                        + ". Please refer to the API documentation at '/api/docs' for the expected format.");
+            }
+        }
         return buildDojoError(ex, "Could not parse the request. Make sure that the message format is correct.");
     }
 
@@ -208,7 +226,7 @@ public class GlobalExceptionHandler {
     private DojoError buildDojoError(Exception ex, String message) {
         log.debug("Returning error response: {}", message, ex);
         if (serverConfig.isDevelopment() && ex.getMessage() != null) {
-            return new DojoError(message + ". DEBUG INFO: " + ex.getMessage());
+            return new DojoError(message + " 🐞 DEBUG INFO: " + ex.getMessage());
         }
         return new DojoError(message);
     }

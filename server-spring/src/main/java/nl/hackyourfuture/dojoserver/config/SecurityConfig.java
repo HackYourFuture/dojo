@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/admin/users/**").permitAll()
                         .requestMatchers("/actuator/health/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/docs/**").permitAll()

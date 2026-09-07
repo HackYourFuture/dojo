@@ -10,10 +10,25 @@ Java 25 · Spring Boot 4.1.1 · PostgreSQL · Flyway · Hibernate/JPA · Lombok 
 - **Keep it simple.** This is an internal tool for a handful of users, not a system that has to
   scale. Prefer the simplest thing that works over the defensive or general version.
 - **Comments are one line** where possible. No multi-paragraph javadoc.
-- **Answer questions directly** — a few sentences. Skip background and option surveys unless asked.
 - **Never raise untracked or unstaged git files** as an issue.
 - **Verify Spring / Hibernate / Tomcat behaviour** against the actual code or the jars in `~/.m2`
   rather than from memory, and prefer running the app over reasoning about it.
+
+## Communication
+
+Short and direct. The user asks for more when they want it.
+
+- **Lead with the answer**, in a sentence or two. No preamble, no recap of what you just did.
+- **No option surveys, trade-off lists, or "two approaches" framing.** Pick one, say why in a
+  clause, move on. Present a choice only when it is genuinely the user's to make and the answer
+  changes what gets built.
+- **State findings, don't argue them.** One line each. Add evidence only where the claim is
+  surprising or the user is likely to disagree.
+- **Skip the closing summary.** No "what changed" wrap-up, no restating the task, no next-steps
+  list unless asked.
+- Headings, tables and bullet lists are for documents. A question gets prose.
+- Report verification as a fact — "tests pass, lint clean" — not as a section.
+- Do not raise the same point twice. If the user declined it, it is decided.
 
 ## Layout
 
@@ -31,25 +46,44 @@ nl.hackyourfuture.dojoserver
 ## Entities
 
 ```java
-@NoArgsConstructor @AllArgsConstructor @Getter @Builder
-@Entity @Table(name = "users")
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@Setter
+@Entity
+@Table(name = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-    @Id @EqualsAndHashCode.Include
+    @Id
+    @EqualsAndHashCode.Include
+    @Setter(AccessLevel.NONE)
     private String id;
 
-    @Setter
     private String email;
 
-    @CreatedDate       private Instant createdAt;
-    @LastModifiedDate  private Instant updatedAt;
+    // Managed by Spring Data JPA's AuditingEntityListener. Do not set these manually.
+    @CreatedDate
+    @Setter(AccessLevel.NONE)
+    private Instant createdAt;
+    @LastModifiedDate
+    @Setter(AccessLevel.NONE)
+    private Instant updatedAt;
 }
 ```
 
 - Ids are 10-character alphanumeric strings from `RandomUtils.generateRandomId()`, assigned in the
   service before save. Not UUIDs.
-- `@Getter` on the class, `@Setter` only on mutable fields — never on the id.
+- `@Setter` goes **on the class**, with `@Setter(AccessLevel.NONE)` on the id and the two audit
+  fields. Not one `@Setter` per mutable field: a wide entity like `Trainee` would carry an
+  annotation on every line. Accepted cost — a field added later is mutable unless you lock it, so
+  remember the three exceptions on every new entity. (If that repetition grows, move the audit
+  fields to a `@MappedSuperclass` and the exceptions disappear.)
+- Constructors are closed: `@NoArgsConstructor(access = PROTECTED)` is the one Hibernate needs,
+  `@AllArgsConstructor(access = PRIVATE)` is the one `@Builder` needs. Public versions would let
+  callers set the audit fields that `@Setter(AccessLevel.NONE)` exists to protect.
 - Equality is id-only, via `onlyExplicitlyIncluded`.
 - `@Entity` plus `@Table(name = ...)`. Not `@Entity(name = ...)`, which names the JPQL entity.
 - Audit fields are written by `AuditingEntityListener`, enabled by `@EnableJpaAuditing` on
@@ -60,11 +94,19 @@ public class User {
 `@Transactional` on writes, `@Transactional(readOnly = true)` on reads.
 
 ```java
+
 @Transactional
 public UserResponse updateUser(String id, UserRequest request) {
     User user = userRepository.findById(id)
             .orElseThrow(() -> new DojoNotFoundException("User", id));
-    user.setEmail(request.email().toLowerCase());
+
+    // Changed email - check for duplicates.
+    if (!user.getEmail().equalsIgnoreCase(request.email())
+            && userRepository.existsByEmailIgnoreCase(request.email())) {
+        throw new DojoConflictException("Email is already in use by another user.");
+    }
+
+    user.setEmail(request.email());
     return UserResponse.from(user);
 }
 ```
@@ -74,24 +116,34 @@ public UserResponse updateUser(String id, UserRequest request) {
   which inserts a row when the id does not exist.
 - **Create** builds a new entity and calls `repository.save(...)`.
 - **Delete** does the same `findById(...).orElseThrow(...)`, then `repository.delete(entity)`.
-- Emails are lowercased before persisting.
+- Request records normalise in their compact constructor — trimmed strings, lowercased emails —
+  so the record runs before bean validation and the service stores what it is given. Java has no
+  `?.`, so guard each field: `email == null ? null : email.strip()`.
+- **Check uniqueness in the service, before the write**, and throw `DojoConflictException` so the
+  caller gets a written-for-humans message. The unique index is still the guarantee — a race
+  reaches it and `handleDataConflict` turns it into a 409 too, just a blunter one. On update, skip
+  the check when the value has not changed, or a plain rename 409s against itself.
+- Derived query names carry SQL semantics: `existsByEmailIgnoreCase` generates
+  `upper(email) = upper(?)`, which is why the index is on `upper(email)`. Plain `findByEmail` is
+  exact-match, so any caller must normalise first.
 
 ## Errors
 
 One response shape, everywhere:
 
 ```java
-public record DojoError(String error) {}
+public record DojoError(String error) {
+}
 ```
 
 Throw a `DojoException` subclass for anything deliberate. Each carries its own status:
 
-| Exception | Status | For |
-|---|---|---|
-| `DojoNotFoundException` | 404 | record does not exist, or the caller may not know it does |
-| `DojoConflictException` | 409 | duplicate value, or a state that forbids the change |
-| `DojoBadRequestException` | 400 | a business rule bean validation cannot express |
-| `DojoForbiddenException` | 403 | caller may see the record but not do this to it |
+| Exception                 | Status | For                                                       |
+|---------------------------|--------|-----------------------------------------------------------|
+| `DojoNotFoundException`   | 404    | record does not exist, or the caller may not know it does |
+| `DojoConflictException`   | 409    | duplicate value, or a state that forbids the change       |
+| `DojoBadRequestException` | 400    | a business rule bean validation cannot express            |
+| `DojoForbiddenException`  | 403    | caller may see the record but not do this to it           |
 
 - **Add subclasses of `DojoException`, not handlers.** One handler in `GlobalExceptionHandler`
   translates the whole family using `ex.getStatus()`.
@@ -124,10 +176,30 @@ decided those and cannot break a long string literal.
 - Both are bound to the `verify` phase, not `validate`, so `spring-boot:run` and `./mvnw test`
   stay fast.
 - `eclipse-formatter.xml` is an Eclipse XML profile, the one format IntelliJ imports natively
-  (Settings > Editor > Code Style > Import Scheme). One file configures both the CLI and the IDE,
-  so format-on-save needs no third-party plugin.
-- `.githooks/pre-commit` reformats staged Java files on commit and reports Checkstyle findings
-  without blocking — enabled with `git config core.hooksPath .githooks` from the repository root.
+  (Settings > Editor > Code Style > Import Scheme), so format-on-save needs no third-party plugin.
+  **But the import is a lossy translation, not the JDT formatter running in the IDE** — IntelliJ
+  has no equivalent of `preserve_positions`, and Eclipse profiles carry no import settings at all.
+  Expect the two to disagree on wrapping and imports. Spotless is the source of truth: when they
+  differ, `./mvnw spotless:apply` wins, and the pre-commit hook applies it regardless. Exact
+  parity would mean running Spotless from the IDE (the "Spotless Applier" plugin) or switching to
+  a single-engine formatter like google-java-format, which would flatten the manual wrapping.
+- `join_wrapped_lines` does not cover parentheses. A `)` on its own line survives only because of
+  the four `parentheses_positions_in_*` keys set to `preserve_positions`.
+- `alignment_for_annotations_on_parameter=48` plus `insert_new_line_after_annotation_on_parameter`
+  gives every annotated record component one annotation per line and its name below them. The same
+  rules apply to method parameters, which is why the controller wraps its parameter list.
+- **Star imports are IntelliJ's, not the profile's.** An Eclipse profile carries no import
+  settings, so IntelliJ collapsed six Lombok imports into `lombok.*` and Checkstyle's
+  `AvoidStarImport` failed CI. `CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND` and
+  `NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND` are set to 999 in the IDE's own `Dojo` scheme
+  (`~/Library/Application Support/JetBrains/<IDE>/codestyles/Dojo.xml`). Re-importing
+  `eclipse-formatter.xml` replaces that scheme and drops both — set them again.
+- `.githooks/pre-commit` runs `spotless:apply` and then `git add -u` over `server-spring/*.java`,
+  staging **every** Java file Spotless changed — not just the ones already staged. Spotless
+  formats the whole module, so a collateral fix would otherwise stay unstaged and CI would fail on
+  a file you never touched. The trade-off is that it also stages Java changes you deliberately
+  left out. Checkstyle findings are reported, never fatal. Enable with
+  `git config core.hooksPath .githooks` from the repository root.
 - The formatter version is pinned by `spotless-maven-plugin`, which resolves the JDT for it. Do not
   add a `<version>` inside `<eclipse>` — that field takes an Eclipse release like `4.36`, not the
   Spotless artifact version.
@@ -157,23 +229,76 @@ instead of new versioned files. After editing V1, recreate the local database:
 docker exec hyf-dojo psql -U admin -d postgres -c "DROP DATABASE dojo WITH (FORCE);" -c "CREATE DATABASE dojo;"
 ```
 
+Editing V1 changes its Flyway checksum, so the app will refuse to start against an old database.
+
+- Case-insensitive uniqueness is **one functional index**:
+  `create unique index users_email_upper_unique on users (upper(email))`. There is deliberately no
+  second exact-match constraint on the column — a unique `upper(email)` already rejects exact
+  duplicates, so the extra constraint would be an index maintained on every write for no added
+  guarantee.
+- `upper` rather than `lower` because Spring Data's `IgnoreCase` generates `upper(...)`. Matching
+  them lets the predicate use the index instead of a sequential scan. Do not "tidy" this to
+  `lower`.
+
 ## API
 
-- Controllers live under `/api/...`.
+- Controllers live under `/api/...`, one `@RestController` per feature with the path on
+  `@RequestMapping`. Admin-facing features sit under `/api/admin/...`.
 - Request and response DTOs are records in a `dto` subpackage. Responses get a static
   `from(entity)` factory. Validation annotations go on the request record.
-- Statuses: 200 read, 201 create, 204 delete, 404 unknown id, 409 conflict.
+- Statuses: 200 read, 201 create, 204 delete, 400 invalid body, 404 unknown id, 409 conflict.
 - Every endpoint carries `@Operation` and `@ApiResponse`. The spec is served at
   `/api/docs/openapi`, the Scalar UI at `/api/docs`.
+
+### Adding an endpoint
+
+`admin/user/` is the reference implementation — copy its shape. Work outwards from the DTOs.
+
+1. **Request record.** One `@Schema` per component with a `description` and `example`, plus the
+   validation annotations. Normalise in the compact constructor so the service can trust its
+   input. Boxed `Boolean`/`Integer`, never primitives. Keep `@Size` minimums honest — a display
+   name can legitimately be two characters.
+2. **Response record.** `requiredMode = REQUIRED` on every component, plus `nullable = true` where
+   the value can be null. A nullable field is still required: the key is always present in the
+   JSON, and a generated client that types it `field?: string` will be wrong.
+3. **Service method.** `@Transactional(readOnly = true)` for reads, `@Transactional` for writes.
+   `findById(...).orElseThrow(() -> new DojoNotFoundException("Entity", id))` for anything taking
+   an id — including update and delete, so an unknown id is a 404 and not a silent no-op.
+4. **Controller method.** `@Operation(summary, description)`, then one `@ApiResponse` per status
+   **the method can actually return** — if the service throws it, document it. Error responses
+   carry `content = @Content(schema = @Schema(implementation = DojoError.class))`.
+5. **`SecurityConfig`.** Add the path to `authorizeHttpRequests`. There is no auth yet so this is
+   `permitAll()`; every path added now is one to revisit when auth lands.
+6. **Migration.** Fold the schema into `V1__init_schema.sql`, then recreate the local database.
+7. `./mvnw spotless:apply`, then `./mvnw spotless:check checkstyle:check`.
+
+What the `users` endpoints declare, as the baseline to match:
+
+|                | 200 | 201 | 204 | 400 | 404 | 409 |
+|----------------|:---:|:---:|:---:|:---:|:---:|:---:|
+| `GET /`        |  ✓  |     |     |     |     |     |
+| `GET /{id}`    |  ✓  |     |     |     |  ✓  |     |
+| `POST /`       |     |  ✓  |     |  ✓  |     |  ✓  |
+| `PUT /{id}`    |  ✓  |     |     |  ✓  |  ✓  |  ✓  |
+| `DELETE /{id}` |     |     |  ✓  |     |  ✓  |     |
+
+Consistency within a controller matters more than any individual choice — descriptions either all
+end with a period or none do, `@Parameter` blocks wrap the same way, validation messages are
+either all custom or all defaults. The formatter preserves whatever you write, so it will not
+correct you, and the next feature copies whatever it finds here.
+
+Two known gaps, deliberate for now: `GET /` is an unpaginated `findAll()`, which is right for a
+handful of staff and wrong the moment this pattern is copied to trainees or submissions; and
+`getAllUsers` has no filtering or sorting.
 
 ## Configuration
 
 `application.yaml` is the base; `-dev`, `-test` and `-prod` overlay it.
 
-| | |
-|---|---|
-| base | `localhost:5432/dojo`, `admin`/`password`, port 7777, `ddl-auto: validate` |
-| dev | Scalar on, full health details, `DEBUG INFO` appended to error messages |
+|      |                                                                                                                    |
+|------|--------------------------------------------------------------------------------------------------------------------|
+| base | `localhost:5432/dojo`, `admin`/`password`, port 7777, `ddl-auto: validate`                                         |
+| dev  | Scalar on, full health details, `DEBUG INFO` appended to error messages                                            |
 | prod | docs off, health details only when authorized, `sslmode=require`, every DB setting from an env var with no default |
 
 `ServerConfig.isDevelopment()` is the gate for anything dev-only. It resolves to `PRODUCTION` when
@@ -205,10 +330,19 @@ CORS is not configured, and is not needed: the React client proxies `/api` to th
 ```
 
 The Dockerfile is a two-stage build that runs as uid 1000 on port 7777 with
-`SPRING_PROFILES_ACTIVE=prod`. It runs `mvn package`, so the image build does not lint.
+`SPRING_PROFILES_ACTIVE=prod`. It runs `mvn package -DskipTests`, so the image build neither lints
+nor tests.
 
-`.github/workflows/build-server-spring.yml` holds both backend jobs: `lint` runs Checkstyle and
-`spotless:check` on a JDK with no database, and `build` builds the image and pushes it to GHCR.
+**Nothing in CI runs tests** — the workflow has no test step and the image build skips them. There
+are no feature tests yet. The integration shape that works, when they arrive: `@SpringBootTest`
+plus `@AutoConfigureMockMvc` (Boot 4 moved this to
+`org.springframework.boot.webmvc.test.autoconfigure`), `@Transactional` on the class, and
+assertions through `MockMvcTester`. `@Transactional` is not optional — `./mvnw test` runs against
+the same local `dojo` database you develop in, and rollback is what keeps it from being wiped.
+
+`.github/workflows/server-ci-cd.yml` ("Backend CI/CD") holds both backend jobs: `lint` runs
+Checkstyle and `spotless:check` on a JDK with no database, and `build` builds the image and pushes
+it to `ghcr.io/<owner>/server-spring`.
 They run in parallel and share the workflow's path filters and concurrency group, which is why the
 lint job lives here rather than in `quality-checks.yml` — that one is the client's and has no path
 filter, so it would fire on client-only PRs.
