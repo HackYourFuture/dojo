@@ -21,9 +21,15 @@ public class UserService {
         return userRepository.findAll().stream().map(UserResponse::from).toList();
     }
 
+    @Transactional(readOnly = true)
+    public UserResponse getUser(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
+        return UserResponse.from(user);
+    }
+
     @Transactional
     public UserResponse createUser(UserRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
+        if (userRepository.existsByEmailIgnoreCase(request.email())) {
             throw new DojoConflictException("Email is already in use by another user.");
         }
 
@@ -44,7 +50,8 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
 
         // Changed email - check for duplicates.
-        if (!user.getEmail().equalsIgnoreCase(request.email()) && userRepository.existsByEmail(request.email())) {
+        if (!user.getEmail().equalsIgnoreCase(request.email()) &&
+                userRepository.existsByEmailIgnoreCase(request.email())) {
             throw new DojoConflictException("Email is already in use by another user.");
         }
 

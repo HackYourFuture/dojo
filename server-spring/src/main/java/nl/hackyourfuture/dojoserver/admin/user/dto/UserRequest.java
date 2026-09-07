@@ -8,18 +8,18 @@ import jakarta.validation.constraints.Size;
 
 @Schema(description = "The details needed to create or update a user")
 public record UserRequest(
-        @NotBlank(message = "Please provide an email")
+        @NotBlank
         @Size(min = 3, max = 100)
         @Email
         @Schema(description = "The user Email. Used for authentication.", example = "user@example.com")
         String email,
 
         @NotBlank
-        @Size(min = 3, max = 100)
+        @Size(min = 2, max = 100)
         @Schema(description = "The display name of the user.", example = "John Doe")
         String name,
 
-        @Size(min = 3, max = 200)
+        @Size(min = 5, max = 200)
         @Schema(description = "The URL to the user image", example = "https://example.org/profile.jpg")
         String imageUrl,
 

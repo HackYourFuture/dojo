@@ -39,6 +39,22 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user", description = "Returns details about a specific user")
+    @ApiResponse(responseCode = "200", description = "Details about a specific user")
+    @ApiResponse(
+            responseCode = "404",
+            description = "The user id was not found",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public UserResponse getUser(
+            @Parameter(description = "ID of the user to fetch", example = "WTh1qLhy3K")
+            @PathVariable
+            String id
+    ) {
+        return userService.getUser(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new user",
@@ -48,7 +64,6 @@ public class UserController {
             responseCode = "400",
             description = "The request body is invalid",
             content = @Content(schema = @Schema(implementation = DojoError.class))
-
     )
     @ApiResponse(
             responseCode = "409",
