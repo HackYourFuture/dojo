@@ -27,8 +27,11 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.exc.InvalidFormatException;
 import tools.jackson.databind.exc.MismatchedInputException;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,6 +52,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class GlobalExceptionHandler {
     private final ServerConfig serverConfig;
+    private final ObjectMapper objectMapper;
 
     // ---------------------------------------------------------------- 400
 
@@ -86,18 +90,51 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleMalformedMessage(HttpMessageNotReadableException ex) {
-        if (ex.getCause() instanceof MismatchedInputException cause) {
-            String field = cause.getPath().stream()
-                    .map(JacksonException.Reference::getPropertyName)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.joining("."));
-            Class<?> expected = cause.getTargetType();
-            if (!field.isEmpty() && expected != null) {
-                return buildDojoError(ex, "The field '" + field + "' expects a " + expected.getSimpleName()
-                        + ". Please refer to the API documentation at '/api/docs' for the expected format.");
-            }
+        return buildDojoError(ex, describeUnreadableJson(ex.getCause()));
+    }
+
+    /**
+     * A PATCH body is merged in the service, so its Jackson errors arrive here
+     * unwrapped rather than inside HttpMessageNotReadableException. Only the
+     * input-shaped subtree: a definition or instantiation error is our bug, and
+     * stays a 500.
+     */
+    @ExceptionHandler(MismatchedInputException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public DojoError handleMismatchedInput(MismatchedInputException ex) {
+        return buildDojoError(ex, describeUnreadableJson(ex));
+    }
+
+    private String describeUnreadableJson(Throwable ex) {
+        if (!(ex instanceof MismatchedInputException cause)) {
+            return "Could not parse the request. Make sure that the message format is correct.";
         }
-        return buildDojoError(ex, "Could not parse the request. Make sure that the message format is correct.");
+        String field = cause.getPath().stream()
+                .map(JacksonException.Reference::getPropertyName)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining("."));
+        Class<?> expected = cause.getTargetType();
+        if (field.isEmpty() || expected == null) {
+            return "Could not parse the request. Make sure that the message format is correct.";
+        }
+        if (cause instanceof InvalidFormatException format && expected.isEnum()) {
+            String allowed = Arrays.stream(expected.getEnumConstants())
+                    .map(this::wireValue)
+                    .collect(Collectors.joining(", "));
+            return "'" + format.getValue() + "' is not a valid value for '" + field + "'. Allowed values: " + allowed
+                    + ".";
+        }
+        return "The field '" + field + "' expects a " + expected.getSimpleName()
+                + ". Please refer to the API documentation at '/api/docs' for the expected format.";
+    }
+
+    /** The value an enum constant takes on the wire (its @JsonValue), falling back to its name. */
+    private String wireValue(Object constant) {
+        try {
+            return objectMapper.convertValue(constant, String.class);
+        } catch (IllegalArgumentException ex) {
+            return ((Enum<?>) constant).name();
+        }
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
