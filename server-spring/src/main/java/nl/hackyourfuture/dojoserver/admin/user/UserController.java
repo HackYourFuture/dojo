@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 @Tag(name = "Users", description = "Operations on user accounts")
 public class UserController {
@@ -50,7 +50,14 @@ public class UserController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
 
     )
-    public UserResponse createUser(@Valid @RequestBody UserRequest request) {
+    @ApiResponse(
+            responseCode = "409",
+            description = "The email address is already in use by another user.",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public UserResponse createUser(
+            @Valid @RequestBody
+            UserRequest request) {
         return userService.createUser(request);
     }
 
@@ -60,12 +67,26 @@ public class UserController {
     @ApiResponse(
             responseCode = "400",
             description = "The request body is invalid",
-            content = @Content(schema = @Schema(implementation = DojoError.class)))
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "The user id was not found",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    @ApiResponse(
+            responseCode = "409",
+            description = "The email address is already in use by another user.",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
     public UserResponse updateUser(
             @Parameter(
                     description = "ID of the user to update",
-                    example = "WTh1qLhy3K") @PathVariable String id,
-            @Valid @RequestBody UserRequest request) {
+                    example = "WTh1qLhy3K")
+            @PathVariable
+            String id,
+            @Valid @RequestBody
+            UserRequest request) {
         return userService.updateUser(id, request);
     }
 
@@ -76,11 +97,14 @@ public class UserController {
     @ApiResponse(
             responseCode = "404",
             description = "The user id was not found",
-            content = @Content(schema = @Schema(implementation = DojoError.class)))
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
     public void deleteUser(
             @Parameter(
                     description = "ID of the user to delete",
-                    example = "WTh1qLhy3K") @PathVariable String id) {
+                    example = "WTh1qLhy3K")
+            @PathVariable
+            String id) {
         userService.deleteUser(id);
     }
 }

@@ -74,7 +74,9 @@ public UserResponse updateUser(String id, UserRequest request) {
   which inserts a row when the id does not exist.
 - **Create** builds a new entity and calls `repository.save(...)`.
 - **Delete** does the same `findById(...).orElseThrow(...)`, then `repository.delete(entity)`.
-- Emails are lowercased before persisting.
+- Request records normalise in their compact constructor — trimmed strings, lowercased emails —
+  so the record runs before bean validation and the service stores what it is given. Java has no
+  `?.`, so guard each field: `email == null ? null : email.strip()`.
 
 ## Errors
 
@@ -126,6 +128,17 @@ decided those and cannot break a long string literal.
 - `eclipse-formatter.xml` is an Eclipse XML profile, the one format IntelliJ imports natively
   (Settings > Editor > Code Style > Import Scheme). One file configures both the CLI and the IDE,
   so format-on-save needs no third-party plugin.
+- `join_wrapped_lines` does not cover parentheses. A `)` on its own line survives only because of
+  the four `parentheses_positions_in_*` keys set to `preserve_positions`.
+- `alignment_for_annotations_on_parameter=48` plus `insert_new_line_after_annotation_on_parameter`
+  gives every annotated record component one annotation per line and its name below them. The same
+  rules apply to method parameters, which is why the controller wraps its parameter list.
+- **Star imports are IntelliJ's, not the profile's.** An Eclipse profile carries no import
+  settings, so IntelliJ collapsed six Lombok imports into `lombok.*` and Checkstyle's
+  `AvoidStarImport` failed CI. `CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND` and
+  `NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND` are set to 999 in the IDE's own `Dojo` scheme
+  (`~/Library/Application Support/JetBrains/<IDE>/codestyles/Dojo.xml`). Re-importing
+  `eclipse-formatter.xml` replaces that scheme and drops both — set them again.
 - `.githooks/pre-commit` reformats staged Java files on commit and reports Checkstyle findings
   without blocking — enabled with `git config core.hooksPath .githooks` from the repository root.
 - The formatter version is pinned by `spotless-maven-plugin`, which resolves the JDT for it. Do not

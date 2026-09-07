@@ -24,6 +24,7 @@ springdoc:
 scalar:
   path: /api/docs
   url: ${springdoc.api-docs.path}
+  page-title: "Dojo API description"
 
 # Health and metrics
 management:

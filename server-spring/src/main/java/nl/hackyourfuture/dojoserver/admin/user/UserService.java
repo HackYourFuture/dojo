@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserRequest;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,21 +23,35 @@ public class UserService {
 
     @Transactional
     public UserResponse createUser(UserRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new DojoConflictException("Email is already in use by another user.");
+        }
+
         var newUser = User.builder()
                 .id(RandomUtils.generateRandomId())
-                .email(request.email().toLowerCase())
+                .email(request.email())
+                .name(request.name())
+                .imageUrl(request.imageUrl())
+                .isActive(request.isActive())
                 .build();
 
         var created = userRepository.save(newUser);
         return UserResponse.from(created);
     }
 
-    /** Loads and mutates: save() on a detached User would merge, inserting a row for a bad id. */
     @Transactional
     public UserResponse updateUser(String id, UserRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
 
-        user.setEmail(request.email().toLowerCase());
+        // Changed email - check for duplicates.
+        if (!user.getEmail().equalsIgnoreCase(request.email()) && userRepository.existsByEmail(request.email())) {
+            throw new DojoConflictException("Email is already in use by another user.");
+        }
+
+        user.setEmail(request.email());
+        user.setName(request.name());
+        user.setImageUrl(request.imageUrl());
+        user.setActive(request.isActive());
         return UserResponse.from(user);
     }
 
