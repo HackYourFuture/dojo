@@ -1,8 +1,18 @@
 package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.trainee.profile.Background;
+import nl.hackyourfuture.dojoserver.trainee.profile.EducationLevel;
+import nl.hackyourfuture.dojoserver.trainee.profile.EnglishLevel;
+import nl.hackyourfuture.dojoserver.trainee.profile.FinancialSupport;
 import nl.hackyourfuture.dojoserver.trainee.profile.Gender;
+import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
+import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
+import nl.hackyourfuture.dojoserver.trainee.profile.QuitReason;
+import nl.hackyourfuture.dojoserver.trainee.profile.Track;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+
+import java.time.LocalDate;
 
 @Schema(description = "A trainee profile as returned by the API")
 public record TraineeResponse(
@@ -30,6 +40,20 @@ public record TraineeResponse(
         String thumbnailUrl,
 
         @Schema(
+                description = "The trainee name for display. If a preferred name is set, it will use it over the first name",
+                example = "John Doe",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        String displayName,
+
+        @Schema(
+                description = "Helper for the client to build a unique path to use in client routing.",
+                example = "/trainee/john-doe_c9JoIbbD",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        String profilePath,
+
+        @Schema(
                 description = "The legal first name of the trainee",
                 example = "John",
                 requiredMode = Schema.RequiredMode.REQUIRED
@@ -52,13 +76,6 @@ public record TraineeResponse(
         String preferredName,
 
         @Schema(
-                description = "The trainee Email. Unique across all trainees.",
-                example = "john.doe@example.com",
-                requiredMode = Schema.RequiredMode.REQUIRED
-        )
-        String email,
-
-        @Schema(
                 description = "How the trainee describes their gender",
                 example = "non-binary",
                 requiredMode = Schema.RequiredMode.REQUIRED,
@@ -72,18 +89,356 @@ public record TraineeResponse(
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String pronouns
+        String pronouns,
+
+        @Schema(
+                description = "The date the trainee was born",
+                example = "1995-04-17",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate dateOfBirth,
+
+        @Schema(
+                description = "The city the trainee lives in",
+                example = "Amsterdam",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String location,
+
+        @Schema(
+                description = "How well the trainee speaks English",
+                example = "good",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        EnglishLevel englishLevel,
+
+        @Schema(
+                description = "Whether the trainee can hold a professional conversation in Dutch",
+                example = "true",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        Boolean professionalDutch,
+
+        @Schema(
+                description = "The country the trainee came from",
+                example = "Syria",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String countryOfOrigin,
+
+        @Schema(
+                description = "The route by which the trainee came to the Netherlands",
+                example = "refugee",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        Background background,
+
+        @Schema(
+                description = "The date the trainee arrived in the Netherlands",
+                example = "2018-09-01",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate nlArrivalDate,
+
+        @Schema(
+                description = "The date the trainee's first residence permit was issued",
+                example = "2019-02-15",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate firstPermitIssueDate,
+
+        @Schema(
+                description = "How the trainee supports themselves while studying",
+                example = "uitkering",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        FinancialSupport financialSupport,
+
+        @Schema(
+                description = "The highest level of education the trainee completed",
+                example = "bachelors-degree",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        EducationLevel educationLevel,
+
+        @Schema(
+                description = "What the trainee studied before joining",
+                example = "BSc in Biology",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String educationBackground,
+
+        @Schema(
+                description = "How many hours a week the trainee does paid work while enrolled - any arrangement, volunteering excluded. 0 means not working.",
+                example = "16",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        Integer weeklyWorkHours,
+
+        @Schema(
+                description = "Anything to account for when catering a physical session",
+                example = "Vegetarian, no nuts",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String dietaryPreference,
+
+        @Schema(
+                description = "Anything to account for when hosting the trainee in person",
+                example = "Uses a wheelchair",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String healthCondition,
+
+        @Schema(
+                description = "Free-form notes about the trainee",
+                example = "Relocating to Utrecht in the spring.",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String comments,
+
+        @Schema(
+                description = "The trainee's participant id for European Social Fund reporting",
+                example = "ESF-2024-0142",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String esfId,
+
+        @Schema(
+                description = "The trainee Email. Unique across all trainees.",
+                example = "john.doe@example.com",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        String email,
+
+        @Schema(
+                description = "The trainee's Slack member id",
+                example = "U068AQ9G99F",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String slackId,
+
+        @Schema(
+                description = "A phone number the trainee can be reached on",
+                example = "0612345678",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String phone,
+
+        @Schema(
+                description = "The trainee's GitHub username, without the URL",
+                example = "johndoe",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String githubHandle,
+
+        @Schema(
+                description = "The URL to the trainee's LinkedIn profile",
+                example = "https://linkedin.com/in/john-doe",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String linkedinUrl,
+
+        @Schema(
+                description = "Who to contact in an emergency",
+                example = "Jane Doe",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String emergencyContactName,
+
+        @Schema(
+                description = "How the emergency contact relates to the trainee",
+                example = "Sister",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String emergencyContactRelationship,
+
+        @Schema(
+                description = "A phone number for the emergency contact",
+                example = "0687654321",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String emergencyContactPhone,
+
+        @Schema(
+                description = "The cohort the trainee started the program with",
+                example = "52",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        Integer startCohort,
+
+        @Schema(
+                description = "The cohort the trainee currently studies with",
+                example = "53",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        Integer currentCohort,
+
+        @Schema(
+                description = "The track the trainee is studying",
+                example = "core-program",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        Track track,
+
+        @Schema(
+                description = "Where the trainee stands in the program",
+                example = "studying",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        LearningStatus learningStatus,
+
+        @Schema(
+                description = "The date the trainee started the program",
+                example = "2024-01-15",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate startDate,
+
+        @Schema(
+                description = "The date the trainee graduated, or is expected to",
+                example = "2024-10-01",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate graduationDate,
+
+        @Schema(
+                description = "The date the trainee left the program",
+                example = "2024-05-20",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate quitDate,
+
+        @Schema(
+                description = "Why the trainee left the program",
+                example = "personal",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        QuitReason quitReason,
+
+        @Schema(
+                description = "The name of the trainee's tech mentor",
+                example = "Jane Roe",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String mentorTech,
+
+        @Schema(
+                description = "The name of the trainee's HR mentor",
+                example = "Jane Roe",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String mentorHr,
+
+        @Schema(
+                description = "The name of the trainee's English mentor",
+                example = "Jane Roe",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String mentorEnglish,
+
+        @Schema(
+                description = "Where the trainee stands in finding work",
+                example = "searching",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        JobPath jobPath,
+
+        @Schema(
+                description = "The date HackYourFuture stops supporting the trainee's job search",
+                example = "2025-10-01",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        LocalDate jobSupportEndDate,
+
+        @Schema(
+                description = "Whether the trainee has a car available for commuting",
+                example = "false",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        Boolean hasCar
 ) {
     public static TraineeResponse from(Trainee trainee) {
         return new TraineeResponse(
                 trainee.getId(),
                 trainee.getImageUrl(),
                 trainee.getThumbnailUrl(),
+                trainee.getDisplayName(),
+                trainee.getProfilePath(),
                 trainee.getFirstName(),
                 trainee.getLastName(),
                 trainee.getPreferredName(),
-                trainee.getEmail(),
                 trainee.getGender(),
-                trainee.getPronouns());
+                trainee.getPronouns(),
+                trainee.getDateOfBirth(),
+                trainee.getLocation(),
+                trainee.getEnglishLevel(),
+                trainee.getProfessionalDutch(),
+                trainee.getCountryOfOrigin(),
+                trainee.getBackground(),
+                trainee.getNlArrivalDate(),
+                trainee.getFirstPermitIssueDate(),
+                trainee.getFinancialSupport(),
+                trainee.getEducationLevel(),
+                trainee.getEducationBackground(),
+                trainee.getWeeklyWorkHours(),
+                trainee.getDietaryPreference(),
+                trainee.getHealthCondition(),
+                trainee.getComments(),
+                trainee.getEsfId(),
+                trainee.getEmail(),
+                trainee.getSlackId(),
+                trainee.getPhone(),
+                trainee.getGithubHandle(),
+                trainee.getLinkedinUrl(),
+                trainee.getEmergencyContactName(),
+                trainee.getEmergencyContactRelationship(),
+                trainee.getEmergencyContactPhone(),
+                trainee.getStartCohort(),
+                trainee.getCurrentCohort(),
+                trainee.getTrack(),
+                trainee.getLearningStatus(),
+                trainee.getStartDate(),
+                trainee.getGraduationDate(),
+                trainee.getQuitDate(),
+                trainee.getQuitReason(),
+                trainee.getMentorTech(),
+                trainee.getMentorHr(),
+                trainee.getMentorEnglish(),
+                trainee.getJobPath(),
+                trainee.getJobSupportEndDate(),
+                trainee.getHasCar());
     }
 }

@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Locale;
+
 @Schema(description = "The details needed to create or update a user")
 public record UserRequest(
         @NotBlank
@@ -29,7 +31,7 @@ public record UserRequest(
 ) {
 
     public UserRequest {
-        email = email == null ? null : email.strip().toLowerCase();
+        email = email == null ? null : email.strip().toLowerCase(Locale.ROOT);
         name = name == null ? null : name.strip();
         imageUrl = imageUrl == null ? null : imageUrl.strip();
     }
