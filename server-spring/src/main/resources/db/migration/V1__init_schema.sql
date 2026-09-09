@@ -79,3 +79,24 @@ create unique index trainees_email_upper_unique on trainees (upper(email));
 create index trainees_first_name_upper_idx on trainees (upper(first_name));
 create index trainees_last_name_upper_idx on trainees (upper(last_name));
 create index trainees_esf_id_idx on trainees (esf_id);
+
+-- Trainee employment history
+create table employment_history
+(
+    id            TEXT           not null
+        constraint employment_history_pk primary key,
+    trainee_id    text           not null
+        constraint employment_history_trainee_fk references trainees on delete cascade,
+    type          text           not null,
+    company_name  text           not null,
+    role          text           not null,
+    start_date    date           not null,
+    end_date      date,
+    fee_collected boolean        not null,
+    fee_amount    numeric(10, 2),
+    comments      text,
+    created_at    timestamptz    not null,
+    updated_at    timestamptz    not null
+);
+
+create index employment_history_trainee_idx on employment_history (trainee_id);
