@@ -37,9 +37,11 @@ Package by feature. Each feature owns its entity, controller, service, repositor
 ```
 nl.hackyourfuture.dojoserver
   admin/user/            User, UserController, UserService, UserRepository, dto/
+  trainee/profile/       Trainee, Gender, TraineeController, TraineeService,
+                         TraineeRepository, dto/
   config/                GlobalExceptionHandler, SecurityConfig, OpenApiConfig,
                          ServerConfig, ServerEnvironment
-  shared/                DojoError, RandomUtils
+  shared/                DojoError, JsonMergePatch, RandomUtils
   shared/exception/      DojoException + Dojo{NotFound,Conflict,BadRequest,Forbidden}Exception
 ```
 
@@ -88,6 +90,11 @@ public class User {
 - `@Entity` plus `@Table(name = ...)`. Not `@Entity(name = ...)`, which names the JPQL entity.
 - Audit fields are written by `AuditingEntityListener`, enabled by `@EnableJpaAuditing` on
   `DojoServerApplication`. Never assign them yourself.
+- `@DynamicUpdate` (Hibernate's, not JPA's) on any entity that a PATCH writes. The merge assigns
+  every field, dirty checking flags only the ones that changed, and `@DynamicUpdate` makes the SQL
+  `UPDATE` list only those columns — so two people editing different fields of the same trainee
+  no longer overwrite each other's columns with the values they loaded. `User` does not carry it:
+  four columns, and no PATCH.
 
 ## Services
 
@@ -188,6 +195,12 @@ decided those and cannot break a long string literal.
 - `alignment_for_annotations_on_parameter=48` plus `insert_new_line_after_annotation_on_parameter`
   gives every annotated record component one annotation per line and its name below them. The same
   rules apply to method parameters, which is why the controller wraps its parameter list.
+- **Inline annotations on parameters (`@PathVariable String id`) are not available.** The JDT has
+  no `_on_record_component` key, so record components are formatted by the same `_on_parameter`
+  keys, and `insert_new_line_after_annotation_on_parameter` is prescriptive in both directions —
+  setting it to `do not insert` puts the type after the last annotation in every request record
+  too, which reads badly wherever a `@Schema` wraps. Tried and reverted; the records win. A
+  controller that really wants it would need `// spotless:off` around its parameter list.
 - **Star imports are IntelliJ's, not the profile's.** An Eclipse profile carries no import
   settings, so IntelliJ collapsed six Lombok imports into `lombok.*` and Checkstyle's
   `AvoidStarImport` failed CI. `CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND` and
@@ -246,6 +259,10 @@ Editing V1 changes its Flyway checksum, so the app will refuse to start against 
   `@RequestMapping`. Admin-facing features sit under `/api/admin/...`.
 - Request and response DTOs are records in a `dto` subpackage. Responses get a static
   `from(entity)` factory. Validation annotations go on the request record.
+- A collection returns a **summary** record, the item URL returns the full one:
+  `GET /api/trainees` is a list of `TraineeSummaryResponse` (id, names, picture URLs), and
+  `GET /api/trainees/{id}` is the `TraineeResponse`. A 50-field profile times every trainee is not
+  a list. `users` returns the full record from both because it has four fields.
 - Statuses: 200 read, 201 create, 204 delete, 400 invalid body, 404 unknown id, 409 conflict.
 - Every endpoint carries `@Operation` and `@ApiResponse`. The spec is served at
   `/api/docs/openapi`, the Scalar UI at `/api/docs`.
@@ -272,15 +289,57 @@ Editing V1 changes its Flyway checksum, so the app will refuse to start against 
 6. **Migration.** Fold the schema into `V1__init_schema.sql`, then recreate the local database.
 7. `./mvnw spotless:apply`, then `./mvnw spotless:check checkstyle:check`.
 
-What the `users` endpoints declare, as the baseline to match:
+### PATCH instead of PUT
 
-|                | 200 | 201 | 204 | 400 | 404 | 409 |
-|----------------|:---:|:---:|:---:|:---:|:---:|:---:|
-| `GET /`        |  ✓  |     |     |     |     |     |
-| `GET /{id}`    |  ✓  |     |     |     |  ✓  |     |
-| `POST /`       |     |  ✓  |     |  ✓  |     |  ✓  |
-| `PUT /{id}`    |  ✓  |     |     |  ✓  |  ✓  |  ✓  |
-| `DELETE /{id}` |     |     |  ✓  |     |  ✓  |     |
+`trainee/profile/` is the reference for a partial update, which is what a resource with a lot of
+fields wants — a `PUT` would force the client to send every field back on every keystroke-sized
+change. The rule is that **a key you send is a key you meant**: leave a field out and it keeps its
+current value, put it in the body and it is validated and stored, `null` included. A body with no
+fields at all is a 400.
+
+The implementation is a JSON Merge Patch (RFC 7386) applied with Jackson's own
+`readerForUpdating`, in `shared/JsonMergePatch`. There is **one request record** for both
+`POST` and `PATCH`: the service loads the entity, expresses it as `TraineeRequest.from(trainee)`,
+lets `JsonMergePatch.apply` overlay the body and validate the merged record, then copies every
+field back onto the entity. Validating the *result* rather than the *request* is what makes one set
+of constraints serve both verbs — `{"firstName": null}` fails `@NotBlank` because the merged
+trainee has no first name, while `{"pronouns": null}` passes and clears the column.
+
+- The controller takes `@RequestBody ObjectNode`, because the merge needs to know which keys were
+  present and a bound record cannot tell. `ObjectNode` rather than `JsonNode` so that an array or
+  scalar body fails at the message converter as a 400 instead of as a `ClassCastException`. A
+  method-level swagger `@RequestBody(content = @Content(schema = @Schema(implementation =
+  TraineeRequest.class)))` keeps the fields in the docs.
+- The docs list the `@NotBlank` fields as required on the PATCH body too. They are required on the
+  *merged result*, not the request; the body description says so, and that is where it stays until
+  there is a generated client that cares.
+- Jackson errors from the merge — a wrong type, an unknown enum value — are thrown inside the
+  service, so they surface unwrapped rather than inside `HttpMessageNotReadableException`.
+  `handleMismatchedInput` turns them into the same 400 the converter path produces; without it they
+  would fall through to the 500 catch-all. It is deliberately `MismatchedInputException` and not its
+  parent `DatabindException`: the parent also covers `InvalidDefinitionException` (a broken mapping)
+  and `ValueInstantiationException` (our own constructor threw), which are bugs and must stay 500s.
+- An unknown enum value gets a message that names the value, the field and the allowed values —
+  `'aaaa' is not a valid value for 'gender'. Allowed values: man, woman, non-binary, other.` The
+  allowed values are the wire values, read back through the `ObjectMapper` so `@JsonValue` is
+  honoured; the handler falls back to the constant name if an enum ever refuses to serialise as a
+  string, so the handler itself can never fail.
+- Validation of the merged record throws `ConstraintViolationException`, which the existing
+  handler already maps to a 400.
+- `readerForUpdating` works on records in Jackson 3 (it rebuilds through the canonical constructor,
+  so the compact-constructor normalisation runs on the merged values). It is not RFC 7386-compliant
+  for nested objects and arrays; the request records here are flat, so that does not bite.
+- Unknown keys are ignored, as everywhere else in the API.
+- The alternatives were measured and rejected. `Optional<T>`: Jackson 3 resolves an omitted key and
+  an explicit null both to `Optional.empty()`. A `Patchable<T>` / `JsonNullable<T>` wrapper per
+  field works (openapitools' `jackson-databind-nullable` 0.2.11 supports Jackson 3 and
+  auto-registers), but it means two request records with duplicated constraints, a value extractor
+  that must be registered through `META-INF/services`, and `@Schema(implementation = ...,
+  requiredMode = NOT_REQUIRED)` on every wrapped field because neither springdoc nor swagger-core
+  knows the wrapper.
+- Enums are `@Enumerated(EnumType.STRING)` in the entity and `@JsonValue` on the wire, so the
+  column holds `NON_BINARY` while the API speaks `non-binary` — the value the React client already
+  sends.
 
 Consistency within a controller matters more than any individual choice — descriptions either all
 end with a period or none do, `@Parameter` blocks wrap the same way, validation messages are
