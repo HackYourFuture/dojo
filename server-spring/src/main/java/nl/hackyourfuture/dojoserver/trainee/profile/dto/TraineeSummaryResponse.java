@@ -35,20 +35,26 @@ public record TraineeSummaryResponse(
         String preferredName,
 
         @Schema(
-                description = "The URL to the trainee profile picture",
-                example = "https://example.org/profile.jpg",
-                requiredMode = Schema.RequiredMode.REQUIRED,
-                nullable = true
-        )
-        String imageUrl,
-
-        @Schema(
                 description = "The URL to a smaller version of the trainee profile picture",
                 example = "https://example.org/profile_thumb.jpg",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String thumbnailUrl
+        String thumbnailUrl,
+
+        @Schema(
+                description = "The trainee name for display. If a preferred name is set, it will use it over the first name",
+                example = "John Doe",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        String displayName,
+
+        @Schema(
+                description = "Helper for the client to build a unique path to use in client routing.",
+                example = "/trainee/john-doe_c9JoIbbD",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        String profilePath
 ) {
     public static TraineeSummaryResponse from(Trainee trainee) {
         return new TraineeSummaryResponse(
@@ -56,7 +62,8 @@ public record TraineeSummaryResponse(
                 trainee.getFirstName(),
                 trainee.getLastName(),
                 trainee.getPreferredName(),
-                trainee.getImageUrl(),
-                trainee.getThumbnailUrl());
+                trainee.getThumbnailUrl(),
+                trainee.getDisplayName(),
+                trainee.getProfilePath());
     }
 }

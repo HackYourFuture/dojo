@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum Gender {
-    MAN("man"),
-    WOMAN("woman"),
-    NON_BINARY("non-binary"),
-    OTHER("other");
+public enum LearningStatus {
+    STUDYING("studying"),
+    GRADUATED("graduated"),
+    ON_HOLD("on-hold"),
+    QUIT("quit");
 
     @JsonValue
     private final String value;
