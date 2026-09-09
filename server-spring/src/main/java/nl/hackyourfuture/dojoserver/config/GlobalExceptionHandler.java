@@ -37,20 +37,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Turns exceptions raised by Spring, the servlet container and the persistence
- * layer into a
- * {@link DojoError}, alongside the {@link DojoException}s the application
- * raises on purpose.
- * <p>
- * Grouped by status code; method order is irrelevant since Spring picks the
- * most specific match.
- * Anything unlisted becomes a 500 — watch the logs and promote the recurring
- * ones.
+ * Turns exceptions raised by Spring, the servlet container and the persistence layer
+ * into a {@link DojoError}, alongside the {@link DojoException}s the application
+ * raises on purpose. Anything unlisted becomes a 500.
  */
 @RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
 public class GlobalExceptionHandler {
+    private static final String UNPARSABLE =
+            "Could not parse the request. Make sure that the message format is correct.";
+
     private final ServerConfig serverConfig;
     private final ObjectMapper objectMapper;
 
@@ -83,56 +80,63 @@ public class GlobalExceptionHandler {
         return buildDojoError(ex, "One or more values are invalid: " + details);
     }
 
-    /**
-     * Jackson reports a wrong JSON type as a cause, so name the field instead of
-     * blaming the whole body.
-     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleMalformedMessage(HttpMessageNotReadableException ex) {
-        return buildDojoError(ex, describeUnreadableJson(ex.getCause()));
+        String message;
+        // Jackson reports the real problem as a cause, so unwrap it before blaming the whole body.
+        if (ex.getCause() instanceof MismatchedInputException cause) {
+            message = describeMismatchedInput(cause);
+        } else {
+            message = UNPARSABLE;
+        }
+        return buildDojoError(ex, message);
     }
 
     /**
-     * A PATCH body is merged in the service, so its Jackson errors arrive here
-     * unwrapped rather than inside HttpMessageNotReadableException. Only the
-     * input-shaped subtree: a definition or instantiation error is our bug, and
-     * stays a 500.
+     * A MismatchedInputException in Jackson happens when your JSON data does not match the Java object
+     * type you are trying to create
      */
     @ExceptionHandler(MismatchedInputException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleMismatchedInput(MismatchedInputException ex) {
-        return buildDojoError(ex, describeUnreadableJson(ex));
+        return buildDojoError(ex, describeMismatchedInput(ex));
     }
 
-    private String describeUnreadableJson(Throwable ex) {
-        if (!(ex instanceof MismatchedInputException cause)) {
-            return "Could not parse the request. Make sure that the message format is correct.";
+    /** Names the field Jackson choked on and, for an enum, the values it would have accepted. */
+    private String describeMismatchedInput(MismatchedInputException ex) {
+        String field = fieldPath(ex);
+        Class<?> expected = ex.getTargetType();
+        if (field.isEmpty() || expected == null) {
+            return UNPARSABLE;
         }
-        String field = cause.getPath().stream()
+        if (expected.isEnum() && ex instanceof InvalidFormatException invalid) {
+            String allowedValues = Arrays.stream(expected.getEnumConstants())
+                    .map(this::wireValue)
+                    .collect(Collectors.joining(", "));
+
+            var message = "'%s' is not a valid value for '%s'. Allowed values: %s.";
+            return message.formatted(invalid.getValue(), field, allowedValues);
+        }
+
+        var message = "The field '%s' expects a %s. ";
+        message += "Please refer to the API documentation at '/api/docs' for the expected format.";
+        return message.formatted(field, expected.getSimpleName());
+    }
+
+    /** Dotted path to the offending field, empty when Jackson could not name one. */
+    private static String fieldPath(MismatchedInputException ex) {
+        return ex.getPath().stream()
                 .map(JacksonException.Reference::getPropertyName)
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining("."));
-        Class<?> expected = cause.getTargetType();
-        if (field.isEmpty() || expected == null) {
-            return "Could not parse the request. Make sure that the message format is correct.";
-        }
-        if (cause instanceof InvalidFormatException format && expected.isEnum()) {
-            String allowed = Arrays.stream(expected.getEnumConstants())
-                    .map(this::wireValue)
-                    .collect(Collectors.joining(", "));
-            return "'" + format.getValue() + "' is not a valid value for '" + field + "'. Allowed values: " + allowed
-                    + ".";
-        }
-        return "The field '" + field + "' expects a " + expected.getSimpleName()
-                + ". Please refer to the API documentation at '/api/docs' for the expected format.";
     }
 
-    /** The value an enum constant takes on the wire (its @JsonValue), falling back to its name. */
+    /** An enum constant as it appears on the wire (its @JsonValue), or its name if that fails. */
     private String wireValue(Object constant) {
         try {
             return objectMapper.convertValue(constant, String.class);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException _) {
             return ((Enum<?>) constant).name();
         }
     }
@@ -256,12 +260,9 @@ public class GlobalExceptionHandler {
 
     // ----------------------------------------------------------------
 
-    /**
-     * Exception text carries SQL, constraint names and personal data, so only dev
-     * sees it.
-     */
     private DojoError buildDojoError(Exception ex, String message) {
         log.debug("Returning error response: {}", message, ex);
+        // Show debug info only in dev environment
         if (serverConfig.isDevelopment() && ex.getMessage() != null) {
             return new DojoError(message + " 🐞 DEBUG INFO: " + ex.getMessage());
         }

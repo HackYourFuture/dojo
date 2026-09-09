@@ -195,6 +195,12 @@ decided those and cannot break a long string literal.
 - `alignment_for_annotations_on_parameter=48` plus `insert_new_line_after_annotation_on_parameter`
   gives every annotated record component one annotation per line and its name below them. The same
   rules apply to method parameters, which is why the controller wraps its parameter list.
+- **Inline annotations on parameters (`@PathVariable String id`) are not available.** The JDT has
+  no `_on_record_component` key, so record components are formatted by the same `_on_parameter`
+  keys, and `insert_new_line_after_annotation_on_parameter` is prescriptive in both directions —
+  setting it to `do not insert` puts the type after the last annotation in every request record
+  too, which reads badly wherever a `@Schema` wraps. Tried and reverted; the records win. A
+  controller that really wants it would need `// spotless:off` around its parameter list.
 - **Star imports are IntelliJ's, not the profile's.** An Eclipse profile carries no import
   settings, so IntelliJ collapsed six Lombok imports into `lombok.*` and Checkstyle's
   `AvoidStarImport` failed CI. `CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND` and

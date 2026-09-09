@@ -59,7 +59,6 @@ public record TraineeRequest(
         pronouns = pronouns == null ? null : pronouns.strip();
     }
 
-    /** The trainee as stored, which is what a PATCH body is merged on top of. */
     public static TraineeRequest from(Trainee trainee) {
         return new TraineeRequest(
                 trainee.getImageUrl(),

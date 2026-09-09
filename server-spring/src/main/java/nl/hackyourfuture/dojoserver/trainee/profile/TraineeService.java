@@ -1,5 +1,8 @@
 package nl.hackyourfuture.dojoserver.trainee.profile;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
@@ -13,12 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final JsonMergePatch jsonMergePatch;
+    private final Validator validator;
 
     @Transactional(readOnly = true)
     public List<TraineeSummaryResponse> getAllTrainees() {
@@ -49,7 +54,7 @@ public class TraineeService {
                 .pronouns(request.pronouns())
                 .build();
 
-        var created = traineeRepository.save(newTrainee);
+        Trainee created = traineeRepository.save(newTrainee);
         return TraineeResponse.from(created);
     }
 
@@ -62,7 +67,20 @@ public class TraineeService {
         Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
         TraineeRequest merged = jsonMergePatch.apply(TraineeRequest.from(trainee), patch);
 
-        setEmail(trainee, merged.email());
+        // Manually run validation on the merged data because we use `ObjectNode` in the body.
+        Set<ConstraintViolation<TraineeRequest>> violations = validator.validate(merged);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        // Changed email - check for duplicates. A plain rename would otherwise conflict with itself.
+        String newEmail = merged.email();
+        boolean emailChanged = !trainee.getEmail().equalsIgnoreCase(newEmail);
+        if (emailChanged && traineeRepository.existsByEmailIgnoreCase(newEmail)) {
+            throw new DojoConflictException("Email is already in use by another trainee.");
+        }
+
+        trainee.setEmail(newEmail);
         trainee.setImageUrl(merged.imageUrl());
         trainee.setThumbnailUrl(merged.thumbnailUrl());
         trainee.setFirstName(merged.firstName());
@@ -77,13 +95,5 @@ public class TraineeService {
     public void deleteTrainee(String id) {
         Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
         traineeRepository.delete(trainee);
-    }
-
-    // Changed email - check for duplicates. A plain rename would otherwise conflict with itself.
-    private void setEmail(Trainee trainee, String email) {
-        if (!trainee.getEmail().equalsIgnoreCase(email) && traineeRepository.existsByEmailIgnoreCase(email)) {
-            throw new DojoConflictException("Email is already in use by another trainee.");
-        }
-        trainee.setEmail(email);
     }
 }

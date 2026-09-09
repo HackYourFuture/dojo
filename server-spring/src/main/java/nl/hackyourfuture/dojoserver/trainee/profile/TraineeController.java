@@ -73,18 +73,14 @@ public class TraineeController {
             description = "The email address is already in use by another trainee.",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public TraineeResponse createTrainee(
-            @Valid @RequestBody
-            TraineeRequest request) {
+    public TraineeResponse createTrainee(@Valid @RequestBody
+    TraineeRequest request) {
         return traineeService.createTrainee(request);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update an existing trainee",
-            description = "Updates the trainee with the given id. Send only the fields you want to change - "
-                    + "the ones you leave out keep their current value, and sending an optional field as "
-                    + "null clears it. The result must still be a valid trainee, so a required field cannot "
-                    + "be set to null.")
+            description = "Updates the trainee with the given id. Send only the fields you want to change.")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "The fields to change. Every field is optional here, including the ones the schema marks as required.",
             content = @Content(schema = @Schema(implementation = TraineeRequest.class))
@@ -127,9 +123,7 @@ public class TraineeController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public void deleteTrainee(
-            @Parameter(
-                    description = "ID of the trainee to delete",
-                    example = "HpOjvmwXsL")
+            @Parameter(description = "ID of the trainee to delete", example = "HpOjvmwXsL")
             @PathVariable
             String id) {
         traineeService.deleteTrainee(id);
