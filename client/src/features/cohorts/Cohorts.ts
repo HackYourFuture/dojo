@@ -19,5 +19,6 @@ export interface TraineeSummary {
   LearningStatus: LearningStatus;
   track: Track;
   JobPath: string;
+  strikes: number;
   averageTestScore: number | null;
 }

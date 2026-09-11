@@ -237,7 +237,7 @@ const EducationInfo = () => {
           </FormControl>
         </Box>
       </div>
-      <Box style={{ width: '100%' }}>
+      <Box display="flex" gap={2} style={{ width: '100%' }}>
         <TestsComponent />
       </Box>
       <div style={{ width: '100%' }}>
