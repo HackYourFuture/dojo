@@ -108,7 +108,7 @@ public record TraineeRequest(
         String comments,
 
         @Size(min = 2, max = 50)
-        @Schema(description = "The trainee's participant id for European Social Fund reporting.")
+        @Schema(description = "The trainee's participant id for European Social Fund reporting.", example = "1234")
         String esfId,
 
         // Contact
