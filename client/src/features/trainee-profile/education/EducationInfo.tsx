@@ -5,7 +5,6 @@ import { createSelectChangeHandler, createTextChangeHandler } from '../utils/for
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { LearningStatusSelect } from '../profile/components/LearningStatusSelect';
 import React from 'react';
-import { StrikesComponent } from './strikes/StrikesComponent';
 import { TestsComponent } from './tests/TestsComponent';
 import TrackSelect from './components/TrackSelect';
 import { formatDate } from '../utils/dateHelper';
@@ -239,7 +238,6 @@ const EducationInfo = () => {
         </Box>
       </div>
       <Box display="flex" gap={2} style={{ width: '100%' }}>
-        <StrikesComponent />
         <TestsComponent />
       </Box>
       <div style={{ width: '100%' }}>
