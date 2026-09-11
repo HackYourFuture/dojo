@@ -100,3 +100,21 @@ create table employment_history
 );
 
 create index employment_history_trainee_idx on employment_history (trainee_id);
+
+-- Trainee assessments
+create table assessments
+(
+    id         TEXT        not null
+        constraint assessments_pk primary key,
+    trainee_id text        not null
+        constraint assessments_trainee_fk references trainees on delete cascade,
+    date       date        not null,
+    type       text        not null,
+    result     text        not null,
+    score      numeric(4, 1),
+    comments   text,
+    created_at timestamptz not null,
+    updated_at timestamptz not null
+);
+
+create index assessments_trainee_idx on assessments (trainee_id);
