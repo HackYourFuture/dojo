@@ -78,7 +78,7 @@ export const TraineeProfileProvider = ({
     const updatedFields: Partial<T> = {};
 
     // These props exist on the Trainee but should not be included in the changes
-    const ignoredProps = ['assignments', 'tests', 'employmentHistory'];
+    const ignoredProps = ['strikes', 'assignments', 'tests', 'employmentHistory'];
 
     Object.entries(edited).forEach(([key, value]) => {
       const typedKey = key as keyof T;
