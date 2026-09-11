@@ -50,13 +50,13 @@ public record InteractionResponse(
         )
         ReporterResponse reporter
 ) {
-    public static InteractionResponse from(Interaction interaction, ReporterResponse reporter) {
+    public static InteractionResponse from(Interaction interaction) {
         return new InteractionResponse(
                 interaction.getId(),
                 interaction.getDate(),
                 interaction.getType(),
                 interaction.getTitle(),
                 interaction.getDetails(),
-                reporter);
+                interaction.getReporter() == null ? null : ReporterResponse.from(interaction.getReporter()));
     }
 }

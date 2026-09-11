@@ -260,9 +260,7 @@ Editing V1 changes its Flyway checksum, so the app will refuse to start against 
 - Controllers live under `/api/...`, one `@RestController` per feature with the path on
   `@RequestMapping`. Admin-facing features sit under `/api/admin/...`.
 - Request and response DTOs are records in a `dto` subpackage. Responses get a static
-  `from(entity)` factory. Validation annotations go on the request record. The one exception is
-  `InteractionResponse.from(interaction, reporter)`, which takes the reporter as a second argument
-  because it is loaded separately — see the interactions note below.
+  `from(entity)` factory. Validation annotations go on the request record.
 - A collection returns a **summary** record, the item URL returns the full one:
   `GET /api/trainees` is a list of `TraineeSummaryResponse` (id, names, picture URLs), and
   `GET /api/trainees/{id}` is the `TraineeResponse`. A 50-field profile times every trainee is not
@@ -378,9 +376,12 @@ mounted on; the feature still owns all five artefacts.
 - Item lookup goes through `findByIdAndTraineeId`, never `findById`, so one profile cannot reach
   another's records. The arc is the second guard — `mentor_id` is null on every trainee row, so
   even a wrong query returns nothing instead of someone else's data.
-- The reporter is a plain `reporterId` column, expanded to `ReporterResponse` by a batch
-  `userRepository.findAllById` rather than a `@ManyToOne`: a LAZY association throws under
-  `open-in-view: false` and an EAGER one is a query per row. `ReporterResponse` lives in
+- The reporter is a `@ManyToOne(fetch = LAZY)` to `User` — the codebase's first JPA relation —
+  join-fetched by `@EntityGraph(attributePaths = "reporter")` on both read queries, so a list is a
+  single `left join` rather than a second round trip. LAZY is safe because the entity is mapped to
+  a DTO inside the `@Transactional` service method, well before `open-in-view: false` closes the
+  session; what LAZY buys is that the write paths do not drag a `User` along. Leave the
+  `@EntityGraph` on: without it the relation is fetched per row. `ReporterResponse` lives in
   `admin/user/dto/` because it is a projection of `User`; `UserResponse` itself would leak a staff
   email onto every trainee profile.
 - `interactions.reporter_id` is **nullable until authentication lands**, because nothing can fill
