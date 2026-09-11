@@ -39,9 +39,11 @@ nl.hackyourfuture.dojoserver
   admin/user/            User, UserController, UserService, UserRepository, dto/
   trainee/profile/       Trainee, Gender, TraineeController, TraineeService,
                          TraineeRepository, dto/
+  interaction/           Interaction, InteractionType, InteractionService,
+                         InteractionRepository, TraineeInteractionController, dto/
   config/                GlobalExceptionHandler, SecurityConfig, OpenApiConfig,
                          ServerConfig, ServerEnvironment
-  shared/                DojoError, JsonMergePatch, RandomUtils
+  shared/                DojoError, JsonMergePatch, ProfileType, RandomUtils
   shared/exception/      DojoException + Dojo{NotFound,Conflict,BadRequest,Forbidden}Exception
 ```
 
@@ -258,7 +260,9 @@ Editing V1 changes its Flyway checksum, so the app will refuse to start against 
 - Controllers live under `/api/...`, one `@RestController` per feature with the path on
   `@RequestMapping`. Admin-facing features sit under `/api/admin/...`.
 - Request and response DTOs are records in a `dto` subpackage. Responses get a static
-  `from(entity)` factory. Validation annotations go on the request record.
+  `from(entity)` factory. Validation annotations go on the request record. The one exception is
+  `InteractionResponse.from(interaction, reporter)`, which takes the reporter as a second argument
+  because it is loaded separately — see the interactions note below.
 - A collection returns a **summary** record, the item URL returns the full one:
   `GET /api/trainees` is a list of `TraineeSummaryResponse` (id, names, picture URLs), and
   `GET /api/trainees/{id}` is the `TraineeResponse`. A 50-field profile times every trainee is not
@@ -349,6 +353,47 @@ correct you, and the next feature copies whatever it finds here.
 Two known gaps, deliberate for now: `GET /` is an unpaginated `findAll()`, which is right for a
 handful of staff and wrong the moment this pattern is copied to trainees or submissions; and
 `getAllUsers` has no filtering or sorting.
+
+### One record type, many owners
+
+`interaction/` is the reference for a record that hangs off more than one kind of profile. Staff
+record interactions with trainees today and with mentors and partners later, so there is **one
+`interactions` table, one service, one repository and one DTO pair**, with **one controller per
+profile type** — `TraineeInteractionController` today, `MentorInteractionController` later, both in
+`interaction/`. The controllers live with the service they share, not under the URL they are
+mounted on; the feature still owns all five artefacts.
+
+- The subject link is an **exclusive arc**: one nullable FK column per profile type, with
+  `check (num_nonnulls(trainee_id, mentor_id) = 1)` once there is more than one. A single
+  `profile_id` column would be polymorphic and can carry **no foreign key at all**, giving up the
+  `on delete cascade` every other child table has. Today the arc has one arm, so the column is just
+  `trainee_id text not null` — identical to `assessments`.
+- Public service methods take `(ProfileType profile, String profileId, …)`. `ProfileType` lives in
+  `shared/` so the next shared record type reuses it, and carries a `label` used in 404 messages —
+  without it a shared service reports "Trainee not found" on a mentor URL.
+- Dispatch is confined to three private helpers, each an exhaustive `switch` over `ProfileType`, so
+  adding a constant fails compilation at every site that needs updating. **Never** take the profile
+  type from a path variable or the body: that collapses the guard into a caller-controlled string
+  and makes per-profile authorization impossible when auth lands.
+- Item lookup goes through `findByIdAndTraineeId`, never `findById`, so one profile cannot reach
+  another's records. The arc is the second guard — `mentor_id` is null on every trainee row, so
+  even a wrong query returns nothing instead of someone else's data.
+- The reporter is a plain `reporterId` column, expanded to `ReporterResponse` by a batch
+  `userRepository.findAllById` rather than a `@ManyToOne`: a LAZY association throws under
+  `open-in-view: false` and an EAGER one is a query per row. `ReporterResponse` lives in
+  `admin/user/dto/` because it is a projection of `User`; `UserResponse` itself would leak a staff
+  email onto every trainee profile.
+- `interactions.reporter_id` is **nullable until authentication lands**, because nothing can fill
+  it yet — `reporter` is null in every response until then. Its FK is `on delete restrict`: an
+  interaction is an audit record, and `restrict` is the only rule that still works once the column
+  becomes `not null`. Deleting a user who has reported one is therefore a blunt 409 from
+  `handleDataConflict`; give it a written-for-humans pre-check in `UserService` when auth lands.
+- `Interaction.date` is an `Instant`/`timestamptz`, unlike `Assessment.date`, which is a
+  `LocalDate`. That is deliberate: an interaction happens at a moment, an assessment on a day. The
+  cost is that a body sending a bare `2024-01-01` is a 400 rather than being coerced to midnight.
+- `PUT` never touches `reporterId`, so editing an interaction cannot reassign its author. The
+  legacy Node server defaulted the reporter to whoever was editing, which silently rewrote
+  authorship on every edit.
 
 ## Configuration
 

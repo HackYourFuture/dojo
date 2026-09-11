@@ -1,7 +1,7 @@
 -- Users
 create table users
 (
-    id         TEXT        not null
+    id         text        not null
         constraint users_pk primary key,
     email      text        not null,
     name       text        not null,
@@ -17,7 +17,7 @@ create unique index users_email_upper_unique on users (upper(email));
 create table trainees
 (
     -- Personal
-    id                             TEXT        not null
+    id                             text        not null
         constraint trainees_pk primary key,
     image_url                      text,
     thumbnail_url                  text,
@@ -83,20 +83,20 @@ create index trainees_esf_id_idx on trainees (esf_id);
 -- Trainee employment history
 create table employment_history
 (
-    id            TEXT           not null
+    id            text        not null
         constraint employment_history_pk primary key,
-    trainee_id    text           not null
+    trainee_id    text        not null
         constraint employment_history_trainee_fk references trainees on delete cascade,
-    type          text           not null,
-    company_name  text           not null,
-    role          text           not null,
-    start_date    date           not null,
+    type          text        not null,
+    company_name  text        not null,
+    role          text        not null,
+    start_date    date        not null,
     end_date      date,
-    fee_collected boolean        not null,
+    fee_collected boolean     not null,
     fee_amount    numeric(10, 2),
     comments      text,
-    created_at    timestamptz    not null,
-    updated_at    timestamptz    not null
+    created_at    timestamptz not null,
+    updated_at    timestamptz not null
 );
 
 create index employment_history_trainee_idx on employment_history (trainee_id);
@@ -104,7 +104,7 @@ create index employment_history_trainee_idx on employment_history (trainee_id);
 -- Trainee assessments
 create table assessments
 (
-    id         TEXT        not null
+    id         text        not null
         constraint assessments_pk primary key,
     trainee_id text        not null
         constraint assessments_trainee_fk references trainees on delete cascade,
@@ -118,3 +118,22 @@ create table assessments
 );
 
 create index assessments_trainee_idx on assessments (trainee_id);
+
+-- Interactions
+create table interactions
+(
+    id          text        not null
+        constraint interactions_pk primary key,
+    trainee_id  text        not null
+        constraint interactions_trainee_fk references trainees on delete cascade,
+    date        timestamptz not null,
+    type        text        not null,
+    reporter_id text
+        constraint interactions_reporter_fk references users on delete restrict,
+    title       text        not null,
+    details     text        not null,
+    created_at  timestamptz not null,
+    updated_at  timestamptz not null
+);
+
+create index interactions_trainee_idx on interactions (trainee_id);
