@@ -11,3 +11,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+# Authentication
+dojo:
+  auth:
+    cookie-secure: false
