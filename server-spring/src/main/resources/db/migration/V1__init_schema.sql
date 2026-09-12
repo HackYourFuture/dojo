@@ -137,3 +137,20 @@ create table interactions
 );
 
 create index interactions_trainee_idx on interactions (trainee_id);
+
+-- Tokens
+create table tokens
+(
+    id         text        not null
+        constraint tokens_pk primary key,
+    type       text        not null,
+    token_hash text        not null,
+    user_id    text        not null
+        constraint tokens_user_fk references users on delete cascade,
+    expires_at timestamptz not null,
+    created_at timestamptz not null,
+    updated_at timestamptz not null
+);
+
+create unique index tokens_hash_unique on tokens (token_hash);
+create index tokens_user_idx on tokens (user_id);

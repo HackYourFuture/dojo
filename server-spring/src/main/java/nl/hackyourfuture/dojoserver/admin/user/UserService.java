@@ -3,6 +3,7 @@ package nl.hackyourfuture.dojoserver.admin.user;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserRequest;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserResponse;
+import nl.hackyourfuture.dojoserver.auth.token.TokenService;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final TokenService tokenService;
 
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
@@ -55,6 +57,11 @@ public class UserService {
             throw new DojoConflictException("Email is already in use by another user.");
         }
 
+        // Make a user inactive revokes all its auth tokens
+        if (user.isActive() && !request.isActive()) {
+            tokenService.revokeAllForUser(id);
+        }
+
         user.setEmail(request.email());
         user.setName(request.name());
         user.setImageUrl(request.imageUrl());
@@ -65,6 +72,7 @@ public class UserService {
     @Transactional
     public void deleteUser(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
+        tokenService.revokeAllForUser(id);
         userRepository.delete(user);
     }
 }

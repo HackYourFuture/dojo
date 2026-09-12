@@ -31,3 +31,14 @@ management:
   endpoint:
     health:
       show-details: when_authorized
+
+# Authentication
+dojo:
+  auth:
+    google-client-id: ${GOOGLE_OAUTH_CLIENTID:not-configured}
+    google-client-secret: ${GOOGLE_OAUTH_CLIENTSECRET:not-configured}
+    access-token-ttl: ${ACCESS_TOKEN_TTL:15m}
+    refresh-token-ttl: ${REFRESH_TOKEN_TTL:30d}
+    api-token-ttl: ${API_TOKEN_TTL:365d}
+    cookie-secure: ${COOKIE_SECURE:true}
+    allowed-origins: ${AUTH_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:7777}

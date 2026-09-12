@@ -18,3 +18,10 @@ management:
   endpoint:
     health:
       show-details: when_authorized
+
+# Authentication
+dojo:
+  auth:
+    google-client-id: ${GOOGLE_OAUTH_CLIENTID}
+    google-client-secret: ${GOOGLE_OAUTH_CLIENTSECRET}
+    allowed-origins: ${AUTH_ALLOWED_ORIGINS}
