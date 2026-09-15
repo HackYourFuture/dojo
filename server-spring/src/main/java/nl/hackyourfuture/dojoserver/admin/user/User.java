@@ -34,6 +34,7 @@ public class User {
 
     private String email;
     private String name;
+    private String googleId;
     private String imageUrl;
     private boolean isActive;
 
