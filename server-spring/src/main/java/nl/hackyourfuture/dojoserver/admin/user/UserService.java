@@ -3,7 +3,7 @@ package nl.hackyourfuture.dojoserver.admin.user;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserRequest;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserResponse;
-import nl.hackyourfuture.dojoserver.auth.token.TokenService;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;

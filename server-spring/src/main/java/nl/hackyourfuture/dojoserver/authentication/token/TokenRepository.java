@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.auth.token;
+package nl.hackyourfuture.dojoserver.authentication.token;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

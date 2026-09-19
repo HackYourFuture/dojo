@@ -5,6 +5,8 @@ create table users
         constraint users_pk primary key,
     email      text        not null,
     name       text        not null,
+    google_id  text
+        constraint users_unique_key_google_id unique,
     image_url  text,
     is_active  boolean     not null,
     created_at timestamptz not null,

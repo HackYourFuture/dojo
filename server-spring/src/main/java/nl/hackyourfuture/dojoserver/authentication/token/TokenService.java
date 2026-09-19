@@ -1,8 +1,8 @@
-package nl.hackyourfuture.dojoserver.auth.token;
+package nl.hackyourfuture.dojoserver.authentication.token;
 
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.admin.user.User;
-import nl.hackyourfuture.dojoserver.auth.AuthProperties;
+import nl.hackyourfuture.dojoserver.authentication.AuthProperties;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.SecurityUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoForbiddenException;

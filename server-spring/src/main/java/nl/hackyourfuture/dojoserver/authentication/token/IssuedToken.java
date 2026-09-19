@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.auth.token;
+package nl.hackyourfuture.dojoserver.authentication.token;
 
 import java.time.Instant;
 
