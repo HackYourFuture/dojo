@@ -447,7 +447,7 @@ the same local `dojo` database you develop in, and rollback is what keeps it fro
 
 `.github/workflows/server-ci-cd.yml` ("Backend CI/CD") holds both backend jobs: `lint` runs
 Checkstyle and `spotless:check` on a JDK with no database, and `build` builds the image and pushes
-it to `ghcr.io/<owner>/server-spring`.
+it to `ghcr.io/<owner>/dojo-server-spring`.
 They run in parallel and share the workflow's path filters and concurrency group, which is why the
 lint job lives here rather than in `quality-checks.yml` — that one is the client's and has no path
 filter, so it would fire on client-only PRs.

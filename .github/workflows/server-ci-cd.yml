@@ -5,11 +5,11 @@ on:
     branches: [main]
     paths:
       - 'server-spring/**'
-      - '.github/workflows/build-server-spring.yml'
+      - '.github/workflows/server-ci-cd.yml'
   pull_request:
     paths:
       - 'server-spring/**'
-      - '.github/workflows/build-server-spring.yml'
+      - '.github/workflows/server-ci-cd.yml'
 
 # Cancel previous runs on new pushes
 concurrency:
@@ -21,7 +21,7 @@ env:
   MINOR_VERSION: 0
   PATCH_VERSION: ${{ github.run_number }}
 jobs:
-  lint:
+  backend-lint:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -44,8 +44,43 @@ jobs:
         run: ./mvnw -B spotless:check
         working-directory: server-spring
 
-  build:
+  backend-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Integration tests require a running Postgres service. Use the default credentials.
+    services:
+      postgres:
+        image: postgres:18.4-alpine
+        env:
+          POSTGRES_DB: dojo
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U admin -d dojo"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      - name: Test
+        run: ./mvnw -B test
+        working-directory: server-spring
+
+  backend-build:
+    runs-on: ubuntu-latest
+    needs: [backend-lint, backend-test]
     permissions:
       contents: read
       packages: write
@@ -68,7 +103,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/${{ github.repository_owner }}/server-spring
+          images: ghcr.io/${{ github.repository_owner }}/dojo-server-spring
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ env.MAJOR_VERSION }},enable={{is_default_branch}}
@@ -85,5 +120,5 @@ jobs:
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=server-spring
-          cache-to: type=gha,scope=server-spring,mode=max
+          cache-from: type=gha,scope=dojo-server-spring
+          cache-to: type=gha,scope=dojo-server-spring,mode=max
