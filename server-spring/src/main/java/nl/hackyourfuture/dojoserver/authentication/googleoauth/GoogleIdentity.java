@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.auth.googleoauth;
+package nl.hackyourfuture.dojoserver.authentication.googleoauth;
 
 public record GoogleIdentity(
         String sub,

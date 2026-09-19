@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.auth.googleoauth;
+package nl.hackyourfuture.dojoserver.authentication.googleoauth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withUnauthorizedRequest;
 
-import nl.hackyourfuture.dojoserver.auth.AuthProperties;
+import nl.hackyourfuture.dojoserver.authentication.AuthProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;

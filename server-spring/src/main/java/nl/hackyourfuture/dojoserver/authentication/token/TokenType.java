@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.auth.token;
+package nl.hackyourfuture.dojoserver.authentication.token;
 
 public enum TokenType {
     ACCESS_TOKEN, REFRESH_TOKEN, API_TOKEN;

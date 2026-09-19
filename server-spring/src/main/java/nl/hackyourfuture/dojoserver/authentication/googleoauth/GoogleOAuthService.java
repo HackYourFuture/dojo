@@ -1,8 +1,8 @@
-package nl.hackyourfuture.dojoserver.auth.googleoauth;
+package nl.hackyourfuture.dojoserver.authentication.googleoauth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.RequiredArgsConstructor;
-import nl.hackyourfuture.dojoserver.auth.AuthProperties;
+import nl.hackyourfuture.dojoserver.authentication.AuthProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
