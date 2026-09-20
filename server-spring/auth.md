@@ -1,4 +1,4 @@
-    # Authentication
+# Authentication
 
 Dojo signs people in with their HackYourFuture Google account. The browser talks to Google, the
 server verifies the result with Google directly, and only then checks whether that person has a Dojo
@@ -10,7 +10,7 @@ Integrations (scripts, bots) do not sign in with Google. They carry an API token
 
 ```mermaid
 sequenceDiagram
-    participant U as Staff member
+    participant U as HYF member
     participant C as React client
     participant G as Google
     participant S as Dojo server
@@ -19,9 +19,9 @@ sequenceDiagram
     C->>G: Google popup, user picks their account
     G-->>C: One-time authorization code
     C->>S: POST /api/auth/login { authCode, redirectURI }
-    S->>G: Exchange the code, using our client secret
+    S->>G: Exchange the code, using a client secret
     G-->>S: Access token, then the account profile
-    S->>S: Checks, then issue tokens
+    S->>S: Verifications and issue tokens
     S-->>C: Session cookies
 ```
 
@@ -39,11 +39,11 @@ said no:
 
 Three kinds, each accepted in exactly one place. Sending one in the wrong place is rejected.
 
-| Token   | Looks like   | Sent as                                      | Lifetime   |
-|---------|--------------|----------------------------------------------|------------|
-| Access  | `dojo_at_…`  | `dojo_token` cookie                          | 15 minutes |
-| Refresh | `dojo_rt_…`  | `dojo_refresh` cookie, only to `/api/auth/*` | 14 days    |
-| API     | `dojo_api_…` | `Authorization: Bearer …` header             | 1 year     |
+| Token   | Looks like   | Sent as                                            | Lifetime   |
+|---------|--------------|----------------------------------------------------|------------|
+| Access  | `dojo_at_…`  | `dojo_access_token` cookie                         | 15 minutes |
+| Refresh | `dojo_rt_…`  | `dojo_refresh_token` cookie, only to `/api/auth/*` | 14 days    |
+| API     | `dojo_api_…` | `Authorization: Bearer …` header                   | 1 year     |
 
 Tokens are random values with no meaning of their own. The database stores only a SHA-256 hash of
 each one, so nobody — including us — can read a token back out of it.
@@ -70,7 +70,7 @@ No endpoint ever puts a token in a response body. The browser only ever receives
 Every request to any other endpoint passes through one filter:
 
 - An `Authorization: Bearer` header must hold an **API token**.
-- A `dojo_token` cookie must hold an **access token**.
+- A `dojo_access_token` cookie must hold an **access token**.
 - Anything else — missing, expired, unknown, wrong kind — is treated as not signed in, and the
   request gets `401` with the standard Dojo error body.
 
