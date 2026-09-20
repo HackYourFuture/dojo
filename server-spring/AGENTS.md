@@ -209,11 +209,12 @@ decided those and cannot break a long string literal.
   `NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND` are set to 999 in the IDE's own `Dojo` scheme
   (`~/Library/Application Support/JetBrains/<IDE>/codestyles/Dojo.xml`). Re-importing
   `eclipse-formatter.xml` replaces that scheme and drops both — set them again.
-- `.githooks/pre-commit` runs `spotless:apply` and then `git add -u` over `server-spring/*.java`,
-  staging **every** Java file Spotless changed — not just the ones already staged. Spotless
-  formats the whole module, so a collateral fix would otherwise stay unstaged and CI would fail on
-  a file you never touched. The trade-off is that it also stages Java changes you deliberately
-  left out. Checkstyle findings are reported, never fatal. Enable with
+- `.githooks/pre-commit` runs `spotless:apply` and then re-stages **only the Java files that were
+  already staged**, so a commit contains what you staged and nothing else. Spotless formats the
+  whole module, so a collateral reformat lands in the working tree unstaged — commit it separately.
+  It reads the staged list with `git diff --cached -z ... | xargs -0 git add`, never through a
+  command substitution, which would swallow the NUL separators. A file staged only in part is
+  re-staged whole. Checkstyle findings are reported, never fatal. Enable with
   `git config core.hooksPath .githooks` from the repository root.
 - The formatter version is pinned by `spotless-maven-plugin`, which resolves the JDT for it. Do not
   add a `<version>` inside `<eclipse>` — that field takes an Eclipse release like `4.36`, not the

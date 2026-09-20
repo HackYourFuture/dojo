@@ -1,8 +1,11 @@
 package nl.hackyourfuture.dojoserver.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +25,23 @@ public class OpenApiConfig {
                         .description("REST API for the HackYourFuture final project.")
                         .version("1.0.0"))
                 .servers(List.of(
-                        new Server().url("/").description("This server")));
+                        new Server().url("/").description("This server")))
+                .components(new Components()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .in(SecurityScheme.In.HEADER)
+                                .scheme("bearer")
+                                .description("API token. For integrations; access tokens are not accepted here."))
+                        .addSecuritySchemes("cookieAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.COOKIE)
+                                .name("dojo_access_token")
+                                .description(
+                                        "Access token cookie, set by the login endpoint. Used by the web client.")))
+                .security(List.of(
+                        new SecurityRequirement().addList("bearerAuth"),
+                        new SecurityRequirement().addList("cookieAuth")
+                ));
     }
 
     /**

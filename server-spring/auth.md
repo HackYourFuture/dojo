@@ -18,7 +18,7 @@ sequenceDiagram
     U->>C: Click "Sign in with Google"
     C->>G: Google popup, user picks their account
     G-->>C: One-time authorization code
-    C->>S: POST /api/auth/login { authCode, redirectURI }
+    C->>S: POST /api/auth/login/google { authCode, redirectURI }
     S->>G: Exchange the code, using a client secret
     G-->>S: Access token, then the account profile
     S->>S: Verifications and issue tokens
@@ -56,12 +56,12 @@ Both cookies are `HttpOnly` (JavaScript cannot read them), `SameSite=Strict` and
 
 ## Endpoints
 
-| Method | Path                | What it does                                             |
-|--------|---------------------|----------------------------------------------------------|
-| POST   | `/api/auth/login`   | Exchanges a Google code for a session, sets both cookies |
-| POST   | `/api/auth/refresh` | Issues a fresh access token cookie                       |
-| GET    | `/api/auth/session` | Returns the signed-in user                               |
-| POST   | `/api/auth/logout`  | Deletes both tokens and clears the cookies               |
+| Method | Path                     | What it does                                             |
+|--------|--------------------------|----------------------------------------------------------|
+| POST   | `/api/auth/login/google` | Exchanges a Google code for a session, sets both cookies |
+| POST   | `/api/auth/refresh`      | Issues a fresh access token cookie                       |
+| GET    | `/api/auth/session`      | Returns the signed-in user                               |
+| POST   | `/api/auth/logout`       | Deletes both tokens and clears the cookies               |
 
 No endpoint ever puts a token in a response body. The browser only ever receives cookies.
 
