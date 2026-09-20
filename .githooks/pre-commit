@@ -1,11 +1,15 @@
 #!/bin/sh
-# Reformats Java files and stages the result. Checkstyle findings are reported, never fatal.
-[ -n "$(git diff --cached --name-only --diff-filter=ACM -- 'server-spring/*.java')" ] || exit 0
+# Reformats Java files and re-stages the ones you staged. Checkstyle findings are reported, never fatal.
+# Spotless only touches the working tree, so this list is the same before and after it runs.
+staged_java() {
+    git diff --cached --name-only -z --diff-filter=ACM -- 'server-spring/*.java'
+}
+[ -n "$(staged_java)" ] || exit 0
 
 echo "Applying formatting to Java files..."
 (cd server-spring && ./mvnw -B -q spotless:apply) >/dev/null 2>&1 \
     || echo "spotless:apply failed — run it in server-spring to see why"
-# spotless:apply formats the whole module, so stage every Java file it changed, not just the staged ones.
-git add -u -- 'server-spring/*.java'
+# spotless:apply formats the whole module, so re-stage only the staged files; the rest stay in the working tree.
+staged_java | xargs -0 git add --
 (cd server-spring && ./mvnw -B checkstyle:check) 2>&1 | grep -E '^\[ERROR\] .*\.java:' || true
 exit 0
