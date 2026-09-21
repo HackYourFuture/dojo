@@ -130,7 +130,7 @@ create table interactions
         constraint interactions_trainee_fk references trainees on delete cascade,
     date        timestamptz not null,
     type        text        not null,
-    reporter_id text -- TODO: Make it not null after authentication is implemented
+    reporter_id text        not null
         constraint interactions_reporter_fk references users on delete restrict,
     title       text        not null,
     details     text        not null,

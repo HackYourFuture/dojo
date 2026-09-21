@@ -34,8 +34,24 @@ Maven is not needed; use the bundled `./mvnw` wrapper.
 
 4. Check it works: <http://localhost:7777/api/docs>
 
-The default settings already point at the database above, so no `.env` file is required for local
-development.
+The default settings already point at the database above, so no `.env` file is required to start
+the server. Signing in is a separate matter — see below.
+
+## 🔐 Authentication
+
+Every endpoint requires a signed-in user. The exceptions are `/api/auth/login/google`,
+`/api/auth/refresh`, `/api/auth/logout`, `/actuator/health/**` and `/api/docs/**`.
+
+Signing in needs a HackYourFuture Google account *and* a matching active row in the `users` table.
+To sign in locally you also need real Google OAuth credentials:
+
+```bash
+GOOGLE_OAUTH_CLIENTID=… GOOGLE_OAUTH_CLIENTSECRET=… \
+  SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+```
+
+Without them the server starts normally but every sign-in fails. `auth.md` describes the flow, the
+three token types and the cookies.
 
 ## ▶️ Running
 
@@ -57,14 +73,18 @@ docker run -d -p 7777:7777 \
   -e DB_NAME=dojo \
   -e DB_USER=dojo \
   -e DB_PASSWORD=secret \
+  -e GOOGLE_OAUTH_CLIENTID=your-client-id \
+  -e GOOGLE_OAUTH_CLIENTSECRET=your-client-secret \
+  -e AUTH_ALLOWED_ORIGINS=https://dojo.hackyourfuture.net \
   dojo-server
 ```
 
-The image runs the `prod` profile by default, as a non-root user, on port 7777. All five `DB_*`
-variables are required in production — the container will not start without them.
+The image runs the `prod` profile by default, as a non-root user, on port 7777. The five `DB_*`
+variables, both Google credentials and `AUTH_ALLOWED_ORIGINS` are required in production — the
+container will not start without them.
 
-`.github/workflows/build-server-spring.yml` builds this image and pushes it to GHCR on every push
-to `main`.
+`.github/workflows/server-ci-cd.yml` lints, tests and builds this image, and pushes it to GHCR on
+every push to `main`.
 
 ## ⚙️ Environment variables
 
@@ -75,11 +95,19 @@ to `main`.
 | `DB_NAME` | Database name. Defaults to `dojo` outside production. | Yes in prod |
 | `DB_USER` | Database user. Defaults to `admin` outside production. | Yes in prod |
 | `DB_PASSWORD` | Database password. Defaults to `password` outside production. | Yes in prod |
+| `GOOGLE_OAUTH_CLIENTID` | Google OAuth client id. Defaults to `not-configured`, which starts but cannot sign anyone in. | Yes in prod |
+| `GOOGLE_OAUTH_CLIENTSECRET` | Google OAuth client secret. Same default. | Yes in prod |
+| `AUTH_ALLOWED_ORIGINS` | Comma-separated origins allowed to sign in and to send cookies. Defaults to the two localhost origins. | Yes in prod |
+| `ACCESS_TOKEN_TTL` | Access token lifetime. Defaults to `15m`. | No |
+| `REFRESH_TOKEN_TTL` | Refresh token lifetime. Defaults to `14d`. | No |
+| `API_TOKEN_TTL` | API token lifetime. Defaults to `365d`. | No |
+| `COOKIE_SECURE` | `Secure` flag on the session cookies. Defaults to `true`; the `dev` profile sets `false`. | No |
 | `SPRING_PROFILES_ACTIVE` | `dev`, `test` or `prod`. The Docker image sets `prod`. | No |
 | `SERVER_PORT` | Port the server listens on. Defaults to `7777`. | No |
 
-The `prod` profile deliberately has no defaults for the `DB_*` variables, so a misconfigured
-deployment fails at startup instead of quietly connecting somewhere wrong.
+The `prod` profile deliberately has no defaults for the `DB_*` variables, the Google credentials or
+the allowed origins, so a misconfigured deployment fails at startup instead of quietly connecting
+somewhere wrong.
 
 ## 📝 API docs
 
@@ -102,8 +130,8 @@ through four layers:
 
 Two supporting pieces sit outside the features:
 
-* **`config/`** — security, error handling, OpenAPI and profile configuration. `GlobalExceptionHandler`
-  turns every exception into the same `DojoError` JSON shape.
+* **`config/`** — error handling, OpenAPI and profile configuration. `GlobalExceptionHandler` turns
+  every exception into the same `DojoError` JSON shape. `config/security/` holds the filter chain.
 * **`shared/`** — small helpers used across features, plus the `DojoException` family that decides
   which HTTP status an error becomes.
 

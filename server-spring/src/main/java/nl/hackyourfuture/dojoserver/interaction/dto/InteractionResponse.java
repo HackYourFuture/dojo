@@ -45,8 +45,7 @@ public record InteractionResponse(
 
         @Schema(
                 description = "The user who recorded this interaction.",
-                requiredMode = Schema.RequiredMode.REQUIRED,
-                nullable = true // TODO: remove after authentication is implemented
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         ReporterResponse reporter
 ) {
@@ -57,6 +56,7 @@ public record InteractionResponse(
                 interaction.getType(),
                 interaction.getTitle(),
                 interaction.getDetails(),
-                interaction.getReporter() == null ? null : ReporterResponse.from(interaction.getReporter()));
+                ReporterResponse.from(interaction.getReporter())
+        );
     }
 }

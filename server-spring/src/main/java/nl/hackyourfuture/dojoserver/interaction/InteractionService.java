@@ -1,10 +1,13 @@
 package nl.hackyourfuture.dojoserver.interaction;
 
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.interaction.dto.InteractionRequest;
 import nl.hackyourfuture.dojoserver.interaction.dto.InteractionResponse;
 import nl.hackyourfuture.dojoserver.shared.ProfileType;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoForbiddenException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import org.jspecify.annotations.NonNull;
@@ -18,6 +21,7 @@ import java.util.List;
 public class InteractionService {
     private final InteractionRepository interactionRepository;
     private final TraineeRepository traineeRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<InteractionResponse> getInteractions(ProfileType profile, String profileId) {
@@ -27,6 +31,7 @@ public class InteractionService {
 
     @Transactional
     public InteractionResponse createInteraction(
+            AuthenticatedUser currentUser,
             ProfileType profile,
             String profileId,
             @NonNull
@@ -34,10 +39,11 @@ public class InteractionService {
     ) {
         requireProfile(profile, profileId);
 
-        // TODO: set the reporter after authentication is implemented
+        var reporter = userRepository.getReferenceById(currentUser.id());
         var builder = Interaction.builder()
                 .id(RandomUtils.generateRandomId())
                 .date(request.date())
+                .reporter(reporter)
                 .type(request.type())
                 .title(request.title())
                 .details(request.details());
@@ -52,6 +58,7 @@ public class InteractionService {
 
     @Transactional
     public InteractionResponse updateInteraction(
+            AuthenticatedUser currentUser,
             ProfileType profile,
             String profileId,
             String id,
@@ -60,7 +67,9 @@ public class InteractionService {
     ) {
         Interaction interaction = findInteraction(profile, profileId, id);
 
-        // TODO: do not allow to edit interactions created by other users. after authentication is implemented
+        if (!currentUser.id().equals(interaction.getReporter().getId())) {
+            throw new DojoForbiddenException("You are not allowed to update this interaction");
+        }
 
         interaction.setDate(request.date());
         interaction.setType(request.type());
@@ -71,9 +80,13 @@ public class InteractionService {
     }
 
     @Transactional
-    public void deleteInteraction(ProfileType profile, String profileId, String id) {
-        // TODO: do not allow to delete interactions created by other users. after authentication is implemented
+    public void deleteInteraction(AuthenticatedUser currentUser, ProfileType profile, String profileId, String id) {
         Interaction interaction = findInteraction(profile, profileId, id);
+
+        if (!currentUser.id().equals(interaction.getReporter().getId())) {
+            throw new DojoForbiddenException("You are not allowed to delete this interaction");
+        }
+
         interactionRepository.delete(interaction);
     }
 

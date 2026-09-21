@@ -41,10 +41,19 @@ nl.hackyourfuture.dojoserver
                          TraineeRepository, dto/
   interaction/           Interaction, InteractionType, InteractionService,
                          InteractionRepository, TraineeInteractionController, dto/
-  config/                GlobalExceptionHandler, SecurityConfig, OpenApiConfig,
+  authentication/        AuthenticationController, AuthenticationService, AuthProperties,
+                         AuthenticationCookieManager, TokenAuthenticationFilter,
+                         AuthenticatedUser, LoginResponse, dto/
+  authentication/token/  Token, TokenType, TokenService, TokenRepository, IssuedToken
+  authentication/
+    googleoauth/         GoogleOAuthService, GoogleIdentity, GoogleOAuthException
+  config/                GlobalExceptionHandler, OpenApiConfig, RestClientConfig,
                          ServerConfig, ServerEnvironment
-  shared/                DojoError, JsonMergePatch, ProfileType, RandomUtils
-  shared/exception/      DojoException + Dojo{NotFound,Conflict,BadRequest,Forbidden}Exception
+  config/security/       SecurityConfig, CsrfOriginFilter, SecurityErrorHandler
+  shared/                DojoError, JsonMergePatch, ProfileType, RandomUtils,
+                         SecurityUtils, StringUtils
+  shared/exception/      DojoException + Dojo{NotFound,Conflict,BadRequest,Forbidden,
+                         Unauthorized}Exception
 ```
 
 ## Entities
@@ -152,6 +161,7 @@ Throw a `DojoException` subclass for anything deliberate. Each carries its own s
 | `DojoNotFoundException`   | 404    | record does not exist, or the caller may not know it does |
 | `DojoConflictException`   | 409    | duplicate value, or a state that forbids the change       |
 | `DojoBadRequestException` | 400    | a business rule bean validation cannot express            |
+| `DojoUnauthorizedException` | 401  | the caller is not, or is no longer, signed in             |
 | `DojoForbiddenException`  | 403    | caller may see the record but not do this to it           |
 
 - **Add subclasses of `DojoException`, not handlers.** One handler in `GlobalExceptionHandler`
@@ -287,8 +297,9 @@ Editing V1 changes its Flyway checksum, so the app will refuse to start against 
 4. **Controller method.** `@Operation(summary, description)`, then one `@ApiResponse` per status
    **the method can actually return** — if the service throws it, document it. Error responses
    carry `content = @Content(schema = @Schema(implementation = DojoError.class))`.
-5. **`SecurityConfig`.** Add the path to `authorizeHttpRequests`. There is no auth yet so this is
-   `permitAll()`; every path added now is one to revisit when auth lands.
+5. **`SecurityConfig`.** Nothing to do for a normal endpoint — the chain ends in
+   `anyRequest().authenticated()`, so a new path requires a signed-in user by default. Add a
+   `permitAll()` matcher only to open a path deliberately, and say why in a comment.
 6. **Migration.** Fold the schema into `V1__init_schema.sql`, then recreate the local database.
 7. `./mvnw spotless:apply`, then `./mvnw spotless:check checkstyle:check`.
 
@@ -373,23 +384,28 @@ mounted on; the feature still owns all five artefacts.
 - Dispatch is confined to three private helpers, each an exhaustive `switch` over `ProfileType`, so
   adding a constant fails compilation at every site that needs updating. **Never** take the profile
   type from a path variable or the body: that collapses the guard into a caller-controlled string
-  and makes per-profile authorization impossible when auth lands.
+  and makes per-profile authorization impossible once there is more than one profile type.
 - Item lookup goes through `findByIdAndTraineeId`, never `findById`, so one profile cannot reach
   another's records. The arc is the second guard — `mentor_id` is null on every trainee row, so
   even a wrong query returns nothing instead of someone else's data.
 - The reporter is a `@ManyToOne(fetch = LAZY)` to `User` — the codebase's first JPA relation —
   join-fetched by `@EntityGraph(attributePaths = "reporter")` on both read queries, so a list is a
-  single `left join` rather than a second round trip. LAZY is safe because the entity is mapped to
+  single join rather than a second round trip. `@JoinColumn(nullable = false)` is what makes it an
+  **inner** join: Hibernate emits a `left join` for a to-one it believes can be null. LAZY is safe because the entity is mapped to
   a DTO inside the `@Transactional` service method, well before `open-in-view: false` closes the
   session; what LAZY buys is that the write paths do not drag a `User` along. Leave the
   `@EntityGraph` on: without it the relation is fetched per row. `ReporterResponse` lives in
   `admin/user/dto/` because it is a projection of `User`; `UserResponse` itself would leak a staff
-  email onto every trainee profile.
-- `interactions.reporter_id` is **nullable until authentication lands**, because nothing can fill
-  it yet — `reporter` is null in every response until then. Its FK is `on delete restrict`: an
-  interaction is an audit record, and `restrict` is the only rule that still works once the column
-  becomes `not null`. Deleting a user who has reported one is therefore a blunt 409 from
-  `handleDataConflict`; give it a written-for-humans pre-check in `UserService` when auth lands.
+  email onto every trainee profile. It is never null, so `InteractionResponse.reporter` carries no
+  `nullable = true` and needs no null guard.
+- `interactions.reporter_id` is `not null`. The reporter is the authenticated caller, linked in
+  `createInteraction` with `userRepository.getReferenceById(currentUser.id())` — a proxy, so the
+  insert needs no `User` loaded up front. Its FK is `on delete restrict`: an interaction is an audit
+  record, so deleting a user who has reported one is a blunt 409 from `handleDataConflict`. Give it
+  a written-for-humans pre-check in `UserService`.
+- **Editing and deleting are author-only.** Both compare `currentUser.id()` against
+  `interaction.getReporter().getId()` and throw `DojoForbiddenException`. The controller takes
+  `@AuthenticationPrincipal AuthenticatedUser` and passes it down; `ProfileType` stays hardcoded.
 - `Interaction.date` is an `Instant`/`timestamptz`, unlike `Assessment.date`, which is a
   `LocalDate`. That is deliberate: an interaction happens at a moment, an assessment on a day. The
   cost is that a body sending a bare `2024-01-01` is a 400 rather than being coerced to midnight.
@@ -405,10 +421,14 @@ mounted on; the feature still owns all five artefacts.
 |------|--------------------------------------------------------------------------------------------------------------------|
 | base | `localhost:5432/dojo`, `admin`/`password`, port 7777, `ddl-auto: validate`                                         |
 | dev  | Scalar on, full health details, `DEBUG INFO` appended to error messages                                            |
-| prod | docs off, health details only when authorized, `sslmode=require`, every DB setting from an env var with no default |
+| prod | docs off, health details only when authorized, every DB and auth setting from an env var with no default |
 
 `ServerConfig.isDevelopment()` is the gate for anything dev-only. It resolves to `PRODUCTION` when
-no profile matches.
+no profile matches — but the yaml overlays do not, so a jar started with no profile is terse about
+errors while still serving `/api/docs` and defaulting to the local database. The Dockerfile pins
+`SPRING_PROFILES_ACTIVE=prod`.
+
+`dojo.auth.*` holds the authentication settings; `auth.md` has the table and what each one does.
 
 Run locally:
 
@@ -416,14 +436,48 @@ Run locally:
 SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
 ```
 
-## Security — current state
+## Security
 
-`SecurityConfig` has one filter chain: stateless sessions, request cache disabled, CSRF, httpBasic
-and formLogin all disabled.
+`auth.md` is the feature description — the sign-in flow, the three token types, the cookies. This
+section is the wiring.
 
-There is no authentication yet, so the chain ends in `anyRequest().permitAll()`. That is also what
-makes unmapped paths answer 404 instead of 403 — `authenticated()` would reject them in the filter
-chain before the dispatcher runs.
+`config/security/SecurityConfig` has one filter chain: stateless sessions, request cache disabled,
+and Spring's own CSRF, httpBasic, formLogin and logout all disabled. It ends in
+`anyRequest().authenticated()`; the `permitAll()` list is `POST /api/auth/{login/google,refresh,
+logout}`, `/actuator/health/**`, `/api/docs/**` and the `ERROR` dispatch type.
+
+- **Unmapped paths answer 401, not 404** — `AuthorizationFilter` rejects before the dispatcher runs.
+  That is correct for an authenticated API: a 404 would enumerate which routes exist.
+- Filter order is `TokenAuthenticationFilter` → `CsrfOriginFilter` → `AuthorizationFilter`, chained
+  explicitly rather than both "before `AuthorizationFilter`", and all three sit after
+  `ExceptionTranslationFilter` so a rejection becomes a `DojoError`.
+- **Neither filter is a `@Component`.** Boot's `ServletContextInitializerBeans.addAdaptableBeans`
+  adapts any `Filter` bean into a servlet registration as well, so they are constructed in
+  `SecurityConfig` instead.
+- `TokenAuthenticationFilter` **never writes a 401**. A missing, expired, unknown or wrong-type
+  credential leaves the request anonymous and `AuthorizationFilter` produces the 401, which is what
+  keeps the `permitAll` login and refresh endpoints reachable for a caller whose token just expired.
+- The principal is an `AuthenticatedUser` inside a `PreAuthenticatedAuthenticationToken` built with
+  the **three-argument** constructor — the only one that marks the token authenticated. The
+  two-argument one is a request to authenticate and every protected endpoint would answer 403.
+- `SecurityErrorHandler` is both the `AuthenticationEntryPoint` and the `AccessDeniedHandler`, so
+  filter-chain 401s and 403s carry the same `DojoError` shape. `GlobalExceptionHandler` never sees
+  them — it is a `@RestControllerAdvice` and the filter chain runs before the dispatcher.
+- **CSRF is `CsrfOriginFilter`, not Spring's token machinery.** It rejects an unsafe method that
+  carries a session cookie without an allowed `Origin`. `SameSite=Strict` already covers cross-site
+  requests; this closes the same-site gap a sibling `*.hackyourfuture.net` host would leave. Bearer
+  callers send no `Origin` and carry no cookie, so they are untouched. A rejection is 403 when the
+  caller authenticated and 401 when it did not — `ExceptionTranslationFilter` routes an anonymous
+  `AccessDeniedException` to the entry point.
+- `consumes = APPLICATION_JSON_VALUE` on login is the **login-CSRF** defence: an HTML form cannot
+  send `application/json`. Not decoration; do not relax it.
+- The `AuthenticationManager` bean that throws exists so `UserDetailsServiceAutoConfiguration` backs
+  off. Nothing delegates to it. Without it Boot invents an in-memory user and logs a random password
+  on every start; defining the bean is the mechanism the Boot reference prescribes, not `exclude`.
+- **Accepted risk:** the cookies carry no `__Host-` prefix, so a compromised sibling
+  `*.hackyourfuture.net` host can set a same-named cookie that `getCookie` may pick first. `__Host-`
+  forces `Secure` and `Path=/`, which conflicts with `cookie-secure: false` in dev and with the
+  refresh cookie's `/api/auth` path.
 
 CORS is not configured, and is not needed: the React client proxies `/api` to this server.
 
@@ -437,18 +491,19 @@ CORS is not configured, and is not needed: the React client proxies `/api` to th
 
 The Dockerfile is a two-stage build that runs as uid 1000 on port 7777 with
 `SPRING_PROFILES_ACTIVE=prod`. It runs `mvn package -DskipTests`, so the image build neither lints
-nor tests.
+nor tests — CI does both before it.
 
-**Nothing in CI runs tests** — the workflow has no test step and the image build skips them. There
-are no feature tests yet. The integration shape that works, when they arrive: `@SpringBootTest`
+`.github/workflows/server-ci-cd.yml` ("Backend CI/CD") holds three jobs: `backend-lint` runs
+Checkstyle and `spotless:check` on a JDK with no database, `backend-test` runs `./mvnw -B test`
+against a `postgres:18.4-alpine` service container, and `backend-build` `needs` both, then builds
+the image and pushes it to `ghcr.io/<owner>/dojo-server-spring`. All three share the workflow's path
+filters and concurrency group, which is why the lint job lives here rather than in
+`quality-checks.yml` — that one is the client's and has no path filter, so it would fire on
+client-only PRs.
+
+`authentication/` holds the only tests so far, and they are the reference shape: `@SpringBootTest`
 plus `@AutoConfigureMockMvc` (Boot 4 moved this to
 `org.springframework.boot.webmvc.test.autoconfigure`), `@Transactional` on the class, and
-assertions through `MockMvcTester`. `@Transactional` is not optional — `./mvnw test` runs against
-the same local `dojo` database you develop in, and rollback is what keeps it from being wiped.
-
-`.github/workflows/server-ci-cd.yml` ("Backend CI/CD") holds both backend jobs: `lint` runs
-Checkstyle and `spotless:check` on a JDK with no database, and `build` builds the image and pushes
-it to `ghcr.io/<owner>/dojo-server-spring`.
-They run in parallel and share the workflow's path filters and concurrency group, which is why the
-lint job lives here rather than in `quality-checks.yml` — that one is the client's and has no path
-filter, so it would fire on client-only PRs.
+assertions through `MockMvcTester`. `@Transactional` is not optional — there is no
+`src/test/resources`, so `./mvnw test` runs against the same local `dojo` database you develop in
+and rollback is what keeps it from being wiped.
