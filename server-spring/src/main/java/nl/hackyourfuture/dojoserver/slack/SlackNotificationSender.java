@@ -129,7 +129,7 @@ public class SlackNotificationSender {
 
     private static String value(Object object) {
         return switch (object) {
-            case null -> "---";
+            case null -> "—";
             case Enum<?> constant -> humanize(constant);
             case Boolean flag -> flag ? "Yes" : "No";
             case LocalDate date -> DATE.format(date);
@@ -139,7 +139,7 @@ public class SlackNotificationSender {
 
     private static String cell(String value) {
         if (value == null || value.isBlank()) {
-            return "---";
+            return "—";
         }
         return value
                 .replace("|", "\\|")
