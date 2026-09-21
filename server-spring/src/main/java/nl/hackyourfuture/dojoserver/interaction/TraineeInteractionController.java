@@ -8,11 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.interaction.dto.InteractionRequest;
 import nl.hackyourfuture.dojoserver.interaction.dto.InteractionResponse;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.shared.ProfileType;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,12 +67,14 @@ public class TraineeInteractionController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public InteractionResponse createInteraction(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the trainee", example = "HpOjvmwXsL")
             @PathVariable
             String traineeId,
             @Valid @RequestBody
             InteractionRequest request) {
-        return interactionService.createInteraction(ProfileType.TRAINEE, traineeId, request);
+        return interactionService.createInteraction(currentUser, ProfileType.TRAINEE, traineeId, request);
     }
 
     @PutMapping("/{interactionId}")
@@ -83,11 +87,18 @@ public class TraineeInteractionController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     @ApiResponse(
+            responseCode = "403",
+            description = "The current user is not allowed to edit the interaction.",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    @ApiResponse(
             responseCode = "404",
             description = "The trainee id or the interaction id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public InteractionResponse updateInteraction(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the trainee", example = "HpOjvmwXsL")
             @PathVariable
             String traineeId,
@@ -96,7 +107,8 @@ public class TraineeInteractionController {
             String interactionId,
             @Valid @RequestBody
             InteractionRequest request) {
-        return interactionService.updateInteraction(ProfileType.TRAINEE, traineeId, interactionId, request);
+        return interactionService.updateInteraction(currentUser, ProfileType.TRAINEE, traineeId, interactionId,
+                request);
     }
 
     @DeleteMapping("/{interactionId}")
@@ -105,17 +117,24 @@ public class TraineeInteractionController {
             description = "Permanently deletes the interaction from the records of the trainee.")
     @ApiResponse(responseCode = "204", description = "The interaction has been successfully deleted")
     @ApiResponse(
+            responseCode = "403",
+            description = "The current user is not allowed to delete the interaction.",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    @ApiResponse(
             responseCode = "404",
             description = "The trainee id or the interaction id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public void deleteInteraction(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the trainee", example = "HpOjvmwXsL")
             @PathVariable
             String traineeId,
             @Parameter(description = "ID of the interaction to delete", example = "g5HQGuL8Zq")
             @PathVariable
             String interactionId) {
-        interactionService.deleteInteraction(ProfileType.TRAINEE, traineeId, interactionId);
+        interactionService.deleteInteraction(currentUser, ProfileType.TRAINEE, traineeId, interactionId);
     }
 }

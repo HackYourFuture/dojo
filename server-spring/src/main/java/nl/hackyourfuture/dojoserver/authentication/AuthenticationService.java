@@ -18,6 +18,7 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoUnauthorizedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -127,16 +128,17 @@ public class AuthenticationService {
 
     /** In the rare case where the user's Google account email was changed, sync it with dojo's email */
     private void syncEmail(User user, String googleEmail) {
-        if (user.getEmail().equalsIgnoreCase(googleEmail)) {
+        String newEmail = googleEmail.strip().toLowerCase(Locale.ROOT);
+        if (user.getEmail().equalsIgnoreCase(newEmail)) {
             return;
         }
-        if (userRepository.existsByEmailIgnoreCase(googleEmail)) {
+        if (userRepository.existsByEmailIgnoreCase(newEmail)) {
             log.warn("User id '{}' now has Google email '{}', which another user already holds. Not updating.",
-                    user.getId(), googleEmail);
+                    user.getId(), newEmail);
             return;
         }
         log.warn("Google OAuth email changed for User ID '{}'. Previous email: '{}'. next email: '{}'. "
-                + "Updating the DB with the new email", user.getId(), user.getEmail(), googleEmail);
-        user.setEmail(googleEmail);
+                + "Updating the DB with the new email", user.getId(), user.getEmail(), newEmail);
+        user.setEmail(newEmail);
     }
 }

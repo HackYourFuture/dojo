@@ -22,11 +22,12 @@ sequenceDiagram
     S->>G: Exchange the code, using a client secret
     G-->>S: Access token, then the account profile
     S->>S: Verifications and issue tokens
-    S-->>C: Session cookies
+    S-->>C: Session cookies and the signed-in user
 ```
 
-The server's checks, in order. Any failure gives the same message, so nobody can probe which step
-said no:
+The server's checks, in order. Every failure below gives the same `401` message, so nobody can probe
+which step said no. The one exception is the `redirectURI`, which is checked first against
+`allowed-origins` and answers `400 Invalid redirectURI` — that is a client bug, not a sign-in outcome.
 
 1. **The code is genuine.** Only Dojo holds the client secret, so only Dojo can exchange the code.
 2. **The account is ours.** Google must report the `hackyourfuture.net` Workspace and a verified
@@ -52,16 +53,17 @@ The access token is short-lived and the browser renews it with the refresh token
 itself is never replaced, so the session always ends 14 days after signing in and the person signs in
 with Google again.
 
-Both cookies are `HttpOnly` (JavaScript cannot read them), `SameSite=Strict` and `Secure`.
+Both cookies are `HttpOnly` (JavaScript cannot read them), `SameSite=Strict`, and `Secure` unless
+`cookie-secure` is turned off, which only the dev profile does.
 
 ## Endpoints
 
-| Method | Path                     | What it does                                             |
-|--------|--------------------------|----------------------------------------------------------|
-| POST   | `/api/auth/login/google` | Exchanges a Google code for a session, sets both cookies |
-| POST   | `/api/auth/refresh`      | Issues a fresh access token cookie                       |
-| GET    | `/api/auth/session`      | Returns the signed-in user                               |
-| POST   | `/api/auth/logout`       | Deletes both tokens and clears the cookies               |
+| Method | Path                     | What it does                                             | Success |
+|--------|--------------------------|----------------------------------------------------------|---------|
+| POST   | `/api/auth/login/google` | Exchanges a Google code for a session, sets both cookies | 200     |
+| POST   | `/api/auth/refresh`      | Issues a fresh access token cookie, nothing else changes | 204     |
+| GET    | `/api/auth/session`      | Returns the signed-in user                               | 200     |
+| POST   | `/api/auth/logout`       | Deletes both tokens and clears the cookies, always       | 204     |
 
 No endpoint ever puts a token in a response body. The browser only ever receives cookies.
 
@@ -98,18 +100,20 @@ else's behalf.
 
 Everything lives under `dojo.auth` in `application.yaml`.
 
-| Setting                | Meaning                                        | Default   |
-|------------------------|------------------------------------------------|-----------|
-| `google-client-id`     | Google OAuth client id                         | env var   |
-| `google-client-secret` | Google OAuth client secret                     | env var   |
-| `access-token-ttl`     | Access token lifetime                          | `15m`     |
-| `refresh-token-ttl`    | Refresh token lifetime                         | `14d`     |
-| `api-token-ttl`        | API token lifetime                             | `365d`    |
-| `cookie-secure`        | `Secure` flag on cookies (`false` in dev only) | `true`    |
-| `allowed-origins`      | Origins allowed to sign in and to send cookies | localhost |
+| Setting                | Meaning                                        | Default          |
+|------------------------|------------------------------------------------|------------------|
+| `google-client-id`     | Google OAuth client id                         | `not-configured` |
+| `google-client-secret` | Google OAuth client secret                     | `not-configured` |
+| `access-token-ttl`     | Access token lifetime                          | `15m`            |
+| `refresh-token-ttl`    | Refresh token lifetime                         | `14d`            |
+| `api-token-ttl`        | API token lifetime                             | `365d`           |
+| `cookie-secure`        | `Secure` flag on cookies (`false` in dev only) | `true`           |
+| `allowed-origins`      | Origins allowed to sign in and to send cookies | localhost        |
 
 In production the Google credentials and the allowed origins come from environment variables with no
-fallback, so a missing value stops the server rather than starting it misconfigured.
+fallback, so a missing value stops the server rather than starting it misconfigured. Everywhere else
+the credentials fall back to the literal `not-configured`, which starts fine and fails at the first
+sign-in attempt.
 
 ## Where the code lives
 
@@ -117,13 +121,17 @@ fallback, so a missing value stops the server rather than starting it misconfigu
 authentication/
   AuthenticationController      the four endpoints
   AuthenticationService         the sign-in checks and the session lifecycle
-  AuthCookies                   writes and clears the two cookies
+  AuthenticationCookieManager   reads, writes and clears the two cookies
   TokenAuthenticationFilter     identifies the caller on every request
+  AuthenticatedUser             the principal in the SecurityContext
   AuthProperties                the dojo.auth settings
+  dto/                          GoogleLoginRequest, SessionResponse, TokenResponse
   token/                        Token, TokenType, TokenService — issuing, checking, revoking
   googleoauth/                  GoogleOAuthService — the conversation with Google
-config/
+config/security/
   SecurityConfig                the filter chain
   CsrfOriginFilter              the Origin check
   SecurityErrorHandler          401 and 403 in the standard Dojo error format
+shared/
+  SecurityUtils                 the SHA-256 used to hash tokens at rest
 ```

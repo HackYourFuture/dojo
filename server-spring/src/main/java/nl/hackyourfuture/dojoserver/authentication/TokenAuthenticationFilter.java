@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.token.Token;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
-import nl.hackyourfuture.dojoserver.shared.exception.DojoException;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoForbiddenException;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoUnauthorizedException;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,8 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Identifies the caller on every request: a bearer header must carry an API token, the dojo_token cookie
- * an access token. A failure leaves the request anonymous rather than answering 401, so the permitAll
+ * Identifies the caller on every request: a bearer header must carry an API token, the dojo_access_token
+ * cookie an access token. A failure leaves the request anonymous rather than answering 401, so the permitAll
  * login and refresh endpoints stay reachable for the caller whose token just expired; AuthorizationFilter
  * produces the 401 further down the chain. The token must be built with the constructor that takes
  * authorities, which is the only one that marks it authenticated - the two-argument one is a request to
@@ -73,7 +74,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             // No token found
             return Optional.empty();
-        } catch (DojoException _) {
+        } catch (DojoUnauthorizedException | DojoForbiddenException _) {
             return Optional.empty();
         }
     }

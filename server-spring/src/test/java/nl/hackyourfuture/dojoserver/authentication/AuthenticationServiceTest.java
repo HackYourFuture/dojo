@@ -1,6 +1,7 @@
 package nl.hackyourfuture.dojoserver.authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -15,6 +16,8 @@ import nl.hackyourfuture.dojoserver.authentication.googleoauth.GoogleOAuthServic
 import nl.hackyourfuture.dojoserver.authentication.token.IssuedToken;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoUnauthorizedException;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -27,6 +30,8 @@ public class AuthenticationServiceTest {
     private static final String ORIGIN = "https://example.org";
     private static final String AUTH_CODE = "auth_code_FjR0jzGdKN";
     private static final String GOOGLE_SUB = "108276490238476";
+    private static final String EMAIL = "jane.doe@hackyourfuture.net";
+    private static final String HOSTED_DOMAIN = "hackyourfuture.net";
 
     private final TokenService tokenService = mock(TokenService.class);
     private final UserRepository userRepository = mock(UserRepository.class);
@@ -41,16 +46,8 @@ public class AuthenticationServiceTest {
     @Test
     void googleLoginSuccess() {
         // Arrange
-        User user = User.builder()
-                .id("WTh1qLhy3K")
-                .email("jane.doe@hackyourfuture.net")
-                .name("Jane Doe")
-                .googleId(GOOGLE_SUB)
-                .imageUrl("https://example.org/jane.jpg")
-                .isActive(true)
-                .build();
-        var googleIdentity = new GoogleIdentity(GOOGLE_SUB, user.getEmail(), true, user.getName(),
-                user.getImageUrl(), "hackyourfuture.net");
+        User user = user(GOOGLE_SUB);
+        var googleIdentity = identity(GOOGLE_SUB, EMAIL, true, HOSTED_DOMAIN);
         var accessToken = new IssuedToken("t1", TokenType.ACCESS_TOKEN, "dojo_at_bKq2", user.getId(),
                 Instant.parse("2026-09-20T10:15:00Z"));
         var refreshToken = new IssuedToken("t2", TokenType.REFRESH_TOKEN, "dojo_rt_9vPz", user.getId(),
@@ -77,5 +74,117 @@ public class AuthenticationServiceTest {
         verify(userRepository).findByGoogleId(GOOGLE_SUB);
         verify(userRepository, never()).findByEmailIgnoreCase(any());
         verify(tokenService).deleteExpired();
+    }
+
+    @Test
+    void googleLoginRefusesARedirectUriThatIsNotAnAllowedOrigin() {
+        // Act & Assert - the code is never sent to Google.
+        assertThatThrownBy(() -> authenticationService
+                .googleLogin(new GoogleLoginRequest(AUTH_CODE, "https://evil.example")))
+                .isInstanceOf(DojoBadRequestException.class);
+        verify(googleOAuthService, never()).verifyGoogleLogin(any(), any());
+        verifyNothingWasIssued();
+    }
+
+    @Test
+    void googleLoginRefusesAnAccountOutsideTheHostedDomain() {
+        // Arrange
+        stubGoogle(identity(GOOGLE_SUB, "jane.doe@gmail.com", true, "gmail.com"));
+
+        // Act & Assert
+        assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        verifyRefusedBeforeTheUserLookup();
+    }
+
+    @Test
+    void googleLoginRefusesAnAccountWithNoHostedDomain() {
+        // Arrange - a personal account reports no Workspace at all.
+        stubGoogle(identity(GOOGLE_SUB, "jane.doe@gmail.com", true, null));
+
+        // Act & Assert
+        assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        verifyRefusedBeforeTheUserLookup();
+    }
+
+    @Test
+    void googleLoginRefusesAnUnverifiedEmail() {
+        // Arrange
+        stubGoogle(identity(GOOGLE_SUB, EMAIL, false, HOSTED_DOMAIN));
+
+        // Act & Assert
+        assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        verifyRefusedBeforeTheUserLookup();
+    }
+
+    @Test
+    void googleLoginRefusesAnIdentityWithoutASub() {
+        // Arrange - a null sub would otherwise match every user whose google_id is still null.
+        stubGoogle(identity(null, EMAIL, true, HOSTED_DOMAIN));
+
+        // Act & Assert
+        assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        verifyRefusedBeforeTheUserLookup();
+    }
+
+    @Test
+    void googleLoginRefusesToRebindAUserWhoIsAlreadyBoundToAnotherGoogleAccount() {
+        // Arrange - same email, different sub: the email lookup must not adopt the new account.
+        User user = user("a-different-sub");
+        stubGoogle(identity(GOOGLE_SUB, EMAIL, true, HOSTED_DOMAIN));
+        when(userRepository.findByGoogleId(GOOGLE_SUB)).thenReturn(Optional.empty());
+        when(userRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(Optional.of(user));
+
+        // Act & Assert
+        assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        assertThat(user.getGoogleId()).isEqualTo("a-different-sub");
+        verifyNothingWasIssued();
+    }
+
+    @Test
+    void googleLoginRefusesADeactivatedUser() {
+        // Arrange
+        User user = user(GOOGLE_SUB);
+        user.setActive(false);
+        stubGoogle(identity(GOOGLE_SUB, EMAIL, true, HOSTED_DOMAIN));
+        when(userRepository.findByGoogleId(GOOGLE_SUB)).thenReturn(Optional.of(user));
+
+        // Act & Assert
+        assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        verifyNothingWasIssued();
+    }
+
+    private LoginResponse login() {
+        return authenticationService.googleLogin(new GoogleLoginRequest(AUTH_CODE, ORIGIN));
+    }
+
+    private void stubGoogle(GoogleIdentity googleIdentity) {
+        when(googleOAuthService.verifyGoogleLogin(AUTH_CODE, ORIGIN)).thenReturn(googleIdentity);
+    }
+
+    private void verifyNothingWasIssued() {
+        verify(tokenService, never()).issue(any(), any());
+    }
+
+    /** The identity gate refuses before any lookup, which is what tells it apart from an unknown user. */
+    private void verifyRefusedBeforeTheUserLookup() {
+        verify(userRepository, never()).findByGoogleId(any());
+        verify(userRepository, never()).findByEmailIgnoreCase(any());
+        verifyNothingWasIssued();
+    }
+
+    private static User user(String googleId) {
+        return User.builder()
+                .id("WTh1qLhy3K")
+                .email(EMAIL)
+                .name("Jane Doe")
+                .googleId(googleId)
+                .imageUrl("https://example.org/jane.jpg")
+                .isActive(true)
+                .build();
+    }
+
+    private static GoogleIdentity identity(String sub, String email, Boolean emailVerified, String hostedDomain) {
+        return new GoogleIdentity(sub, email, emailVerified, "Jane Doe", "https://example.org/jane.jpg",
+                hostedDomain);
     }
 }

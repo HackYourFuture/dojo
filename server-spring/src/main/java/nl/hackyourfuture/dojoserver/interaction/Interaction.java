@@ -48,7 +48,7 @@ public class Interaction {
     private InteractionType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reporter_id")
+    @JoinColumn(name = "reporter_id", nullable = false)
     @Setter(AccessLevel.NONE)
     private User reporter;
 
