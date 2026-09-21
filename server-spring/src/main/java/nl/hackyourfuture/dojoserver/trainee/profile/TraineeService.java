@@ -4,10 +4,13 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.FieldChange;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
@@ -15,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.lang.reflect.RecordComponent;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -24,6 +30,7 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final JsonMergePatch jsonMergePatch;
     private final Validator validator;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public List<TraineeSummaryResponse> getAllTrainees() {
@@ -37,7 +44,7 @@ public class TraineeService {
     }
 
     @Transactional
-    public TraineeResponse createTrainee(TraineeRequest request) {
+    public TraineeResponse createTrainee(AuthenticatedUser currentUser, TraineeRequest request) {
         if (traineeRepository.existsByEmailIgnoreCase(request.email())) {
             throw new DojoConflictException("Email is already in use by another trainee.");
         }
@@ -90,6 +97,7 @@ public class TraineeService {
                 .build();
 
         Trainee created = traineeRepository.save(newTrainee);
+        slackNotificationSender.traineeCreated(currentUser.name(), created);
         return TraineeResponse.from(created);
     }
 
@@ -98,9 +106,10 @@ public class TraineeService {
      * result is validated as a whole, so the create rules hold for anything that changed.
      */
     @Transactional
-    public TraineeResponse updateTrainee(String id, ObjectNode patch) {
+    public TraineeResponse updateTrainee(AuthenticatedUser currentUser, String id, ObjectNode patch) {
         Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
-        TraineeRequest merged = jsonMergePatch.apply(TraineeRequest.from(trainee), patch);
+        TraineeRequest current = TraineeRequest.from(trainee);
+        TraineeRequest merged = jsonMergePatch.apply(current, patch);
 
         // Manually run validation on the merged data because we use `ObjectNode` in the body.
         Set<ConstraintViolation<TraineeRequest>> violations = validator.validate(merged);
@@ -159,12 +168,34 @@ public class TraineeService {
         trainee.setJobSupportEndDate(merged.jobSupportEndDate());
         trainee.setHasCar(merged.hasCar());
 
+        slackNotificationSender.traineeUpdated(currentUser.name(), trainee, changes(current, merged));
         return TraineeResponse.from(trainee);
     }
 
     @Transactional
-    public void deleteTrainee(String id) {
+    public void deleteTrainee(AuthenticatedUser currentUser, String id) {
         Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
         traineeRepository.delete(trainee);
+        slackNotificationSender.traineeDeleted(currentUser.name(), trainee);
+    }
+
+    /**
+     * The fields the patch actually changed, for the notification. Read off the record components so a
+     * field added to `TraineeRequest` is covered without touching this.
+     */
+    private static List<FieldChange> changes(TraineeRequest current, TraineeRequest merged) {
+        return Arrays.stream(TraineeRequest.class.getRecordComponents())
+                .filter(component -> !Objects.equals(read(component, current), read(component, merged)))
+                .map(component -> new FieldChange(component.getName(), read(component, current),
+                        read(component, merged)))
+                .toList();
+    }
+
+    private static Object read(RecordComponent component, TraineeRequest request) {
+        try {
+            return component.getAccessor().invoke(request);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Cannot read " + component.getName(), e);
+        }
     }
 }

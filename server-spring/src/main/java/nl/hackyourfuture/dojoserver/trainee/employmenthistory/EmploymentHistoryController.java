@@ -8,10 +8,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.dto.EmploymentHistoryRequest;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.dto.EmploymentHistoryResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,12 +66,14 @@ public class EmploymentHistoryController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public EmploymentHistoryResponse createEmploymentHistory(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the trainee", example = "HpOjvmwXsL")
             @PathVariable
             String traineeId,
             @Valid @RequestBody
             EmploymentHistoryRequest request) {
-        return employmentHistoryService.createEmploymentHistory(traineeId, request);
+        return employmentHistoryService.createEmploymentHistory(currentUser, traineeId, request);
     }
 
     @PutMapping("/{employmentHistoryId}")

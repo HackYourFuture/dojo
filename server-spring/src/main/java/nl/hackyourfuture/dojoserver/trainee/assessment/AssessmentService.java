@@ -1,10 +1,13 @@
 package nl.hackyourfuture.dojoserver.trainee.assessment;
 
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentRequest;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentResponse;
+import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import java.util.List;
 public class AssessmentService {
     private final AssessmentRepository assessmentRepository;
     private final TraineeRepository traineeRepository;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public List<AssessmentResponse> getAssessments(String traineeId) {
@@ -26,8 +30,9 @@ public class AssessmentService {
     }
 
     @Transactional
-    public AssessmentResponse createAssessment(String traineeId, AssessmentRequest request) {
-        requireTrainee(traineeId);
+    public AssessmentResponse createAssessment(AuthenticatedUser currentUser, String traineeId,
+            AssessmentRequest request) {
+        Trainee trainee = requireTrainee(traineeId);
 
         var newAssessment = Assessment.builder()
                 .id(RandomUtils.generateRandomId())
@@ -40,6 +45,7 @@ public class AssessmentService {
                 .build();
 
         Assessment created = assessmentRepository.save(newAssessment);
+        slackNotificationSender.traineeAssessmentCreated(currentUser.name(), trainee, created);
         return AssessmentResponse.from(created);
     }
 
@@ -62,10 +68,9 @@ public class AssessmentService {
     }
 
     /** Every endpoint here is nested under a trainee, so an unknown trainee id is a 404 of its own. */
-    private void requireTrainee(String traineeId) {
-        if (!traineeRepository.existsById(traineeId)) {
-            throw new DojoNotFoundException("Trainee", traineeId);
-        }
+    private Trainee requireTrainee(String traineeId) {
+        return traineeRepository.findById(traineeId)
+                .orElseThrow(() -> new DojoNotFoundException("Trainee", traineeId));
     }
 
     private Assessment findAssessment(String traineeId, String id) {

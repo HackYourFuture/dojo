@@ -1,11 +1,14 @@
 package nl.hackyourfuture.dojoserver.trainee.employmenthistory;
 
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.dto.EmploymentHistoryRequest;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.dto.EmploymentHistoryResponse;
+import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import java.util.List;
 public class EmploymentHistoryService {
     private final EmploymentHistoryRepository employmentHistoryRepository;
     private final TraineeRepository traineeRepository;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public List<EmploymentHistoryResponse> getEmploymentHistory(String traineeId) {
@@ -27,8 +31,9 @@ public class EmploymentHistoryService {
     }
 
     @Transactional
-    public EmploymentHistoryResponse createEmploymentHistory(String traineeId, EmploymentHistoryRequest request) {
-        requireTrainee(traineeId);
+    public EmploymentHistoryResponse createEmploymentHistory(AuthenticatedUser currentUser, String traineeId,
+            EmploymentHistoryRequest request) {
+        Trainee trainee = requireTrainee(traineeId);
         validateDates(request);
 
         var newRecord = EmploymentHistory.builder()
@@ -45,6 +50,7 @@ public class EmploymentHistoryService {
                 .build();
 
         EmploymentHistory created = employmentHistoryRepository.save(newRecord);
+        slackNotificationSender.traineeEmploymentHistoryCreated(currentUser.name(), trainee, created);
         return EmploymentHistoryResponse.from(created);
     }
 
@@ -72,10 +78,9 @@ public class EmploymentHistoryService {
     }
 
     /** Every endpoint here is nested under a trainee, so an unknown trainee id is a 404 of its own. */
-    private void requireTrainee(String traineeId) {
-        if (!traineeRepository.existsById(traineeId)) {
-            throw new DojoNotFoundException("Trainee", traineeId);
-        }
+    private Trainee requireTrainee(String traineeId) {
+        return traineeRepository.findById(traineeId)
+                .orElseThrow(() -> new DojoNotFoundException("Trainee", traineeId));
     }
 
     private EmploymentHistory findEmploymentHistory(String traineeId, String id) {

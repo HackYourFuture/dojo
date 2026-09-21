@@ -9,6 +9,7 @@ import nl.hackyourfuture.dojoserver.shared.ProfileType;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoForbiddenException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class InteractionService {
     private final InteractionRepository interactionRepository;
     private final TraineeRepository traineeRepository;
     private final UserRepository userRepository;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public List<InteractionResponse> getInteractions(ProfileType profile, String profileId) {
@@ -53,6 +55,14 @@ public class InteractionService {
         }
 
         Interaction created = interactionRepository.save(builder.build());
+
+        // Send notification
+        if (profile == ProfileType.TRAINEE) {
+            var trainee = traineeRepository.findById(profileId)
+                    .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
+            slackNotificationSender.traineeInteractionCreated(currentUser.name(), trainee, created);
+        }
+
         return InteractionResponse.from(created);
     }
 
