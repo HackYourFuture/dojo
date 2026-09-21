@@ -8,11 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -73,9 +75,12 @@ public class TraineeController {
             description = "The email address is already in use by another trainee.",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public TraineeResponse createTrainee(@Valid @RequestBody
-    TraineeRequest request) {
-        return traineeService.createTrainee(request);
+    public TraineeResponse createTrainee(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
+            @Valid @RequestBody
+            TraineeRequest request) {
+        return traineeService.createTrainee(currentUser, request);
     }
 
     @PatchMapping("/{id}")
@@ -102,6 +107,8 @@ public class TraineeController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public TraineeResponse updateTrainee(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(
                     description = "ID of the trainee to update",
                     example = "HpOjvmwXsL")
@@ -109,7 +116,7 @@ public class TraineeController {
             String id,
             @RequestBody
             ObjectNode patch) {
-        return traineeService.updateTrainee(id, patch);
+        return traineeService.updateTrainee(currentUser, id, patch);
     }
 
     @DeleteMapping("/{id}")
@@ -123,9 +130,11 @@ public class TraineeController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public void deleteTrainee(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the trainee to delete", example = "HpOjvmwXsL")
             @PathVariable
             String id) {
-        traineeService.deleteTrainee(id);
+        traineeService.deleteTrainee(currentUser, id);
     }
 }

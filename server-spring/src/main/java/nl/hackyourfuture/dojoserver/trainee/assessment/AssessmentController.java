@@ -8,10 +8,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentRequest;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,12 +66,14 @@ public class AssessmentController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public AssessmentResponse createAssessment(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the trainee", example = "HpOjvmwXsL")
             @PathVariable
             String traineeId,
             @Valid @RequestBody
             AssessmentRequest request) {
-        return assessmentService.createAssessment(traineeId, request);
+        return assessmentService.createAssessment(currentUser, traineeId, request);
     }
 
     @PutMapping("/{assessmentId}")

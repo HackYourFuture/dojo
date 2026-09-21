@@ -21,6 +21,7 @@ management:
 
 # Authentication
 dojo:
+  base-url: ${DOJO_BASE_URL}
   auth:
     google-client-id: ${GOOGLE_OAUTH_CLIENTID}
     google-client-secret: ${GOOGLE_OAUTH_CLIENTSECRET}
