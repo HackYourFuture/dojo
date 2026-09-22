@@ -11,16 +11,25 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.FieldChange;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
+import nl.hackyourfuture.dojoserver.trainee.assessment.AssessmentService;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.PredicateSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.node.ObjectNode;
 
 import java.lang.reflect.RecordComponent;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,13 +37,33 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TraineeService {
     private final TraineeRepository traineeRepository;
+    private final AssessmentService assessmentService;
     private final JsonMergePatch jsonMergePatch;
     private final Validator validator;
     private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
-    public List<TraineeSummaryResponse> getAllTrainees() {
-        return traineeRepository.findAll().stream().map(TraineeSummaryResponse::from).toList();
+    public Page<TraineeSummaryResponse> getAllTrainees(Integer startCohort, Integer endCohort,
+            Sort.Direction direction, int page, int size) {
+        List<PredicateSpecification<Trainee>> filters = new ArrayList<>();
+        if (startCohort != null) {
+            filters.add(TraineeSpecifications.currentCohortFrom(startCohort));
+        }
+        if (endCohort != null) {
+            filters.add(TraineeSpecifications.currentCohortTo(endCohort));
+        }
+
+        // Trainees with no cohort come first either way.
+        Sort sort = Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst());
+
+        Page<Trainee> trainees = traineeRepository.findAll(
+                Specification.where(PredicateSpecification.allOf(filters)),
+                PageRequest.of(page, size, sort));
+
+        Map<String, BigDecimal> averageScores = assessmentService.getAverageScores(
+                trainees.getContent().stream().map(Trainee::getId).toList());
+
+        return trainees.map(trainee -> TraineeSummaryResponse.from(trainee, averageScores.get(trainee.getId())));
     }
 
     @Transactional(readOnly = true)

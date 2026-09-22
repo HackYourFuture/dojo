@@ -9,6 +9,11 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  data:
+    web:
+      pageable:
+        # Serialise a Page as Spring's PagedModel. The default shape is explicitly unstable.
+        serialization-mode: via-dto
   http:
     clients:
       connect-timeout: 5s
