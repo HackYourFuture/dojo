@@ -40,8 +40,7 @@ public class Trainee {
     private String id;
 
     // Personal
-    private String imageUrl;
-    private String thumbnailUrl;
+    private String pictureId;
     private String firstName;
     private String lastName;
     private String preferredName;
@@ -141,5 +140,27 @@ public class Trainee {
                 .replaceAll("\\s+", "-")
                 .toLowerCase(Locale.ROOT);
         return String.format("/trainee/%s_%s", name, id);
+    }
+
+    public String getPictureUrl() {
+        if (getPictureId() == null) {
+            return null;
+        }
+        return "/api/trainees/" + getId() + "/picture/" + getPictureId();
+    }
+
+    public String getThumbnailUrl() {
+        if (getPictureId() == null) {
+            return null;
+        }
+        return "/api/trainees/" + getId() + "/picture/" + getPictureId() + "/thumbnail";
+    }
+
+    public String getPictureStorageKey(String imageId) {
+        return "images/trainee/" + getId() + "/" + imageId;
+    }
+
+    public String getThumbnailStorageKey(String imageId) {
+        return "images/trainee/" + getId() + "/" + imageId + "_thumb";
     }
 }

@@ -17,6 +17,6 @@ public record AuthenticatedUser(
     }
 
     public static AuthenticatedUser from(User user) {
-        return new AuthenticatedUser(user.getId(), user.getName(), user.getEmail(), user.getImageUrl());
+        return new AuthenticatedUser(user.getId(), user.getName(), user.getEmail(), user.getPictureUrl());
     }
 }

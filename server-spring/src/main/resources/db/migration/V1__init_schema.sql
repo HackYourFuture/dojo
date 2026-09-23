@@ -7,7 +7,7 @@ create table users
     name       text        not null,
     google_id  text
         constraint users_unique_key_google_id unique,
-    image_url  text,
+    picture_id  text,
     is_active  boolean     not null,
     created_at timestamptz not null,
     updated_at timestamptz not null
@@ -21,8 +21,7 @@ create table trainees
     -- Personal
     id                             text        not null
         constraint trainees_pk primary key,
-    image_url                      text,
-    thumbnail_url                  text,
+    picture_id                     text,
     first_name                     text        not null,
     last_name                      text        not null,
     preferred_name                 text,

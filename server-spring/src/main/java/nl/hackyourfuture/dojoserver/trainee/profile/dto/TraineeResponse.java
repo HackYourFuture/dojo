@@ -393,7 +393,7 @@ public record TraineeResponse(
     public static TraineeResponse from(Trainee trainee) {
         return new TraineeResponse(
                 trainee.getId(),
-                trainee.getImageUrl(),
+                trainee.getPictureUrl(),
                 trainee.getThumbnailUrl(),
                 trainee.getDisplayName(),
                 trainee.getProfilePath(),
