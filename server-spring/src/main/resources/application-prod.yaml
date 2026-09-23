@@ -26,3 +26,10 @@ dojo:
     google-client-id: ${GOOGLE_OAUTH_CLIENTID}
     google-client-secret: ${GOOGLE_OAUTH_CLIENTSECRET}
     allowed-origins: ${AUTH_ALLOWED_ORIGINS}
+  file-storage:
+    endpoint: ${STORAGE_ENDPOINT}
+    region: ${STORAGE_REGION}
+    bucket: ${STORAGE_BUCKET}
+    access-key-id: ${STORAGE_ACCESS_KEY_ID}
+    access-key-secret: ${STORAGE_ACCESS_KEY_SECRET}
+    force-base-path-style: false
