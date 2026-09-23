@@ -16,10 +16,10 @@ public interface AssessmentRepository extends JpaRepository<Assessment, String> 
 
     // One row per trainee and type: grouping on the type is what keeps a retake from counting twice.
     @Query("""
-            select a.traineeId as traineeId, max(a.score) as bestScore
-            from Assessment a
-            where a.traineeId in :traineeIds and a.score is not null
-            group by a.traineeId, a.type
+            select traineeId, max(score)
+            from Assessment
+            where traineeId in :traineeIds and score is not null
+            group by traineeId, type
             """)
     List<BestScore> findBestScorePerType(Collection<String> traineeIds);
 }

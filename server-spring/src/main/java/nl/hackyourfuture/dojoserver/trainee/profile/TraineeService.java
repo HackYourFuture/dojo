@@ -43,7 +43,7 @@ public class TraineeService {
     private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
-    public Page<TraineeSummaryResponse> getAllTrainees(Integer startCohort, Integer endCohort,
+    public Page<TraineeSummaryResponse> getTrainees(Integer startCohort, Integer endCohort,
             Sort.Direction direction, int page, int size) {
         List<PredicateSpecification<Trainee>> filters = new ArrayList<>();
         if (startCohort != null) {
@@ -54,7 +54,8 @@ public class TraineeService {
         }
 
         // Trainees with no cohort come first either way.
-        Sort sort = Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst());
+        Sort sort = Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst())
+                .and(Sort.by("lastName", "id"));
 
         Page<Trainee> trainees = traineeRepository.findAll(
                 Specification.where(PredicateSpecification.allOf(filters)),

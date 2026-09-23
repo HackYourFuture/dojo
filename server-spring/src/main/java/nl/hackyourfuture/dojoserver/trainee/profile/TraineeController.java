@@ -76,7 +76,7 @@ public class TraineeController {
             @Max(100)
             int size
     ) {
-        return traineeService.getAllTrainees(startCohort, endCohort, direction, page, size);
+        return traineeService.getTrainees(startCohort, endCohort, direction, page, size);
     }
 
     @GetMapping("/{id}")

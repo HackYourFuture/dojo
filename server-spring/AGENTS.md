@@ -38,7 +38,9 @@ Package by feature. Each feature owns its entity, controller, service, repositor
 nl.hackyourfuture.dojoserver
   admin/user/            User, UserController, UserService, UserRepository, dto/
   trainee/profile/       Trainee, Gender, TraineeController, TraineeService,
-                         TraineeRepository, dto/
+                         TraineeRepository, TraineeSpecifications, dto/
+  trainee/assessment/    Assessment, AssessmentType, AssessmentResult, AssessmentController,
+                         AssessmentService, AssessmentRepository, BestScore, dto/
   interaction/           Interaction, InteractionType, InteractionService,
                          InteractionRepository, TraineeInteractionController, dto/
   authentication/        AuthenticationController, AuthenticationService, AuthProperties,
@@ -273,9 +275,10 @@ Editing V1 changes its Flyway checksum, so the app will refuse to start against 
 - Request and response DTOs are records in a `dto` subpackage. Responses get a static
   `from(entity)` factory. Validation annotations go on the request record.
 - A collection returns a **summary** record, the item URL returns the full one:
-  `GET /api/trainees` is a list of `TraineeSummaryResponse` (id, names, picture URLs), and
-  `GET /api/trainees/{id}` is the `TraineeResponse`. A 50-field profile times every trainee is not
-  a list. `users` returns the full record from both because it has four fields.
+  `GET /api/trainees` is a page of `TraineeSummaryResponse` (the fields the cohort table renders,
+  plus the average assessment score), and `GET /api/trainees/{id}` is the `TraineeResponse`. A
+  50-field profile times every trainee is not a list. `users` returns the full record from both
+  because it has four fields.
 - Statuses: 200 read, 201 create, 204 delete, 400 invalid body, 404 unknown id, 409 conflict.
 - Every endpoint carries `@Operation` and `@ApiResponse`. The spec is served at
   `/api/docs/openapi`, the Scalar UI at `/api/docs`.
@@ -360,9 +363,46 @@ end with a period or none do, `@Parameter` blocks wrap the same way, validation 
 either all custom or all defaults. The formatter preserves whatever you write, so it will not
 correct you, and the next feature copies whatever it finds here.
 
-Two known gaps, deliberate for now: `GET /` is an unpaginated `findAll()`, which is right for a
-handful of staff and wrong the moment this pattern is copied to trainees or submissions; and
-`getAllUsers` has no filtering or sorting.
+One known gap, deliberate for now: `GET /api/admin/users` is an unpaginated `findAll()` with no
+filtering or sorting, which is right for a handful of staff. A list that grows copies
+`GET /api/trainees` instead.
+
+### Paginated lists
+
+`trainee/profile/` is the reference for a list that filters, sorts and pages.
+
+- The repository adds `JpaSpecificationExecutor`. Each filter is a `PredicateSpecification` factory
+  in `TraineeSpecifications`; the service adds one to a list only when its parameter is present and
+  combines them with `PredicateSpecification.allOf(list)`, which matches everything when the list is
+  empty. Spring Data JPA 4.x asserts non-null in `Specification.where` and `.and`, so the
+  `where(null).and(...)` idiom from older examples throws. `Specification.where(...)` wraps the
+  result because only the `Specification` overloads take a `Pageable`.
+- Paging is explicit `page`, `size` and `direction` parameters with `@Min`/`@Max`, not
+  `@ParameterObject Pageable`: the sort is fixed, and a free `sort` parameter would advertise a
+  choice the endpoint does not offer. The bounds reach the `HandlerMethodValidationException` handler
+  as a 400.
+- `Sort.Direction` binds by constant name, so `ASC` and `DESC` only — Boot's MVC conversion service
+  has no lenient enum converter, and `desc` is a 400.
+- **The sort must end in a unique column.** Postgres promises nothing about the order of ties, and
+  its plan changes with `LIMIT` and `OFFSET`. With only `current_cohort` in the `order by`, paging two
+  interleaved cohorts of 30 at the default size showed 57 of the 60 trainees, the gaps filled by
+  duplicates. The `lastName, id` after the cohort is what keeps page boundaries stable.
+- Null precedence is set in Java, `Sort.Order.by("currentCohort").with(direction).nullsFirst()`, and
+  Spring Data JPA 4.x passes it through as SQL `nulls first`. The HTTP `sort` parameter cannot
+  express null handling at all.
+- Return `Page<T>`. `spring.data.web.pageable.serialization-mode: via-dto` serialises it as
+  `PagedModel` — `{"content": [...], "page": {size, number, totalElements, totalPages}}` — which
+  silences Spring's unstable-JSON warning and makes springdoc document the same shape.
+- A per-row value from another feature is **one extra query for the ids on the page**, never a query
+  per row. `AssessmentService.getAverageScores` takes the page's trainee ids and returns a map; a
+  trainee missing from it has no scored assessment, and its `averageAssessmentScore` is `null`.
+- `AssessmentRepository.findBestScorePerType` is the first `@Query`. It is JPQL, so it names the
+  entity and its fields (`Assessment`, `traineeId`), not the table and columns, and with a single
+  root the paths need no alias. Returning a record makes Spring Data rewrite the select into a
+  constructor expression, so **the select order must match the record's component order** —
+  aliases are not consulted. A bad `@Query` fails at startup, not on the first request.
+- The average follows the legacy Node server: best score per assessment type, then the mean of
+  those, so a retake replaces the attempt it retook. Two decimals; the client rounds for display.
 
 ### One record type, many owners
 
@@ -419,7 +459,7 @@ mounted on; the feature still owns all five artefacts.
 
 |      |                                                                                                                    |
 |------|--------------------------------------------------------------------------------------------------------------------|
-| base | `localhost:5432/dojo`, `admin`/`password`, port 7777, `ddl-auto: validate`                                         |
+| base | `localhost:5432/dojo`, `admin`/`password`, port 7777, `ddl-auto: validate`, `Page` serialised as `PagedModel`      |
 | dev  | Scalar on, full health details, `DEBUG INFO` appended to error messages                                            |
 | prod | docs off, health details only when authorized, every DB and auth setting from an env var with no default |
 
@@ -501,9 +541,13 @@ filters and concurrency group, which is why the lint job lives here rather than 
 `quality-checks.yml` — that one is the client's and has no path filter, so it would fire on
 client-only PRs.
 
-`authentication/` holds the only tests so far, and they are the reference shape: `@SpringBootTest`
+`authentication/` and `trainee/profile/TraineeListTest` are the reference shape: `@SpringBootTest`
 plus `@AutoConfigureMockMvc` (Boot 4 moved this to
 `org.springframework.boot.webmvc.test.autoconfigure`), `@Transactional` on the class, and
 assertions through `MockMvcTester`. `@Transactional` is not optional — there is no
 `src/test/resources`, so `./mvnw test` runs against the same local `dojo` database you develop in
-and rollback is what keeps it from being wiped.
+and rollback is what keeps it from being wiped. The same database holds whatever you created by
+hand, so seed values it cannot collide with — `TraineeListTest` uses cohorts 9001 and 9002 and
+asserts only inside that range. `@WithMockUser` is enough for an endpoint that does not read the
+principal; one that takes `@AuthenticationPrincipal AuthenticatedUser` needs a real token, as
+`AuthenticationFlowTest` does.
