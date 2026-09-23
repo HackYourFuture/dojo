@@ -22,6 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -153,14 +154,14 @@ public class Trainee {
         if (getPictureId() == null) {
             return null;
         }
-        return "/api/trainees/" + getId() + "/picture/" + getPictureId() + "/thumbnail";
+        return getPictureUrl() + "/thumbnail";
     }
 
     public String getPictureStorageKey(String imageId) {
-        return "images/trainee/" + getId() + "/" + imageId;
+        return "images/trainees/" + getId() + "/" + Objects.requireNonNull(imageId, "imageId");
     }
 
     public String getThumbnailStorageKey(String imageId) {
-        return "images/trainee/" + getId() + "/" + imageId + "_thumb";
+        return getPictureStorageKey(imageId) + "_thumb";
     }
 }

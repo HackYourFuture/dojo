@@ -21,7 +21,7 @@ public record ReporterResponse(
 
         @Schema(
                 description = "The URL to the user picture",
-                example = "/api/users/USERID/picture/PICTUREID",
+                example = "/api/admin/users/USERID/picture/PICTUREID",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )

@@ -27,8 +27,8 @@ public record UserResponse(
         String name,
 
         @Schema(
-                description = "The URL to the user image",
-                example = "/api/users/USERID/picture/PICTUREID",
+                description = "The URL to the user picture",
+                example = "/api/admin/users/USERID/picture/PICTUREID",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )

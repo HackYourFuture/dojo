@@ -33,7 +33,7 @@ public record TraineeSummaryResponse(
 
         @Schema(
                 description = "The URL to a smaller version of the trainee profile picture",
-                example = "https://example.org/profile_thumb.jpg",
+                example = "/api/trainees/TRAINEEID/picture/PICTUREID/thumbnail",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )

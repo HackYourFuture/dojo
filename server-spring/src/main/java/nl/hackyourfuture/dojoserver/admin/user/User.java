@@ -11,11 +11,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,6 +27,7 @@ import java.time.Instant;
 @Table(name = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
+@DynamicUpdate
 @Setter
 public class User {
     @Id
@@ -51,10 +54,10 @@ public class User {
         if (getPictureId() == null) {
             return null;
         }
-        return "/api/users/" + getId() + "/picture/" + getPictureId();
+        return "/api/admin/users/" + getId() + "/picture/" + getPictureId();
     }
 
     public String getPictureStorageKey(String imageId) {
-        return "images/users/" + getId() + "/" + imageId;
+        return "images/users/" + getId() + "/" + Objects.requireNonNull(imageId, "imageId");
     }
 }
