@@ -27,12 +27,12 @@ public record UserResponse(
         String name,
 
         @Schema(
-                description = "The URL to the user image",
-                example = "https://example.org/profile.jpg",
+                description = "The URL to the user picture",
+                example = "/api/admin/users/USERID/picture/PICTUREID",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String imageUrl,
+        String pictureUrl,
 
         @Schema(
                 description = "User active status. Non active users cannot log in.",
@@ -46,7 +46,7 @@ public record UserResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getName(),
-                user.getImageUrl(),
+                user.getPictureUrl(),
                 user.isActive());
     }
 }

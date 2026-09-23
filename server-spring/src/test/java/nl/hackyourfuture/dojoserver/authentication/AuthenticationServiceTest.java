@@ -178,7 +178,7 @@ public class AuthenticationServiceTest {
                 .email(EMAIL)
                 .name("Jane Doe")
                 .googleId(googleId)
-                .imageUrl("https://example.org/jane.jpg")
+                .pictureId("F5Hn7oqw41")
                 .isActive(true)
                 .build();
     }

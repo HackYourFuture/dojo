@@ -39,7 +39,6 @@ public class UserService {
                 .id(RandomUtils.generateRandomId())
                 .email(request.email())
                 .name(request.name())
-                .imageUrl(request.imageUrl())
                 .isActive(request.isActive())
                 .build();
 
@@ -64,7 +63,6 @@ public class UserService {
 
         user.setEmail(request.email());
         user.setName(request.name());
-        user.setImageUrl(request.imageUrl());
         user.setActive(request.isActive());
         return UserResponse.from(user);
     }

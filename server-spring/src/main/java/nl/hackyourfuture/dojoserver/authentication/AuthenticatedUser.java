@@ -7,7 +7,7 @@ public record AuthenticatedUser(
         String id,
         String name,
         String email,
-        String imageUrl
+        String pictureUrl
 ) implements AuthenticatedPrincipal {
 
     /** What Spring and the access logs print as the user: the id, never the whole record. */
@@ -17,6 +17,6 @@ public record AuthenticatedUser(
     }
 
     public static AuthenticatedUser from(User user) {
-        return new AuthenticatedUser(user.getId(), user.getName(), user.getEmail(), user.getImageUrl());
+        return new AuthenticatedUser(user.getId(), user.getName(), user.getEmail(), user.getPictureUrl());
     }
 }

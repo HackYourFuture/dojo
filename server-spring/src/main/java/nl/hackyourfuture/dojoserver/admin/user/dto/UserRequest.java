@@ -21,10 +21,6 @@ public record UserRequest(
         @Schema(description = "The display name of the user.", example = "John Doe")
         String name,
 
-        @Size(min = 5, max = 200)
-        @Schema(description = "The URL to the user image", example = "https://example.org/profile.jpg")
-        String imageUrl,
-
         @NotNull
         @Schema(description = "User active status. Non active users cannot log in.", example = "true")
         Boolean isActive
@@ -33,6 +29,5 @@ public record UserRequest(
     public UserRequest {
         email = email == null ? null : email.strip().toLowerCase(Locale.ROOT);
         name = name == null ? null : name.strip();
-        imageUrl = imageUrl == null ? null : imageUrl.strip();
     }
 }

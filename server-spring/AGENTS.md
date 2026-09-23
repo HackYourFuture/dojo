@@ -106,8 +106,8 @@ public class User {
 - `@DynamicUpdate` (Hibernate's, not JPA's) on any entity that a PATCH writes. The merge assigns
   every field, dirty checking flags only the ones that changed, and `@DynamicUpdate` makes the SQL
   `UPDATE` list only those columns — so two people editing different fields of the same trainee
-  no longer overwrite each other's columns with the values they loaded. `User` does not carry it:
-  four columns, and no PATCH.
+  no longer overwrite each other's columns with the values they loaded. `User` carries it too:
+  `picture_id` is written separately from the admin edit, so a full-row update would clobber it.
 
 ## Services
 

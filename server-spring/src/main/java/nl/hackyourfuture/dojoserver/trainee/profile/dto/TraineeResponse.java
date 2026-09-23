@@ -25,15 +25,15 @@ public record TraineeResponse(
 
         @Schema(
                 description = "The URL to the trainee profile picture",
-                example = "https://example.org/profile.jpg",
+                example = "/api/trainees/TRAINEEID/picture/PICTUREID",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String imageUrl,
+        String pictureUrl,
 
         @Schema(
                 description = "The URL to a smaller version of the trainee profile picture",
-                example = "https://example.org/profile_thumb.jpg",
+                example = "/api/trainees/TRAINEEID/picture/PICTUREID/thumbnail",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -393,7 +393,7 @@ public record TraineeResponse(
     public static TraineeResponse from(Trainee trainee) {
         return new TraineeResponse(
                 trainee.getId(),
-                trainee.getImageUrl(),
+                trainee.getPictureUrl(),
                 trainee.getThumbnailUrl(),
                 trainee.getDisplayName(),
                 trainee.getProfilePath(),
