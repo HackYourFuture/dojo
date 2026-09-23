@@ -87,7 +87,6 @@ public class AssessmentService {
         assessmentRepository.delete(findAssessment(traineeId, id));
     }
 
-    // The mean of the best score per assessment type. Two decimals, the client rounds to one for display.
     private static BigDecimal average(List<BigDecimal> scores) {
         BigDecimal sum = scores.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
         return sum.divide(BigDecimal.valueOf(scores.size()), 2, RoundingMode.HALF_UP);
