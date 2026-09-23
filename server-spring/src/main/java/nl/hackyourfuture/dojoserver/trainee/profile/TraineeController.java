@@ -7,12 +7,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,11 +26,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import tools.jackson.databind.node.ObjectNode;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/trainees")
@@ -37,11 +40,43 @@ public class TraineeController {
     private final TraineeService traineeService;
 
     @GetMapping
-    @Operation(summary = "List all trainees",
-            description = "Returns a summary of every trainee in Dojo. Fetch /api/trainees/{id} for the full profile.")
-    @ApiResponse(responseCode = "200", description = "The list of trainee summaries")
-    public List<TraineeSummaryResponse> getTrainees() {
-        return traineeService.getAllTrainees();
+    @Operation(summary = "List trainees",
+            description = "Returns a page of trainee summaries, ordered by the current cohort. ")
+    @ApiResponse(responseCode = "200", description = "The page of trainee summaries")
+    @ApiResponse(
+            responseCode = "400",
+            description = "A request parameter is invalid",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public Page<TraineeSummaryResponse> getTrainees(
+            @Parameter(
+                    description = "Only trainees whose current cohort is this one or later",
+                    example = "0")
+            @RequestParam(required = false)
+            Integer startCohort,
+
+            @Parameter(
+                    description = "Only trainees whose current cohort is this one or earlier",
+                    example = "99")
+            @RequestParam(required = false)
+            Integer endCohort,
+
+            @Parameter(description = "The direction to order the cohorts in")
+            @RequestParam(defaultValue = "ASC")
+            Sort.Direction direction,
+
+            @Parameter(description = "Zero-based index of the page to fetch", example = "0")
+            @RequestParam(defaultValue = "0")
+            @Min(0)
+            int page,
+
+            @Parameter(description = "Number of trainees per page", example = "25")
+            @RequestParam(defaultValue = "25")
+            @Min(1)
+            @Max(100)
+            int size
+    ) {
+        return traineeService.getTrainees(startCohort, endCohort, direction, page, size);
     }
 
     @GetMapping("/{id}")

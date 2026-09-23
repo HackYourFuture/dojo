@@ -11,6 +11,7 @@ import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,12 +46,12 @@ public class OpenApiConfig {
     }
 
     /**
-     * Spring discovers controller methods in an arbitrary order, so without this the endpoints
-     * show up in a different order every build. Sorting the paths alphabetically keeps the
-     * generated docs stable and puts /api/users ahead of /api/users/{id}.
+     * Spring discovers controllers and their methods in an arbitrary order, so without this the
+     * docs change order every build. Paths are sorted alphabetically, which puts /api/users ahead of
+     * /api/users/{id}, and each tag group follows its first path, so sub-resources sit next to theirs.
      */
     @Bean
-    public OpenApiCustomizer sortPathsAlphabetically() {
+    public OpenApiCustomizer sortPathsAndTags() {
         return openApi -> {
             Paths sorted = new Paths();
             sorted.setExtensions(openApi.getPaths().getExtensions());
@@ -58,6 +59,16 @@ public class OpenApiConfig {
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(entry -> sorted.addPathItem(entry.getKey(), entry.getValue()));
             openApi.setPaths(sorted);
+
+            // Scalar orders its groups by this top-level list, not by the paths.
+            List<String> tagOrder = sorted.values().stream()
+                    .flatMap(path -> path.readOperations().stream())
+                    .flatMap(operation -> operation.getTags().stream())
+                    .distinct()
+                    .toList();
+            openApi.setTags(openApi.getTags().stream()
+                    .sorted(Comparator.comparingInt(tag -> tagOrder.indexOf(tag.getName())))
+                    .toList());
         };
     }
 }
