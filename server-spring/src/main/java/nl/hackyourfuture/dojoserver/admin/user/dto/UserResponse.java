@@ -35,6 +35,14 @@ public record UserResponse(
         String pictureUrl,
 
         @Schema(
+                description = "The URL to a smaller version of the user picture",
+                example = "/api/admin/users/USERID/picture/PICTUREID/thumbnail",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String thumbnailUrl,
+
+        @Schema(
                 description = "User active status. Non active users cannot log in.",
                 example = "true",
                 requiredMode = Schema.RequiredMode.REQUIRED
@@ -47,6 +55,7 @@ public record UserResponse(
                 user.getEmail(),
                 user.getName(),
                 user.getPictureUrl(),
+                user.getThumbnailUrl(),
                 user.isActive());
     }
 }

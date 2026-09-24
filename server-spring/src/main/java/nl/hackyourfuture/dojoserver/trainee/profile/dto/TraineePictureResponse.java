@@ -1,6 +1,7 @@
 package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 
 public record TraineePictureResponse(
         @Schema(
@@ -17,4 +18,7 @@ public record TraineePictureResponse(
         )
         String thumbnailUrl
 ) {
+    public static TraineePictureResponse from(Trainee trainee) {
+        return new TraineePictureResponse(trainee.getPictureUrl(), trainee.getThumbnailUrl());
+    }
 }
