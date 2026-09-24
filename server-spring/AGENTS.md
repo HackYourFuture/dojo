@@ -219,8 +219,11 @@ decided those and cannot break a long string literal.
   settings, so IntelliJ collapsed six Lombok imports into `lombok.*` and Checkstyle's
   `AvoidStarImport` failed CI. `CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND` and
   `NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND` are set to 999 in the IDE's own `Dojo` scheme
-  (`~/Library/Application Support/JetBrains/<IDE>/codestyles/Dojo.xml`). Re-importing
-  `eclipse-formatter.xml` replaces that scheme and drops both — set them again.
+  (`~/Library/Application Support/JetBrains/<IDE>/codestyles/Dojo.xml`). The counts do not cover
+  IntelliJ's "Packages to Use Import with '*'" list, which defaults to `java.awt` and `javax.swing`
+  and turned `java.awt.Color` into `java.awt.*` on save: empty it too
+  (`PACKAGES_TO_USE_IMPORT_ON_DEMAND`). Re-importing `eclipse-formatter.xml` replaces that scheme and
+  drops all three — set them again.
 - `.githooks/pre-commit` runs `spotless:apply` and then re-stages **only the Java files that were
   already staged**, so a commit contains what you staged and nothing else. Spotless formats the
   whole module, so a collateral reformat lands in the working tree unstaged — commit it separately.

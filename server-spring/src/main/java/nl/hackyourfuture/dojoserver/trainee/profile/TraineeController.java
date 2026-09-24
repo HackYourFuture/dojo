@@ -247,11 +247,11 @@ public class TraineeController {
 
     @PutMapping(path = "/{id}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Set trainee picture",
-            description = "Uploads a JPEG, PNG or WebP image as the profile picture of a trainee, replacing the current one.")
+            description = "Uploads a JPEG, PNG, GIF, BMP, TIFF or WebP image as the profile picture of a trainee, replacing the current one.")
     @ApiResponse(responseCode = "200", description = "The URLs of the new picture and its thumbnail")
     @ApiResponse(
             responseCode = "400",
-            description = "The picture is missing, empty, or not a JPEG, PNG or WebP image",
+            description = "The picture is missing, empty, or not a JPEG, PNG, GIF, BMP, TIFF or WebP image",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     @ApiResponse(
@@ -269,7 +269,7 @@ public class TraineeController {
             @PathVariable
             String id,
 
-            @Parameter(description = "The picture file: a JPEG, PNG or WebP image")
+            @Parameter(description = "The picture file: a JPEG, PNG, GIF, BMP, TIFF or WebP image")
             @RequestParam("picture")
             MultipartFile file
     ) {

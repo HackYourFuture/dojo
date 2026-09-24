@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.FileStorageService;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.image.ImageService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
@@ -25,11 +26,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.RecordComponent;
@@ -45,8 +48,9 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class TraineeService {
-    // Pictures are served back as uploaded, so only types a browser renders as an image.
-    private static final Set<String> PICTURE_CONTENT_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
+    // Square sizes in pixels, the same as the legacy server.
+    private static final int PICTURE_SIZE = 700;
+    private static final int THUMBNAIL_SIZE = 70;
 
     private final TraineeRepository traineeRepository;
     private final AssessmentService assessmentService;
@@ -250,18 +254,25 @@ public class TraineeService {
         if (file.isEmpty()) {
             throw new DojoBadRequestException("The picture file is empty.");
         }
-        if (file.getContentType() == null || !PICTURE_CONTENT_TYPES.contains(file.getContentType())) {
-            throw new DojoBadRequestException("The picture must be a JPEG, PNG or WebP image.");
+        if (file.getContentType() == null || !ImageService.SUPPORTED_CONTENT_TYPES.contains(file.getContentType())) {
+            throw new DojoBadRequestException("The picture must be a JPEG, PNG, GIF, BMP, TIFF or WebP image.");
         }
         String oldPictureId = trainee.getPictureId();
         String newPictureId = "IMG" + RandomUtils.generateRandomId(10);
 
-        String pictureKey = trainee.getPictureStorageKey(newPictureId);
-        String thumbnailKey = trainee.getThumbnailStorageKey(newPictureId);
-        try (InputStream picture = file.getInputStream(); InputStream thumbnail = file.getInputStream()) {
-            fileStorageService.upload(pictureKey, file.getContentType(), picture, file.getSize());
-            // TODO: actually make a thumbnail
-            fileStorageService.upload(thumbnailKey, file.getContentType(), thumbnail, file.getSize());
+        try (InputStream pictureStream = file.getInputStream();
+                InputStream thumbnailStream = file.getInputStream()) {
+            // Convert image to jpeg and create a thumbnail
+            byte[] picture = ImageService.convertImage(pictureStream, PICTURE_SIZE, PICTURE_SIZE);
+            byte[] thumbnail = ImageService.convertImage(thumbnailStream, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+
+            // Upload images to storage
+            String pictureKey = trainee.getPictureStorageKey(newPictureId);
+            String thumbnailKey = trainee.getThumbnailStorageKey(newPictureId);
+            fileStorageService.upload(pictureKey, MediaType.IMAGE_JPEG_VALUE, new ByteArrayInputStream(picture),
+                    picture.length);
+            fileStorageService.upload(thumbnailKey, MediaType.IMAGE_JPEG_VALUE, new ByteArrayInputStream(thumbnail),
+                    thumbnail.length);
         } catch (IOException e) {
             log.error("Trainee id {} - profile picture upload failed: {}", id, e.getMessage());
             throw new RuntimeException(e);
