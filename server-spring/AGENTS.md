@@ -43,6 +43,10 @@ nl.hackyourfuture.dojoserver
                          AssessmentService, AssessmentRepository, BestScore, dto/
   interaction/           Interaction, InteractionType, InteractionService,
                          InteractionRepository, TraineeInteractionController, dto/
+  picture/               PictureOwner, PictureService, PictureResponses
+  image/                 ImageService
+  filestorage/           FileStorageService, FileStorageProperties, StoredFile
+  slack/                 SlackNotificationSender, SlackClient, SlackProperties, FieldChange
   authentication/        AuthenticationController, AuthenticationService, AuthProperties,
                          AuthenticationCookieManager, TokenAuthenticationFilter,
                          AuthenticatedUser, LoginResponse, dto/
@@ -455,6 +459,29 @@ mounted on; the feature still owns all five artefacts.
 - `PUT` never touches `reporterId`, so editing an interaction cannot reassign its author. The
   legacy Node server defaulted the reporter to whoever was editing, which silently rewrote
   authorship on every edit.
+
+### Pictures
+
+`picture/` is the reference for files that belong to a record. Trainees and users both have a
+profile picture, so there is **one `PictureService`** for every entity that implements
+`PictureOwner` (`getPictureId`, `setPictureId`, `getPictureStoragePrefix`). The feature service
+keeps the lookup, its 404 label and the transaction, and passes the managed entity in; the
+controller streams the result through `PictureResponses.of`.
+
+- Each upload is converted by `ImageService` into a 700px picture and a 70px thumbnail, both JPEG,
+  stored at `images/{owner}/{ownerId}/{pictureId}` and `…_thumb`. A new picture id per upload means
+  a URL never changes content, which is why `PictureResponses` can send a one-year
+  `private, immutable` cache header.
+- Only `pictureId` is stored. Keys are built in `PictureService` and URLs on the entity, so neither
+  is saved in the database.
+- A picture id in a URL that is not the owner's current one is a 404, and keys are built from the
+  stored id, never from the path variable.
+- Replacing or deleting a picture removes the old files best-effort; `deleteAll` sweeps whatever is
+  left under the owner's prefix when the owner is deleted.
+- **Delete and `flush()` the owner before `deleteAll`.** `interactions.reporter_id` is `on delete
+  restrict`, so a user who reported an interaction fails at the flush with a 409 — before any file
+  is gone. Sweeping first would delete the pictures of a user who then stays.
+- Tests mock `FileStorageService` with `@MockitoBean`: CI has Postgres but no S3.
 
 ## Configuration
 

@@ -11,13 +11,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nl.hackyourfuture.dojoserver.picture.PictureOwner;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,7 +29,7 @@ import java.util.Objects;
 @EntityListeners(AuditingEntityListener.class)
 @DynamicUpdate
 @Setter
-public class User {
+public class User implements PictureOwner {
     @Id
     @EqualsAndHashCode.Include
     @Setter(AccessLevel.NONE)
@@ -57,7 +57,15 @@ public class User {
         return "/api/admin/users/" + getId() + "/picture/" + getPictureId();
     }
 
-    public String getPictureStorageKey(String imageId) {
-        return "images/users/" + getId() + "/" + Objects.requireNonNull(imageId, "imageId");
+    public String getThumbnailUrl() {
+        if (getPictureId() == null) {
+            return null;
+        }
+        return getPictureUrl() + "/thumbnail";
+    }
+
+    @Override
+    public String getPictureStoragePrefix() {
+        return "images/users/" + getId() + "/";
     }
 }

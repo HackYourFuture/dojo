@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.image;
+package nl.hackyourfuture.dojoserver.shared.media;
 
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.Set;
 
 @Slf4j
-public class ImageService {
-    private ImageService() {
+public class ImageEditor {
+    private ImageEditor() {
         /* This utility class should not be instantiated */
     }
 

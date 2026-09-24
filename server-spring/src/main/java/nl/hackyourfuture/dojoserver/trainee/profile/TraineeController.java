@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
-import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.picture.PictureResponses;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineePictureResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
@@ -20,7 +20,6 @@ import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,16 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
-import java.time.Duration;
-
 @RestController
 @RequestMapping("/api/trainees")
 @RequiredArgsConstructor
 @Tag(name = "Trainees", description = "Operations on trainee profiles")
 public class TraineeController {
-    private static final CacheControl PICTURE_CACHE =
-            CacheControl.maxAge(Duration.ofDays(365)).cachePrivate().immutable();
-
     private final TraineeService traineeService;
 
     @GetMapping
@@ -207,12 +201,7 @@ public class TraineeController {
             @PathVariable
             String pictureId
     ) {
-        StoredFile picture = traineeService.getPicture(traineeId, pictureId);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(picture.contentType()))
-                .contentLength(picture.contentLength())
-                .cacheControl(PICTURE_CACHE)
-                .body(new InputStreamResource(picture.content()));
+        return PictureResponses.of(traineeService.getPicture(traineeId, pictureId));
     }
 
     @GetMapping("/{traineeId}/picture/{pictureId}/thumbnail")
@@ -237,12 +226,7 @@ public class TraineeController {
             @PathVariable
             String pictureId
     ) {
-        StoredFile picture = traineeService.getThumbnail(traineeId, pictureId);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(picture.contentType()))
-                .contentLength(picture.contentLength())
-                .cacheControl(PICTURE_CACHE)
-                .body(new InputStreamResource(picture.content()));
+        return PictureResponses.of(traineeService.getThumbnail(traineeId, pictureId));
     }
 
     @PutMapping(path = "/{id}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
