@@ -11,31 +11,43 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
+import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
+import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineePictureResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/trainees")
 @RequiredArgsConstructor
 @Tag(name = "Trainees", description = "Operations on trainee profiles")
 public class TraineeController {
+    private static final CacheControl PICTURE_CACHE =
+            CacheControl.maxAge(Duration.ofDays(365)).cachePrivate().immutable();
 
     private final TraineeService traineeService;
 
@@ -167,9 +179,122 @@ public class TraineeController {
     public void deleteTrainee(
             @AuthenticationPrincipal
             AuthenticatedUser currentUser,
-            @Parameter(description = "ID of the trainee to delete", example = "HpOjvmwXsL")
+            @Parameter(description = "ID of the trainee to delete", example = "TRAINEEID")
             @PathVariable
             String id) {
         traineeService.deleteTrainee(currentUser, id);
+    }
+
+    // Profile picture methods:
+    @GetMapping("/{traineeId}/picture/{pictureId}")
+    @Operation(summary = "Get trainee picture", description = "Returns the profile picture of a trainee.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "The picture file",
+            content = @Content(mediaType = "image/jpeg", schema = @Schema(type = "string", format = "binary"))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "The trainee id was not found, or the picture id is not the trainee's current picture",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public ResponseEntity<InputStreamResource> getPicture(
+            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @PathVariable
+            String traineeId,
+
+            @Parameter(description = "ID of the picture", example = "PICTUREID")
+            @PathVariable
+            String pictureId
+    ) {
+        StoredFile picture = traineeService.getPicture(traineeId, pictureId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(picture.contentType()))
+                .contentLength(picture.contentLength())
+                .cacheControl(PICTURE_CACHE)
+                .body(new InputStreamResource(picture.content()));
+    }
+
+    @GetMapping("/{traineeId}/picture/{pictureId}/thumbnail")
+    @Operation(summary = "Get trainee picture thumbnail",
+            description = "Returns a smaller version of the profile picture of a trainee.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "The thumbnail file",
+            content = @Content(mediaType = "image/jpeg", schema = @Schema(type = "string", format = "binary"))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "The trainee id was not found, or the picture id is not the trainee's current picture",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public ResponseEntity<InputStreamResource> getThumbnail(
+            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @PathVariable
+            String traineeId,
+
+            @Parameter(description = "ID of the picture", example = "PICTUREID")
+            @PathVariable
+            String pictureId
+    ) {
+        StoredFile picture = traineeService.getThumbnail(traineeId, pictureId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(picture.contentType()))
+                .contentLength(picture.contentLength())
+                .cacheControl(PICTURE_CACHE)
+                .body(new InputStreamResource(picture.content()));
+    }
+
+    @PutMapping(path = "/{id}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Set trainee picture",
+            description = "Uploads a JPEG, PNG, GIF, BMP, TIFF or WebP image as the profile picture of a trainee, replacing the current one.")
+    @ApiResponse(responseCode = "200", description = "The URLs of the new picture and its thumbnail")
+    @ApiResponse(
+            responseCode = "400",
+            description = "The picture is missing, empty, or not a JPEG, PNG, GIF, BMP, TIFF or WebP image",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "The trainee id was not found",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    @ApiResponse(
+            responseCode = "413",
+            description = "The picture is too large",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public TraineePictureResponse setPicture(
+            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @PathVariable
+            String id,
+
+            @Parameter(description = "The picture file: a JPEG, PNG, GIF, BMP, TIFF or WebP image")
+            @RequestParam("picture")
+            MultipartFile file
+    ) {
+        return traineeService.setPicture(id, file);
+    }
+
+    @DeleteMapping("/{traineeId}/picture/{pictureId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete trainee picture",
+            description = "Deletes the profile picture of a trainee, together with its thumbnail.")
+    @ApiResponse(responseCode = "204", description = "The profile picture has been successfully deleted")
+    @ApiResponse(
+            responseCode = "404",
+            description = "The trainee id was not found, or the picture id is not the trainee's current picture",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public void deletePicture(
+            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @PathVariable
+            String traineeId,
+
+            @Parameter(description = "ID of the picture", example = "PICTUREID")
+            @PathVariable
+            String pictureId
+    ) {
+        this.traineeService.deletePicture(traineeId, pictureId);
     }
 }

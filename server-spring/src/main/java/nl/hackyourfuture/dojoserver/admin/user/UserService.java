@@ -73,4 +73,5 @@ public class UserService {
         tokenService.revokeAllForUser(id);
         userRepository.delete(user);
     }
+
 }

@@ -4,6 +4,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -13,8 +14,10 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -89,6 +92,17 @@ public class FileStorageService {
         log.info("Delete file '{}'", key);
 
         s3Client.deleteObject(request);
+    }
+
+    public void deleteAllWithPrefix(String prefix) {
+        Assert.hasText(prefix, "An empty prefix would delete the whole bucket");
+        var request = ListObjectsV2Request.builder()
+                .bucket(this.fileStorageProperties.bucket())
+                .prefix(prefix)
+                .build();
+        for (S3Object object : s3Client.listObjectsV2Paginator(request).contents()) {
+            delete(object.key());
+        }
     }
 
     @PreDestroy

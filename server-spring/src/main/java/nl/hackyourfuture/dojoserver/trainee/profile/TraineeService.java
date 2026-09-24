@@ -4,14 +4,20 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
+import nl.hackyourfuture.dojoserver.filestorage.FileStorageService;
+import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.image.ImageService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.FieldChange;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.assessment.AssessmentService;
+import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineePictureResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
@@ -20,10 +26,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.RecordComponent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,14 +44,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TraineeService {
+    // Square sizes in pixels, the same as the legacy server.
+    private static final int PICTURE_SIZE = 700;
+    private static final int THUMBNAIL_SIZE = 70;
+
     private final TraineeRepository traineeRepository;
     private final AssessmentService assessmentService;
     private final JsonMergePatch jsonMergePatch;
     private final Validator validator;
     private final SlackNotificationSender slackNotificationSender;
+    private final FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
     public Page<TraineeSummaryResponse> getTrainees(Integer startCohort, Integer endCohort,
@@ -205,8 +222,85 @@ public class TraineeService {
     @Transactional
     public void deleteTrainee(AuthenticatedUser currentUser, String id) {
         Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
+        // Delete all pictures
+        fileStorageService.deleteAllWithPrefix(trainee.getPictureStoragePrefix());
         traineeRepository.delete(trainee);
         slackNotificationSender.traineeDeleted(currentUser.name(), trainee);
+    }
+
+    @Transactional(readOnly = true)
+    public StoredFile getPicture(String traineeId, String pictureId) {
+        Trainee trainee = findTrainee(traineeId);
+        if (!pictureId.strip().equals(trainee.getPictureId())) {
+            throw new DojoNotFoundException("Picture", pictureId);
+        }
+        String key = trainee.getPictureStorageKey(trainee.getPictureId());
+        return fileStorageService.download(key);
+    }
+
+    @Transactional(readOnly = true)
+    public StoredFile getThumbnail(String traineeId, String pictureId) {
+        Trainee trainee = findTrainee(traineeId);
+        if (!pictureId.strip().equals(trainee.getPictureId())) {
+            throw new DojoNotFoundException("Thumbnail", pictureId);
+        }
+        String key = trainee.getThumbnailStorageKey(trainee.getPictureId());
+        return fileStorageService.download(key);
+    }
+
+    @Transactional
+    public TraineePictureResponse setPicture(String id, MultipartFile file) {
+        Trainee trainee = findTrainee(id);
+        if (file.isEmpty()) {
+            throw new DojoBadRequestException("The picture file is empty.");
+        }
+        if (file.getContentType() == null || !ImageService.SUPPORTED_CONTENT_TYPES.contains(file.getContentType())) {
+            throw new DojoBadRequestException("The picture must be a JPEG, PNG, GIF, BMP, TIFF or WebP image.");
+        }
+        String oldPictureId = trainee.getPictureId();
+        String newPictureId = "IMG" + RandomUtils.generateRandomId(10);
+
+        try (InputStream pictureStream = file.getInputStream();
+                InputStream thumbnailStream = file.getInputStream()) {
+            // Convert image to jpeg and create a thumbnail
+            byte[] picture = ImageService.convertImage(pictureStream, PICTURE_SIZE, PICTURE_SIZE);
+            byte[] thumbnail = ImageService.convertImage(thumbnailStream, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+
+            // Upload images to storage
+            String pictureKey = trainee.getPictureStorageKey(newPictureId);
+            String thumbnailKey = trainee.getThumbnailStorageKey(newPictureId);
+            fileStorageService.upload(pictureKey, MediaType.IMAGE_JPEG_VALUE, new ByteArrayInputStream(picture),
+                    picture.length);
+            fileStorageService.upload(thumbnailKey, MediaType.IMAGE_JPEG_VALUE, new ByteArrayInputStream(thumbnail),
+                    thumbnail.length);
+        } catch (IOException e) {
+            log.error("Trainee id {} - profile picture upload failed: {}", id, e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        // Save the new picture id in the database
+        trainee.setPictureId(newPictureId);
+
+        // Delete the old picture and thumbnail
+        if (oldPictureId != null) {
+            cleanUpPictures(trainee, oldPictureId);
+        }
+
+        return new TraineePictureResponse(trainee.getPictureUrl(), trainee.getThumbnailUrl());
+    }
+
+    @Transactional
+    public void deletePicture(String id, String pictureId) {
+        Trainee trainee = findTrainee(id);
+        if (!pictureId.strip().equals(trainee.getPictureId())) {
+            throw new DojoNotFoundException("Picture", pictureId);
+        }
+        cleanUpPictures(trainee, trainee.getPictureId());
+        trainee.setPictureId(null);
+    }
+
+    private Trainee findTrainee(String id) {
+        return traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
     }
 
     /**
@@ -226,6 +320,17 @@ public class TraineeService {
             return component.getAccessor().invoke(request);
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException("Cannot read " + component.getName(), e);
+        }
+    }
+
+    private void cleanUpPictures(Trainee trainee, String pictureId) {
+        try {
+            String oldPictureKey = trainee.getPictureStorageKey(pictureId);
+            String oldThumbnailKey = trainee.getThumbnailStorageKey(pictureId);
+            fileStorageService.delete(oldPictureKey);
+            fileStorageService.delete(oldThumbnailKey);
+        } catch (RuntimeException e) {
+            log.error("Error deleting trainee picture: {}", e.getMessage());
         }
     }
 }
