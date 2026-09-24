@@ -16,9 +16,11 @@ import nl.hackyourfuture.dojoserver.authentication.googleoauth.GoogleOAuthServic
 import nl.hackyourfuture.dojoserver.authentication.token.IssuedToken;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
+import nl.hackyourfuture.dojoserver.picture.PictureService;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoUnauthorizedException;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.client.RestClient;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -40,8 +42,8 @@ public class AuthenticationServiceTest {
             new AuthProperties("client-id-8xqGg", "client-secret-3gMQ", Duration.ofMinutes(15), Duration.ofDays(7),
                     Duration.ofDays(365), true, List.of(ORIGIN));
 
-    private final AuthenticationService authenticationService =
-            new AuthenticationService(tokenService, userRepository, googleOAuthService, authProperties);
+    private final AuthenticationService authenticationService = new AuthenticationService(tokenService,
+            userRepository, mock(PictureService.class), googleOAuthService, authProperties, mock(RestClient.class));
 
     @Test
     void googleLoginSuccess() {
