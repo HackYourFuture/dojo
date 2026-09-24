@@ -13,25 +13,35 @@ import nl.hackyourfuture.dojoserver.authentication.token.IssuedToken;
 import nl.hackyourfuture.dojoserver.authentication.token.Token;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
+import nl.hackyourfuture.dojoserver.picture.PictureService;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoUnauthorizedException;
+import nl.hackyourfuture.dojoserver.shared.media.DownloadedFile;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
+import java.net.URI;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationService {
-    private final TokenService tokenService;
-    private final UserRepository userRepository;
     private static final String FAIL_MESSAGE = "Login failed. Please contact the administrator for more details.";
     private static final String ALLOWED_HOSTED_DOMAIN = "hackyourfuture.net";
 
+    private final TokenService tokenService;
+    private final UserRepository userRepository;
+    private final PictureService pictureService;
     private final GoogleOAuthService googleOAuthService;
     private final AuthProperties authProperties;
+    private final RestClient restClient;
 
     @Transactional
     public LoginResponse googleLogin(GoogleLoginRequest request) {
@@ -80,7 +90,7 @@ public class AuthenticationService {
         return TokenResponse.from(newAccessToken);
     }
 
-    /** Idempotent: absent, unknown and already-revoked tokens are all fine. */
+    /** Idempotent: absent, unknown, and already-revoked tokens are all fine. */
     @Transactional
     public void logout(String accessToken, String refreshToken) {
         tokenService.revoke(accessToken);
@@ -123,6 +133,9 @@ public class AuthenticationService {
 
         log.info("First login for user Id '{}'. Registering its Google ID.", user.getId());
         user.setGoogleId(googleIdentity.sub());
+
+        // If possible, download the Google profile image and save it
+        syncProfilePicture(user, googleIdentity.imageUrl());
         return user;
     }
 
@@ -140,5 +153,27 @@ public class AuthenticationService {
         log.warn("Google OAuth email changed for User ID '{}'. Previous email: '{}'. next email: '{}'. "
                 + "Updating the DB with the new email", user.getId(), user.getEmail(), newEmail);
         user.setEmail(newEmail);
+    }
+
+    private void syncProfilePicture(User user, String googlePictureUrl) {
+        if (googlePictureUrl == null || googlePictureUrl.isBlank() || user.getPictureId() != null) {
+            return;
+        }
+        // Google serves 96px by default; ask for the 700px PictureService stores. Replace =s96-c to =s700-c
+        String url = googlePictureUrl.replaceFirst("=s\\d+-c$", "=s700-c");
+        try {
+            ResponseEntity<byte[]> response = restClient.get().uri(URI.create(url)).retrieve().toEntity(byte[].class);
+            byte[] data = Objects.requireNonNullElse(response.getBody(), new byte[0]);
+            pictureService.save(user, new DownloadedFile(
+                    "GooglePicture",
+                    data,
+                    response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))
+            );
+        } catch (RestClientResponseException e) {
+            log.warn("Could not download the Google profile picture for user id '{}': {}", user.getId(),
+                    e.getStatusCode());
+        } catch (RuntimeException e) {
+            log.warn("Could not sync the Google profile picture for user id '{}': {}", user.getId(), e.getMessage());
+        }
     }
 }
