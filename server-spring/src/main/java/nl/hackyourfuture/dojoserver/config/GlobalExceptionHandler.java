@@ -21,9 +21,11 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import tools.jackson.core.JacksonException;
@@ -149,13 +151,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Parent of the missing-parameter, missing-header and missing-part exceptions.
+     * Parent of the missing-parameter and missing-header exceptions.
      */
     @ExceptionHandler(ServletRequestBindingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public DojoError handleMissingRequestData(Exception ex) {
         return buildDojoError(ex,
                 "The request is missing a required parameter, header or part. Please refer to the API documentation at '/api/docs'.");
+    }
+
+    // A ServletException, not a ServletRequestBindingException, so the handler above misses it.
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public DojoError handleMissingPart(MissingServletRequestPartException ex) {
+        return buildDojoError(ex, "The request is missing the '" + ex.getRequestPartName() + "' file.");
     }
 
     // ---------------------------------------------------------------- 401
@@ -231,8 +240,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-    public DojoError handleUnsupportedMediaType(Exception ex) {
-        return buildDojoError(ex, "That content type is not supported. This endpoint expects 'application/json'.");
+    public DojoError handleUnsupportedMediaType(HttpMediaTypeNotSupportedException ex) {
+        return buildDojoError(ex, "That content type is not supported. This endpoint expects '"
+                + MediaType.toString(ex.getSupportedMediaTypes()) + "'.");
     }
 
     // -------------------------------------------------- deliberate errors
@@ -247,6 +257,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatus())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new DojoError(ex.getMessage()));
+    }
+
+    // -------------------------------------------------------- no response
+
+    // The client went away mid-response, e.g. left a page while its pictures loaded. There is no one to answer.
+    @ExceptionHandler(AsyncRequestNotUsableException.class)
+    public ResponseEntity<Void> handleClientGone() {
+        return null;
     }
 
     // ---------------------------------------------------------------- 500

@@ -157,8 +157,12 @@ public class Trainee {
         return getPictureUrl() + "/thumbnail";
     }
 
+    public String getPictureStoragePrefix() {
+        return "images/trainees/" + getId() + "/";
+    }
+
     public String getPictureStorageKey(String imageId) {
-        return "images/trainees/" + getId() + "/" + Objects.requireNonNull(imageId, "imageId");
+        return getPictureStoragePrefix() + Objects.requireNonNull(imageId, "imageId");
     }
 
     public String getThumbnailStorageKey(String imageId) {
