@@ -1,0 +1,24 @@
+{
+  "male": [
+    "Mohammed", "Mohamad", "Muhammad", "Ahmad", "Ahmed", "Mahmoud", "Mustafa", "Omar", "Ali", "Hassan",
+    "Hussein", "Khaled", "Khalid", "Youssef", "Yusuf", "Ibrahim", "Ismaïl", "Abdullah", "Abdelrahman", "Abd al-Karim",
+    "Tariq", "Tarek", "Samir", "Karim", "Rami", "Bilal", "Hamza", "Anas", "Majd", "Firas",
+    "Fadi", "Nizar", "Wassim", "Ziad", "Saïd", "Hicham", "Noureddine", "Abdelkader", "Chérif", "Mourad",
+    "Rachid", "Adel", "Ala'a", "Mu'min", "Walid", "Jamal", "Nabil", "Osama", "Qusay", "Yazan"
+  ],
+  "female": [
+    "Fatima", "Aïcha", "Aisha", "Maryam", "Mariam", "Nour", "Noor", "Layla", "Leila", "Rania",
+    "Rana", "Lina", "Lana", "Hala", "Huda", "Salma", "Sara", "Yasmin", "Yasmine", "Amira",
+    "Amal", "Asma'", "Dalia", "Dima", "Ghada", "Hanan", "Heba", "Iman", "Jana", "Joud",
+    "Kawthar", "Lubna", "Loubna", "Malak", "Manal", "Nada", "Nadia", "Naïma", "Rahaf", "Reem",
+    "Ruba", "Safa'a", "Samira", "Chaïma", "Suha", "Wafa'a", "Zainab", "Zahra", "Khadija", "Hayat"
+  ],
+  "last": [
+    "Al-Ahmad", "Al-Ali", "Al-Hassan", "Al-Hussein", "Al-Khatib", "Al-Masri", "Al-Shami", "Al-Halabi", "Al-Homsi", "Al-Tamimi",
+    "Al-Najjar", "Al-Sayed", "Al-Rifa'i", "Al-Sa'di", "Al-Ja'fari", "Abu Zaid", "Abu Khalil", "Abdelaziz", "Abdallah", "Haddad",
+    "Khoury", "Saleh", "Salem", "Mansour", "Nasser", "Hamdan", "Darwish", "Kanaan", "Qasim", "Yassin",
+    "Othman", "Barakat", "Bakri", "Hijazi", "Sabbagh", "Attar", "Hallak", "Jaber", "Karam", "Moussa",
+    "Nassar", "Rahal", "Shaheen", "Suleiman", "Zein", "El-Amin", "El Amrani", "El Idrissi", "Benali", "Ben Saïd",
+    "Belkacem", "Bouzid", "Chérif", "Mekki", "Ouali", "Ziani", "Hamidi", "Bennani", "Alaoui", "Kaddour"
+  ]
+}
