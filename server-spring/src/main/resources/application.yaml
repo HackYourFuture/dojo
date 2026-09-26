@@ -29,11 +29,13 @@ server:
 springdoc:
   api-docs:
     path: /api/docs/openapi
+    enabled: ${API_DOCS_ENABLED:true}
   override-with-generic-response: false
 scalar:
   path: /api/docs
   url: ${springdoc.api-docs.path}
   page-title: "Dojo API description"
+  enabled: ${API_DOCS_ENABLED:true}
 
 # Health and metrics
 management:

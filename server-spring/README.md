@@ -106,6 +106,7 @@ every push to `main`.
 | `COOKIE_SECURE`             | `Secure` flag on the session cookies. Defaults to `true`; the `dev` profile sets `false`.                                        | No          |
 | `SPRING_PROFILES_ACTIVE`    | `dev`, `test` or `prod`. The Docker image sets `prod`.                                                                           | No          |
 | `SERVER_PORT`               | Port the server listens on. Defaults to `7777`.                                                                                  | No          |
+| `API_DOCS_ENABLED`          | Enable Scalar API docs endpoint `/api/docs`                                                                                      | No          |
 
 The `prod` profile deliberately has no defaults for the `DB_*` variables, the Google credentials or
 the allowed origins, so a misconfigured deployment fails at startup instead of quietly connecting
@@ -113,8 +114,8 @@ somewhere wrong.
 
 ## 📝 API docs
 
-Interactive docs at `/api/docs`, the raw OpenAPI document at `/api/docs/openapi`. Both are
-disabled on the `prod` profile.
+Interactive docs at `/api/docs`, the raw OpenAPI document at `/api/docs/openapi`.
+Both are disabled on the `prod` profile by default but can be enabled with the `API_DOCS_ENABLED` environemnt variable.
 
 Health check: `/actuator/health`.
 
