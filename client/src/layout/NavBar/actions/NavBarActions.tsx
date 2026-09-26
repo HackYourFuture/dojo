@@ -38,7 +38,7 @@ export const NavBarActions: React.FC = () => {
       </IconButton>
       <Tooltip title="Open user menu">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt={user?.name ?? 'User image'} src={user?.imageUrl ?? ''} />
+          <Avatar alt={user?.name ?? 'User image'} src={user?.pictureUrl ?? undefined} />
         </IconButton>
       </Tooltip>
 

@@ -50,7 +50,7 @@ Before you begin, ensure you have the following installed:
 npm run dev
 ```
 
-The application will open automatically in your browser at `http://localhost:5173`.
+The application will open automatically in your browser at `http://localhost:8888`.
 
 ## Building for Production
 

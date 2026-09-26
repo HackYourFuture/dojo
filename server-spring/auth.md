@@ -90,7 +90,7 @@ signed-in user's behalf. Two things prevent it:
   site.
 - Any request that changes data and relies on a cookie must also carry an `Origin` header that Dojo
   recognises. (Browsers always send one. If you are testing with `curl`, add
-  `-H "Origin: http://localhost:5173"` or the request is refused.)
+  `-H "Origin: http://localhost:8888"` or the request is refused.)
 
 Sign-in has its own protection: it only accepts `application/json`, which an HTML form cannot send.
 

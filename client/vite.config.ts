@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      port: 8888,
       // Automatically open the app in the browser on server start.
       open: '/',
 

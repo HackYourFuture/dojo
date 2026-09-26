@@ -5,11 +5,11 @@ import { AvatarWithTooltip } from '../../education/components/AvatarWithTooltip'
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Interaction } from '../Interactions';
+import { Interaction } from '../models/interaction';
 import MarkdownText from '../../components/MarkdownText';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import { formatTextToFriendly } from '../../utils/formHelper';
-import { useDeleteInteraction } from '../data/interaction-queries';
+import { useDeleteInteraction } from '../data/mutations';
 
 interface InteractionsListProps {
   interactions: Interaction[];
@@ -17,7 +17,7 @@ interface InteractionsListProps {
   onClickEdit: (id: string) => void;
 }
 const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId, onClickEdit }) => {
-  const { mutateAsync: deleteInteraction, isPending: isDeleteLoading } = useDeleteInteraction(traineeId);
+  const { mutate: deleteInteraction, isPending: isDeleteLoading } = useDeleteInteraction(traineeId);
   const [error, setError] = useState<string>('');
   const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
@@ -28,15 +28,17 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
     setIsModalOpen(true);
   };
 
-  const onConfirmDelete = async () => {
+  const onConfirmDelete = () => {
     if (!interactionToDelete) return;
-    await deleteInteraction(interactionToDelete.id, {
+    deleteInteraction(interactionToDelete.id, {
       onSuccess: () => {
         setIsModalOpen(false);
         setInteractionToDelete(null);
       },
       onError: (error) => {
-        if (error instanceof Error) setError(error.message);
+        // Close the dialog so the error above the list is visible, e.g. when deleting someone else's interaction.
+        setIsModalOpen(false);
+        setError(error.message);
       },
     });
   };
@@ -92,7 +94,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
                         paddingTop: 1,
                       }}
                     >
-                      <AvatarWithTooltip imageUrl={interaction.reporter.imageUrl} name={interaction.reporter.name} />
+                      <AvatarWithTooltip imageUrl={interaction.reporter.pictureUrl} name={interaction.reporter.name} />
                     </ListItemAvatar>
                     <ListItemText
                       primary={
