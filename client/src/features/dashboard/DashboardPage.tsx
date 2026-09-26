@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useDashboardData } from './data/useDashboardData';
+import { useGetDashboard } from './data/dashboard-queries';
 
 /**
  * Component for displaying the dashboard page elements.
@@ -27,7 +27,7 @@ const DashboardPage = () => {
   const startDateFormatted: string | undefined = startDate?.format('YYYY-MM-DD');
   const endDateFormatted: string | undefined = endDate?.format('YYYY-MM-DD');
 
-  const { isLoading, isError, data, error, isFetching, refetch } = useDashboardData(
+  const { isLoading, isError, data, error, isFetching, refetch } = useGetDashboard(
     startDateFormatted,
     endDateFormatted
   );

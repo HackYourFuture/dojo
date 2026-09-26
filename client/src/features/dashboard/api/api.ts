@@ -1,13 +1,13 @@
+import { DashboardResponse } from './types';
 import axios from 'axios';
-import { DashboardData } from '../Dashboard';
+import { mapDashboardToDomain } from './mapper';
 
-export const getDashboardData = async (startDate?: string, endDate?: string): Promise<DashboardData> => {
+export const getDashboard = async (startDate?: string, endDate?: string) => {
   const params = {
     ...(startDate && { startDate }),
     ...(endDate && { endDate }),
   };
 
-  const response = await axios.get<DashboardData>('/api/dashboard', { params });
-
-  return response.data;
+  const { data } = await axios.get<DashboardResponse>('/api/dashboard', { params });
+  return mapDashboardToDomain(data);
 };

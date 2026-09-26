@@ -1,8 +1,8 @@
 import { Alert, Box, Dialog, SelectChangeEvent, Typography } from '@mui/material';
-import { FormErrors, FormState, NewTraineeForm } from './components/NewTraineeForm';
-import { JobPath, LearningStatus } from '../../../data/types/Trainee';
+import { FormErrors, NewTraineeForm } from './components/NewTraineeForm';
+import { JobPath, LearningStatus, NewTrainee } from '../../../data/types/Trainee';
 
-import { useCreateTraineeProfile } from './data/mutations';
+import { useCreateTrainee } from '../data/mutations';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { validateAndCollectFormErrors } from './lib/formValidation';
@@ -12,7 +12,7 @@ interface AddTraineeDialogProps {
   handleClose: () => void;
 }
 export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, handleClose }) => {
-  const initialState = {
+  const initialState: NewTrainee = {
     firstName: '',
     lastName: '',
     gender: null,
@@ -23,17 +23,11 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
   };
 
   const navigate = useNavigate();
-  const {
-    mutate: createTrainee,
-    isPending,
-    error: submitError,
-  } = useCreateTraineeProfile({
-    onSuccess: (profilePath: string) => onSuccess(profilePath),
-  });
+  const { mutate: createTrainee, isPending, error: submitError } = useCreateTrainee();
 
   const [errors, setErrors] = useState<FormErrors | null>(null);
 
-  const [formState, setFormState] = useState<FormState>(initialState);
+  const [formState, setFormState] = useState<NewTrainee>(initialState);
   const onClose = () => {
     setFormState(initialState);
     setErrors(null);
@@ -46,7 +40,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
   };
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormState((prevState: FormState) => ({
+    setFormState((prevState: NewTrainee) => ({
       ...prevState,
       [name]: value,
     }));
@@ -55,7 +49,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
   const handleSelectChange = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
 
-    setFormState((prevState: FormState) => ({
+    setFormState((prevState: NewTrainee) => ({
       ...prevState,
       [name]: value,
     }));
@@ -69,7 +63,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
       setErrors(errors);
       return;
     }
-    createTrainee(formState);
+    createTrainee(formState, { onSuccess: (trainee) => onSuccess(trainee.profilePath) });
   };
 
   return (
@@ -91,7 +85,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
         {submitError && (
           <Box paddingTop={2}>
             <Alert severity="error">
-              An error occurred while creating the trainee profile: {submitError?.message && 'unknown'}
+              An error occurred while creating the trainee profile: {submitError.message || 'unknown'}
             </Alert>
           </Box>
         )}

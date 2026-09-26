@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Skeleton, Avatar } from '@mui/material';
 
 export interface TraineeAvatarProps {
-  imageURL: string;
+  imageUrl: string;
   altText: string;
 }
 
-export const TraineeAvatar = ({ imageURL, altText }: TraineeAvatarProps) => {
+export const TraineeAvatar = ({ imageUrl, altText }: TraineeAvatarProps) => {
   const size = { width: 40, height: 40 };
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  if (imageURL.trim().length === 0 || isError) {
+  if (imageUrl.trim().length === 0 || isError) {
     return <Avatar sx={size} alt={altText} variant="square"></Avatar>;
   }
 
@@ -20,7 +20,7 @@ export const TraineeAvatar = ({ imageURL, altText }: TraineeAvatarProps) => {
       {isLoading && <Skeleton variant="rectangular" width={size.width} height={size.height} />}
       <img
         loading="lazy"
-        src={imageURL}
+        src={imageUrl}
         alt={altText}
         style={{
           width: `${isLoading ? 0 : size.width}px`,

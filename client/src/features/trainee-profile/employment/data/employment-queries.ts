@@ -1,12 +1,7 @@
+import { EmploymentHistory } from '../models/employment-history';
+import { employmentHistoryKeys } from './keys';
+import { getEmploymentHistory } from '../api/api';
 import { useQuery } from '@tanstack/react-query';
-import { EmploymentHistory } from '../../../../data/types/Trainee';
-import { getEmployments } from '../api/api';
-
-export const employmentHistoryKeys = {
-  all: ['employmentHistory'] as const, // for broad invalidation
-  byQuery: (traineeId: string) => ['employmentHistory', traineeId] as const,
-  // per-term cache
-};
 
 /**
  * Hook to get employments of a trainee.
@@ -15,9 +10,9 @@ export const employmentHistoryKeys = {
  */
 export const useGetEmploymentHistory = (traineeId: string) => {
   return useQuery({
-    queryKey: employmentHistoryKeys.byQuery(traineeId),
+    queryKey: employmentHistoryKeys.list(traineeId),
     queryFn: async () => {
-      const data = await getEmployments(traineeId);
+      const data = await getEmploymentHistory(traineeId);
       return orderEmploymentHistoryByDateDesc(data);
     },
     enabled: !!traineeId,
@@ -26,5 +21,5 @@ export const useGetEmploymentHistory = (traineeId: string) => {
 };
 
 const orderEmploymentHistoryByDateDesc = (data: EmploymentHistory[]): EmploymentHistory[] => {
-  return data.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+  return data.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 };

@@ -1,14 +1,15 @@
+import { Button, CircularProgress } from '@mui/material';
 import { ErrorBox, Loader } from '../../components';
 
 import { ActionsCard } from './components/ActionsCard';
 import Box from '@mui/material/Box';
-import { Cohort } from '../cohorts/Cohorts';
 import CohortAccordion from './components/CohortAccordion';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useCohortsData } from './data/useCohortsData';
 import { useEffect } from 'react';
+import { useGetCohorts } from './data/cohort-queries';
+import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 
 /**
  * Component for displaying the cohort page elements.
@@ -18,7 +19,19 @@ const CohortsPage = () => {
     document.title = 'Cohorts | Dojo';
   }, []);
 
-  const { isError, data, error, isPending } = useCohortsData();
+  const {
+    data: cohorts,
+    error,
+    isPending,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetchNextPageError,
+    fetchNextPage,
+  } = useGetCohorts();
+
+  // After a failed page, wait for the retry button. Otherwise the end of the list, still in view, requests it again.
+  const loadMoreRef = useInfiniteScroll(fetchNextPage, hasNextPage && !isFetchingNextPage && !isFetchNextPageError);
 
   return (
     <Container fixed>
@@ -30,7 +43,7 @@ const CohortsPage = () => {
             <Loader />
           </Box>
         )}
-        {isError && (
+        {isError && !isFetchNextPageError && (
           <Box width="50%" margin="auto" marginTop="2rem" marginBottom="2rem">
             <ErrorBox
               errorMessage={
@@ -41,22 +54,25 @@ const CohortsPage = () => {
         )}
 
         <Stack direction="column" spacing={2}>
-          {data?.sort(compareCohort).map((cohort: Cohort, index: number) => (
-            <Box key={index}>
+          {cohorts?.map((cohort) => (
+            <Box key={cohort.cohort ?? 'no-cohort'}>
               <CohortAccordion cohortInfo={cohort}></CohortAccordion>
             </Box>
           ))}
         </Stack>
+
+        <Box ref={loadMoreRef} display="flex" flexDirection="column" alignItems="center" gap={1} paddingY={2}>
+          {isFetchingNextPage && <CircularProgress />}
+          {isFetchNextPageError && (
+            <>
+              <ErrorBox errorMessage={error?.message ?? 'An unknown error occurred while fetching cohorts data.'} />
+              <Button onClick={() => fetchNextPage()}>Retry</Button>
+            </>
+          )}
+        </Box>
       </Box>
     </Container>
   );
-};
-
-const compareCohort = (a: Cohort, b: Cohort) => {
-  // Sort by cohort number, descending. Put cohorts with no number on the top.
-  const cohortA = a.cohort ?? Number.MAX_SAFE_INTEGER;
-  const cohortB = b.cohort ?? Number.MAX_SAFE_INTEGER;
-  return cohortB - cohortA;
 };
 
 export default CohortsPage;

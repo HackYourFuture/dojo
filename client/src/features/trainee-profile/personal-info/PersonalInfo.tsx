@@ -1,4 +1,4 @@
-import { Background, EducationLevel, EnglishLevel, Pronouns, ResidencyStatus } from '../../../data/types/Trainee';
+import { Background, EducationLevel, EnglishLevel, Pronouns } from '../../../data/types/Trainee';
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 
@@ -88,7 +88,7 @@ const PersonalInfo = () => {
         <GenderSelect
           disabled={false}
           isEditing={isEditing}
-          value={editedFields?.gender}
+          value={editedFields?.gender ?? ''}
           onChange={handleSelectChange}
         />
 
@@ -170,82 +170,6 @@ const PersonalInfo = () => {
       </div>
 
       <div style={{ width: '100%' }}>
-        {/* Work Permit */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '16ch', gap: '2rem' }}>
-          <InputLabel htmlFor="hasWorkPermit">Work permit</InputLabel>
-          <Select
-            name="hasWorkPermit"
-            id="hasWorkPermit"
-            label="Work permit"
-            value={editedFields?.hasWorkPermit == null ? '' : editedFields?.hasWorkPermit}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="true">Yes</MenuItem>
-            <MenuItem value="false">No</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Residency Status */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '24ch', gap: '2rem' }}>
-          <InputLabel htmlFor="residencyStatus">Residency status</InputLabel>
-          <Select
-            name="residencyStatus"
-            id="residencyStatus"
-            label="Residency status"
-            value={editedFields?.residencyStatus || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value={ResidencyStatus.FirstInterview}>First interview</MenuItem>
-            <MenuItem value={ResidencyStatus.SecondInterview}>Second interview</MenuItem>
-            <MenuItem value={ResidencyStatus.Residency}>Residency</MenuItem>
-            <MenuItem value={ResidencyStatus.Citizenship}>Citizenship</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Social Benefits */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '16ch', gap: '2rem' }}>
-          <InputLabel htmlFor="receivesSocialBenefits">Uitkering</InputLabel>
-          <Select
-            name="receivesSocialBenefits"
-            id="receivesSocialBenefits"
-            label="Uitkering"
-            value={editedFields?.receivesSocialBenefits == null ? '' : editedFields?.receivesSocialBenefits}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="true">Yes</MenuItem>
-            <MenuItem value="false">No</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Case Manager Urging */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '16ch', gap: '2rem' }}>
-          <InputLabel htmlFor="caseManagerUrging">Case manager urging</InputLabel>
-          <Select
-            name="caseManagerUrging"
-            id="caseManagerUrging"
-            label="Case manager urging"
-            value={editedFields?.caseManagerUrging == null ? '' : editedFields?.caseManagerUrging}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="true">Yes</MenuItem>
-            <MenuItem value="false">No</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-
-      <div style={{ width: '100%' }}>
         {/* English Level */}
         <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
           <InputLabel htmlFor="englishLevel">English level</InputLabel>
@@ -260,7 +184,6 @@ const PersonalInfo = () => {
             onChange={handleSelectChange}
           >
             <MenuItem value={EnglishLevel.NeedsWork}>Needs work</MenuItem>
-            <MenuItem value={EnglishLevel.Moderate}>Moderate</MenuItem>
             <MenuItem value={EnglishLevel.Good}>Good</MenuItem>
           </Select>
         </FormControl>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Trainee,
+  TraineeChanges,
   TraineeContactInfo,
   TraineeEducationInfo,
   TraineeEmploymentInfo,
@@ -8,9 +9,8 @@ import {
 } from '../../../data/types/Trainee';
 
 import { TraineeProfileContext } from './useTraineeProfileContext';
-import { UpdateTraineeRequestData } from '../personal-info/data/useTraineeInfoData';
 
-type TraineeInfoType = TraineePersonalInfo | TraineeContactInfo | TraineeEmploymentInfo | TraineeEducationInfo;
+type TraineeSection = TraineePersonalInfo | TraineeContactInfo | TraineeEmploymentInfo | TraineeEducationInfo;
 
 export const TraineeProfileProvider = ({
   id,
@@ -32,10 +32,10 @@ export const TraineeProfileProvider = ({
 
   /**
    * Function to get the changes made to the trainee's profile (every tab)
-   * @returns  {UpdateTraineeRequestData} - Object with the changes made to the trainee's profile.
-   *                                     The object is structured as follows: { personalInfo, contactInfo, educationInfo, employmentInfo }
+   * @returns  {TraineeChanges} - Object with the changes made to the trainee's profile.
+   *                            The object is structured as follows: { personalInfo, contactInfo, educationInfo, employmentInfo }
    */
-  const getTraineeInfoChanges = (): UpdateTraineeRequestData => {
+  const getTraineeInfoChanges = (): TraineeChanges => {
     const personalInfo: Partial<TraineePersonalInfo> | null = getChangedFields(
       originalTrainee.personalInfo,
       trainee.personalInfo
@@ -53,7 +53,7 @@ export const TraineeProfileProvider = ({
       trainee.educationInfo
     );
 
-    const dataToSave: UpdateTraineeRequestData = {};
+    const dataToSave: TraineeChanges = {};
 
     // add the changed fields to the dataToSave object if not null
     if (personalInfo) dataToSave.personalInfo = personalInfo;
@@ -68,21 +68,16 @@ export const TraineeProfileProvider = ({
    * This function is used to get the fields that have been changed in the trainee's profile.
    * It loops over the edited object and compares it to the original object.
    * If the value of a field has changed, it will be added to the updatedFields object.
-   * Some of the properties are ignored while comparing, because they are edited in a different way.
    *
    * @param orig info before editing (personalInfo, contactInfo, employmentInfo, educationInfo)
    * @param edited editted data (personalInfo, contactInfo, employmentInfo, educationInfo)
    * @returns
    */
-  const getChangedFields = <T extends TraineeInfoType>(orig: T, edited: T) => {
+  const getChangedFields = <T extends TraineeSection>(orig: T, edited: T) => {
     const updatedFields: Partial<T> = {};
-
-    // These props exist on the Trainee but should not be included in the changes
-    const ignoredProps = ['strikes', 'assignments', 'tests', 'employmentHistory'];
 
     Object.entries(edited).forEach(([key, value]) => {
       const typedKey = key as keyof T;
-      if (ignoredProps.includes(key)) return;
 
       if (orig[typedKey] !== value) {
         updatedFields[typedKey] = value;

@@ -23,11 +23,9 @@ export const SidebarJobPath = ({ jobPath }: JobPathProps) => {
       case JobPath.Internship:
       case JobPath.TechJob:
         return 'success';
-      case JobPath.NotSearching:
-        return 'warning';
       case JobPath.NonTechJob:
       case JobPath.OtherStudies:
-      case JobPath.NoLongerHelping:
+      case JobPath.SupportEnded:
         return 'error';
     }
   };
@@ -40,14 +38,12 @@ export const SidebarJobPath = ({ jobPath }: JobPathProps) => {
         return 'Internship';
       case JobPath.TechJob:
         return 'Tech job';
-      case JobPath.NotSearching:
-        return 'Not searching';
       case JobPath.NonTechJob:
         return 'Non-tech Job';
       case JobPath.OtherStudies:
         return 'Other studies';
-      case JobPath.NoLongerHelping:
-        return 'No longer helping';
+      case JobPath.SupportEnded:
+        return 'Support ended';
     }
   };
 

@@ -5,7 +5,7 @@ import { createSelectChangeHandler, createTextChangeHandler } from '../utils/for
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { LearningStatusSelect } from '../profile/components/LearningStatusSelect';
 import React from 'react';
-import { TestsComponent } from './tests/TestsComponent';
+import { AssessmentsComponent } from './assessments/AssessmentsComponent';
 import TrackSelect from './components/TrackSelect';
 import { formatDate } from '../utils/dateHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
@@ -38,7 +38,7 @@ const EducationInfo = () => {
           ...prevFields,
           educationInfo: {
             ...prevFields.educationInfo,
-            [name]: value,
+            [name]: value === '' ? null : Number(value),
           },
         };
       });
@@ -54,7 +54,7 @@ const EducationInfo = () => {
             id="currentCohort"
             name="currentCohort"
             label="Cohort"
-            value={editedFields?.currentCohort ?? 'No cohort assigned'}
+            value={editedFields?.currentCohort ?? (isEditing ? '' : 'No cohort assigned')}
             slotProps={{
               input: {
                 readOnly: isEditing ? false : true,
@@ -194,12 +194,12 @@ const EducationInfo = () => {
           {/* Technical mentor */}
           <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
             <TextField
-              id="techMentor"
-              name="techMentor"
+              id="mentorTech"
+              name="mentorTech"
               label="Technical Mentor"
               type="text"
               placeholder={isEditing ? 'John Doe' : ''}
-              value={editedFields?.techMentor ?? ''}
+              value={editedFields?.mentorTech ?? ''}
               slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
@@ -209,12 +209,12 @@ const EducationInfo = () => {
           {/* HR Mentor */}
           <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
             <TextField
-              id="hrMentor"
-              name="hrMentor"
+              id="mentorHr"
+              name="mentorHr"
               label="HR Mentor"
               type="text"
               placeholder={isEditing ? 'Jane Smith' : ''}
-              value={editedFields?.hrMentor ?? ''}
+              value={editedFields?.mentorHr ?? ''}
               slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
@@ -224,12 +224,12 @@ const EducationInfo = () => {
           {/* English mentor */}
           <FormControl sx={{ mx: 2, my: 1, width: '30ch', gap: '2rem' }}>
             <TextField
-              id="englishMentor"
-              name="englishMentor"
+              id="mentorEnglish"
+              name="mentorEnglish"
               label="English Mentor"
               type="text"
               placeholder={isEditing ? 'John Doe' : ''}
-              value={editedFields?.englishMentor ?? ''}
+              value={editedFields?.mentorEnglish ?? ''}
               slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
               variant={isEditing ? 'outlined' : 'standard'}
               onChange={handleTextChange}
@@ -238,24 +238,8 @@ const EducationInfo = () => {
         </Box>
       </div>
       <Box display="flex" gap={2} style={{ width: '100%' }}>
-        <TestsComponent />
+        <AssessmentsComponent />
       </Box>
-      <div style={{ width: '100%' }}>
-        {/* Comments */}
-        <FormControl sx={{ mx: 2, width: '81ch' }}>
-          <TextField
-            id="comments"
-            name="comments"
-            label="Comments"
-            type="text"
-            multiline
-            value={editedFields?.comments || ''}
-            slotProps={{ input: { readOnly: isEditing ? false : true }, inputLabel: { shrink: true } }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleTextChange}
-          />
-        </FormControl>
-      </div>
     </Box>
   );
 };
