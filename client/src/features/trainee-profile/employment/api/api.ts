@@ -1,19 +1,32 @@
+import { mapDomainToEmploymentHistoryRequest, mapEmploymentHistoryToDomain } from './mapper';
+
+import { EmploymentHistory } from '../models/employment-history';
+import { EmploymentHistoryResponse } from './types';
 import axios from 'axios';
-import { EmploymentHistory } from '../../../../data/types/Trainee';
 
-export const getEmployments = async (traineeId: string) => {
-  const { data } = await axios.get<EmploymentHistory[]>(`/api/trainees/${traineeId}/employment-history`);
-  return data;
+export const getEmploymentHistory = async (traineeId: string) => {
+  const { data } = await axios.get<EmploymentHistoryResponse[]>(`/api/trainees/${traineeId}/employment-history`);
+  return data.map((employment) => mapEmploymentHistoryToDomain(employment));
 };
 
-export const addEmployment = async (traineeId: string, employment: EmploymentHistory) => {
-  await axios.post(`/api/trainees/${traineeId}/employment-history`, employment);
+export const addEmploymentHistory = async (traineeId: string, employment: EmploymentHistory) => {
+  const employmentRequest = mapDomainToEmploymentHistoryRequest(employment);
+  const { data } = await axios.post<EmploymentHistoryResponse>(
+    `/api/trainees/${traineeId}/employment-history`,
+    employmentRequest
+  );
+  return mapEmploymentHistoryToDomain(data);
 };
 
-export const deleteEmployment = async (traineeId: string, employmentId: string) => {
+export const editEmploymentHistory = async (traineeId: string, employment: EmploymentHistory) => {
+  const employmentRequest = mapDomainToEmploymentHistoryRequest(employment);
+  const { data } = await axios.put<EmploymentHistoryResponse>(
+    `/api/trainees/${traineeId}/employment-history/${employment.id}`,
+    employmentRequest
+  );
+  return mapEmploymentHistoryToDomain(data);
+};
+
+export const deleteEmploymentHistory = async (traineeId: string, employmentId: string) => {
   await axios.delete(`/api/trainees/${traineeId}/employment-history/${employmentId}`);
-};
-
-export const editEmployment = async (traineeId: string, employment: EmploymentHistory) => {
-  await axios.put(`/api/trainees/${traineeId}/employment-history/${employment.id}`, employment);
 };

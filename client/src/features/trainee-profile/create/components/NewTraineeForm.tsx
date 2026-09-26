@@ -1,20 +1,10 @@
 import { Button, SelectChangeEvent, Stack } from '@mui/material';
-import { Gender, JobPath, LearningStatus } from '../../../../data/types/Trainee';
 
 import { GenderSelect } from '../../profile/components/GenderSelect';
 import { JobPathSelect } from '../../profile/components/JobPathSelect';
 import { LearningStatusSelect } from '../../profile/components/LearningStatusSelect';
+import { NewTrainee } from '../../../../data/types/Trainee';
 import TextFieldWrapper from './TextFieldWrapper';
-
-export type FormState = {
-  firstName: string;
-  lastName: string;
-  gender: Gender | null;
-  email: string;
-  cohort: number;
-  learningStatus: LearningStatus;
-  jobPath: JobPath;
-};
 
 export type FormErrors = {
   firstName?: string;
@@ -26,7 +16,7 @@ export type FormErrors = {
 
 export const NewTraineeForm: React.FC<{
   isLoading: boolean;
-  formState: FormState;
+  formState: NewTrainee;
   errors: FormErrors | null;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClose: () => void;

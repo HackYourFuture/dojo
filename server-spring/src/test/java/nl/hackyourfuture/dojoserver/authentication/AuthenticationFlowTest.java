@@ -27,18 +27,20 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * The whole flow over MockMvc with Google stubbed. Transactional, because it runs against the local
- * development database. Cookie POSTs carry an Origin header, exactly as a browser's do.
+ * The whole flow over MockMvc with Google stubbed. Transactional, because it
+ * runs against the local
+ * development database. Cookie POSTs carry an Origin header, exactly as a
+ * browser's do.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 public class AuthenticationFlowTest {
 
-    private static final String ORIGIN = "http://localhost:5173";
+    private static final String ORIGIN = "http://localhost:8888";
     private static final String LOGIN = "/api/auth/login/google";
-    private static final String LOGIN_BODY =
-            "{\"authCode\":\"auth_code_FjR0jzGdKN\",\"redirectURI\":\"" + ORIGIN + "\"}";
+    private static final String LOGIN_BODY = "{\"authCode\":\"auth_code_FjR0jzGdKN\",\"redirectURI\":\"" + ORIGIN
+            + "\"}";
     private static final String ACCESS = AuthenticationCookieManager.ACCESS_COOKIE;
     private static final String REFRESH = AuthenticationCookieManager.REFRESH_COOKIE;
 
@@ -62,7 +64,8 @@ public class AuthenticationFlowTest {
                 .isActive(true)
                 .build());
         when(googleOAuthService.verifyGoogleLogin(anyString(), anyString())).thenReturn(new GoogleIdentity(
-                "sub-" + user.getId(), user.getEmail(), true, user.getName(), null, "hackyourfuture.net"));
+                "sub-" + user.getId(), user.getEmail(), true, user.getName(), null,
+                "hackyourfuture.net"));
     }
 
     // ------------------------------------------------------------------ login
@@ -83,7 +86,8 @@ public class AuthenticationFlowTest {
                 .isHttpOnly(ACCESS, true)
                 .isHttpOnly(REFRESH, true);
         assertThat(login.getResponse().getHeaders("Set-Cookie")).hasSize(2)
-                .allSatisfy(header -> assertThat(header).contains("SameSite=Strict").contains("HttpOnly"));
+                .allSatisfy(header -> assertThat(header).contains("SameSite=Strict")
+                        .contains("HttpOnly"));
         assertThat(accessCookie(login).getValue()).startsWith("dojo_at_");
         assertThat(refreshCookie(login).getValue()).startsWith("dojo_rt_");
     }
@@ -112,7 +116,8 @@ public class AuthenticationFlowTest {
     void theRefreshTokenNeverAuthenticatesARequest() {
         Cookie refresh = refreshCookie(login());
 
-        assertThat(mvc.get().uri("/api/trainees").cookie(new Cookie(ACCESS, refresh.getValue()))).hasStatus(401);
+        assertThat(mvc.get().uri("/api/trainees").cookie(new Cookie(ACCESS, refresh.getValue())))
+                .hasStatus(401);
         assertThat(mvc.get().uri("/api/trainees").header("Authorization", "Bearer " + refresh.getValue()))
                 .hasStatus(401);
         assertThat(mvc.get().uri("/api/auth/session").cookie(refresh)).hasStatus(401);
@@ -147,16 +152,20 @@ public class AuthenticationFlowTest {
         assertThat(mvc.post().uri("/api/trainees").cookie(access)
                 .contentType(MediaType.APPLICATION_JSON).content("{}")).hasStatus(403);
 
-        // With an allowed Origin it reaches the controller, which rejects the empty body instead.
+        // With an allowed Origin it reaches the controller, which rejects the empty
+        // body instead.
         int allowed = mvc.post().uri("/api/trainees").cookie(access).header("Origin", ORIGIN)
-                .contentType(MediaType.APPLICATION_JSON).content("{}").exchange().getResponse().getStatus();
+                .contentType(MediaType.APPLICATION_JSON).content("{}").exchange().getResponse()
+                .getStatus();
         assertThat(allowed).isNotEqualTo(403).isNotEqualTo(401);
 
-        // Bearer callers are exempt: no page can set Authorization on someone else's behalf.
+        // Bearer callers are exempt: no page can set Authorization on someone else's
+        // behalf.
         String apiToken = tokenService.issue(user, TokenType.API_TOKEN).plaintextToken();
         int bearer = mvc.post().uri("/api/trainees").header("Authorization", "Bearer " + apiToken)
                 .header("Origin", "https://evil.example")
-                .contentType(MediaType.APPLICATION_JSON).content("{}").exchange().getResponse().getStatus();
+                .contentType(MediaType.APPLICATION_JSON).content("{}").exchange().getResponse()
+                .getStatus();
         assertThat(bearer).isNotEqualTo(403).isNotEqualTo(401);
     }
 
@@ -174,7 +183,8 @@ public class AuthenticationFlowTest {
         Cookie access = accessCookie(login);
         Cookie refresh = refreshCookie(login);
 
-        MvcTestResult logout = mvc.post().uri("/api/auth/logout").cookie(access, refresh).header("Origin", ORIGIN)
+        MvcTestResult logout = mvc.post().uri("/api/auth/logout").cookie(access, refresh)
+                .header("Origin", ORIGIN)
                 .exchange();
         assertThat(logout).hasStatus(204);
         assertThat(logout).cookies()
@@ -216,7 +226,8 @@ public class AuthenticationFlowTest {
         assertThat(result.getResponse().getContentType()).startsWith("application/json");
         assertThat(result.getResponse().getContentAsString()).contains("\"error\":\"Unauthorized session.");
 
-        // Unmapped paths, Spring's own /logout and a direct /error are all 401: nothing to enumerate.
+        // Unmapped paths, Spring's own /logout and a direct /error are all 401: nothing
+        // to enumerate.
         assertThat(mvc.get().uri("/api/does-not-exist")).hasStatus(401);
         assertThat(mvc.post().uri("/logout")).hasStatus(401);
         assertThat(mvc.get().uri("/error")).hasStatus(401);
@@ -244,7 +255,9 @@ public class AuthenticationFlowTest {
 
     private static Cookie cookie(MvcTestResult result, String name) {
         Cookie cookie = result.getResponse().getCookie(name);
-        assertThat(cookie).as("Set-Cookie " + name + " in " + List.of(result.getResponse().getHeaders("Set-Cookie")))
+        assertThat(cookie)
+                .as("Set-Cookie " + name + " in "
+                        + List.of(result.getResponse().getHeaders("Set-Cookie")))
                 .isNotNull();
         return cookie;
     }

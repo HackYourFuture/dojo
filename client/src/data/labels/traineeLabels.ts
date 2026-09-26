@@ -13,7 +13,7 @@ export const getTrackLabel = (track: Track): string => {
       return 'Tester';
     case Track.Cloud:
       return 'Cloud';
-    case Track.Core:
+    case Track.CoreProgram:
       return 'Core Program';
     case Track.FullstackLegacy:
       return 'Fullstack (Legacy)';

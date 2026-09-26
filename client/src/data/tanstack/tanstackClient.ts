@@ -10,9 +10,10 @@
  * Chain of events (how it works, short):
  * 1. `TanStackQueryProvider` registers the router `navigate` by calling
  *    `setNavigateTo(navigate)` inside an effect.
- * 2. When a query/mutation error happens, `queryCache.onError` runs.
+ * 2. When a query/mutation error happens, `queryCache.onError` or `mutationCache.onError` runs.
  * 3. If the error looks like an Axios 401, the handler calls the stored
  *    `navigateTo('/login', { replace: true })` to send the user to login.
+ *    A 401 only gets here when the session could not be renewed (see `data/http/interceptors.ts`).
  * 4. When the provider unmounts, it should call `resetNavigateTo()` to
  *    clear the stored function and avoid stale references.
  *
@@ -23,9 +24,8 @@
  *   want to call `resetNavigateTo()` or mock `setNavigateTo`.
  */
 
-import { QueryCache, QueryClient } from '@tanstack/react-query';
-
-import { AxiosError } from 'axios';
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
+import { AxiosError, isAxiosError } from 'axios';
 
 // Type for the optional stored navigate function
 type NavigateFn = ((to: string, opts?: { replace?: boolean; state?: unknown }) => void) | null;
@@ -52,17 +52,32 @@ const handleError = (error: unknown) => {
   }
 };
 
-// Centralized QueryCache. Global error handling happens here.
+const MAX_RETRIES = 1;
+
+// A 4xx response fails the same way on every attempt, so only network and server errors are retried.
+const shouldRetry = (failureCount: number, error: unknown) => {
+  const status = isAxiosError(error) ? error.response?.status : undefined;
+  const isClientError = status !== undefined && status >= 400 && status < 500;
+  return !isClientError && failureCount < MAX_RETRIES;
+};
+
+// Centralized caches. Global error handling happens here. The mutation cache handler runs even when a
+// `useMutation` call passes its own `onError`, which would override a default option.
 const queryCache = new QueryCache({
   onError: handleError,
 });
 
-// App-wide QueryClient using the cache above. Import and pass this to
+const mutationCache = new MutationCache({
+  onError: handleError,
+});
+
+// App-wide QueryClient using the caches above. Import and pass this to
 // `QueryClientProvider` in the application's root.
 export const queryClient = new QueryClient({
   queryCache,
+  mutationCache,
   defaultOptions: {
-    queries: { retry: 1 },
-    mutations: { retry: 1, onError: handleError },
+    queries: { retry: shouldRetry },
+    mutations: { retry: shouldRetry },
   },
 });

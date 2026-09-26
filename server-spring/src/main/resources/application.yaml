@@ -43,7 +43,7 @@ management:
 
 # Authentication
 dojo:
-  base-url: ${DOJO_BASE_URL:http://localhost:5173}
+  base-url: ${DOJO_BASE_URL:http://localhost:8888}
   auth:
     google-client-id: ${GOOGLE_OAUTH_CLIENTID:not-configured}
     google-client-secret: ${GOOGLE_OAUTH_CLIENTSECRET:not-configured}
@@ -52,7 +52,7 @@ dojo:
     refresh-token-ttl: ${REFRESH_TOKEN_TTL:14d}
     api-token-ttl: ${API_TOKEN_TTL:365d}
     cookie-secure: ${COOKIE_SECURE:true}
-    allowed-origins: ${AUTH_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:7777}
+    allowed-origins: ${AUTH_ALLOWED_ORIGINS:http://localhost:8888,http://localhost:7777}
   slack:
     bot-token: ${SLACK_BOT_TOKEN:}
     notification-channel-id: ${SLACK_NOTIFICATION_CHANNEL_ID:}

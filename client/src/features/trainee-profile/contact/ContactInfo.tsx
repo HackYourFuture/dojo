@@ -225,19 +225,19 @@ const ContactInfo = () => {
           }}
         >
           <TextField
-            id="linkedin"
-            name="linkedin"
+            id="linkedinUrl"
+            name="linkedinUrl"
             label="LinkedIn"
             type="url"
             placeholder={isEditing ? 'https://www.linkedin.com/in/john_doe' : ''}
-            value={editedFields.linkedin || ''}
+            value={editedFields.linkedinUrl || ''}
             slotProps={{
               input: {
                 readOnly: isEditing ? false : true,
                 endAdornment: (
                   <InputAdornment position="start">
-                    {!isEditing && editedFields.linkedin && (
-                      <Link href={editedFields.linkedin} target="_blank">
+                    {!isEditing && editedFields.linkedinUrl && (
+                      <Link href={editedFields.linkedinUrl} target="_blank">
                         <LinkIcon sx={{ color: 'action.active' }} />
                       </Link>
                     )}
@@ -316,12 +316,12 @@ const ContactInfo = () => {
               }}
             >
               <TextField
-                id="emergencyContactPhoneNum"
-                name="emergencyContactPhoneNum"
+                id="emergencyContactPhone"
+                name="emergencyContactPhone"
                 label="Emergency Contact Phone Number"
                 type="tel"
                 placeholder={isEditing ? '+1234567890' : ''}
-                value={editedFields.emergencyContactPhoneNum || ''}
+                value={editedFields.emergencyContactPhone || ''}
                 slotProps={{
                   input: {
                     readOnly: isEditing ? false : true,

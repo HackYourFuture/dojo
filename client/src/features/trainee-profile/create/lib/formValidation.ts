@@ -1,4 +1,5 @@
-import { FormErrors, FormState } from '../components/NewTraineeForm';
+import { FormErrors } from '../components/NewTraineeForm';
+import { NewTrainee } from '../../../../data/types/Trainee';
 
 const FIELD_REQUIRED_ERROR = 'This field is required';
 
@@ -27,7 +28,7 @@ const cohortValidationError = (cohort: number | undefined) => {
  * @param formState
  * @returns
  */
-export const validateAndCollectFormErrors = (formState: FormState): FormErrors | null => {
+export const validateAndCollectFormErrors = (formState: NewTrainee): FormErrors | null => {
   const errors: FormErrors = {};
   const nameError = nameValidationError(formState.firstName);
   if (nameError) errors.firstName = nameError;

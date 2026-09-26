@@ -1,7 +1,7 @@
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import { Cohort } from '../Cohorts';
+import { Cohort } from '../models/cohort';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -57,9 +57,6 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   Track
                 </TableCell>
                 <TableCell sx={headerStyle}>Location</TableCell>
-                <TableCell sx={headerStyle} width={50}>
-                  Work Permit
-                </TableCell>
                 <TableCell sx={headerStyle} width={100}>
                   Avg Score
                 </TableCell>
@@ -76,26 +73,25 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   to={trainee.profilePath}
                 >
                   <TableCell component="th" scope="row">
-                    <TraineeAvatar imageURL={trainee.thumbnailURL ?? ''} altText={trainee.displayName}></TraineeAvatar>
+                    <TraineeAvatar imageUrl={trainee.thumbnailUrl ?? ''} altText={trainee.displayName}></TraineeAvatar>
                   </TableCell>
                   <TableCell>{trainee.displayName}</TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap', minWidth: '240px' }}>
-                    {trainee.LearningStatus === LearningStatus.Graduated ? (
-                      <SidebarJobPath jobPath={trainee.JobPath}></SidebarJobPath>
+                    {trainee.learningStatus === LearningStatus.Graduated ? (
+                      <SidebarJobPath jobPath={trainee.jobPath}></SidebarJobPath>
                     ) : (
-                      <SidebarLearningStatus learningStatus={trainee.LearningStatus}></SidebarLearningStatus>
+                      <SidebarLearningStatus learningStatus={trainee.learningStatus}></SidebarLearningStatus>
                     )}
                   </TableCell>
                   <TableCell>{getTrackLabel(trainee.track)}</TableCell>
                   <TableCell>{trainee.location}</TableCell>
-                  <TableCell>{convertToString(trainee.hasWorkPermit)}</TableCell>
-                  <TableCell sx={{ color: getScoreColor(trainee.averageTestScore) }}>
-                    {trainee.averageTestScore !== null ? trainee.averageTestScore.toFixed(1) : '-'}
+                  <TableCell sx={{ color: getScoreColor(trainee.averageAssessmentScore) }}>
+                    {trainee.averageAssessmentScore !== null ? trainee.averageAssessmentScore.toFixed(1) : '-'}
                   </TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'end' }} onClick={(e) => e.stopPropagation()}>
                     <div>
-                      {trainee.slackID && (
-                        <IconButton aria-label="Slack Id" href={`slack://user?team=T0EJTUQ87&id=${trainee.slackID}`}>
+                      {trainee.slackId && (
+                        <IconButton aria-label="Slack Id" href={`slack://user?team=T0EJTUQ87&id=${trainee.slackId}`}>
                           <img src={slackLogo} alt="Slack" width="27" height="27" style={{ borderRadius: '50%' }} />
                         </IconButton>
                       )}
@@ -113,8 +109,8 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                           <GitHubIcon sx={{ color: 'action.active' }} />
                         </IconButton>
                       )}
-                      {trainee.linkedIn && (
-                        <IconButton aria-label="LinkedIn URL" href={trainee.linkedIn} target="_blank">
+                      {trainee.linkedinUrl && (
+                        <IconButton aria-label="LinkedIn URL" href={trainee.linkedinUrl} target="_blank">
                           <LinkedInIcon sx={{ color: 'action.active' }} />
                         </IconButton>
                       )}
@@ -128,13 +124,6 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
       </Accordion>
     </>
   );
-};
-
-const convertToString = (value: boolean | null | undefined) => {
-  if (value === null || value === undefined) {
-    return '';
-  }
-  return value ? 'Yes' : 'No';
 };
 
 const getScoreColor = (score: number | null) => {

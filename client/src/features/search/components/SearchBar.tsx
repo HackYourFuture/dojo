@@ -15,6 +15,9 @@ type SearchBarProps = {
   onTextChange: (text: string) => void;
 };
 
+// The search API rejects longer queries.
+const MAX_QUERY_LENGTH = 100;
+
 const SearchBar = ({ onTextChange }: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   // You can change search debounce time using this hook.
@@ -54,6 +57,7 @@ const SearchBar = ({ onTextChange }: SearchBarProps) => {
               </InputAdornment>
             ),
           },
+          htmlInput: { maxLength: MAX_QUERY_LENGTH },
         }}
       />
     </Box>

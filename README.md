@@ -83,7 +83,7 @@ If you only work on the front-end, you can connect to a remote deployed backend 
    npm run dev
    ``` 
 
-6. The app should be accessible at http://localhost:5173/
+6. The app should be accessible at http://localhost:8888/
 
 ### Option 2: Full setup (front-end & back-end)
 
@@ -97,12 +97,12 @@ If you only work on the front-end, you can connect to a remote deployed backend 
 
 3. Set up the client from the detailed instructions in [client/README.md](client/README.md)
 
-4. The back-end should be accessible at http://localhost:7777/ and the front-end should be accessible at http://localhost:5173/
+4. The back-end should be accessible at http://localhost:7777/ and the front-end should be accessible at http://localhost:8888/
 
 
 ## Usage
 
-1. Navigate to `http://localhost:5173` in the browser.
+1. Navigate to `http://localhost:8888` in the browser.
 2. Log in with an authorized google account.
 3. Search for a trainee to track trainee progress, contact information, employment status etc...
 4. Use the cohorts overview page to see the full list of trainees.

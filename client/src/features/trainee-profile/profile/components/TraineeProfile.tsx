@@ -1,9 +1,4 @@
 import { Box, Snackbar } from '@mui/material';
-import {
-  UpdateTraineeRequestData,
-  useSaveTraineeInfo,
-  useTraineeInfoData,
-} from '../../personal-info/data/useTraineeInfoData';
 import { useEffect, useState } from 'react';
 
 import ContactInfo from '../../contact/ContactInfo';
@@ -15,8 +10,10 @@ import MuiAlert from '@mui/material/Alert';
 import PersonalInfo from '../../personal-info/PersonalInfo';
 import ProfileNav from './ProfileNav';
 import ProfileSidebar from '../ProfileSidebar';
-import { Trainee } from '../../../../data/types/Trainee';
+import { TraineeChanges } from '../../../../data/types/Trainee';
+import { useGetTrainee } from '../../data/trainee-queries';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
+import { useUpdateTrainee } from '../../data/mutations';
 
 interface TraineeProfileProps {
   id: string;
@@ -31,8 +28,8 @@ interface TraineeProfileProps {
 const TraineeProfile = ({ id }: TraineeProfileProps) => {
   // Default active tab
   const [activeTab, setActiveTab] = useState('personal');
-  const { data: traineeData } = useTraineeInfoData(id);
-  const { isPending: isSaveLoading, mutate } = useSaveTraineeInfo(id);
+  const { data: traineeData } = useGetTrainee(id);
+  const { isPending: isSaveLoading, mutate: updateTrainee } = useUpdateTrainee(id);
   const { isEditMode, setTrainee, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -56,25 +53,27 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
   };
 
   /**
-   * Save trainee data by calling the saveTraineeInfo mutation.
+   * Save trainee data by calling the updateTrainee mutation.
    * Shows a snackbar with the result of the save operation and refreshes the trainee data.
-   * @param editedFields
+   * @param changes
    */
-  const saveTraineeData = async (editedFields: UpdateTraineeRequestData) => {
-    mutate(editedFields, {
-      onSuccess: (data: Trainee) => {
+  const saveTraineeData = (changes: TraineeChanges) => {
+    updateTrainee(changes, {
+      onSuccess: (trainee) => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Trainee data saved successfully');
-        setTrainee(data);
+        setSnackbarOpen(true);
+        setTrainee(trainee);
         setIsEditMode(false);
       },
-      onError: (error: Error) => {
-        console.error('There was a problem saving trainee data:', (error as Error).message);
+      onError: (error) => {
+        console.error('There was a problem saving trainee data:', error.message);
+        // The server validates the whole profile, so its message names the field that blocks the save.
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error saving trainee data');
+        setSnackbarMessage(`Error saving trainee data: ${error.message}`);
+        setSnackbarOpen(true);
       },
     });
-    setSnackbarOpen(true);
   };
 
   /**
@@ -87,8 +86,13 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
       return;
     }
 
-    const changedFields: UpdateTraineeRequestData = getTraineeInfoChanges(traineeData!);
-    saveTraineeData(changedFields);
+    const changes = getTraineeInfoChanges();
+    // Nothing to save, and the API rejects an update without fields.
+    if (Object.keys(changes).length === 0) {
+      setIsEditMode(false);
+      return;
+    }
+    saveTraineeData(changes);
   };
 
   /**

@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 import { Loader } from '../../../components/Loader';
-import { SearchResult } from '../Search';
+import { SearchResult } from '../models/search-result';
 
 interface SearchResultsListProps {
   isLoading: boolean;
@@ -35,30 +35,27 @@ const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) => {
     >
       {data?.length ? (
         <List>
-          {data.map((trainee: SearchResult) => {
+          {data.map((result: SearchResult) => {
             return (
-              <ListItem disablePadding key={trainee.id}>
+              <ListItem disablePadding key={result.id}>
                 <Link
-                  to={trainee.profilePath}
+                  to={result.path}
                   style={{
                     textDecoration: 'none',
                     width: '100%',
                   }}
                 >
                   <ListItemButton
-                    key={trainee.id}
+                    key={result.id}
                     sx={{
                       color: 'text.primary',
                     }}
                   >
                     <ListItemIcon>
-                      <Avatar src={trainee.thumbnail ?? ''} sx={{ width: 32, height: 32 }} variant="rounded"></Avatar>
+                      <Avatar src={result.thumbnailUrl ?? ''} sx={{ width: 32, height: 32 }} variant="rounded"></Avatar>
                     </ListItemIcon>
-                    <ListItemText primary={trainee.name}></ListItemText>
-                    <ListItemText
-                      secondary={trainee.cohort !== null ? `Cohort ${trainee.cohort}` : 'No cohort assigned'}
-                      sx={{ textAlign: 'right' }}
-                    ></ListItemText>
+                    <ListItemText primary={result.title}></ListItemText>
+                    <ListItemText secondary={result.subtitle} sx={{ textAlign: 'right' }}></ListItemText>
                   </ListItemButton>
                 </Link>
               </ListItem>

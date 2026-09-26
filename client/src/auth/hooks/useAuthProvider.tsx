@@ -1,9 +1,10 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { loginWithGoogle, logoutSession } from '../api/api';
 import { useCallback, useMemo, useState } from 'react';
 
 import { ApiContext } from './useAuth';
+import { AxiosError } from 'axios';
 import { Loader } from '../../components';
 import { useLocalStorage } from './useLocalStorage';
 
@@ -19,16 +20,10 @@ export const ApiProvider = () => {
     onSuccess: async (response) => {
       try {
         setLoading(true);
-        await axios.post('/api/auth/login', {
-          authCode: response.code,
-          redirectURI: new URL(window.location.href).origin,
-        });
-        const { data } = await axios.get('/api/auth/session');
-        if (data) {
-          console.log('Successfully logged in!', data);
-          setUser(data);
-          navigate('/', { replace: true });
-        }
+        const user = await loginWithGoogle(response.code, new URL(window.location.href).origin);
+        console.log('Successfully logged in!', user);
+        setUser(user);
+        navigate('/', { replace: true });
       } catch (error) {
         console.log('Error logging in:', error);
 
@@ -50,7 +45,7 @@ export const ApiProvider = () => {
     try {
       setLoading(true);
 
-      await axios.post('/api/auth/logout');
+      await logoutSession();
       googleLogout();
       setUser(null);
       console.log('Successfully logged out!');

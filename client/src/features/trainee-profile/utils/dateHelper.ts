@@ -2,9 +2,9 @@ const TIME_ZONE = 'Europe/Amsterdam';
 /**
  * Function to format date value.
  *
- * @param {Date | undefined} date date value selected.
+ * @param {Date | string | null | undefined} date date value selected.
  */
-export const formatDate = (date: Date | undefined) => {
+export const formatDate = (date: Date | string | null | undefined) => {
   if (!date) return '';
   const formattedDate = new Date(date);
 
@@ -18,9 +18,9 @@ export const formatDate = (date: Date | undefined) => {
  * Function to format date value for display.
  * It uses the Dutch locale and the Europe/Amsterdam time zone.
  * Displays the date in the format DD-MM-YYYY.
- * @param {string | undefined} date date value selected.
+ * @param {Date | string | null | undefined} date date value selected.
  */
-export const formatDateForDisplay = (date: Date | undefined) => {
+export const formatDateForDisplay = (date: Date | string | null | undefined) => {
   if (!date) return '';
   try {
     const formattedDate = new Intl.DateTimeFormat('nl-NL', {
@@ -34,4 +34,11 @@ export const formatDateForDisplay = (date: Date | undefined) => {
     console.error(error);
     return '';
   }
+};
+
+/**
+ * Formats a date as the YYYY-MM-DD string the API expects for a date without a time.
+ */
+export const toISODateString = (date: Date) => {
+  return date.toISOString().split('T')[0];
 };

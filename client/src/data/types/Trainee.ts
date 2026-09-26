@@ -1,5 +1,3 @@
-import { Interaction } from '../../features/trainee-profile/interactions/Interactions';
-
 // enums
 export enum Gender {
   Man = 'man',
@@ -8,6 +6,7 @@ export enum Gender {
   Other = 'other',
 }
 
+// The pronouns offered in the profile. The API stores pronouns as free text.
 export enum Pronouns {
   HeHim = 'He/him',
   SheHer = 'She/her',
@@ -18,7 +17,6 @@ export enum Pronouns {
 
 export enum EnglishLevel {
   NeedsWork = 'needs-work',
-  Moderate = 'moderate',
   Good = 'good',
 }
 
@@ -39,13 +37,6 @@ export enum EducationLevel {
   PhD = 'phd',
 }
 
-export enum ResidencyStatus {
-  FirstInterview = 'first-interview',
-  SecondInterview = 'second-interview',
-  Residency = 'residency',
-  Citizenship = 'citizenship',
-}
-
 export enum LearningStatus {
   Studying = 'studying',
   Graduated = 'graduated',
@@ -59,7 +50,7 @@ export enum Track {
   Data = 'data',
   Tester = 'tester',
   Cloud = 'cloud',
-  Core = 'core',
+  CoreProgram = 'core-program',
   FullstackLegacy = 'fullstack-legacy',
 }
 
@@ -73,158 +64,85 @@ export enum QuitReason {
   Other = 'other',
 }
 
-export enum EmploymentType {
-  Internship = 'internship',
-  Job = 'job',
-}
-
 export enum JobPath {
   NotGraduated = 'not-graduated',
   Searching = 'searching',
   Internship = 'internship',
   TechJob = 'tech-job',
   NonTechJob = 'non-tech-job',
-  NotSearching = 'not-searching',
   OtherStudies = 'other-studies',
-  NoLongerHelping = 'no-longer-helping',
-}
-
-export enum TestResult {
-  Passed = 'passed',
-  PassedWithWarning = 'passed-with-warning',
-  Failed = 'failed',
-  Disqualified = 'disqualified',
-}
-
-export enum TestType {
-  Presentation = 'presentation',
-  JavaScript = 'javascript',
-  BrowsersInterview = 'browsers-interview',
-  UsingApisInterview = 'using-apis-interview',
-  NodeJS = 'nodejs',
-  ReactInterview = 'react-interview',
-  FinalProjectInterview = 'final-project-interview',
-  CoreMidTermInterview = 'core-mid-term-interview',
-  CoreEndInterview = 'core-end-interview',
-  FrontEndMidTermInterview = 'frontend-mid-term-interview',
-  BackEndMidTermInterview = 'backend-mid-term-interview',
-  CloudMidTermInterview = 'cloud-mid-term-interview',
-  DataMidTermInterview = 'data-mid-term-interview',
-  TesterMidTermInterview = 'tester-mid-term-interview',
+  SupportEnded = 'support-ended',
 }
 
 // interfaces
 export interface Trainee {
   readonly id: string;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
   displayName: string;
   profilePath: string;
-  imageURL?: string;
-  thumbnailURL?: string;
+  pictureUrl: string | null;
+  thumbnailUrl: string | null;
   personalInfo: TraineePersonalInfo;
   contactInfo: TraineeContactInfo;
   educationInfo: TraineeEducationInfo;
   employmentInfo: TraineeEmploymentInfo;
-  interactions: Interaction[];
 }
 
 export interface TraineePersonalInfo {
   firstName: string;
   lastName: string;
-  preferredName?: string;
-  gender: Gender;
-  pronouns?: Pronouns;
-  location?: string;
-  englishLevel?: EnglishLevel;
-  professionalDutch?: boolean;
-  countryOfOrigin?: string;
-  background?: Background;
-  hasWorkPermit?: boolean;
-  residencyStatus?: ResidencyStatus;
-  receivesSocialBenefits?: boolean;
-  caseManagerUrging?: boolean;
-  educationLevel?: EducationLevel;
-  educationBackground?: string;
-  comments?: string;
+  preferredName: string | null;
+  gender: Gender | null;
+  pronouns: string | null;
+  location: string | null;
+  englishLevel: EnglishLevel | null;
+  professionalDutch: boolean | null;
+  countryOfOrigin: string | null;
+  background: Background | null;
+  educationLevel: EducationLevel | null;
+  educationBackground: string | null;
+  comments: string | null;
 }
 
 export interface TraineeContactInfo {
   email: string;
-  slackId?: string;
-  phone?: string;
-  githubHandle?: string;
-  linkedin?: string;
-  emergencyContactName?: string;
-  emergencyContactPhoneNum?: string;
+  slackId: string | null;
+  phone: string | null;
+  githubHandle: string | null;
+  linkedinUrl: string | null;
+  emergencyContactName: string | null;
+  emergencyContactPhone: string | null;
 }
 
+// Dates are YYYY-MM-DD strings, the format of both the API and the date inputs.
 export interface TraineeEducationInfo {
   startCohort: number;
-  currentCohort?: number;
+  currentCohort: number | null;
   learningStatus: LearningStatus;
   track: Track;
-  techMentor?: string;
-  hrMentor?: string;
-  englishMentor?: string;
-  startDate?: Date;
-  graduationDate?: Date;
-  quitReason?: QuitReason;
-  quitDate?: Date;
-  assignments: Assignment[];
-  tests: Test[];
-  comments?: string;
+  mentorTech: string | null;
+  mentorHr: string | null;
+  mentorEnglish: string | null;
+  startDate: string | null;
+  graduationDate: string | null;
+  quitReason: QuitReason | null;
+  quitDate: string | null;
 }
 
 export interface TraineeEmploymentInfo {
   jobPath: JobPath;
-  cvURL?: string;
-  availability?: string;
-  preferredRole?: string;
-  drivingLicense?: boolean;
-  preferredLocation?: string;
-  extraTechnologies?: string;
-  employmentHistory: EmploymentHistory[];
-  comments?: string;
-}
-
-export interface Assignment {
-  readonly id: string;
-  createDate: Date;
-  type: string;
-  status: string;
-  content?: string;
-  comments?: string;
-}
-
-export interface Test {
-  readonly id: string;
-  date: Date;
-  type: TestType;
-  score?: number;
-  result: TestResult;
-  comments?: string;
-}
-
-export interface EmploymentHistory {
-  readonly id: string;
-  type: EmploymentType;
-  companyName: string;
-  role: string;
-  startDate: Date;
-  endDate?: Date;
-  feeCollected: boolean;
-  feeAmount?: number;
-  comments?: string;
-}
-
-export interface Reporter {
-  name: string;
-  imageUrl: string;
-}
-
-export interface ReporterWithId extends Reporter {
-  id: string;
 }
 
 export type TraineeInfoType = 'personalInfo' | 'contactInfo' | 'employmentInfo' | 'educationInfo';
+
+// The fields edited on the profile page, grouped by tab.
+export type TraineeChanges = { [K in TraineeInfoType]?: Partial<Trainee[K]> };
+
+export interface NewTrainee {
+  firstName: string;
+  lastName: string;
+  gender: Gender | null;
+  email: string;
+  cohort: number;
+  learningStatus: LearningStatus;
+  jobPath: JobPath;
+}

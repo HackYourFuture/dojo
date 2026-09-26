@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Interaction, InteractionType } from '../Interactions';
+import { Interaction, InteractionType } from '../models/interaction';
 
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
@@ -49,6 +49,7 @@ export const InteractionDetailsModal = ({
   });
 
   const [typeError, setTypeError] = useState(false);
+  const [dateError, setDateError] = useState(false);
   const [detailsError, setDetailsError] = useState(false);
   const [titleError, setTitleError] = useState(false);
 
@@ -61,6 +62,9 @@ export const InteractionDetailsModal = ({
   const handleChange = (field: keyof Interaction) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
+    if (field === 'date') {
+      setDateError(false);
+    }
     if (field === 'details') {
       setDetailsError(false);
     }
@@ -70,7 +74,7 @@ export const InteractionDetailsModal = ({
 
     setInteractionFields((prev) => ({
       ...prev,
-      [field]: field === 'date' ? new Date(value) : value,
+      [field]: field === 'date' ? (value ? new Date(value) : undefined) : value,
     }));
   };
 
@@ -86,6 +90,10 @@ export const InteractionDetailsModal = ({
     let invalid = false;
     if (!interactionFields.type) {
       setTypeError(true);
+      invalid = true;
+    }
+    if (!interactionFields.date) {
+      setDateError(true);
       invalid = true;
     }
     if (!interactionFields.details) {
@@ -161,7 +169,9 @@ export const InteractionDetailsModal = ({
                 value={formatDate(interactionFields.date)}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange('date')}
+                error={dateError}
               />
+              {dateError && <FormHelperText error>Date is required</FormHelperText>}
             </FormControl>
           </Box>
           <Box>
