@@ -9,9 +9,9 @@ spring:
 # API Docs
 springdoc:
   api-docs:
-    enabled: false
+    enabled: ${API_DOCS_ENABLED:false}
 scalar:
-  enabled: false
+  enabled: ${API_DOCS_ENABLED:false}
 
 # Health and metrics
 management:
