@@ -44,6 +44,7 @@ nl.hackyourfuture.dojoserver
   interaction/           Interaction, InteractionType, InteractionService,
                          InteractionRepository, TraineeInteractionController, dto/
   picture/               PictureOwner, PictureService, PictureResponses
+  search/                SearchController, SearchService, SearchMatcher, SearchText, dto/
   image/                 ImageService
   filestorage/           FileStorageService, FileStorageProperties, StoredFile
   slack/                 SlackNotificationSender, SlackClient, SlackProperties, FieldChange
@@ -482,6 +483,52 @@ controller streams the result through `PictureResponses.of`.
   restrict`, so a user who reported an interaction fails at the flush with a 409 — before any file
   is gone. Sweeping first would delete the pictures of a user who then stays.
 - Tests mock `FileStorageService` with `@MockitoBean`: CI has Postgres but no S3.
+
+### Search
+
+`search/` finds records by what staff type into the one search box. `GET /api/search?q=` returns up to
+20 `SearchResult`s, best first: a `type`, what a dropdown shows (`title`, `subtitle`, `thumbnailUrl`,
+`path`) and the `score`, so the order can be checked against the rules. Today every result is a trainee.
+
+- **Ranking happens in Java, over every trainee.** Close spellings (Yusuf/Youssef, Muhammad/Mohammed)
+  mean no index can narrow the candidates, so Postgres would scan every row too. In Java the rules are
+  two small classes, `SearchText` turning text into words and `SearchMatcher` scoring them, pinned by
+  `SearchRankingTest` without a database and tuned without a migration. A search takes about 40 ms over
+  2,800 trainees; if that ever grows, fetch only the searched columns before anything cleverer.
+- Each query word must match some field, and counts once at its best match: the kind of match times the
+  field's weight.
+
+  | Kind of match                                  | Points         |
+  |------------------------------------------------|----------------|
+  | a whole word                                   | 1000           |
+  | the start of a word                            | 100            |
+  | a close spelling (names only)                  | 10 × closeness |
+  | inside a longer word (names only, 4+ letters)  | 1              |
+
+- The trainee weights in `SearchService.traineeFields` follow how often staff search by each field: the
+  called name (preferred, else first) 5, legal first name 4, last name 3, email 2, GitHub handle 1,
+  comments 0.001. Kinds of match are ten times apart, so **a better kind of match beats a better field
+  only while the heaviest weight stays under ten times the lightest** (five times among names, since a
+  close spelling scores 5 to 10). Comments break that on purpose: at 0.001 they score at most 1, below
+  any other hit. Ties go to the newest cohort, then the display name, then the id.
+- A close spelling needs 3+ letters and allows one edit per three letters of the longer word, rounded up
+  and at most three. That is looser than a typo budget on purpose: transliterations are not typos, and
+  Youssef and Yusuf are three edits apart.
+- Every field is also compared with its spaces removed, and the query with its words joined, so
+  `abdulrahman` finds `Abdul Rahman` and `abdul rahman` finds `Abdulrahman`. The joined query only counts
+  as a whole word, so it never loosens a query.
+- `SearchText.words` lower-cases, strips accents, folds ı ł ø đ ß æ œ, drops apostrophes, and splits
+  on anything but letters, digits and `@ . _ +`. An apostrophe sits inside a transliterated name, so
+  "Ala'a" is `alaa`: splitting it would leave a stray `a` that every one-letter query word matches as a
+  whole word. The email characters only join words: "Rotterdam." is `rotterdam`, while an email address
+  stays one word.
+- Measured and rejected: Postgres full-text search stems names (`Mohammed` becomes `moham`) and has no
+  typo tolerance, and `pg_trgm` scores yusuf/yousef at 0.08, far below its threshold.
+- **Adding a type** (mentors, laptops): a `SearchResultType` constant, a `SearchResult.from(...)`
+  overload, a fields method and a rank method like `traineeFields` and `rankTrainees` with that type's own
+  tie-break, and a line in `SearchService.search` that combines the lists. No provider interface until
+  there are three types, and no cross-type order yet: merged by score or grouped by type is a UI decision,
+  and a flat list with `type` and `score` supports both.
 
 ## Configuration
 

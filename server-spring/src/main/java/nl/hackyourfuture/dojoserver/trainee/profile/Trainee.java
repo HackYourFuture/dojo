@@ -126,14 +126,13 @@ public class Trainee implements PictureOwner {
     private Instant updatedAt;
 
     // Helper methods
+    // The name the trainee goes by: the preferred name if set, otherwise the first name.
+    public String getCalledName() {
+        return preferredName != null && !preferredName.isBlank() ? preferredName : firstName;
+    }
+
     public String getDisplayName() {
-        String name;
-        if (preferredName != null && !preferredName.isBlank()) {
-            name = preferredName;
-        } else {
-            name = firstName;
-        }
-        return String.format("%s %s", name, lastName).strip();
+        return String.format("%s %s", getCalledName(), lastName).strip();
     }
 
     public String getProfilePath() {
