@@ -25,6 +25,7 @@ dojo:
   auth:
     google-client-id: ${GOOGLE_OAUTH_CLIENTID}
     google-client-secret: ${GOOGLE_OAUTH_CLIENTSECRET}
+    google-allowed-domain: ${GOOGLE_ALLOWED_DOMAIN:hackyourfuture.net}
     allowed-origins: ${AUTH_ALLOWED_ORIGINS}
   file-storage:
     endpoint: ${STORAGE_ENDPOINT}

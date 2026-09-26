@@ -43,6 +43,7 @@ Every endpoint requires a signed-in user. The exceptions are `/api/auth/login/go
 `/api/auth/refresh`, `/api/auth/logout`, `/actuator/health/**` and `/api/docs/**`.
 
 Signing in needs a HackYourFuture Google account *and* a matching active row in the `users` table.
+Outside production `GOOGLE_ALLOWED_DOMAIN` is empty, so any Google account with a `users` row works.
 To sign in locally you also need real Google OAuth credentials:
 
 ```bash
@@ -88,22 +89,23 @@ every push to `main`.
 
 ## ⚙️ Environment variables
 
-| Name | Description | Required |
-|---|---|---|
-| `DB_HOST` | Database host. Defaults to `localhost` outside production. | Yes in prod |
-| `DB_PORT` | Database port. Defaults to `5432` outside production. | Yes in prod |
-| `DB_NAME` | Database name. Defaults to `dojo` outside production. | Yes in prod |
-| `DB_USER` | Database user. Defaults to `admin` outside production. | Yes in prod |
-| `DB_PASSWORD` | Database password. Defaults to `password` outside production. | Yes in prod |
-| `GOOGLE_OAUTH_CLIENTID` | Google OAuth client id. Defaults to `not-configured`, which starts but cannot sign anyone in. | Yes in prod |
-| `GOOGLE_OAUTH_CLIENTSECRET` | Google OAuth client secret. Same default. | Yes in prod |
-| `AUTH_ALLOWED_ORIGINS` | Comma-separated origins allowed to sign in and to send cookies. Defaults to the two localhost origins. | Yes in prod |
-| `ACCESS_TOKEN_TTL` | Access token lifetime. Defaults to `15m`. | No |
-| `REFRESH_TOKEN_TTL` | Refresh token lifetime. Defaults to `14d`. | No |
-| `API_TOKEN_TTL` | API token lifetime. Defaults to `365d`. | No |
-| `COOKIE_SECURE` | `Secure` flag on the session cookies. Defaults to `true`; the `dev` profile sets `false`. | No |
-| `SPRING_PROFILES_ACTIVE` | `dev`, `test` or `prod`. The Docker image sets `prod`. | No |
-| `SERVER_PORT` | Port the server listens on. Defaults to `7777`. | No |
+| Name                        | Description                                                                                                                      | Required    |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------|-------------|
+| `DB_HOST`                   | Database host. Defaults to `localhost` outside production.                                                                       | Yes in prod |
+| `DB_PORT`                   | Database port. Defaults to `5432` outside production.                                                                            | Yes in prod |
+| `DB_NAME`                   | Database name. Defaults to `dojo` outside production.                                                                            | Yes in prod |
+| `DB_USER`                   | Database user. Defaults to `admin` outside production.                                                                           | Yes in prod |
+| `DB_PASSWORD`               | Database password. Defaults to `password` outside production.                                                                    | Yes in prod |
+| `GOOGLE_OAUTH_CLIENTID`     | Google OAuth client id. Defaults to `not-configured`, which starts but cannot sign anyone in.                                    | Yes in prod |
+| `GOOGLE_OAUTH_CLIENTSECRET` | Google OAuth client secret. Same default.                                                                                        | Yes in prod |
+| `GOOGLE_ALLOWED_DOMAIN`     | Workspace domain allowed to sign in; empty allows any Google account. Defaults to `hackyourfuture.net` in prod, empty elsewhere. | No          |
+| `AUTH_ALLOWED_ORIGINS`      | Comma-separated origins allowed to sign in and to send cookies. Defaults to the two localhost origins.                           | Yes in prod |
+| `ACCESS_TOKEN_TTL`          | Access token lifetime. Defaults to `15m`.                                                                                        | No          |
+| `REFRESH_TOKEN_TTL`         | Refresh token lifetime. Defaults to `14d`.                                                                                       | No          |
+| `API_TOKEN_TTL`             | API token lifetime. Defaults to `365d`.                                                                                          | No          |
+| `COOKIE_SECURE`             | `Secure` flag on the session cookies. Defaults to `true`; the `dev` profile sets `false`.                                        | No          |
+| `SPRING_PROFILES_ACTIVE`    | `dev`, `test` or `prod`. The Docker image sets `prod`.                                                                           | No          |
+| `SERVER_PORT`               | Port the server listens on. Defaults to `7777`.                                                                                  | No          |
 
 The `prod` profile deliberately has no defaults for the `DB_*` variables, the Google credentials or
 the allowed origins, so a misconfigured deployment fails at startup instead of quietly connecting
@@ -121,12 +123,12 @@ Health check: `/actuator/health`.
 Code is grouped by feature — each feature owns its whole stack. Inside a feature, a request flows
 through four layers:
 
-| Layer | What it does |
-|---|---|
-| **Controller** | Maps HTTP to Java. Validates the request body, returns DTOs, and documents the endpoint for OpenAPI. No business logic. |
-| **Service** | The business logic, and the transaction boundary. Loads entities, applies rules, throws `DojoException` subclasses when something is wrong. |
-| **Repository** | Database access, via Spring Data JPA. Usually just an interface — Spring writes the queries. |
-| **Entity** | A row in the database, mapped to a Java class. |
+| Layer          | What it does                                                                                                                                |
+|----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| **Controller** | Maps HTTP to Java. Validates the request body, returns DTOs, and documents the endpoint for OpenAPI. No business logic.                     |
+| **Service**    | The business logic, and the transaction boundary. Loads entities, applies rules, throws `DojoException` subclasses when something is wrong. |
+| **Repository** | Database access, via Spring Data JPA. Usually just an interface — Spring writes the queries.                                                |
+| **Entity**     | A row in the database, mapped to a Java class.                                                                                              |
 
 Two supporting pieces sit outside the features:
 

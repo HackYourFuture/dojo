@@ -34,7 +34,6 @@ import java.util.Optional;
 @Slf4j
 public class AuthenticationService {
     private static final String FAIL_MESSAGE = "Login failed. Please contact the administrator for more details.";
-    private static final String ALLOWED_HOSTED_DOMAIN = "hackyourfuture.net";
 
     private final TokenService tokenService;
     private final UserRepository userRepository;
@@ -98,12 +97,15 @@ public class AuthenticationService {
         log.info("Logout completed");
     }
 
-    private static void verifyGoogleIdentity(GoogleIdentity googleIdentity) {
+    private void verifyGoogleIdentity(GoogleIdentity googleIdentity) {
         if (googleIdentity.sub() == null || googleIdentity.email() == null) {
             log.warn("Login failed: Google identity must have both sub and email");
             throw new DojoUnauthorizedException(FAIL_MESSAGE);
         }
-        if (!ALLOWED_HOSTED_DOMAIN.equalsIgnoreCase(googleIdentity.hostedDomain())) {
+        // Blank lets any Google account through, such as gmail in local development.
+        String allowedDomain = authProperties.googleAllowedDomain();
+        if (allowedDomain != null && !allowedDomain.isBlank()
+                && !allowedDomain.equalsIgnoreCase(googleIdentity.hostedDomain())) {
             log.warn("Login failed: Google account '{}' has invalid hosted domain '{}'",
                     googleIdentity.email(),
                     googleIdentity.hostedDomain()

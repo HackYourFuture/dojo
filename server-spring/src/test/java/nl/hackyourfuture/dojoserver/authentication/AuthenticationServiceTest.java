@@ -38,12 +38,14 @@ public class AuthenticationServiceTest {
     private final TokenService tokenService = mock(TokenService.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     private final GoogleOAuthService googleOAuthService = mock(GoogleOAuthService.class);
-    private final AuthProperties authProperties =
-            new AuthProperties("client-id-8xqGg", "client-secret-3gMQ", Duration.ofMinutes(15), Duration.ofDays(7),
-                    Duration.ofDays(365), true, List.of(ORIGIN));
+    private final AuthenticationService authenticationService = authenticationService(HOSTED_DOMAIN);
 
-    private final AuthenticationService authenticationService = new AuthenticationService(tokenService,
-            userRepository, mock(PictureService.class), googleOAuthService, authProperties, mock(RestClient.class));
+    private AuthenticationService authenticationService(String allowedDomain) {
+        var authProperties = new AuthProperties("client-id-8xqGg", "client-secret-3gMQ", allowedDomain,
+                Duration.ofMinutes(15), Duration.ofDays(7), Duration.ofDays(365), true, List.of(ORIGIN));
+        return new AuthenticationService(tokenService, userRepository, mock(PictureService.class), googleOAuthService,
+                authProperties, mock(RestClient.class));
+    }
 
     @Test
     void googleLoginSuccess() {
@@ -105,6 +107,35 @@ public class AuthenticationServiceTest {
 
         // Act & Assert
         assertThatThrownBy(this::login).isInstanceOf(DojoUnauthorizedException.class);
+        verifyRefusedBeforeTheUserLookup();
+    }
+
+    @Test
+    void googleLoginAcceptsAPersonalAccountWhenNoDomainIsConfigured() {
+        // Arrange - how local development signs in: a gmail account reports no hosted domain.
+        User user = user(GOOGLE_SUB);
+        user.setEmail("jane.doe@gmail.com");
+        var token = new IssuedToken("t1", TokenType.ACCESS_TOKEN, "dojo_at_bKq2", user.getId(),
+                Instant.parse("2026-09-20T10:15:00Z"));
+        stubGoogle(identity(GOOGLE_SUB, "jane.doe@gmail.com", true, null));
+        when(userRepository.findByGoogleId(GOOGLE_SUB)).thenReturn(Optional.of(user));
+        when(tokenService.issue(any(), any())).thenReturn(token);
+
+        // Act
+        LoginResponse loginResponse = authenticationService("").googleLogin(new GoogleLoginRequest(AUTH_CODE, ORIGIN));
+
+        // Assert
+        assertThat(loginResponse.user()).isSameAs(user);
+    }
+
+    @Test
+    void googleLoginStillRefusesAnUnverifiedEmailWhenNoDomainIsConfigured() {
+        // Arrange - with no domain to check, the verified email is what ties the account to its owner.
+        stubGoogle(identity(GOOGLE_SUB, "jane.doe@gmail.com", false, null));
+
+        // Act & Assert
+        assertThatThrownBy(() -> authenticationService("").googleLogin(new GoogleLoginRequest(AUTH_CODE, ORIGIN)))
+                .isInstanceOf(DojoUnauthorizedException.class);
         verifyRefusedBeforeTheUserLookup();
     }
 

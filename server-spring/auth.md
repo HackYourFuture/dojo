@@ -30,8 +30,9 @@ which step said no. The one exception is the `redirectURI`, which is checked fir
 `allowed-origins` and answers `400 Invalid redirectURI` — that is a client bug, not a sign-in outcome.
 
 1. **The code is genuine.** Only Dojo holds the client secret, so only Dojo can exchange the code.
-2. **The account is ours.** Google must report the `hackyourfuture.net` Workspace and a verified
-   email address.
+2. **The account is ours.** Google must report a verified email address and the Workspace named by
+   `google-allowed-domain` — `hackyourfuture.net` in production. Outside production that setting is
+   empty, so any Google account passes this step, such as a gmail one for local development.
 3. **The person has a Dojo account.** Looked up by Google's permanent account id (`sub`). On a first
    sign-in the lookup falls back to the email address and remembers the `sub` from then on.
 4. **The account is active.** Deactivated users cannot sign in.
@@ -100,15 +101,16 @@ else's behalf.
 
 Everything lives under `dojo.auth` in `application.yaml`.
 
-| Setting                | Meaning                                        | Default          |
-|------------------------|------------------------------------------------|------------------|
-| `google-client-id`     | Google OAuth client id                         | `not-configured` |
-| `google-client-secret` | Google OAuth client secret                     | `not-configured` |
-| `access-token-ttl`     | Access token lifetime                          | `15m`            |
-| `refresh-token-ttl`    | Refresh token lifetime                         | `14d`            |
-| `api-token-ttl`        | API token lifetime                             | `365d`           |
-| `cookie-secure`        | `Secure` flag on cookies (`false` in dev only) | `true`           |
-| `allowed-origins`      | Origins allowed to sign in and to send cookies | localhost        |
+| Setting                 | Meaning                                                       | Default                             |
+|-------------------------|---------------------------------------------------------------|-------------------------------------|
+| `google-client-id`      | Google OAuth client id                                        | `not-configured`                    |
+| `google-client-secret`  | Google OAuth client secret                                    | `not-configured`                    |
+| `google-allowed-domain` | Workspace domain allowed to sign in; empty allows any account | empty, `hackyourfuture.net` in prod |
+| `access-token-ttl`      | Access token lifetime                                         | `15m`                               |
+| `refresh-token-ttl`     | Refresh token lifetime                                        | `14d`                               |
+| `api-token-ttl`         | API token lifetime                                            | `365d`                              |
+| `cookie-secure`         | `Secure` flag on cookies (`false` in dev only)                | `true`                              |
+| `allowed-origins`       | Origins allowed to sign in and to send cookies                | localhost                           |
 
 In production the Google credentials and the allowed origins come from environment variables with no
 fallback, so a missing value stops the server rather than starting it misconfigured. Everywhere else
