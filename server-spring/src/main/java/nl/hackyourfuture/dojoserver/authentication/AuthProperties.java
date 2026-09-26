@@ -19,6 +19,8 @@ public record AuthProperties(
         @NotBlank
         String googleClientSecret,
 
+        String googleAllowedDomain,
+
         @NotNull
         Duration accessTokenTtl,
 

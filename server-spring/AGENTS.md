@@ -538,7 +538,7 @@ controller streams the result through `PictureResponses.of`.
 |------|--------------------------------------------------------------------------------------------------------------------|
 | base | `localhost:5432/dojo`, `admin`/`password`, port 7777, `ddl-auto: validate`, `Page` serialised as `PagedModel`      |
 | dev  | Scalar on, full health details, `DEBUG INFO` appended to error messages                                            |
-| prod | docs off, health details only when authorized, every DB and auth setting from an env var with no default |
+| prod | docs off, health details only when authorized, every DB and auth setting from an env var with no default, except `google-allowed-domain` (`hackyourfuture.net`) |
 
 `ServerConfig.isDevelopment()` is the gate for anything dev-only. It resolves to `PRODUCTION` when
 no profile matches — but the yaml overlays do not, so a jar started with no profile is terse about

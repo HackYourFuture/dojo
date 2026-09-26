@@ -31,8 +31,8 @@ public class GoogleOAuthServiceTest {
     private final RestClient.Builder restClientBuilder = RestClient.builder();
     private final MockRestServiceServer mockRestClient = MockRestServiceServer.bindTo(restClientBuilder).build();
     private final AuthProperties authProperties =
-            new AuthProperties("client-id-8xqGg", "client-secret-3gMQ", Duration.ofMinutes(15), Duration.ofDays(7),
-                    Duration.ofDays(365), true, List.of("https://example.org"));
+            new AuthProperties("client-id-8xqGg", "client-secret-3gMQ", "example.org", Duration.ofMinutes(15),
+                    Duration.ofDays(7), Duration.ofDays(365), true, List.of("https://example.org"));
 
     @Test
     void verifyGoogleLoginSuccess() {
