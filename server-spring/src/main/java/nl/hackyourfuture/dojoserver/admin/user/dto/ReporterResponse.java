@@ -20,14 +20,14 @@ public record ReporterResponse(
         String name,
 
         @Schema(
-                description = "The URL to the user picture",
-                example = "/api/admin/users/USERID/picture/PICTUREID",
+                description = "The URL to a smaller version of the user picture",
+                example = "/api/admin/users/USERID/picture/PICTUREID/thumbnail",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String pictureUrl
+        String thumbnailUrl
 ) {
     public static ReporterResponse from(User user) {
-        return new ReporterResponse(user.getId(), user.getName(), user.getPictureUrl());
+        return new ReporterResponse(user.getId(), user.getName(), user.getThumbnailUrl());
     }
 }

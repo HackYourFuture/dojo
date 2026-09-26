@@ -27,14 +27,14 @@ public record SessionResponse(
         String email,
 
         @Schema(
-                description = "The URL to the user image",
-                example = "/api/admin/users/USERID/picture/PICTUREID",
+                description = "The URL to a smaller version of the user picture",
+                example = "/api/admin/users/USERID/picture/PICTUREID/thumbnail",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String pictureUrl
+        String thumbnailUrl
 ) {
     public static SessionResponse from(AuthenticatedUser user) {
-        return new SessionResponse(user.id(), user.name(), user.email(), user.pictureUrl());
+        return new SessionResponse(user.id(), user.name(), user.email(), user.thumbnailUrl());
     }
 }
