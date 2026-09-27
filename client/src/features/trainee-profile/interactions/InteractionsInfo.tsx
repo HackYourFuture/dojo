@@ -1,10 +1,11 @@
 import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
-import { useAddInteraction, useEditInteraction, useGetInteractions } from './data/interaction-queries';
+import { useAddInteraction, useEditInteraction } from './data/mutations';
 
 import AddIcon from '@mui/icons-material/Add';
-import { Interaction } from './Interactions';
+import { Interaction } from './models/interaction';
 import { InteractionDetailsModal } from './components/InteractionDetailsModal';
 import InteractionsList from './components/InteractionsList';
+import { useGetInteractions } from './data/interaction-queries';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
@@ -38,21 +39,25 @@ const InteractionsInfo = () => {
   };
 
   const onConfirmAdd = async (interaction: Interaction) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     addInteraction(interaction, {
       onSuccess: handleSuccess,
       onError: (e) => {
-        setModalError((e as Error).message);
+        setModalError(e.message);
       },
     });
   };
 
   const onConfirmEdit = (interaction: Interaction) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     editInteraction(interaction, {
       onSuccess: handleSuccess,
       onError: (e) => {
-        setModalError((e as Error).message);
+        setModalError(e.message);
       },
     });
   };

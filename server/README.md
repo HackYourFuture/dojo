@@ -102,6 +102,6 @@ Dojo uses Sign in with Google. In order to make it work, a new OAuth app needs t
 3. Finish the setup
 4. Create a new OAuth client
 4. Choose Web Application type and provide a name
-5. Add http://localhost:5173 to Authorised JavaScript origins and Authorised redirect URIs
+5. Add http://localhost:8888 to Authorised JavaScript origins and Authorised redirect URIs
 6. Save and copy the client ID and the client secret to the .env file
 7. Go to 'Audience' tab and add test users that will be allowed to use the Google authentication.

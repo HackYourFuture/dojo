@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import TraineeProfile from './profile/components/TraineeProfile';
 import { TraineeProfileProvider } from './context/useTraineeProfileProvider';
 import { useParams } from 'react-router-dom';
-import { useTraineeInfoData } from './personal-info/data/useTraineeInfoData';
+import { useGetTrainee } from './data/trainee-queries';
 
 /**
  * Component for displaying the trainee profile page sidebar and tabs.
@@ -13,7 +13,7 @@ const TraineePage = () => {
   const { traineeInfo } = useParams();
   const trainee = traineeInfo?.split('_');
   const traineeId = trainee ? trainee[1] : '';
-  const { isLoading, data, isError, error, isFetching } = useTraineeInfoData(traineeId);
+  const { isLoading, data, isError, error, isFetching } = useGetTrainee(traineeId);
 
   // Show spinner only for the first load
   if ((isLoading || isFetching) && data === undefined) {

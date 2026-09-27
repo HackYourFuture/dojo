@@ -35,7 +35,7 @@ import java.util.List;
 @Transactional
 public class AuthenticationFlowTest {
 
-    private static final String ORIGIN = "http://localhost:5173";
+    private static final String ORIGIN = "http://localhost:8888";
     private static final String LOGIN = "/api/auth/login/google";
     private static final String LOGIN_BODY =
             "{\"authCode\":\"auth_code_FjR0jzGdKN\",\"redirectURI\":\"" + ORIGIN + "\"}";

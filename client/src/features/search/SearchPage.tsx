@@ -5,7 +5,7 @@ import { ErrorBox } from '../../components';
 import HYFLogo from '../../assets/hyf-logo-red.png';
 import SearchBar from './components/SearchBar';
 import SearchResultsList from './components/SearchResultsList';
-import { useSearch } from './data/queries';
+import { useGetSearchResults } from './data/search-queries';
 
 /**
  * Component for displaying the home page / search page elements.
@@ -15,7 +15,7 @@ const SearchPage = () => {
   /**
    * React Query hook to fetch matching trainees with a debounce time.
    */
-  const { isLoading, data, isError, error } = useSearch(searchString);
+  const { isLoading, data, isError, error } = useGetSearchResults(searchString);
 
   useEffect(() => {
     document.title = 'Home | Dojo';

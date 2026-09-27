@@ -1,27 +1,23 @@
-import { useMutation } from '@tanstack/react-query';
-import { EmploymentHistory } from '../../../../data/types/Trainee'
-import { addEmployment, deleteEmployment, editEmployment } from '../api/api';
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
+import { addEmploymentHistory, deleteEmploymentHistory, editEmploymentHistory } from '../api/api';
+
+import { EmploymentHistory } from '../models/employment-history';
+import { employmentHistoryKeys } from './keys';
+
+const invalidateEmploymentHistoryQuery = (queryClient: QueryClient, traineeId: string) => {
+  return queryClient.invalidateQueries({ queryKey: employmentHistoryKeys.list(traineeId) });
+};
 
 /**
  * Hook to add employment to a trainee.
  * @param {string} traineeId the id of the trainee to add the employment to.
- * @param {EmploymentHistory} employment the employment to add.
  */
 export const useAddEmploymentHistory = (traineeId: string) => {
-  return useMutation({
-    mutationFn: (employment: EmploymentHistory) => addEmployment(traineeId, employment),
-  });
-};
+  const queryClient = useQueryClient();
 
-/**
- * Hook to delete employment from a trainee.
- * @param {string} traineeId the id of the trainee to delete the employment from.
- * @param {string} employmentId the id of the employment to delete.
- * */
-
-export const useDeleteEmploymentHistory = (traineeId: string) => {
   return useMutation({
-    mutationFn: (employmentId: string) => deleteEmployment(traineeId, employmentId),
+    mutationFn: (employment: EmploymentHistory) => addEmploymentHistory(traineeId, employment),
+    onSuccess: async () => await invalidateEmploymentHistoryQuery(queryClient, traineeId),
   });
 };
 
@@ -30,7 +26,23 @@ export const useDeleteEmploymentHistory = (traineeId: string) => {
  * @param {string} traineeId the id of the trainee to edit the employment of.
  */
 export const useEditEmploymentHistory = (traineeId: string) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (employment: EmploymentHistory) => editEmployment(traineeId, employment),
+    mutationFn: (employment: EmploymentHistory) => editEmploymentHistory(traineeId, employment),
+    onSuccess: async () => await invalidateEmploymentHistoryQuery(queryClient, traineeId),
+  });
+};
+
+/**
+ * Hook to delete employment from a trainee.
+ * @param {string} traineeId the id of the trainee to delete the employment from.
+ */
+export const useDeleteEmploymentHistory = (traineeId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (employmentId: string) => deleteEmploymentHistory(traineeId, employmentId),
+    onSuccess: async () => await invalidateEmploymentHistoryQuery(queryClient, traineeId),
   });
 };

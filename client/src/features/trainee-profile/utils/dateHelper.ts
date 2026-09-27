@@ -2,10 +2,12 @@ const TIME_ZONE = 'Europe/Amsterdam';
 /**
  * Function to format date value.
  *
- * @param {Date | undefined} date date value selected.
+ * @param {Date | string | null | undefined} date date value selected.
  */
-export const formatDate = (date: Date | undefined) => {
-  if (!date) return '';
+export const formatDate = (date: Date | string | null | undefined) => {
+  if (!date) {
+    return '';
+  }
   const formattedDate = new Date(date);
 
   if (isNaN(formattedDate.getTime())) {
@@ -18,10 +20,12 @@ export const formatDate = (date: Date | undefined) => {
  * Function to format date value for display.
  * It uses the Dutch locale and the Europe/Amsterdam time zone.
  * Displays the date in the format DD-MM-YYYY.
- * @param {string | undefined} date date value selected.
+ * @param {Date | string | null | undefined} date date value selected.
  */
-export const formatDateForDisplay = (date: Date | undefined) => {
-  if (!date) return '';
+export const formatDateForDisplay = (date: Date | string | null | undefined) => {
+  if (!date) {
+    return '';
+  }
   try {
     const formattedDate = new Intl.DateTimeFormat('nl-NL', {
       timeZone: TIME_ZONE,
@@ -34,4 +38,20 @@ export const formatDateForDisplay = (date: Date | undefined) => {
     console.error(error);
     return '';
   }
+};
+
+/**
+ * Today's calendar date at midnight UTC, the same form as the dates read from the API.
+ * `new Date()` would turn into yesterday's date between midnight and 01:00 or 02:00 in Amsterdam.
+ */
+export const today = () => {
+  const now = new Date();
+  return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+};
+
+/**
+ * Formats a date as the YYYY-MM-DD string the API expects for a date without a time.
+ */
+export const toISODateString = (date: Date) => {
+  return date.toISOString().split('T')[0];
 };

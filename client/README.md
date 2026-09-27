@@ -50,7 +50,7 @@ Before you begin, ensure you have the following installed:
 npm run dev
 ```
 
-The application will open automatically in your browser at `http://localhost:5173`.
+The application will open automatically in your browser at `http://localhost:8888`.
 
 ## Building for Production
 
@@ -71,7 +71,7 @@ The build files will be generated in the `dist/` directory.
 
 ### API Proxy Configuration
 
-You need to set up `VITE_BACKEND_PROXY_TARGET` variable to point to the correct backend URL. If you use the default http://localhost:7777, you need to run the local server first. Read more about local backend development in the server's [README.md](../server/)
+You need to set up `VITE_BACKEND_PROXY_TARGET` variable to point to the correct backend URL. If you use the default http://localhost:7777, you need to run the local server first. Read more about local backend development in the server's [README.md](../server-spring/README.md)
 The development server automatically proxies API requests:
 
 - `/api/*` → Backend server
@@ -98,7 +98,7 @@ The application uses Google OAuth for authentication:
 2. Protected routes require authentication
 3. User sessions persist across browser refreshes
 
-Make sure you have `VITE_GOOGLE_CLIENT_ID` set up correctly. Check out the server [README.md](../server/README.md#google-authentication-setup) for more info.
+Make sure you have `VITE_GOOGLE_CLIENT_ID` set up correctly. Check out the server [README.md](../server-spring/README.md#-authentication) for more info.
 
 ## API Integration
 

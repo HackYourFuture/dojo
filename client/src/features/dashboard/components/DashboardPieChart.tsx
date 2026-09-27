@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { ChartData, DashboardData } from '../Dashboard';
+import { ChartData, DashboardData } from '../models/dashboard';
 
 import { PieChart } from '@mui/x-charts/PieChart';
 import { PieValueType } from '@mui/x-charts';
