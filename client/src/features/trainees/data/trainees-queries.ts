@@ -1,8 +1,8 @@
-import { Cohort, TraineeSummary, TraineeSummaryPage } from '../models/cohort';
+import { Cohort, TraineeSummary, TraineeSummaryPage } from '../models/trainee-summary';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { LearningStatus } from '../../../data/types/Trainee';
-import { cohortKeys } from './keys';
+import { traineeListKeys } from './keys';
 import { getTraineeSummaries } from '../api/api';
 
 const LEARNING_STATUS_ORDER = [
@@ -46,9 +46,9 @@ const selectCohorts = (data: InfiniteData<TraineeSummaryPage>): Cohort[] => {
 /**
  * A React Query hook that fetches the trainees page by page and groups them by cohort.
  */
-export const useGetCohorts = () => {
+export const useGetTraineesByCohort = () => {
   return useInfiniteQuery({
-    queryKey: cohortKeys.list(),
+    queryKey: traineeListKeys.list(),
     queryFn: ({ pageParam }) => getTraineeSummaries(pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage, _allPages, lastPageParam) =>

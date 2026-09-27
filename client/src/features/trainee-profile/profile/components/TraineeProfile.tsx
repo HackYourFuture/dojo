@@ -8,8 +8,8 @@ import EmploymentInfo from '../../employment/EmploymentInfo';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
 import MuiAlert from '@mui/material/Alert';
 import PersonalInfo from '../../personal-info/PersonalInfo';
+import ProfileHeader from '../ProfileHeader';
 import ProfileNav from './ProfileNav';
-import ProfileSidebar from '../ProfileSidebar';
 import { TraineeChanges } from '../../../../data/types/Trainee';
 import { useGetTrainee } from '../../data/trainee-queries';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
@@ -105,12 +105,21 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
   };
 
   return (
-    <Box style={{ display: 'flex' }} bgcolor={'background.default'}>
-      <Box width="40%" position="sticky" top={0} left={0} height="100%" color="black" style={{ overflowY: 'auto' }}>
-        <ProfileSidebar traineeId={id} />
-      </Box>
-      <Box width="100%" paddingY="16px">
-        <Box display="flex" justifyContent="space-between">
+    <Box bgcolor={'background.default'}>
+      <ProfileHeader traineeId={id} />
+      <Box>
+        {/* Keeps its height on the interactions tab, which has no edit button. */}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap="wrap"
+          gap={2}
+          minHeight={56}
+          paddingX={3}
+          borderBottom={1}
+          borderColor="divider"
+        >
           <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
           {activeTab === 'interactions' ? null : (
             <EditSaveButton

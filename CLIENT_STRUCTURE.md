@@ -137,7 +137,7 @@ trainee-profile/
 ├── utils/                        # Helper functions
 │   └── formHelper.ts
 ├── profile/                      # Main profile layout
-│   ├── ProfileSidebar.tsx
+│   ├── ProfileHeader.tsx
 │   └── components/
 │       ├── TraineeProfile.tsx
 │       ├── ProfileNav.tsx
@@ -157,17 +157,20 @@ trainee-profile/
     └── InteractionsInfo.tsx
 ```
 
-### Example: Cohorts Feature
+### Example: Trainees Feature
 
 ```
-cohorts/
-├── Cohorts.ts                    # Type definitions for cohort data
-├── CohortsPage.tsx               # Main page component
-├── components/                   # Cohort-specific components
+trainees/
+├── TraineesPage.tsx              # Main page component, lists the trainees grouped by cohort
+├── api/                          # API calls, response types and mappers
+├── components/                   # Trainees-specific components
 │   ├── CohortAccordion.tsx
 │   └── TraineeAvatar.tsx
-└── data/                         # Data fetching hooks
-    └── useCohortsData.tsx
+├── data/                         # React Query keys and hooks
+│   ├── keys.ts
+│   └── trainees-queries.ts
+└── models/                       # Type definitions for the trainees list
+    └── trainee-summary.ts
 ```
 
 **Note:** The trainee-profile feature no longer has a root-level type file. Trainee types have been moved to `/src/data/types/Trainee.ts` as they are used across multiple features.
