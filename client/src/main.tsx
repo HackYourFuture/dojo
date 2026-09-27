@@ -12,9 +12,11 @@ import { theme } from './theme/theme';
 
 installAxiosInterceptors();
 
+const googleClientId = document.querySelector<HTMLMetaElement>('meta[name="google-client-id"]')!.content;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_CLIENTID}>
+    <GoogleOAuthProvider clientId={googleClientId}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RouterProvider router={router} />

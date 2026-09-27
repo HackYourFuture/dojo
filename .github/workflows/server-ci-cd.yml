@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
-  MAJOR_VERSION: 1
+  MAJOR_VERSION: 2
   MINOR_VERSION: 0
   PATCH_VERSION: ${{ github.run_number }}
 jobs:
@@ -103,7 +103,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/${{ github.repository_owner }}/dojo-server-spring
+          images: ghcr.io/${{ github.repository_owner }}/dojo-server
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ env.MAJOR_VERSION }},enable={{is_default_branch}}
@@ -120,5 +120,5 @@ jobs:
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=dojo-server-spring
-          cache-to: type=gha,scope=dojo-server-spring,mode=max
+          cache-from: type=gha,scope=dojo-server
+          cache-to: type=gha,scope=dojo-server,mode=max

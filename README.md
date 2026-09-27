@@ -77,7 +77,7 @@ If you only work on the front-end, you can connect to a remote deployed backend 
    cd client
    ``` 
 3. Copy `.env.example` to `.env`
-4. Replace `VITE_BACKEND_PROXY_TARGET` and `VITE_GOOGLE_CLIENT_ID` with the correct values of the test server
+4. Replace `VITE_BACKEND_PROXY_TARGET` and `VITE_GOOGLE_CLIENTID` with the correct values of the test server
 5. Start the app:
    ```bash
    npm run dev
