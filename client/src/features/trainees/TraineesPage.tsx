@@ -8,15 +8,15 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useEffect } from 'react';
-import { useGetCohorts } from './data/cohort-queries';
+import { useGetTraineesByCohort } from './data/trainees-queries';
 import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 
 /**
- * Component for displaying the cohort page elements.
+ * Component for displaying the trainees page, with the trainees grouped by cohort.
  */
-const CohortsPage = () => {
+const TraineesPage = () => {
   useEffect(() => {
-    document.title = 'Cohorts | Dojo';
+    document.title = 'Trainees | Dojo';
   }, []);
 
   const {
@@ -29,9 +29,9 @@ const CohortsPage = () => {
     isFetchingNextPage,
     isFetchNextPageError,
     fetchNextPage,
-  } = useGetCohorts();
+  } = useGetTraineesByCohort();
 
-  const errorMessage = error?.message ?? 'An unknown error occurred while fetching cohorts data.';
+  const errorMessage = error?.message ?? 'An unknown error occurred while fetching trainees.';
 
   // Loading a page cancels a running refetch of the loaded pages, so wait for it. After a failed page, wait for the
   // retry button, otherwise the end of the list, still in view, would request it again.
@@ -40,7 +40,7 @@ const CohortsPage = () => {
   return (
     <Container fixed>
       <Box p={2}>
-        <Typography variant="h4">Cohorts Overview</Typography>
+        <Typography variant="h4">Trainees</Typography>
         <ActionsCard />
         {isPending && (
           <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -76,4 +76,4 @@ const CohortsPage = () => {
   );
 };
 
-export default CohortsPage;
+export default TraineesPage;

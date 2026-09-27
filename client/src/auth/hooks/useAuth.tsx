@@ -6,6 +6,8 @@ export interface AuthContextType {
   errorMessage: string;
   login: () => void;
   logout: () => Promise<void>;
+  // Signs out on this device only, for when the session has already ended on the server.
+  clearUser: () => void;
 }
 
 export const ApiContext = createContext<AuthContextType | null>(null);

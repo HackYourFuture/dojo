@@ -1,5 +1,5 @@
 import { PagedModel, TraineeSummaryResponse } from './types';
-import { TraineeSummary, TraineeSummaryPage } from '../models/cohort';
+import { TraineeSummary, TraineeSummaryPage } from '../models/trainee-summary';
 
 export const mapTraineeSummaryToDomain = (trainee: TraineeSummaryResponse): TraineeSummary => {
   return {

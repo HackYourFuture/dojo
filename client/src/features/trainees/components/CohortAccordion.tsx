@@ -1,7 +1,7 @@
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import { Cohort } from '../models/cohort';
+import { Cohort } from '../models/trainee-summary';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -28,8 +28,8 @@ export interface CohortAccordionProps {
 /**
  * Component for displaying cohort accordion component.
  *
- * @param {CohortAccordionProps} cohortInfo trainee employment information.
- * @returns {ReactNode} A React element that renders cohorts information in an accordion component.
+ * @param {CohortAccordionProps} cohortInfo the cohort and its trainees.
+ * @returns {ReactNode} A React element that renders the trainees of one cohort in an accordion component.
  */
 const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
   const expandFlag = cohortInfo.cohort !== null ? true : false;
@@ -44,7 +44,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
           {cohortInfo.cohort !== null ? `Cohort ${cohortInfo.cohort}` : 'No cohort assigned'}
         </AccordionSummary>
         <AccordionDetails>
-          <Table size="small" aria-label="cohorts table">
+          <Table size="small" aria-label="trainees table">
             <TableHead>
               <TableRow sx={headerStyle}>
                 <TableCell sx={headerStyle} width={50}></TableCell>

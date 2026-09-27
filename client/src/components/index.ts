@@ -1,3 +1,4 @@
+export * from './ComingSoon';
 export * from './Comment';
 export * from '../features/dashboard/components/DashboardPieChart';
 export * from './ErrorBox';

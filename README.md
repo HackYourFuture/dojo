@@ -32,7 +32,7 @@ Dojo is HackYourFuture's in-house management tool designed to track HackYourFutu
 - View and update trainee profile
 - Track trainee progress and performance
 - Generate real-time reports
-- Cohorts overview
+- Trainees overview, grouped by cohort
 - Secure authentication using Google OAuth
 
 ## Technology Stack
@@ -105,7 +105,7 @@ If you only work on the front-end, you can connect to a remote deployed backend 
 1. Navigate to `http://localhost:8888` in the browser.
 2. Log in with an authorized google account.
 3. Search for a trainee to track trainee progress, contact information, employment status etc...
-4. Use the cohorts overview page to see the full list of trainees.
+4. Use the Trainees page to see the full list of trainees.
 
 ## Login issues
 Make sure:

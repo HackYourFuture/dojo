@@ -14,12 +14,14 @@ interface ProfileNavProps {
  */
 const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
   return (
-    <Box display="flex" color="black" sx={{ mx: 5, my: 1 }}>
+    // Sits on the bottom border of the tab bar, so the active tab line covers it.
+    <Box display="flex" alignSelf="flex-end" minWidth={0}>
       <Tabs
         value={activeTab}
         onChange={(_, value) => onTabChange(value)}
-        aria-label="basic tabs example"
-        variant="fullWidth"
+        aria-label="Profile sections"
+        variant="scrollable"
+        scrollButtons="auto"
       >
         <Tab label="Personal" value="personal" />
         <Tab label="Contact" value="contact" />

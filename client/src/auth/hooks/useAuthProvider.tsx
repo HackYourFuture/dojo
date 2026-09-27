@@ -67,14 +67,17 @@ export const ApiProvider = () => {
     }
   }, [setUser, navigate, errorMessage]);
 
+  const clearUser = useCallback(() => setUser(null), [setUser]);
+
   const value = useMemo(
     () => ({
       user,
       errorMessage,
       login,
       logout,
+      clearUser,
     }),
-    [user, errorMessage, login, logout]
+    [user, errorMessage, login, logout, clearUser]
   );
 
   return <ApiContext.Provider value={value}>{loading ? <Loader /> : <Outlet />}</ApiContext.Provider>;

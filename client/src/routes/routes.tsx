@@ -1,13 +1,16 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
 import { ApiProvider } from '../auth/hooks/useAuthProvider';
-import CohortsPage from '../features/cohorts/CohortsPage';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import LoginPage from '../features/login/LoginPage';
+import PartnersPage from '../features/partners/PartnersPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import Root from './root';
 import SearchPage from '../features/search/SearchPage';
 import TraineePage from '../features/trainee-profile/TraineePage';
+import TraineesPage from '../features/trainees/TraineesPage';
+import UsersPage from '../features/admin/users/UsersPage';
+import VolunteersPage from '../features/volunteers/VolunteersPage';
 
 export const router = createBrowserRouter([
   {
@@ -30,10 +33,34 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: '/cohorts',
+            path: '/trainees',
             element: (
               <ProtectedRoute>
-                <CohortsPage />
+                <TraineesPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/volunteers',
+            element: (
+              <ProtectedRoute>
+                <VolunteersPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/partners',
+            element: (
+              <ProtectedRoute>
+                <PartnersPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/admin/users',
+            element: (
+              <ProtectedRoute>
+                <UsersPage />
               </ProtectedRoute>
             ),
           },
