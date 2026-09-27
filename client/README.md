@@ -39,7 +39,7 @@ Before you begin, ensure you have the following installed:
    VITE_BACKEND_PROXY_TARGET=http://localhost:7777
 
    # Google OAuth Client ID (required for authentication)
-   VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
+   VITE_GOOGLE_CLIENTID=your_google_client_id_here
    ```
 
 ## Development
@@ -67,7 +67,7 @@ The build files will be generated in the `dist/` directory.
 | Variable                    | Description            | Default                 | Required |
 | --------------------------- | ---------------------- | ----------------------- | -------- |
 | `VITE_BACKEND_PROXY_TARGET` | Backend API URL        | `http://localhost:7777` | No       |
-| `VITE_GOOGLE_CLIENT_ID`     | Google OAuth Client ID | -                       | Yes      |
+| `VITE_GOOGLE_CLIENTID`      | Google OAuth Client ID | -                       | Yes      |
 
 ### API Proxy Configuration
 
@@ -98,7 +98,7 @@ The application uses Google OAuth for authentication:
 2. Protected routes require authentication
 3. User sessions persist across browser refreshes
 
-Make sure you have `VITE_GOOGLE_CLIENT_ID` set up correctly. Check out the server [README.md](../server-spring/README.md#-authentication) for more info.
+Make sure you have `VITE_GOOGLE_CLIENTID` set up correctly. Check out the server [README.md](../server-spring/README.md#-authentication) for more info.
 
 ## API Integration
 
