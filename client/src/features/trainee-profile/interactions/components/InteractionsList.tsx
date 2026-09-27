@@ -29,7 +29,9 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
   };
 
   const onConfirmDelete = () => {
-    if (!interactionToDelete) return;
+    if (!interactionToDelete) {
+      return;
+    }
     deleteInteraction(interactionToDelete.id, {
       onSuccess: () => {
         setIsModalOpen(false);

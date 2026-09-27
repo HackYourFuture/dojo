@@ -14,5 +14,7 @@ export const useGetTrainee = (traineeId: string) => {
     //Added because it keeps rendering
     refetchOnMount: false, // Prevent refetching on component mount
     refetchOnWindowFocus: false, // Prevent refetching on window focus
+    // The edit form diffs against this data, so a refetch mid-edit would save a colleague's newer values back.
+    refetchOnReconnect: false,
   });
 };

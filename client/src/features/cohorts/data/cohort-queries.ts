@@ -27,7 +27,9 @@ const selectCohorts = (data: InfiniteData<TraineeSummaryPage>): Cohort[] => {
 
   for (const trainee of data.pages.flatMap((page) => page.trainees)) {
     // Pages are fetched by offset, so a trainee added or removed while scrolling can repeat a row.
-    if (seenIds.has(trainee.id)) continue;
+    if (seenIds.has(trainee.id)) {
+      continue;
+    }
     seenIds.add(trainee.id);
 
     const cohort = cohorts.get(trainee.cohort);

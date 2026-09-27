@@ -56,10 +56,18 @@ export const TraineeProfileProvider = ({
     const dataToSave: TraineeChanges = {};
 
     // add the changed fields to the dataToSave object if not null
-    if (personalInfo) dataToSave.personalInfo = personalInfo;
-    if (contactInfo) dataToSave.contactInfo = contactInfo;
-    if (educationInfo) dataToSave.educationInfo = educationInfo;
-    if (employmentInfo) dataToSave.employmentInfo = employmentInfo;
+    if (personalInfo) {
+      dataToSave.personalInfo = personalInfo;
+    }
+    if (contactInfo) {
+      dataToSave.contactInfo = contactInfo;
+    }
+    if (educationInfo) {
+      dataToSave.educationInfo = educationInfo;
+    }
+    if (employmentInfo) {
+      dataToSave.employmentInfo = employmentInfo;
+    }
 
     return dataToSave;
   };
@@ -84,7 +92,9 @@ export const TraineeProfileProvider = ({
       }
     });
 
-    if (Object.keys(updatedFields).length === 0) return null;
+    if (Object.keys(updatedFields).length === 0) {
+      return null;
+    }
     return updatedFields;
   };
 

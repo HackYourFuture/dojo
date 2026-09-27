@@ -10,11 +10,15 @@ import { useCallback } from 'react';
 export const useInfiniteScroll = (onReachEnd: () => void, isEnabled: boolean) => {
   return useCallback(
     (element: HTMLElement | null) => {
-      if (!element || !isEnabled) return;
+      if (!element || !isEnabled) {
+        return;
+      }
 
       const observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) onReachEnd();
+          if (entry.isIntersecting) {
+            onReachEnd();
+          }
         },
         { rootMargin: '400px' } // Start loading before the user reaches the end.
       );

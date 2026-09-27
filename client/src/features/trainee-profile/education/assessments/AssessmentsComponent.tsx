@@ -44,7 +44,9 @@ export const AssessmentsComponent = () => {
   };
 
   const onConfirmAdd = async (assessment: Assessment) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
 
     addAssessment(assessment, {
       onSuccess: handleSuccess,
@@ -55,7 +57,9 @@ export const AssessmentsComponent = () => {
   };
 
   const onConfirmEdit = (assessment: Assessment) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     editAssessment(assessment, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -91,7 +95,8 @@ export const AssessmentsComponent = () => {
 
   const onConfirmDelete = () => {
     deleteAssessment(idToDelete, {
-      onSuccess: () => {
+      // Also close on failure, so the error shown in place of the list is not hidden behind the dialog.
+      onSettled: () => {
         setIsConfirmationDialogOpen(false);
       },
     });

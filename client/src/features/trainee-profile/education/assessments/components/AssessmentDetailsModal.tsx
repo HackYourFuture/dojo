@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Assessment, AssessmentResult, AssessmentType } from '../models/assessment';
 
-import { formatDate } from '../../../utils/dateHelper';
+import { formatDate, today } from '../../../utils/dateHelper';
 import { useState } from 'react';
 
 type AssessmentDetailsModalProps = {
@@ -31,8 +31,12 @@ type AssessmentDetailsModalProps = {
 
 // The inputs give text: the date as YYYY-MM-DD and the score as a number string.
 const parseInputValue = (name: string, value: string) => {
-  if (name === 'date') return value ? new Date(value) : undefined;
-  if (name === 'score') return value === '' ? null : Number(value);
+  if (name === 'date') {
+    return value ? new Date(value) : undefined;
+  }
+  if (name === 'score') {
+    return value === '' ? null : Number(value);
+  }
   return value;
 };
 
@@ -47,7 +51,7 @@ export const AssessmentDetailsModal = ({
 }: AssessmentDetailsModalProps) => {
   const [assessmentFields, setAssessmentFields] = useState<Partial<Assessment>>({
     id: initialAssessment?.id || '',
-    date: initialAssessment?.date || new Date(),
+    date: initialAssessment?.date || today(),
     type: initialAssessment?.type || undefined,
     score: initialAssessment?.score ?? null,
     result: initialAssessment?.result || undefined,
@@ -68,8 +72,12 @@ export const AssessmentDetailsModal = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === 'score') setScoreError(false);
-    if (name === 'date') setDateError(false);
+    if (name === 'score') {
+      setScoreError(false);
+    }
+    if (name === 'date') {
+      setDateError(false);
+    }
 
     setAssessmentFields((prevAssessment) => ({
       ...prevAssessment,
@@ -79,8 +87,12 @@ export const AssessmentDetailsModal = ({
 
   const handleAssessmentSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
-    if (name === 'type') setTypeError(false);
-    if (name === 'result') setResultError(false);
+    if (name === 'type') {
+      setTypeError(false);
+    }
+    if (name === 'result') {
+      setResultError(false);
+    }
 
     setAssessmentFields((prev) => ({
       ...prev,
@@ -106,10 +118,15 @@ export const AssessmentDetailsModal = ({
       setScoreError(true);
       invalid = true;
     }
-    if (invalid) return;
+    if (invalid) {
+      return;
+    }
 
-    if (isEditMode) onConfirmEdit(assessmentFields as Assessment);
-    else onConfirmAdd(assessmentFields as Assessment);
+    if (isEditMode) {
+      onConfirmEdit(assessmentFields as Assessment);
+    } else {
+      onConfirmAdd(assessmentFields as Assessment);
+    }
   };
 
   return (
@@ -161,7 +178,7 @@ export const AssessmentDetailsModal = ({
               <TextField
                 error={dateError}
                 disabled={isLoading}
-                id={assessmentFields?.date ? 'date' : 'dateEmpty'}
+                id="date"
                 name="date"
                 label="Assessment date"
                 type="date"

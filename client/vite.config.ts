@@ -17,6 +17,8 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 8888,
+      // The backend only accepts this origin, so fail instead of moving to another port when it is taken.
+      strictPort: true,
       // Automatically open the app in the browser on server start.
       open: '/',
 

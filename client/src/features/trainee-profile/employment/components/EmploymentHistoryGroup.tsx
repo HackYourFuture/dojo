@@ -67,7 +67,9 @@ export const EmploymentHistoryGroup = () => {
   };
 
   const onConfirmAdd = async (employment: EmploymentHistory) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     addEmployment(employment, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -77,7 +79,9 @@ export const EmploymentHistoryGroup = () => {
   };
 
   const onConfirmEdit = (employment: EmploymentHistory) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     editEmployment(employment, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -92,7 +96,8 @@ export const EmploymentHistoryGroup = () => {
 
   const onConfirmDelete = () => {
     deleteEmployment(idToDelete, {
-      onSuccess: () => {
+      // Also close on failure, so the error shown in place of the list is not hidden behind the dialog.
+      onSettled: () => {
         setIsConfirmationDialogOpen(false);
       },
     });

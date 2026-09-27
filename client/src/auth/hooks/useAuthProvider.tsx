@@ -8,6 +8,10 @@ import { AxiosError } from 'axios';
 import { Loader } from '../../components';
 import { useLocalStorage } from './useLocalStorage';
 
+// The message is the server's text (see data/http/interceptors.ts), or axios' own when there is no response.
+const toErrorMessage = (error: AxiosError) =>
+  error.response ? `Error code: ${error.response.status} ${error.message}` : error.message;
+
 export const ApiProvider = () => {
   const [user, setUser] = useLocalStorage('user', null);
   const [loading, setLoading] = useState(false);
@@ -27,8 +31,9 @@ export const ApiProvider = () => {
       } catch (error) {
         console.log('Error logging in:', error);
 
-        if (error instanceof AxiosError)
-          setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
+        if (error instanceof AxiosError) {
+          setErrorMessage(toErrorMessage(error));
+        }
         console.log(errorMessage);
       } finally {
         setLoading(false);
@@ -53,8 +58,9 @@ export const ApiProvider = () => {
     } catch (error) {
       console.log('Error logging out:', error);
 
-      if (error instanceof AxiosError)
-        setErrorMessage(`Error code: ${error.response?.status} ${error.response?.data?.error}`);
+      if (error instanceof AxiosError) {
+        setErrorMessage(toErrorMessage(error));
+      }
       console.log(errorMessage);
     } finally {
       setLoading(false);

@@ -162,7 +162,7 @@ export const InteractionDetailsModal = ({
             <FormControl fullWidth>
               <TextField
                 disabled={isLoading}
-                id={interactionFields?.date ? 'date' : 'dateEmpty'}
+                id="date"
                 name="date"
                 label="Interaction Date"
                 type="date"

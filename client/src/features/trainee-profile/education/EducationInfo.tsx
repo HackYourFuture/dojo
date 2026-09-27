@@ -167,7 +167,7 @@ const EducationInfo = () => {
             id="startCohort"
             name="startCohort"
             label="Start cohort"
-            value={editedFields?.startCohort || ''}
+            value={editedFields?.startCohort ?? ''}
             slotProps={{
               input: {
                 readOnly: isEditing ? false : true,

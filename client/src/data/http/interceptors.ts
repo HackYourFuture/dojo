@@ -26,13 +26,19 @@ const refreshOnce = () => {
 // The access token lives for 15 minutes. On a 401, renew it once and replay the request. If the session cannot be
 // renewed, the original 401 reaches the query client, which sends the user to the login page.
 const retryAfterRefresh = async (error: unknown) => {
-  if (!isAxiosError(error) || error.response?.status !== 401 || !error.config) throw error;
+  if (!isAxiosError(error) || error.response?.status !== 401 || !error.config) {
+    throw error;
+  }
 
   const request = error.config;
-  if (request._retriedAfterRefresh || request.url?.startsWith('/api/auth/')) throw error;
+  if (request._retriedAfterRefresh || request.url?.startsWith('/api/auth/')) {
+    throw error;
+  }
 
   request._retriedAfterRefresh = true;
-  if (!(await refreshOnce())) throw error;
+  if (!(await refreshOnce())) {
+    throw error;
+  }
   return axios(request);
 };
 

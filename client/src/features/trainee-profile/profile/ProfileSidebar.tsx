@@ -64,7 +64,7 @@ const ProfileSidebar = ({ traineeId }: ProfileSidebarProps) => {
         )}
         {/* Cohort */}
         <Typography variant="body1" color="text.secondary">
-          Cohort {data?.educationInfo?.currentCohort || 'not assigned'}
+          Cohort {data?.educationInfo?.currentCohort ?? 'not assigned'}
         </Typography>
       </Stack>
 

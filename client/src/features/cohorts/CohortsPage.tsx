@@ -24,14 +24,18 @@ const CohortsPage = () => {
     error,
     isPending,
     isError,
+    isFetching,
     hasNextPage,
     isFetchingNextPage,
     isFetchNextPageError,
     fetchNextPage,
   } = useGetCohorts();
 
-  // After a failed page, wait for the retry button. Otherwise the end of the list, still in view, requests it again.
-  const loadMoreRef = useInfiniteScroll(fetchNextPage, hasNextPage && !isFetchingNextPage && !isFetchNextPageError);
+  const errorMessage = error?.message ?? 'An unknown error occurred while fetching cohorts data.';
+
+  // Loading a page cancels a running refetch of the loaded pages, so wait for it. After a failed page, wait for the
+  // retry button, otherwise the end of the list, still in view, would request it again.
+  const loadMoreRef = useInfiniteScroll(fetchNextPage, hasNextPage && !isFetching && !isFetchNextPageError);
 
   return (
     <Container fixed>
@@ -45,11 +49,7 @@ const CohortsPage = () => {
         )}
         {isError && !isFetchNextPageError && (
           <Box width="50%" margin="auto" marginTop="2rem" marginBottom="2rem">
-            <ErrorBox
-              errorMessage={
-                error instanceof Error ? error.message : 'An unknown error occurred while fetching cohorts data.'
-              }
-            />
+            <ErrorBox errorMessage={errorMessage} />
           </Box>
         )}
 
@@ -63,9 +63,10 @@ const CohortsPage = () => {
 
         <Box ref={loadMoreRef} display="flex" flexDirection="column" alignItems="center" gap={1} paddingY={2}>
           {isFetchingNextPage && <CircularProgress />}
-          {isFetchNextPageError && (
+          {/* The error state lasts until a page loads, so it is hidden while the retry is running. */}
+          {isFetchNextPageError && !isFetchingNextPage && (
             <>
-              <ErrorBox errorMessage={error?.message ?? 'An unknown error occurred while fetching cohorts data.'} />
+              <ErrorBox errorMessage={errorMessage} />
               <Button onClick={() => fetchNextPage()}>Retry</Button>
             </>
           )}

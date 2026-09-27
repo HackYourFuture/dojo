@@ -39,7 +39,9 @@ const InteractionsInfo = () => {
   };
 
   const onConfirmAdd = async (interaction: Interaction) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     addInteraction(interaction, {
       onSuccess: handleSuccess,
       onError: (e) => {
@@ -49,7 +51,9 @@ const InteractionsInfo = () => {
   };
 
   const onConfirmEdit = (interaction: Interaction) => {
-    if (modalError) setModalError('');
+    if (modalError) {
+      setModalError('');
+    }
     editInteraction(interaction, {
       onSuccess: handleSuccess,
       onError: (e) => {

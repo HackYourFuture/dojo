@@ -18,6 +18,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { TraineeAvatar } from './TraineeAvatar';
+import { memo } from 'react';
 import slackLogo from '../../../assets/slack.png';
 
 export interface CohortAccordionProps {
@@ -139,4 +140,5 @@ const getScoreColor = (score: number | null) => {
   return 'inherit';
 };
 
-export default CohortAccordion;
+// Loading a page changes only the last cohort, and React Query keeps the other Cohort objects identical.
+export default memo(CohortAccordion);

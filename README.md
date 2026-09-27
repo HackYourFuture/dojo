@@ -93,7 +93,7 @@ If you only work on the front-end, you can connect to a remote deployed backend 
    npm run setup
    ```
 
-2. Set up the server from the detailed instructions in [server/README.md](server/README.md). Make sure the back-end is running before setting up the front-end.
+2. Set up the server from the detailed instructions in [server-spring/README.md](server-spring/README.md). Make sure the back-end is running before setting up the front-end.
 
 3. Set up the client from the detailed instructions in [client/README.md](client/README.md)
 

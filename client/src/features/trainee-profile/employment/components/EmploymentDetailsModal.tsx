@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { formatDate } from '../../utils/dateHelper';
+import { formatDate, today } from '../../utils/dateHelper';
 
 interface EmploymentDetailsModalProps {
   isOpen: boolean;
@@ -33,8 +33,12 @@ interface EmploymentDetailsModalProps {
 
 // The inputs give text: the dates as YYYY-MM-DD and the fee as a number string.
 const parseInputValue = (name: string, value: string) => {
-  if (name === 'startDate' || name === 'endDate') return value ? new Date(value) : null;
-  if (name === 'feeAmount') return value === '' ? null : Number(value);
+  if (name === 'startDate' || name === 'endDate') {
+    return value ? new Date(value) : null;
+  }
+  if (name === 'feeAmount') {
+    return value === '' ? null : Number(value);
+  }
   return value;
 };
 
@@ -52,7 +56,7 @@ export const EmploymentDetailsModal = ({
     type: initialEmployment?.type || '',
     companyName: initialEmployment?.companyName || '',
     role: initialEmployment?.role || '',
-    startDate: initialEmployment?.startDate || new Date(),
+    startDate: initialEmployment?.startDate || today(),
     endDate: initialEmployment?.endDate ?? null,
     feeCollected: initialEmployment?.feeCollected || false,
     feeAmount: initialEmployment?.feeAmount ?? null,
@@ -108,7 +112,9 @@ export const EmploymentDetailsModal = ({
 
     setRequiredFieldError(newErrors);
     const errors = Object.values(newErrors).some(Boolean)
-    if (errors) return;
+    if (errors) {
+      return;
+    }
 
     if (initialEmployment) {
       onConfirmEdit(employmentFields);
