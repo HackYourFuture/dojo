@@ -56,14 +56,13 @@ export const ProfileNumberField = ({
           <OutlinedInput
             label={label}
             notched
+            slotProps={{ input: props }}
+            // OutlinedInput handles the ref, value, focus and change of its input itself, so these go to it as props too.
             inputRef={props.ref}
             value={state.inputValue}
             onBlur={props.onBlur}
             onChange={props.onChange}
-            onKeyUp={props.onKeyUp}
-            onKeyDown={props.onKeyDown}
             onFocus={props.onFocus}
-            slotProps={{ input: props }}
           />
         )}
       />

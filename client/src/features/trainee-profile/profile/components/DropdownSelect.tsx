@@ -1,6 +1,5 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { SelectOption } from '../../utils/selectOptions';
 
 type DropdownSelectProps = {
@@ -9,18 +8,14 @@ type DropdownSelectProps = {
   label: string;
   value?: string;
   options: SelectOption[];
-  isEditing?: boolean;
   disabled?: boolean;
   error?: string;
   onChange: (event: SelectChangeEvent<string>) => void;
   width?: string | number;
 };
 
-// Hides the arrow while the dropdown is read-only.
-const NoIcon = () => null;
-
 /**
- * A dropdown that is outlined while editing, and a read-only value otherwise.
+ * An outlined dropdown with an error message below it, used by the create dialog.
  */
 export const DropdownSelect = ({
   id,
@@ -28,7 +23,6 @@ export const DropdownSelect = ({
   label,
   value = '',
   options,
-  isEditing = false,
   disabled = false,
   error,
   onChange,
@@ -37,7 +31,7 @@ export const DropdownSelect = ({
   const labelId = `${id}-label`;
 
   return (
-    <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ width }}>
+    <FormControl sx={{ width }}>
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         id={id}
@@ -47,10 +41,6 @@ export const DropdownSelect = ({
         value={value}
         disabled={disabled}
         error={!!error}
-        inputProps={{ readOnly: !isEditing }}
-        IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-        // Keeps the label above the dropdown when it is empty, like the text fields.
-        startAdornment=" "
         onChange={onChange}
       >
         {options.map((option) => (

@@ -1,18 +1,17 @@
-import { ChangeEvent, ReactNode } from 'react';
 import { JobPath, Trainee, TraineeInfoType } from '../../../data/types/Trainee';
 
+import { ChangeEvent } from 'react';
+
 /**
- * Function to handle the change event for the input component.
+ * Creates the change handler of the date, number and dropdown fields, which report their value instead of an event.
  * @param setTrainee a function to set the trainee object in the context
  * @param propName a key of the Trainee object
- * @returns
  */
-export const createTextChangeHandler = (
+export const createValueChangeHandler = (
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>,
   propName: TraineeInfoType
 ) => {
-  return (event: ChangeEvent<HTMLInputElement | { name: string; value: ReactNode }>) => {
-    const { name, value } = event.target;
+  return (name: string, value: string | number | boolean | null) => {
     setTrainee((prevFields: Trainee) => {
       const updatedInfo = {
         ...prevFields[propName], // Update the specified prop (personalInfo, contactInfo, etc.)
@@ -25,22 +24,15 @@ export const createTextChangeHandler = (
 };
 
 /**
- * Like createTextChangeHandler, for the date, number and dropdown fields, which report their value instead of an event.
+ * Like createValueChangeHandler, for the text fields, which report a change event.
  */
-export const createValueChangeHandler = (
+export const createTextChangeHandler = (
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>,
   propName: TraineeInfoType
 ) => {
-  return (name: string, value: string | number | boolean | null) => {
-    setTrainee((prevFields: Trainee) => {
-      const updatedInfo = {
-        ...prevFields[propName],
-        [name]: value,
-      };
-
-      return { ...prevFields, [propName]: updatedInfo };
-    });
-  };
+  const handleValueChange = createValueChangeHandler(setTrainee, propName);
+  return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    handleValueChange(event.target.name, event.target.value);
 };
 
 /**

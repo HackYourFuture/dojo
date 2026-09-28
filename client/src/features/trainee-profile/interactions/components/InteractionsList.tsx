@@ -23,7 +23,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
   const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
-  const handleClickOnDeleteButton = async (interaction: Interaction) => {
+  const handleClickOnDeleteButton = (interaction: Interaction) => {
     setError('');
     setInteractionToDelete(interaction);
     setIsModalOpen(true);
@@ -39,7 +39,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
         setInteractionToDelete(null);
       },
       onError: (error) => {
-        // Close the dialog so the error above the list is visible, e.g. when deleting someone else's interaction.
+        // Close the dialog so the error above the list is visible.
         setIsModalOpen(false);
         setError(error.message);
       },

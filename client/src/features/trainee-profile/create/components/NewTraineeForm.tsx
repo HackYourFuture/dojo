@@ -51,7 +51,6 @@ export const NewTraineeForm: React.FC<{
           label="Gender"
           options={genderOptions}
           disabled={isLoading}
-          isEditing
           value={formState.gender || undefined}
           error={errors?.gender || ''}
           onChange={handleSelect}
@@ -86,7 +85,6 @@ export const NewTraineeForm: React.FC<{
             label="Learning Status"
             options={learningStatusOptions}
             disabled={isLoading}
-            isEditing
             value={formState.learningStatus}
             onChange={handleSelect}
           />
@@ -96,7 +94,6 @@ export const NewTraineeForm: React.FC<{
             label="Job path"
             options={jobPathOptions}
             disabled={isLoading}
-            isEditing
             value={formState.jobPath}
             onChange={handleSelect}
           />

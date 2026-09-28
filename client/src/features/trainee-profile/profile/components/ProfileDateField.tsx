@@ -1,7 +1,7 @@
 import { PROFILE_FIELD_WIDTH, ProfileTextField } from './ProfileTextField';
-import dayjs, { Dayjs } from 'dayjs';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 
 interface ProfileDateFieldProps {
@@ -21,16 +21,16 @@ export const ProfileDateField = ({ name, label, value, isEditing, onChange }: Pr
     return <ProfileTextField name={name} label={label} value={formatDateForDisplay(value)} isEditing={false} />;
   }
 
-  // A partly typed date is stored as no date.
-  const handleChange = (date: Dayjs | null) => onChange(name, date?.isValid() ? date.format('YYYY-MM-DD') : null);
-
   return (
     <DatePicker
       name={name}
       label={label}
       // Uncontrolled, so the picker keeps a partly typed date. It mounts with the current value whenever editing starts.
       defaultValue={value ? dayjs(value) : null}
-      onChange={handleChange}
+      // A date the picker rejects, like a partly typed one, is stored as no date.
+      onChange={(date, { validationError }) =>
+        onChange(name, date && !validationError ? date.format('YYYY-MM-DD') : null)
+      }
       views={['year', 'month', 'day']}
       sx={{ width: PROFILE_FIELD_WIDTH }}
       slotProps={{
