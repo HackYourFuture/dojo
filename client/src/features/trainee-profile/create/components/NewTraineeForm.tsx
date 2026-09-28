@@ -1,8 +1,7 @@
 import { Button, SelectChangeEvent, Stack } from '@mui/material';
+import { genderOptions, jobPathOptions, learningStatusOptions } from '../../utils/selectOptions';
 
-import { GenderSelect } from '../../profile/components/GenderSelect';
-import { JobPathSelect } from '../../profile/components/JobPathSelect';
-import { LearningStatusSelect } from '../../profile/components/LearningStatusSelect';
+import { DropdownSelect } from '../../profile/components/DropdownSelect';
 import { NewTrainee } from '../../../../data/types/Trainee';
 import TextFieldWrapper from './TextFieldWrapper';
 
@@ -46,7 +45,11 @@ export const NewTraineeForm: React.FC<{
           value={formState.lastName}
           onChange={handleChange}
         />
-        <GenderSelect
+        <DropdownSelect
+          id="gender"
+          name="gender"
+          label="Gender"
+          options={genderOptions}
           disabled={isLoading}
           isEditing
           value={formState.gender || undefined}
@@ -77,13 +80,26 @@ export const NewTraineeForm: React.FC<{
             maxLength={3}
           />
 
-          <LearningStatusSelect
+          <DropdownSelect
+            id="learningStatus"
+            name="learningStatus"
+            label="Learning Status"
+            options={learningStatusOptions}
             disabled={isLoading}
             isEditing
             value={formState.learningStatus}
             onChange={handleSelect}
           />
-          <JobPathSelect disabled={isLoading} isEditing value={formState.jobPath} onChange={handleSelect} />
+          <DropdownSelect
+            id="jobPath"
+            name="jobPath"
+            label="Job path"
+            options={jobPathOptions}
+            disabled={isLoading}
+            isEditing
+            value={formState.jobPath}
+            onChange={handleSelect}
+          />
         </Stack>
       </Stack>
       <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>

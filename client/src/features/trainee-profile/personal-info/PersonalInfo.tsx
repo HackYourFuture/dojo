@@ -1,15 +1,25 @@
-import { Background, EducationLevel, EnglishLevel, Pronouns } from '../../../data/types/Trainee';
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
+import {
+  backgroundOptions,
+  educationLevelOptions,
+  englishLevelOptions,
+  financialSupportOptions,
+  genderOptions,
+  pronounOptions,
+  yesNoOptions,
+} from '../utils/selectOptions';
+import { createNumberChangeHandler, createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
+import { FieldRow, PROFILE_FIELD_GAP, ProfileSection } from '../profile/components/ProfileSection';
+import { PROFILE_FIELD_WIDTH, ProfileTextField } from '../profile/components/ProfileTextField';
 
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { GenderSelect } from '../profile/components/GenderSelect';
+import { ProfileSelect } from '../profile/components/ProfileSelect';
+import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
-const NoIcon = () => null;
+// Two fields and the gap between them, so the field lines up with the columns of the other rows.
+const DOUBLE_FIELD_WIDTH = `calc(2 * ${PROFILE_FIELD_WIDTH} + ${PROFILE_FIELD_GAP})`;
 
 /**
- * Component for displaying  and updating trainee profile data on the personal information tab.
+ * Component for displaying and updating trainee profile data on the personal information tab.
  *
  * @returns {ReactNode} A React element that renders trainee personal information with view, add, and edit logic.
  */
@@ -17,254 +27,218 @@ const PersonalInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { personalInfo: editedFields } = trainee;
 
-  /**
-   * Function to handel changing text fields with edited data.
-   *
-   * @param {HTMLInputElement} e the event received from the text fields after editing.
-   */
-  const handleChange = createTextChangeHandler(setTrainee, 'personalInfo');
-
-  /**
-   * Function to handel changing select fields with edited data.
-   *
-   * @param {SelectChangeEvent} event the event received from select component change.
-   */
+  const handleTextChange = createTextChangeHandler(setTrainee, 'personalInfo');
+  const handleNumberChange = createNumberChangeHandler(setTrainee, 'personalInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'personalInfo');
 
   return (
-    <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <div style={{ width: '100%' }}>
-        {/* First Name */}
-        <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <TextField
-            id="firstName"
+    <Stack spacing={4} useFlexGap>
+      <ProfileSection>
+        <FieldRow>
+          <ProfileTextField
             name="firstName"
             label="First name"
-            type="text"
-            placeholder={isEditing ? 'John' : ''}
-            value={editedFields?.firstName || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            placeholder="John"
+            value={editedFields.firstName}
+            isEditing={isEditing}
+            onChange={handleTextChange}
           />
-        </FormControl>
-
-        {/* Last Name */}
-        <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <TextField
-            id="lastName"
+          <ProfileTextField
             name="lastName"
             label="Last name"
-            type="text"
-            placeholder={isEditing ? 'Doe' : ''}
-            value={editedFields?.lastName || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            placeholder="Doe"
+            value={editedFields.lastName}
+            isEditing={isEditing}
+            onChange={handleTextChange}
           />
-        </FormControl>
-
-        {/* Preferred Name */}
-        <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <TextField
-            id="preferredName"
+          <ProfileTextField
             name="preferredName"
             label="Preferred name"
-            type="text"
-            placeholder={isEditing ? 'Johnny' : ''}
-            value={editedFields?.preferredName || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            placeholder="Johnny"
+            value={editedFields.preferredName}
+            isEditing={isEditing}
+            onChange={handleTextChange}
           />
-        </FormControl>
-      </div>
-
-      <div style={{ width: '100%' }}>
-        {/* Gender */}
-        <GenderSelect
-          disabled={false}
-          isEditing={isEditing}
-          value={editedFields?.gender ?? ''}
-          onChange={handleSelectChange}
-        />
-
-        {/* Pronouns */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <InputLabel htmlFor="pronouns">Pronouns</InputLabel>
-          <Select
-            name="pronouns"
-            id="pronouns"
-            label="Pronouns"
-            value={editedFields?.pronouns || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
+        </FieldRow>
+        <FieldRow>
+          <ProfileTextField
+            name="dateOfBirth"
+            label="Date of birth"
+            type="date"
+            value={editedFields.dateOfBirth}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+          <ProfileSelect
+            name="gender"
+            label="Gender"
+            options={genderOptions}
+            value={editedFields.gender}
+            isEditing={isEditing}
             onChange={handleSelectChange}
-          >
-            <MenuItem value={Pronouns.HeHim}>{Pronouns.HeHim}</MenuItem>
-            <MenuItem value={Pronouns.SheHer}>{Pronouns.SheHer}</MenuItem>
-            <MenuItem value={Pronouns.TheyThem}>{Pronouns.TheyThem}</MenuItem>
-            <MenuItem value={Pronouns.HeThey}>{Pronouns.HeThey}</MenuItem>
-            <MenuItem value={Pronouns.SheThey}>{Pronouns.SheThey}</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-
-      <div style={{ width: '100%' }}>
-        {/* Location */}
-        <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <TextField
-            id="location"
+          />
+          <ProfileSelect
+            name="pronouns"
+            label="Pronouns"
+            options={pronounOptions}
+            value={editedFields.pronouns}
+            isEditing={isEditing}
+            onChange={handleSelectChange}
+          />
+        </FieldRow>
+        <FieldRow>
+          <ProfileTextField
             name="location"
             label="Location"
-            type="text"
-            placeholder={isEditing ? 'Amsterdam' : ''}
-            value={editedFields?.location || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            placeholder="Amsterdam"
+            value={editedFields.location}
+            isEditing={isEditing}
+            onChange={handleTextChange}
           />
-        </FormControl>
+          <ProfileTextField
+            name="esfId"
+            label="ESF ID"
+            value={editedFields.esfId}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+      </ProfileSection>
 
-        {/* Country of Origin */}
-        <FormControl sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <TextField
-            id="countryOfOrigin"
+      <ProfileSection title="Background">
+        <FieldRow>
+          <ProfileSelect
+            name="background"
+            label="Background"
+            options={backgroundOptions}
+            value={editedFields.background}
+            isEditing={isEditing}
+            onChange={handleSelectChange}
+          />
+          <ProfileTextField
             name="countryOfOrigin"
             label="Country of origin"
-            type="text"
-            placeholder={isEditing ? 'Netherlands' : ''}
-            value={editedFields?.countryOfOrigin || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            placeholder="Netherlands"
+            value={editedFields.countryOfOrigin}
+            isEditing={isEditing}
+            onChange={handleTextChange}
           />
-        </FormControl>
+          <ProfileTextField
+            name="nlArrivalDate"
+            label="Arrived in NL"
+            type="date"
+            value={editedFields.nlArrivalDate}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+          <ProfileTextField
+            name="firstPermitIssueDate"
+            label="First permit issued"
+            type="date"
+            value={editedFields.firstPermitIssueDate}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+      </ProfileSection>
 
-        {/* Background */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <InputLabel htmlFor="background">Background</InputLabel>
-          <Select
-            name="background"
-            id="background"
-            label="Background"
-            value={editedFields?.background || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
+      <ProfileSection title="Financial">
+        <FieldRow>
+          <ProfileSelect
+            name="financialSupport"
+            label="Financial support"
+            options={financialSupportOptions}
+            value={editedFields.financialSupport}
+            isEditing={isEditing}
             onChange={handleSelectChange}
-          >
-            <MenuItem value={Background.EUCitizen}>EU citizen</MenuItem>
-            <MenuItem value={Background.FamilyReunification}>Family reunification</MenuItem>
-            <MenuItem value={Background.PartnerOfSkilledMigrant}>Partner of a skilled migrant</MenuItem>
-            <MenuItem value={Background.Refugee}>Refugee</MenuItem>
-            <MenuItem value={Background.VulnerableGroup}>Vulnerable group</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
+          />
+          <ProfileTextField
+            name="weeklyWorkHours"
+            label="Weekly work hours"
+            value={editedFields.weeklyWorkHours}
+            isEditing={isEditing}
+            onChange={handleNumberChange}
+            slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 2 } }}
+          />
+        </FieldRow>
+      </ProfileSection>
 
-      <div style={{ width: '100%' }}>
-        {/* English Level */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <InputLabel htmlFor="englishLevel">English level</InputLabel>
-          <Select
+      <ProfileSection title="Education">
+        <FieldRow>
+          <ProfileSelect
             name="englishLevel"
-            id="englishLevel"
             label="English level"
-            value={editedFields?.englishLevel || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
+            options={englishLevelOptions}
+            value={editedFields.englishLevel}
+            isEditing={isEditing}
             onChange={handleSelectChange}
-          >
-            <MenuItem value={EnglishLevel.NeedsWork}>Needs work</MenuItem>
-            <MenuItem value={EnglishLevel.Good}>Good</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Professional Dutch */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <InputLabel htmlFor="professionalDutch">Professional dutch</InputLabel>
-          <Select
+          />
+          <ProfileSelect
             name="professionalDutch"
-            id="professionalDutch"
-            label="Professional dutch"
-            value={editedFields?.professionalDutch == null ? '' : editedFields?.professionalDutch}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
+            label="Professional Dutch"
+            options={yesNoOptions}
+            value={editedFields.professionalDutch}
+            isEditing={isEditing}
             onChange={handleSelectChange}
-          >
-            <MenuItem value="true">Yes</MenuItem>
-            <MenuItem value="false">No</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-
-      <div style={{ width: '100%' }}>
-        {/* Education Level */}
-        <FormControl variant={isEditing ? 'outlined' : 'standard'} sx={{ mx: 2, my: 1, width: '25ch', gap: '2rem' }}>
-          <InputLabel htmlFor="educationLevel">Education level</InputLabel>
-          <Select
+          />
+        </FieldRow>
+        <FieldRow>
+          <ProfileSelect
             name="educationLevel"
-            id="educationLevel"
             label="Education level"
-            value={editedFields?.educationLevel || ''}
-            inputProps={{ readOnly: isEditing ? false : true }}
-            IconComponent={isEditing ? ArrowDropDownIcon : NoIcon}
-            startAdornment=" "
+            options={educationLevelOptions}
+            value={editedFields.educationLevel}
+            isEditing={isEditing}
             onChange={handleSelectChange}
-          >
-            <MenuItem value={EducationLevel.None}>None</MenuItem>
-            <MenuItem value={EducationLevel.HighSchool}>High school</MenuItem>
-            <MenuItem value={EducationLevel.Diploma}>Diploma</MenuItem>
-            <MenuItem value={EducationLevel.BachelorsDegree}>Bachelors degree</MenuItem>
-            <MenuItem value={EducationLevel.MastersDegree}>Masters degree</MenuItem>
-            <MenuItem value={EducationLevel.PhD}>PhD</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Education Background */}
-        <FormControl sx={{ mx: 2, my: 1, width: '53ch', gap: '2rem' }}>
-          <TextField
-            id="educationBackground"
+          />
+          <ProfileTextField
             name="educationBackground"
             label="Education background"
-            type="text"
-            placeholder={isEditing ? 'Computer science' : ''}
-            value={editedFields?.educationBackground || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            placeholder="Computer science"
+            value={editedFields.educationBackground}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+            sx={{ width: DOUBLE_FIELD_WIDTH }}
           />
-        </FormControl>
-      </div>
+        </FieldRow>
+      </ProfileSection>
 
-      <div style={{ width: '100%' }}>
-        {/* Comments */}
-        <FormControl sx={{ mx: 2, width: '81ch' }}>
-          <TextField
-            id="comments"
-            name="comments"
-            label="Comments"
-            type="text"
+      <ProfileSection title="Health">
+        <FieldRow fill>
+          <ProfileTextField
+            name="dietaryPreference"
+            label="Dietary preference"
+            placeholder="Vegetarian"
             multiline
-            value={editedFields?.comments || ''}
-            InputProps={{ readOnly: isEditing ? false : true }}
-            InputLabelProps={{ shrink: true }}
-            variant={isEditing ? 'outlined' : 'standard'}
-            onChange={handleChange}
+            value={editedFields.dietaryPreference}
+            isEditing={isEditing}
+            onChange={handleTextChange}
           />
-        </FormControl>
-      </div>
-    </Box>
+          <ProfileTextField
+            name="healthCondition"
+            label="Health condition"
+            placeholder="Uses a wheelchair"
+            multiline
+            value={editedFields.healthCondition}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+      </ProfileSection>
+
+      {/* The section title labels the field. */}
+      <ProfileSection title="Comments">
+        <ProfileTextField
+          name="comments"
+          multiline
+          value={editedFields.comments}
+          isEditing={isEditing}
+          onChange={handleTextChange}
+          sx={{ width: '100%' }}
+          slotProps={{ htmlInput: { 'aria-label': 'Comments' } }}
+        />
+      </ProfileSection>
+    </Stack>
   );
 };
 

@@ -14,14 +14,22 @@ export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
       preferredName: trainee.preferredName,
       gender: trainee.gender,
       pronouns: trainee.pronouns,
+      dateOfBirth: trainee.dateOfBirth,
       location: trainee.location,
       englishLevel: trainee.englishLevel,
       professionalDutch: trainee.professionalDutch,
       countryOfOrigin: trainee.countryOfOrigin,
       background: trainee.background,
+      nlArrivalDate: trainee.nlArrivalDate,
+      firstPermitIssueDate: trainee.firstPermitIssueDate,
+      financialSupport: trainee.financialSupport,
       educationLevel: trainee.educationLevel,
       educationBackground: trainee.educationBackground,
+      weeklyWorkHours: trainee.weeklyWorkHours,
+      dietaryPreference: trainee.dietaryPreference,
+      healthCondition: trainee.healthCondition,
       comments: trainee.comments,
+      esfId: trainee.esfId,
     },
     contactInfo: {
       email: trainee.email,
@@ -30,6 +38,7 @@ export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
       githubHandle: trainee.githubHandle,
       linkedinUrl: trainee.linkedinUrl,
       emergencyContactName: trainee.emergencyContactName,
+      emergencyContactRelationship: trainee.emergencyContactRelationship,
       emergencyContactPhone: trainee.emergencyContactPhone,
     },
     educationInfo: {
@@ -47,6 +56,8 @@ export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
     },
     employmentInfo: {
       jobPath: trainee.jobPath,
+      jobSupportEndDate: trainee.jobSupportEndDate,
+      hasCar: trainee.hasCar,
     },
   };
 };

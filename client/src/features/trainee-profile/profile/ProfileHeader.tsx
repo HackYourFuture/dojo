@@ -6,6 +6,7 @@ import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
 import { ReactNode } from 'react';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
+import { getSlackUserUrl } from '../../../data/links';
 import slackLogo from '../../../assets/slack.png';
 import { useGetTrainee } from '../data/trainee-queries';
 
@@ -52,7 +53,7 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
   const linkedIn = data?.contactInfo?.linkedinUrl;
 
   return (
-    <Box display="flex" alignItems="center" gap={3} paddingX={3} paddingY={3}>
+    <Box display="flex" alignItems="center" gap={3}>
       <Avatar
         src={data?.pictureUrl ?? undefined}
         alt={data?.displayName}
@@ -83,14 +84,15 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
             {slackId && (
               <SocialLink
                 title="Slack"
-                href={`slack://user?team=T0EJTUQ87&id=${slackId}`}
+                href={getSlackUserUrl(slackId)}
                 icon={
-                  <img
+                  <Box
+                    component="img"
                     src={slackLogo}
                     alt=""
                     width={SOCIAL_ICON_SIZE}
                     height={SOCIAL_ICON_SIZE}
-                    style={{ borderRadius: '50%' }}
+                    borderRadius="50%"
                   />
                 }
               />
@@ -107,7 +109,9 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
               <SocialLink
                 title="LinkedIn"
                 href={linkedIn}
-                icon={<img src={LinkedInLogo} alt="" width={SOCIAL_ICON_SIZE} height={SOCIAL_ICON_SIZE} />}
+                icon={
+                  <Box component="img" src={LinkedInLogo} alt="" width={SOCIAL_ICON_SIZE} height={SOCIAL_ICON_SIZE} />
+                }
                 isExternal
               />
             )}

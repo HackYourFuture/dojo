@@ -28,6 +28,14 @@ export enum Background {
   EUCitizen = 'eu-citizen',
 }
 
+export enum FinancialSupport {
+  SideJob = 'side-job',
+  Uitkering = 'uitkering',
+  Family = 'family',
+  Savings = 'savings',
+  None = 'none',
+}
+
 export enum EducationLevel {
   None = 'none',
   HighSchool = 'high-school',
@@ -75,6 +83,7 @@ export enum JobPath {
 }
 
 // interfaces
+// Dates are YYYY-MM-DD strings, the format of both the API and the date inputs.
 export interface Trainee {
   readonly id: string;
   displayName: string;
@@ -93,14 +102,22 @@ export interface TraineePersonalInfo {
   preferredName: string | null;
   gender: Gender | null;
   pronouns: string | null;
+  dateOfBirth: string | null;
   location: string | null;
   englishLevel: EnglishLevel | null;
   professionalDutch: boolean | null;
   countryOfOrigin: string | null;
   background: Background | null;
+  nlArrivalDate: string | null;
+  firstPermitIssueDate: string | null;
+  financialSupport: FinancialSupport | null;
   educationLevel: EducationLevel | null;
   educationBackground: string | null;
+  weeklyWorkHours: number | null;
+  dietaryPreference: string | null;
+  healthCondition: string | null;
   comments: string | null;
+  esfId: string | null;
 }
 
 export interface TraineeContactInfo {
@@ -110,10 +127,10 @@ export interface TraineeContactInfo {
   githubHandle: string | null;
   linkedinUrl: string | null;
   emergencyContactName: string | null;
+  emergencyContactRelationship: string | null;
   emergencyContactPhone: string | null;
 }
 
-// Dates are YYYY-MM-DD strings, the format of both the API and the date inputs.
 export interface TraineeEducationInfo {
   startCohort: number;
   currentCohort: number | null;
@@ -130,6 +147,8 @@ export interface TraineeEducationInfo {
 
 export interface TraineeEmploymentInfo {
   jobPath: JobPath;
+  jobSupportEndDate: string | null;
+  hasCar: boolean | null;
 }
 
 export type TraineeInfoType = 'personalInfo' | 'contactInfo' | 'employmentInfo' | 'educationInfo';

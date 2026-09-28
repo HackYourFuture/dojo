@@ -23,7 +23,7 @@ const TraineePage = () => {
   if (isError && error instanceof Error) {
     return (
       <Box width="50%" margin="auto" marginTop="2rem">
-        return <ErrorBox errorMessage={error.message} />;
+        <ErrorBox errorMessage={error.message} />
       </Box>
     );
   }

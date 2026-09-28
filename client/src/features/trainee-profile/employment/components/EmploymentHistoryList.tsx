@@ -1,9 +1,9 @@
 import { EmploymentHistory } from '../models/employment-history';
-import { Box, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
+import { ListItemActions } from '../../components/ListItemActions';
 import React from 'react';
 import { formatDateForDisplay } from '../../utils/dateHelper';
+import { formatTextToFriendly } from '../../utils/formHelper';
 
 interface EmploymentHistoryListProps {
   employmentHistory: EmploymentHistory[];
@@ -11,30 +11,11 @@ interface EmploymentHistoryListProps {
   onClickDelete: (id: string) => void;
 }
 
-export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({ employmentHistory, onClickEdit, onClickDelete }) => {
-
-  /**
-   * Formats text to have the first letter capitalized
-   * @param string - The string to format
-   * @returns The formatted string
-   */
-  const capitalize = (string: string): string => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  const renderActions = (id: string) => {
-    return (
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
-        <IconButton aria-label="edit" onClick={() => onClickEdit(id)}>
-          <EditIcon />
-        </IconButton>
-        <IconButton aria-label="delete" onClick={() => onClickDelete(id)}>
-          <DeleteIcon />
-        </IconButton>
-      </Box>
-    );
-  };
-
+export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({
+  employmentHistory,
+  onClickEdit,
+  onClickDelete,
+}) => {
   return (
     <List
       sx={{
@@ -46,57 +27,57 @@ export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({ em
       }}
     >
       {employmentHistory.length === 0 ? (
-        <Typography variant="body1" color="#CCCCCC" padding="16px">
+        <Typography variant="body1" color="text.secondary" padding="16px">
           No employment history found
         </Typography>
       ) : (
         employmentHistory.map((employment: EmploymentHistory, index: number) => {
           return (
-            <Box key={employment.id}>
-              <ListItem
-                alignItems="flex-start"
-                disablePadding
-                sx={{
-                  backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
-                }}
-              >
-                <Box sx={{ px: 2 }} width="100%">
-                  <ListItemText
-                    sx={{ px: 2 }}
-                    primary={
-                      <Box width="100%" pt={1} pb={2} fontWeight="bold">
-                        {employment.companyName}
-                      </Box>
-                    }
-                    secondary={
-                      <Box mt={-2} py={1}>
-                          <Typography variant="body2">
-                            {employment.role} • {capitalize(employment.type)}
-                          </Typography>
-                          <Typography variant="body2">
-                            Start: {formatDateForDisplay(employment.startDate)}
-                            {employment.endDate ? ' • ' + 'End: ' + formatDateForDisplay(employment.endDate) : ''}
-                          </Typography>
-                      </Box>
-                    }
-                  />
-                  <ListItemText
-                    sx={{ px: 2, }}
-                    primary={
-                      <Box width="100%" pb={2}>
-                        {employment.comments && <Typography variant="subtitle1" pt={1}>{employment.comments}</Typography>}
-                      </Box>
-                    }
-                    />
-                </Box>
-                <Box>
-                  {renderActions(employment.id)}
-                  <Tooltip title="Education fee">
-                    <Typography>€ {employment.feeAmount || '---'}</Typography>
-                  </Tooltip>
-                </Box>
-              </ListItem>
-            </Box>
+            <ListItem
+              key={employment.id}
+              alignItems="flex-start"
+              disablePadding
+              sx={{
+                backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
+              }}
+            >
+              <Box px={2} width="100%">
+                <ListItemText
+                  // A div, since the secondary text holds paragraphs, which cannot be inside the default <p>.
+                  slotProps={{ secondary: { component: 'div' } }}
+                  primary={
+                    <Box pt={1} fontWeight="bold">
+                      {employment.companyName}
+                    </Box>
+                  }
+                  secondary={
+                    <Box py={1}>
+                      <Typography variant="body2">
+                        {employment.role} • {formatTextToFriendly(employment.type)}
+                      </Typography>
+                      <Typography variant="body2">
+                        Start: {formatDateForDisplay(employment.startDate)}
+                        {employment.endDate && ` • End: ${formatDateForDisplay(employment.endDate)}`}
+                      </Typography>
+                    </Box>
+                  }
+                />
+                {employment.comments && (
+                  <Typography variant="subtitle1" pb={2}>
+                    {employment.comments}
+                  </Typography>
+                )}
+              </Box>
+              <Box>
+                <ListItemActions
+                  onEdit={() => onClickEdit(employment.id)}
+                  onDelete={() => onClickDelete(employment.id)}
+                />
+                <Tooltip title="Education fee">
+                  <Typography>€ {employment.feeAmount ?? '---'}</Typography>
+                </Tooltip>
+              </Box>
+            </ListItem>
           );
         })
       )}

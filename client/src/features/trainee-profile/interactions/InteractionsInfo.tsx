@@ -1,10 +1,11 @@
-import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import { useAddInteraction, useEditInteraction } from './data/mutations';
 
 import AddIcon from '@mui/icons-material/Add';
 import { Interaction } from './models/interaction';
 import { InteractionDetailsModal } from './components/InteractionDetailsModal';
 import InteractionsList from './components/InteractionsList';
+import { ProfileSection } from '../profile/components/ProfileSection';
 import { useGetInteractions } from './data/interaction-queries';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
@@ -73,19 +74,15 @@ const InteractionsInfo = () => {
   };
 
   return (
-    <>
-      <Box padding="24px" maxWidth={1000} paddingRight={10}>
-        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" padding="16px">
-            Interactions ({interactions?.length || 0})
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
-              New Interaction
-            </Button>
-          </Stack>
-        </Box>
-
+    <Box maxWidth={1000}>
+      <ProfileSection
+        title={`Interactions (${interactions?.length || 0})`}
+        action={
+          <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+            New Interaction
+          </Button>
+        }
+      >
         {interactionsError ? (
           <Alert severity="error">Oopsie! Something went wrong: {getErrorMessage(interactionsError)}</Alert>
         ) : interactionsLoading ? (
@@ -95,19 +92,19 @@ const InteractionsInfo = () => {
         ) : (
           <InteractionsList traineeId={traineeId} interactions={interactions || []} onClickEdit={onClickEdit} />
         )}
+      </ProfileSection>
 
-        <InteractionDetailsModal
-          key={interactionToEdit?.id || `add-interaction-${isModalOpen}`} // Use interaction ID for edit mode, and a unique key for add mode to force remounting
-          isLoading={addInteractionLoading || editInteractionLoading}
-          error={modalError}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onConfirmAdd={onConfirmAdd}
-          onConfirmEdit={onConfirmEdit}
-          initialInteraction={interactionToEdit}
-        />
-      </Box>
-    </>
+      <InteractionDetailsModal
+        key={interactionToEdit?.id || `add-interaction-${isModalOpen}`} // Use interaction ID for edit mode, and a unique key for add mode to force remounting
+        isLoading={addInteractionLoading || editInteractionLoading}
+        error={modalError}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirmAdd={onConfirmAdd}
+        onConfirmEdit={onConfirmEdit}
+        initialInteraction={interactionToEdit}
+      />
+    </Box>
   );
 };
 

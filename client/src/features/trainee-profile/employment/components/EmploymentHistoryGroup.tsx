@@ -1,5 +1,6 @@
-import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { ProfileSection } from '../../profile/components/ProfileSection';
 import { useGetEmploymentHistory } from '../data/employment-queries';
 import { useState } from 'react';
 import { EmploymentHistory } from '../models/employment-history';
@@ -104,7 +105,7 @@ export const EmploymentHistoryGroup = () => {
   };
 
   return (
-    <div style={{ width: '70ch' }}>
+    <Box width="70ch">
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
@@ -115,28 +116,30 @@ export const EmploymentHistoryGroup = () => {
         onCancel={onCancelDelete}
       />
 
-      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h6" padding="16px">
-          Employment history
-        </Typography>
-        <Stack direction="row" spacing={2}>
+      <ProfileSection
+        title="Employment history"
+        action={
           <Button startIcon={<AddIcon />} onClick={onClickAdd}>
             Add Employment
           </Button>
-        </Stack>
-      </Box>
-
-      {employmentHistoryError || deleteEmploymentError ? (
-        <Alert severity="error">
-          Oopsie! Something went wrong: {getErrorMessage(employmentHistoryError || deleteEmploymentError)}
-        </Alert>
-      ) : employmentHistoryLoading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <EmploymentHistoryList employmentHistory={employmentHistory || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
-      )}
+        }
+      >
+        {employmentHistoryError || deleteEmploymentError ? (
+          <Alert severity="error">
+            Oopsie! Something went wrong: {getErrorMessage(employmentHistoryError || deleteEmploymentError)}
+          </Alert>
+        ) : employmentHistoryLoading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <EmploymentHistoryList
+            employmentHistory={employmentHistory || []}
+            onClickEdit={onClickEdit}
+            onClickDelete={onClickDelete}
+          />
+        )}
+      </ProfileSection>
       <EmploymentDetailsModal
         key={employmentToEdit?.id || `add-employment-${isModalOpen}`}
         isOpen={isModalOpen}
@@ -147,6 +150,6 @@ export const EmploymentHistoryGroup = () => {
         onConfirmEdit={onConfirmEdit}
         initialEmployment={employmentToEdit}
       />
-    </div>
+    </Box>
   );
 };

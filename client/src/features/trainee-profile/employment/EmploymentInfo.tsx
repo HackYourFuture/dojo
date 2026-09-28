@@ -1,7 +1,11 @@
-import { Box } from '@mui/material';
+import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
+import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
+import { jobPathOptions, yesNoOptions } from '../utils/selectOptions';
+
 import { EmploymentHistoryGroup } from './components/EmploymentHistoryGroup';
-import { JobPathSelect } from '../profile/components/JobPathSelect';
-import { createSelectChangeHandler } from '../utils/formHelper';
+import { ProfileSelect } from '../profile/components/ProfileSelect';
+import { ProfileTextField } from '../profile/components/ProfileTextField';
+import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
 /**
@@ -13,18 +17,44 @@ export const EmploymentInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
 
+  const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
   const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
 
   return (
-    <Box display="flex" flexDirection="row" flexWrap="wrap" gap={4} padding="24px">
-      <div style={{ width: '100%' }}>
-        {/* Job path */}
-        <JobPathSelect isEditing={isEditing} value={editedFields.jobPath} onChange={handleSelectChange} />
-      </div>
+    <Stack spacing={4} useFlexGap>
+      <ProfileSection>
+        <FieldRow>
+          <ProfileSelect
+            name="jobPath"
+            label="Job path"
+            options={jobPathOptions}
+            value={editedFields.jobPath}
+            isEditing={isEditing}
+            onChange={handleSelectChange}
+          />
+          <ProfileTextField
+            name="jobSupportEndDate"
+            label="Job support end date"
+            type="date"
+            value={editedFields.jobSupportEndDate}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+        <FieldRow>
+          <ProfileSelect
+            name="hasCar"
+            label="Has a car"
+            options={yesNoOptions}
+            value={editedFields.hasCar}
+            isEditing={isEditing}
+            onChange={handleSelectChange}
+          />
+        </FieldRow>
+      </ProfileSection>
 
-      {/* Employment history */}
       <EmploymentHistoryGroup />
-    </Box>
+    </Stack>
   );
 };
 

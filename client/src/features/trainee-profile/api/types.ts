@@ -2,6 +2,7 @@ import {
   Background,
   EducationLevel,
   EnglishLevel,
+  FinancialSupport,
   Gender,
   JobPath,
   LearningStatus,
@@ -22,14 +23,22 @@ export interface TraineeResponse {
   preferredName: string | null;
   gender: Gender | null;
   pronouns: string | null;
+  dateOfBirth: string | null; // YYYY-MM-DD
   location: string | null;
   englishLevel: EnglishLevel | null;
   professionalDutch: boolean | null;
   countryOfOrigin: string | null;
   background: Background | null;
+  nlArrivalDate: string | null; // YYYY-MM-DD
+  firstPermitIssueDate: string | null; // YYYY-MM-DD
+  financialSupport: FinancialSupport | null;
   educationLevel: EducationLevel | null;
   educationBackground: string | null;
+  weeklyWorkHours: number | null;
+  dietaryPreference: string | null;
+  healthCondition: string | null;
   comments: string | null;
+  esfId: string | null;
 
   // Contact
   email: string;
@@ -38,6 +47,7 @@ export interface TraineeResponse {
   githubHandle: string | null;
   linkedinUrl: string | null;
   emergencyContactName: string | null;
+  emergencyContactRelationship: string | null;
   emergencyContactPhone: string | null;
 
   // Education
@@ -55,6 +65,8 @@ export interface TraineeResponse {
 
   // Employment
   jobPath: JobPath;
+  jobSupportEndDate: string | null; // YYYY-MM-DD
+  hasCar: boolean | null;
 }
 
 type EditableField = Exclude<

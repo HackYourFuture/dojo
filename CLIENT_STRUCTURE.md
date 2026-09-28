@@ -69,6 +69,7 @@ Global data management:
 - Global query hooks (if not feature-specific)
 - API client configuration
 - Data type definitions used across multiple features
+- Helpers used across multiple features, like `links.ts` for links into other apps (Slack)
 
 ### `/src/features`
 
@@ -129,33 +130,42 @@ feature-name/
 ```
 trainee-profile/
 ├── TraineePage.tsx               # Main entry point
+├── api/                          # API calls, response types and mappers
+├── data/                         # React Query keys, queries and mutations
 ├── components/                   # Shared UI components for trainee profile
+│   ├── ListItemActions.tsx       # Edit and delete buttons of the list items
 │   └── MarkdownText.tsx
 ├── context/                      # State management for trainee profile
-│   ├── TraineeProfileContext.tsx
-│   └── TraineeProfileProvider.tsx
+│   ├── useTraineeProfileContext.tsx
+│   └── useTraineeProfileProvider.tsx
 ├── utils/                        # Helper functions
-│   └── formHelper.ts
+│   ├── dateHelper.ts
+│   ├── formHelper.ts             # Change handlers for the profile fields
+│   └── selectOptions.ts          # The options of every dropdown in the profile and the create dialog
 ├── profile/                      # Main profile layout
 │   ├── ProfileHeader.tsx
 │   └── components/
-│       ├── TraineeProfile.tsx
+│       ├── TraineeProfile.tsx    # Header, tab bar and the page padding
 │       ├── ProfileNav.tsx
-│       └── EditSaveButton.tsx
+│       ├── EditSaveButton.tsx
+│       ├── ProfileSection.tsx    # Section title, and FieldRow for a line of fields
+│       ├── ProfileTextField.tsx  # Text, number or date field, read-only until the profile is edited
+│       ├── ProfileSelect.tsx     # Dropdown, sized like ProfileTextField
+│       └── DropdownSelect.tsx    # The dropdown behind ProfileSelect and the create dialog's dropdowns
 ├── personal-info/                # Personal information tab
-│   ├── PersonalInfo.tsx
-│   └── data/
-│       ├── useTraineeInfoData.tsx
-│       └── useSaveTraineeInfo.tsx
+│   └── PersonalInfo.tsx
 ├── contact/                      # Contact information tab
 │   └── ContactInfo.tsx
-├── education/                    # Education information tab
+├── education/                    # Education information tab, with the assessments
 │   └── EducationInfo.tsx
-├── employment/                   # Employment information tab
+├── employment/                   # Employment information tab, with the employment history
 │   └── EmploymentInfo.tsx
-└── interactions/                 # Interactions tab
-    └── InteractionsInfo.tsx
+├── interactions/                 # Interactions tab
+│   └── InteractionsInfo.tsx
+└── create/                       # Dialog to add a trainee
 ```
+
+**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField` and `ProfileSelect`, so every field gets the same width, spacing, and read-only and edit behavior. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 

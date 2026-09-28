@@ -1,14 +1,61 @@
-import { Box, FormControl, Icon, InputAdornment, Link, TextField, Typography } from '@mui/material';
+import { Box, InputAdornment, Link, Stack } from '@mui/material';
+import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
+import { ProfileTextField, ProfileTextFieldProps } from '../profile/components/ProfileTextField';
 
-import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkIcon from '@mui/icons-material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
+import { ReactNode } from 'react';
 import { createTextChangeHandler } from '../utils/formHelper';
+import { getSlackUserUrl } from '../../../data/links';
 import slackIcon from '../../../assets/slack.png';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
+
+// Sets the size and link icon itself.
+type ContactFieldProps = Omit<ProfileTextFieldProps, 'label' | 'sx' | 'slotProps'> & {
+  label: string;
+  icon: ReactNode;
+  // Opened from the link icon at the end of the field, when not editing.
+  href?: string;
+  isExternal?: boolean;
+};
+
+/**
+ * A contact field with an icon in front of it.
+ */
+const ContactField = ({ label, icon, href, isExternal = false, ...props }: ContactFieldProps) => {
+  const showsLink = !props.isEditing && !!props.value && !!href;
+
+  return (
+    <Stack direction="row" alignItems="center" spacing={1}>
+      <Box display="flex" color="action.active">
+        {icon}
+      </Box>
+      <ProfileTextField
+        {...props}
+        label={label}
+        sx={{ flex: 1 }}
+        slotProps={{
+          input: {
+            endAdornment: showsLink && (
+              <InputAdornment position="end">
+                <Link
+                  href={href}
+                  aria-label={`Open ${label}`}
+                  {...(isExternal && { target: '_blank', rel: 'noopener' })}
+                >
+                  <LinkIcon sx={{ color: 'action.active' }} />
+                </Link>
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
+    </Stack>
+  );
+};
 
 /**
  * Component for displaying contact information in trainee profile data on the contact tab.
@@ -17,327 +64,105 @@ import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
  */
 const ContactInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
-
   const { contactInfo: editedFields } = trainee;
 
   const handleTextChange = createTextChangeHandler(setTrainee, 'contactInfo');
 
   return (
-    <Box display="flex" flexWrap="wrap" gap={4} padding="24px">
-      <Box width="100%" display="flex">
-        <Box width="50%">
-          {/* Email */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <EmailIcon sx={{ color: 'action.active', mr: 1 }} />
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: '100%',
-                gap: '2rem',
-              }}
-            >
-              <TextField
-                id="email"
-                name="email"
-                label="Email"
-                type="email"
-                placeholder={isEditing ? 'john_doe@example.com' : ''}
-                value={editedFields.email || ''}
-                slotProps={{
-                  input: {
-                    readOnly: isEditing ? false : true,
-                    endAdornment: (
-                      <InputAdornment position="start">
-                        {!isEditing && editedFields.email && (
-                          <Link href={'mailto:' + editedFields.email}>
-                            <LinkIcon sx={{ color: 'action.active' }} />
-                          </Link>
-                        )}
-                      </InputAdornment>
-                    ),
-                  },
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                variant={isEditing ? 'outlined' : 'standard'}
-                onChange={handleTextChange}
-              />
-            </FormControl>
-          </Box>
-
-          {/* Slack */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Icon sx={{ mr: 1 }}>
-              <img src={slackIcon} alt="Slack" width="27" height="27" />
-            </Icon>
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: '100%',
-                gap: '2rem',
-              }}
-            >
-              <TextField
-                id="slackId"
-                name="slackId"
-                label="Slack ID"
-                type="text"
-                placeholder={isEditing ? 'UXXXXXXXXXX' : ''}
-                value={editedFields.slackId || ''}
-                slotProps={{
-                  input: {
-                    readOnly: isEditing ? false : true,
-                    endAdornment: (
-                      <InputAdornment position="start">
-                        {!isEditing && editedFields.slackId && (
-                          <Link href={`slack://user?team=T0EJTUQ87&id=${editedFields.slackId}`}>
-                            <LinkIcon sx={{ color: 'action.active' }} />
-                          </Link>
-                        )}
-                      </InputAdornment>
-                    ),
-                  },
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                variant={isEditing ? 'outlined' : 'standard'}
-                onChange={handleTextChange}
-              />
-            </FormControl>
-          </Box>
-        </Box>
-
-        <Box width="50%">
-          {/* Phone */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <PhoneIcon sx={{ color: 'action.active', mr: 1 }} />
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: '100%',
-                gap: '2rem',
-              }}
-            >
-              <TextField
-                id="phone"
-                name="phone"
-                label="Phone"
-                type="tel"
-                placeholder={isEditing ? '+1234567890' : ''}
-                value={editedFields.phone || ''}
-                slotProps={{
-                  input: {
-                    readOnly: isEditing ? false : true,
-                  },
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                variant={isEditing ? 'outlined' : 'standard'}
-                onChange={handleTextChange}
-              />
-            </FormControl>
-          </Box>
-
-          {/* Github Handle */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <GitHubIcon sx={{ color: 'action.active', mr: 1 }} />
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: '100%',
-                gap: '2rem',
-              }}
-            >
-              <TextField
-                id="githubHandle"
-                name="githubHandle"
-                label="GitHub Handle"
-                type="text"
-                placeholder={isEditing ? 'john_doe' : ''}
-                value={editedFields.githubHandle || ''}
-                slotProps={{
-                  input: {
-                    readOnly: isEditing ? false : true,
-                    endAdornment: (
-                      <InputAdornment position="start">
-                        {!isEditing && editedFields.githubHandle && (
-                          <Link href={'https://github.com/' + editedFields.githubHandle} target="_blank">
-                            <LinkIcon sx={{ color: 'action.active' }} />
-                          </Link>
-                        )}
-                      </InputAdornment>
-                    ),
-                  },
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                variant={isEditing ? 'outlined' : 'standard'}
-                onChange={handleTextChange}
-              />
-            </FormControl>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Linkedin */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-        }}
-      >
-        <LinkedInIcon sx={{ color: 'action.active', mr: 1 }} />
-        <FormControl
-          sx={{
-            mx: 2,
-            my: 2,
-            width: '100%',
-            gap: '2rem',
-          }}
-        >
-          <TextField
-            id="linkedinUrl"
+    <Stack spacing={4} useFlexGap>
+      <ProfileSection>
+        <FieldRow fill>
+          <ContactField
+            icon={<EmailIcon />}
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="john_doe@example.com"
+            href={`mailto:${editedFields.email}`}
+            value={editedFields.email}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+          <ContactField
+            icon={<PhoneIcon />}
+            name="phone"
+            label="Phone"
+            type="tel"
+            placeholder="+1234567890"
+            value={editedFields.phone}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+        <FieldRow fill>
+          <ContactField
+            icon={<Box component="img" src={slackIcon} alt="" width={24} height={24} />}
+            name="slackId"
+            label="Slack ID"
+            placeholder="UXXXXXXXXXX"
+            href={editedFields.slackId ? getSlackUserUrl(editedFields.slackId) : undefined}
+            value={editedFields.slackId}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+          <ContactField
+            icon={<GitHubIcon />}
+            name="githubHandle"
+            label="GitHub Handle"
+            placeholder="john_doe"
+            href={`https://github.com/${editedFields.githubHandle}`}
+            isExternal
+            value={editedFields.githubHandle}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+        <FieldRow fill>
+          <ContactField
+            icon={<LinkedInIcon />}
             name="linkedinUrl"
             label="LinkedIn"
             type="url"
-            placeholder={isEditing ? 'https://www.linkedin.com/in/john_doe' : ''}
-            value={editedFields.linkedinUrl || ''}
-            slotProps={{
-              input: {
-                readOnly: isEditing ? false : true,
-                endAdornment: (
-                  <InputAdornment position="start">
-                    {!isEditing && editedFields.linkedinUrl && (
-                      <Link href={editedFields.linkedinUrl} target="_blank">
-                        <LinkIcon sx={{ color: 'action.active' }} />
-                      </Link>
-                    )}
-                  </InputAdornment>
-                ),
-              },
-              inputLabel: {
-                shrink: true,
-              },
-            }}
-            variant={isEditing ? 'outlined' : 'standard'}
+            placeholder="https://www.linkedin.com/in/john_doe"
+            href={editedFields.linkedinUrl ?? undefined}
+            isExternal
+            value={editedFields.linkedinUrl}
+            isEditing={isEditing}
             onChange={handleTextChange}
           />
-        </FormControl>
-      </Box>
+        </FieldRow>
+      </ProfileSection>
 
-      <Typography variant="h6" padding="5px" width="100%">
-        Emergency contact
-      </Typography>
-
-      <Box width="100%" display="flex">
-        <Box width="50%">
-          {/* Emergency Contact */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <ContactEmergencyIcon sx={{ color: 'action.active', mr: 1 }} />
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: '100%',
-                gap: '2rem',
-              }}
-            >
-              <TextField
-                id="emergencyContactName"
-                name="emergencyContactName"
-                label="Emergency Contact"
-                type="text"
-                placeholder={isEditing ? 'Steve Doe' : ''}
-                value={editedFields.emergencyContactName || ''}
-                slotProps={{
-                  input: {
-                    readOnly: isEditing ? false : true,
-                  },
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                variant={isEditing ? 'outlined' : 'standard'}
-                onChange={handleTextChange}
-              />
-            </FormControl>
-          </Box>
-        </Box>
-
-        <Box width="50%">
-          {/* Emergency Contact Phone */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <PhoneIcon sx={{ color: 'action.active', mr: 1 }} />
-            <FormControl
-              sx={{
-                mx: 2,
-                my: 2,
-                width: '100%',
-                gap: '2rem',
-              }}
-            >
-              <TextField
-                id="emergencyContactPhone"
-                name="emergencyContactPhone"
-                label="Emergency Contact Phone Number"
-                type="tel"
-                placeholder={isEditing ? '+1234567890' : ''}
-                value={editedFields.emergencyContactPhone || ''}
-                slotProps={{
-                  input: {
-                    readOnly: isEditing ? false : true,
-                  },
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                variant={isEditing ? 'outlined' : 'standard'}
-                onChange={handleTextChange}
-              />
-            </FormControl>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+      <ProfileSection title="Emergency contact">
+        <FieldRow fill>
+          <ProfileTextField
+            name="emergencyContactName"
+            label="Name"
+            placeholder="Steve Doe"
+            value={editedFields.emergencyContactName}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+          <ProfileTextField
+            name="emergencyContactRelationship"
+            label="Relationship"
+            placeholder="Sister"
+            value={editedFields.emergencyContactRelationship}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+          <ProfileTextField
+            name="emergencyContactPhone"
+            label="Phone"
+            type="tel"
+            placeholder="+1234567890"
+            value={editedFields.emergencyContactPhone}
+            isEditing={isEditing}
+            onChange={handleTextChange}
+          />
+        </FieldRow>
+      </ProfileSection>
+    </Stack>
   );
 };
 
