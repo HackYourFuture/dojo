@@ -9,7 +9,7 @@ interface ListItemActionsProps {
 }
 
 /**
- * The "..." button at the end of an item in the lists of the profile tabs, with a menu to edit or delete the item.
+ * The "..." button at the end of a list item or table row, with a menu to edit or delete it.
  */
 export const ListItemActions = ({ onEdit, onDelete }: ListItemActionsProps) => {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);

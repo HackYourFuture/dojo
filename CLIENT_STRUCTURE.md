@@ -51,7 +51,7 @@ Authentication-related logic:
 
 **Globally shared UI components** used across multiple features:
 
-- Generic, reusable components (Button, Modal, ErrorBox, Loader, etc.)
+- Generic, reusable components (Button, Modal, ErrorBox, Loader, ListItemActions, etc.)
 - Should NOT contain feature-specific logic
 - Should be well-documented with props interfaces
 
@@ -133,7 +133,6 @@ trainee-profile/
 ├── api/                          # API calls, response types and mappers
 ├── data/                         # React Query keys, queries and mutations
 ├── components/                   # Shared UI components for trainee profile
-│   ├── ListItemActions.tsx       # "..." menu to edit or delete a list item
 │   └── MarkdownText.tsx
 ├── context/                      # State management for trainee profile
 │   ├── useTraineeProfileContext.tsx

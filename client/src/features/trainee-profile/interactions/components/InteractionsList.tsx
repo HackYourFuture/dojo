@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { AvatarWithTooltip } from '../../education/components/AvatarWithTooltip';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
 import { Interaction } from '../models/interaction';
-import { ListItemActions } from '../../components/ListItemActions';
+import { ListItemActions } from '../../../../components/ListItemActions';
 import MarkdownText from '../../components/MarkdownText';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import { formatTextToFriendly } from '../../utils/formHelper';

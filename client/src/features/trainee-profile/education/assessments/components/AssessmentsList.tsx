@@ -3,7 +3,7 @@ import { CancelSharp, CheckCircle, Error, OfflinePin } from '@mui/icons-material
 import { Assessment, AssessmentResult } from '../models/assessment';
 
 import GradingIcon from '@mui/icons-material/Grading';
-import { ListItemActions } from '../../../components/ListItemActions';
+import { ListItemActions } from '../../../../../components/ListItemActions';
 import MarkdownText from '../../../components/MarkdownText';
 import { formatDateForDisplay } from '../../../utils/dateHelper';
 import { formatTextToFriendly } from '../../../utils/formHelper';

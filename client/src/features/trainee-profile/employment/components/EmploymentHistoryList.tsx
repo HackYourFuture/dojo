@@ -1,6 +1,6 @@
 import { EmploymentHistory } from '../models/employment-history';
 import { Box, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
-import { ListItemActions } from '../../components/ListItemActions';
+import { ListItemActions } from '../../../../components/ListItemActions';
 import React from 'react';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import { formatTextToFriendly } from '../../utils/formHelper';
