@@ -371,8 +371,8 @@ end with a period or none do, `@Parameter` blocks wrap the same way, validation 
 either all custom or all defaults. The formatter preserves whatever you write, so it will not
 correct you, and the next feature copies whatever it finds here.
 
-One known gap, deliberate for now: `GET /api/admin/users` is an unpaginated `findAll()` with no
-filtering or sorting, which is right for a handful of staff. A list that grows copies
+One known gap, deliberate for now: `GET /api/admin/users` is an unpaginated list, ordered by name
+and then id, with no filtering, which is right for a handful of staff. A list that grows copies
 `GET /api/trainees` instead.
 
 ### Paginated lists

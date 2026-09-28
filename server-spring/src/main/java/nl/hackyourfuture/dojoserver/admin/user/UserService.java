@@ -25,7 +25,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream().map(UserResponse::from).toList();
+        return userRepository.findAllByOrderByNameAscIdAsc().stream().map(UserResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
