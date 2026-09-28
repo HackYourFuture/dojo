@@ -32,7 +32,7 @@ export const ApiProvider = () => {
       try {
         setLoading(true);
         const user = await loginWithGoogle(response.code, new URL(window.location.href).origin);
-        console.log('Successfully logged in!', user);
+        console.log('Successfully logged in as ', user.name);
         setUser(user);
         navigate('/', { replace: true });
       } catch (error) {

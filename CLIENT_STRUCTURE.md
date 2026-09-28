@@ -148,7 +148,9 @@ trainee-profile/
 │       ├── ProfileNav.tsx
 │       ├── EditSaveButton.tsx
 │       ├── ProfileSection.tsx    # Section title, and FieldRow for a line of fields
-│       ├── ProfileTextField.tsx  # Text field, read-only until the profile is edited
+│       ├── ProfileValue.tsx      # A field's label and value, shown until the profile is edited
+│       ├── fieldStyles.ts        # The field width, the label above every field, and the input style that keeps it there
+│       ├── ProfileTextField.tsx  # Text field, shown as a ProfileValue until the profile is edited
 │       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
 │       ├── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
 │       ├── ProfileSelect.tsx     # Dropdown, with "- Not set -" for a nullable field
@@ -166,7 +168,7 @@ trainee-profile/
 └── create/                       # Dialog to add a trainee
 ```
 
-**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileDateField`, `ProfileNumberField` and `ProfileSelect`, so every field gets the same width, spacing, and read-only and edit behavior. Use `<FieldRow fill>` when the fields should share the width of the row instead.
+**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileDateField`, `ProfileNumberField` and `ProfileSelect`, so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 

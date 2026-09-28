@@ -37,7 +37,8 @@ Dojo is HackYourFuture's in-house management tool designed to track HackYourFutu
 
 ## Technology Stack
 
-This project is built using the MERN stack.
+A React single-page app on top of a Spring Boot REST API and a PostgreSQL database. Sign-in is Google OAuth, profile pictures are kept in S3-compatible storage, and trainee changes are posted to Slack.
+
 ### Front-end
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css&logoColor=white)
@@ -49,12 +50,19 @@ This project is built using the MERN stack.
 ![MUI](https://img.shields.io/badge/MUI-%23563D7C.svg?style=for-the-badge&logo=MUI&logoColor=white)
 
 ### Back-end
-![TypeScript](https://img.shields.io/badge/typescript-%231572B6.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
-![Mongoose](https://img.shields.io/badge/Mongoose-%23880000.svg?style=for-the-badge&logo=mongoose&logoColor=white)
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/spring_boot-%236DB33F.svg?style=for-the-badge&logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/postgresql-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![Hibernate](https://img.shields.io/badge/hibernate-%2359666C.svg?style=for-the-badge&logo=hibernate&logoColor=white)
+![Flyway](https://img.shields.io/badge/flyway-%23CC0200.svg?style=for-the-badge&logo=flyway&logoColor=white)
+![Maven](https://img.shields.io/badge/maven-%23C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white)
+
+### Deployment
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github_actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+
+The `server` folder holds the legacy Node.js, Express and MongoDB back-end, which `server-spring` replaces.
 
 ## Getting Started
 
@@ -62,20 +70,20 @@ This project is built using the MERN stack.
 
 Ensure you have the following installed:
 
-- Node.js version 22 or above
-- npm
+- Node.js version 24 or above, with npm
+- For the full setup: Java 25 and [Docker](https://www.docker.com/get-started/)
 
-### Option 1: Express setup for front-end development only
+### Option 1: Quick setup for front-end development only
 If you only work on the front-end, you can connect to a remote deployed backend instead of running a server locally. This saves some time and configuration.
 
-1. Run the following command in the root directory:
+1. Navigate to the front-end directory:
+   ```bash
+   cd client
+   ```
+2. Install the dependencies:
    ```bash
    npm run setup
    ```
-2. Navigate to the front-end directory:
-   ```bash
-   cd client
-   ``` 
 3. Copy `.env.example` to `.env`
 4. Replace `VITE_BACKEND_PROXY_TARGET` and `VITE_GOOGLE_CLIENTID` with the correct values of the test server
 5. Start the app:
@@ -87,17 +95,11 @@ If you only work on the front-end, you can connect to a remote deployed backend 
 
 ### Option 2: Full setup (front-end & back-end)
 
-1. Run the following command in the root directory:
+1. Set up the server from the detailed instructions in [server-spring/README.md](server-spring/README.md). Make sure the back-end is running before setting up the front-end.
 
-   ```bash
-   npm run setup
-   ```
+2. Set up the client from the detailed instructions in [client/README.md](client/README.md)
 
-2. Set up the server from the detailed instructions in [server-spring/README.md](server-spring/README.md). Make sure the back-end is running before setting up the front-end.
-
-3. Set up the client from the detailed instructions in [client/README.md](client/README.md)
-
-4. The back-end should be accessible at http://localhost:7777/ and the front-end should be accessible at http://localhost:8888/
+3. The back-end should be accessible at http://localhost:7777/ and the front-end should be accessible at http://localhost:8888/
 
 
 ## Usage
@@ -109,8 +111,8 @@ If you only work on the front-end, you can connect to a remote deployed backend 
 
 ## Login issues
 Make sure:
-1. The `.env` files are set up correctly on both front-end and back-end with the correct Google client ID and secret.
-2. The Google account you try to authenticate is in the Dojo database.
+1. `VITE_GOOGLE_CLIENTID` in `client/.env` and the server's `GOOGLE_OAUTH_CLIENTID` and `GOOGLE_OAUTH_CLIENTSECRET` belong to the same Google OAuth client.
+2. The Google account you try to authenticate has an active user in the Dojo database.
 3. The Google account is on the list of the test users for the OAuth authentication in Google console.
 
 Refer to the server and client documentation for more details.

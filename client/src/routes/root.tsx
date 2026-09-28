@@ -1,6 +1,6 @@
 import { Box, Toolbar } from '@mui/material';
+import { Outlet, ScrollRestoration } from 'react-router-dom';
 
-import { Outlet } from 'react-router-dom';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ResponsiveNavBar } from '../components';
 import { Sidebar } from '../layout/Sidebar/Sidebar';
@@ -28,6 +28,8 @@ export default function Root() {
             <Outlet />
           </Box>
         </Box>
+        {/* Opens every page at the top, and Back returns to where the previous page was scrolled. */}
+        <ScrollRestoration />
 
         {/* react query debugger */}
         <ReactQueryDevtools initialIsOpen={false} />

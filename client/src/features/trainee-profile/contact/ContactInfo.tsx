@@ -1,10 +1,9 @@
-import { Box, InputAdornment, Link, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
 import { ProfileTextField, ProfileTextFieldProps } from '../profile/components/ProfileTextField';
 
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkIcon from '@mui/icons-material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { ReactNode } from 'react';
@@ -13,49 +12,22 @@ import { getSlackUserUrl } from '../../../data/links';
 import slackIcon from '../../../assets/slack.png';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
-// Sets the size and link icon itself.
-type ContactFieldProps = Omit<ProfileTextFieldProps, 'label' | 'sx' | 'slotProps'> & {
-  label: string;
+type ContactFieldProps = Omit<ProfileTextFieldProps, 'sx'> & {
   icon: ReactNode;
-  // Opened from the link icon at the end of the field, when not editing.
-  href?: string;
-  isExternal?: boolean;
 };
 
 /**
  * A contact field with an icon in front of it.
  */
-const ContactField = ({ label, icon, href, isExternal = false, ...props }: ContactFieldProps) => {
-  const showsLink = !props.isEditing && !!props.value && !!href;
-
-  return (
-    <Stack direction="row" alignItems="center" spacing={1}>
-      <Box display="flex" color="action.active">
-        {icon}
-      </Box>
-      <ProfileTextField
-        {...props}
-        label={label}
-        sx={{ flex: 1 }}
-        slotProps={{
-          input: {
-            endAdornment: showsLink && (
-              <InputAdornment position="end">
-                <Link
-                  href={href}
-                  aria-label={`Open ${label}`}
-                  {...(isExternal && { target: '_blank', rel: 'noopener' })}
-                >
-                  <LinkIcon sx={{ color: 'action.active' }} />
-                </Link>
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
-    </Stack>
-  );
-};
+const ContactField = ({ icon, ...props }: ContactFieldProps) => (
+  <Stack direction="row" alignItems="flex-end" spacing={1.5}>
+    {/* As tall as the input, with the icon on its middle, or on the line of the value when not editing. */}
+    <Box display="flex" alignItems={props.isEditing ? 'center' : 'flex-start'} height={40} color="action.active">
+      {icon}
+    </Box>
+    <ProfileTextField {...props} sx={{ flex: 1, minWidth: 0 }} />
+  </Stack>
+);
 
 /**
  * Component for displaying contact information in trainee profile data on the contact tab.
@@ -111,7 +83,6 @@ const ContactInfo = () => {
             label="GitHub Handle"
             placeholder="john_doe"
             href={`https://github.com/${editedFields.githubHandle}`}
-            isExternal
             value={editedFields.githubHandle}
             isEditing={isEditing}
             onChange={handleTextChange}
@@ -125,7 +96,6 @@ const ContactInfo = () => {
             type="url"
             placeholder="https://www.linkedin.com/in/john_doe"
             href={editedFields.linkedinUrl ?? undefined}
-            isExternal
             value={editedFields.linkedinUrl}
             isEditing={isEditing}
             onChange={handleTextChange}

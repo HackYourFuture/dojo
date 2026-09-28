@@ -1,5 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { ProfileTextField } from './ProfileTextField';
+import { ProfileValue } from './ProfileValue';
 import { SelectOption } from '../../utils/selectOptions';
 
 // A boolean matches the values of yesNoOptions.
@@ -31,7 +32,7 @@ const parseSelectValue = (value: string): ProfileSelectValue => {
 };
 
 /**
- * A dropdown on the profile tabs, sized like ProfileTextField: an outlined select while editing, a read-only value otherwise.
+ * A dropdown on the profile tabs, sized like ProfileTextField: an outlined select while editing, the label and value otherwise.
  */
 export const ProfileSelect = ({
   name,
@@ -47,7 +48,7 @@ export const ProfileSelect = ({
   if (!isEditing) {
     // Pronouns are free text, so they may not match an option.
     const selectedLabel = options.find((option) => option.value === selectedValue)?.label ?? selectedValue;
-    return <ProfileTextField name={name} label={label} value={selectedLabel} isEditing={false} />;
+    return <ProfileValue label={label} value={selectedLabel} />;
   }
 
   return (
