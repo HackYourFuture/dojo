@@ -1,37 +1,43 @@
 import { TextField, TextFieldProps } from '@mui/material';
 
-// Four fields and their gaps fit on a row of a 1440px wide screen.
-export const PROFILE_FIELD_WIDTH = '24ch';
+import { ProfileValue } from './ProfileValue';
+import { profileInputStyle } from './fieldStyles';
 
-export type ProfileTextFieldProps = Omit<TextFieldProps, 'variant'> & {
+export type ProfileTextFieldProps = Omit<TextFieldProps, 'variant' | 'value'> & {
   name: string;
+  value: string | null;
   isEditing: boolean;
+  // Opened from the value when not editing.
+  href?: string;
 };
 
 /**
- * A text field on the profile tabs: an outlined input while editing, a read-only value otherwise.
+ * A text field on the profile tabs: an outlined input while editing, the label and value otherwise.
  */
 export const ProfileTextField = ({
   name,
+  label,
   value,
   isEditing,
-  placeholder,
+  href,
   sx = [],
   slotProps,
   ...props
-}: ProfileTextFieldProps) => (
-  <TextField
-    id={name}
-    {...props}
-    name={name}
-    value={value ?? ''}
-    placeholder={isEditing ? placeholder : undefined}
-    variant={isEditing ? 'outlined' : 'standard'}
-    sx={[{ width: PROFILE_FIELD_WIDTH }, ...(Array.isArray(sx) ? sx : [sx])]}
-    slotProps={{
-      ...slotProps,
-      input: { readOnly: !isEditing, ...slotProps?.input },
-      inputLabel: { shrink: true },
-    }}
-  />
-);
+}: ProfileTextFieldProps) => {
+  if (!isEditing) {
+    return <ProfileValue label={label} value={value} href={href} sx={sx} />;
+  }
+
+  return (
+    <TextField
+      id={name}
+      {...props}
+      name={name}
+      label={label}
+      value={value ?? ''}
+      size="small"
+      sx={[profileInputStyle, ...(Array.isArray(sx) ? sx : [sx])]}
+      slotProps={{ ...slotProps, inputLabel: { shrink: true } }}
+    />
+  );
+};

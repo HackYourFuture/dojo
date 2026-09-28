@@ -161,10 +161,14 @@ One-time setup:
 
 2. Format on save in IntelliJ: *Settings → Editor → Code Style* → gear → *Import Scheme → Eclipse
    XML Profile* → `eclipse-formatter.xml`, then tick *Settings → Tools → Actions on Save → Reformat
-   code*. No formatter plugin needed.
+   code*. No formatter plugin needed. The profile carries no import settings and Checkstyle rejects
+   star imports, so in the scheme's *Java → Imports* tab set both "use import with '*'" counts to
+   999 and empty *Packages to Use Import with '*'*. Re-importing the profile resets them. The IDE
+   only approximates Spotless; when they disagree, `./mvnw spotless:apply` wins.
 
 ## 🗄️ Database migrations
 
 Schema changes live in `src/main/resources/db/migration` and are applied by Flyway at startup.
 Hibernate validates the schema against the entities, so the app refuses to start if the two
-disagree.
+disagree. Every change is a new `V{n}__description.sql`; never edit a migration that has been
+deployed.

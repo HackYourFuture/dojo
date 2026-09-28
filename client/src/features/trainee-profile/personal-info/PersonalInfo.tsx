@@ -9,11 +9,12 @@ import {
 } from '../utils/selectOptions';
 import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
 import { FieldRow, PROFILE_FIELD_GAP, ProfileSection } from '../profile/components/ProfileSection';
-import { PROFILE_FIELD_WIDTH, ProfileTextField } from '../profile/components/ProfileTextField';
 
+import { PROFILE_FIELD_WIDTH } from '../profile/components/fieldStyles';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../profile/components/ProfileSelect';
+import { ProfileTextField } from '../profile/components/ProfileTextField';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 

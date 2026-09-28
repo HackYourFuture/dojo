@@ -1,8 +1,8 @@
-import { PROFILE_FIELD_WIDTH, ProfileTextField } from './ProfileTextField';
-
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ProfileValue } from './ProfileValue';
 import dayjs from 'dayjs';
 import { formatDateForDisplay } from '../../utils/dateHelper';
+import { profileInputStyle } from './fieldStyles';
 
 interface ProfileDateFieldProps {
   name: string;
@@ -14,11 +14,11 @@ interface ProfileDateFieldProps {
 }
 
 /**
- * A date on the profile tabs: a date picker that can be cleared while editing, a read-only value otherwise.
+ * A date on the profile tabs: a date picker that can be cleared while editing, the label and value otherwise.
  */
 export const ProfileDateField = ({ name, label, value, isEditing, onChange }: ProfileDateFieldProps) => {
   if (!isEditing) {
-    return <ProfileTextField name={name} label={label} value={formatDateForDisplay(value)} isEditing={false} />;
+    return <ProfileValue label={label} value={formatDateForDisplay(value)} />;
   }
 
   return (
@@ -32,10 +32,10 @@ export const ProfileDateField = ({ name, label, value, isEditing, onChange }: Pr
         onChange(name, date && !validationError ? date.format('YYYY-MM-DD') : null)
       }
       views={['year', 'month', 'day']}
-      sx={{ width: PROFILE_FIELD_WIDTH }}
+      sx={profileInputStyle}
       slotProps={{
         field: { clearable: true },
-        textField: { InputLabelProps: { shrink: true } },
+        textField: { size: 'small', InputLabelProps: { shrink: true } },
       }}
     />
   );
