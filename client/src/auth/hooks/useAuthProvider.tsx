@@ -1,23 +1,30 @@
 import { Outlet, useNavigate } from 'react-router-dom';
+import { getSession, loginWithGoogle, logoutSession } from '../api/api';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import { loginWithGoogle, logoutSession } from '../api/api';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ApiContext } from './useAuth';
 import { AxiosError } from 'axios';
 import { Loader } from '../../components';
-import { useLocalStorage } from './useLocalStorage';
+import { User } from './User';
 
 // The message is the server's text (see data/http/interceptors.ts), or axios' own when there is no response.
 const toErrorMessage = (error: AxiosError) =>
   error.response ? `Error code: ${error.response.status} ${error.message}` : error.message;
 
 export const ApiProvider = () => {
-  const [user, setUser] = useLocalStorage('user', null);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getSession()
+      .then(setUser)
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
 
   const login = useGoogleLogin({
     flow: 'auth-code',

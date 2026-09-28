@@ -1,9 +1,24 @@
-import { Collapse, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Collapse,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 import { SIDEBAR_ITEMS, SidebarGroupItem, SidebarLinkItem } from './constants';
 
+import { DarkModeToggle } from '../../features/dark-mode/DarkModeToggle';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../../auth/hooks/useAuth';
 import { useState } from 'react';
 
 interface SidebarMenuProps {
@@ -94,12 +109,41 @@ const SidebarGroup = ({ item, onItemClick }: SidebarGroupProps) => {
   );
 };
 
-/** The list of main menu links, with the current page highlighted. */
+// Lines up the avatar with the link icons and the name with the link names.
+const SidebarUser = () => {
+  const { user } = useAuth();
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 3, pt: 3, pb: 2 }}>
+      <Avatar alt={user?.name} src={user?.thumbnailUrl ?? undefined} sx={{ width: 32, height: 32 }} />
+      <Typography fontWeight={600}>{user?.name}</Typography>
+    </Box>
+  );
+};
+
+const LogoutButton = () => {
+  const { logout } = useAuth();
+
+  return (
+    <ListItem disablePadding>
+      <ListItemButton onClick={() => logout()} sx={buttonStyle}>
+        <ListItemIcon>
+          <LogoutIcon />
+        </ListItemIcon>
+        <ListItemText primary="Log out" slotProps={{ primary: { fontWeight: 500 } }} />
+      </ListItemButton>
+    </ListItem>
+  );
+};
+
+/** The logged in user, the main menu links with the current page highlighted, log out, and the dark mode switch. */
 export const SidebarMenu = ({ onItemClick }: SidebarMenuProps) => {
   return (
     <>
       {/* Keeps the menu below the nav bar. */}
       <Toolbar />
+      <SidebarUser />
+      <Divider sx={{ mx: 1.5 }} />
       <List sx={{ px: 1.5, py: 2 }}>
         {SIDEBAR_ITEMS.map((item) =>
           'children' in item ? (
@@ -108,7 +152,13 @@ export const SidebarMenu = ({ onItemClick }: SidebarMenuProps) => {
             <SidebarLink key={item.path} item={item} onClick={onItemClick} />
           )
         )}
+        <Divider component="li" sx={{ my: 1.5 }} />
+        <LogoutButton />
       </List>
+      {/* The drawer is a flex column, so this pushes the switch to the bottom. */}
+      <Box sx={{ display: 'flex', mt: 'auto', px: 3, py: 2 }}>
+        <DarkModeToggle />
+      </Box>
     </>
   );
 };

@@ -16,3 +16,8 @@ export const logoutSession = async () => {
 export const refreshSession = async () => {
   await axios.post('/api/auth/refresh');
 };
+
+export const getSession = async () => {
+  const { data } = await axios.get<SessionResponse>('/api/auth/session');
+  return mapSessionToDomain(data);
+};
