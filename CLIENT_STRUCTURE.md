@@ -133,7 +133,7 @@ trainee-profile/
 ├── api/                          # API calls, response types and mappers
 ├── data/                         # React Query keys, queries and mutations
 ├── components/                   # Shared UI components for trainee profile
-│   ├── ListItemActions.tsx       # Edit and delete buttons of the list items
+│   ├── ListItemActions.tsx       # "..." menu to edit or delete a list item
 │   └── MarkdownText.tsx
 ├── context/                      # State management for trainee profile
 │   ├── useTraineeProfileContext.tsx
@@ -149,9 +149,11 @@ trainee-profile/
 │       ├── ProfileNav.tsx
 │       ├── EditSaveButton.tsx
 │       ├── ProfileSection.tsx    # Section title, and FieldRow for a line of fields
-│       ├── ProfileTextField.tsx  # Text, number or date field, read-only until the profile is edited
-│       ├── ProfileSelect.tsx     # Dropdown, sized like ProfileTextField
-│       └── DropdownSelect.tsx    # The dropdown behind ProfileSelect and the create dialog's dropdowns
+│       ├── ProfileTextField.tsx  # Text field, read-only until the profile is edited
+│       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
+│       ├── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
+│       ├── ProfileSelect.tsx     # Dropdown, with "- Not set -" for a nullable field
+│       └── DropdownSelect.tsx    # The create dialog's dropdowns
 ├── personal-info/                # Personal information tab
 │   └── PersonalInfo.tsx
 ├── contact/                      # Contact information tab
@@ -165,7 +167,7 @@ trainee-profile/
 └── create/                       # Dialog to add a trainee
 ```
 
-**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField` and `ProfileSelect`, so every field gets the same width, spacing, and read-only and edit behavior. Use `<FieldRow fill>` when the fields should share the width of the row instead.
+**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileDateField`, `ProfileNumberField` and `ProfileSelect`, so every field gets the same width, spacing, and read-only and edit behavior. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 

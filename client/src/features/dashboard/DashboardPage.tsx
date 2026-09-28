@@ -1,13 +1,9 @@
-import 'dayjs/locale/nl';
-
 import { Box, Button, Container, Stack } from '@mui/material';
 import { DashboardPieChart, ErrorBox, Loader } from '../../components';
 import dayjs, { Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useGetDashboard } from './data/dashboard-queries';
 
 /**
@@ -48,10 +44,8 @@ const DashboardPage = () => {
     <Container fixed sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       <Box my={3} display="flex" alignItems="start" justifyContent="start" p={2}>
         <Stack direction="row" spacing={3}>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
-            <DatePicker label="Start date" value={startDate} onChange={(newValue) => setStartDate(newValue)} />
-            <DatePicker label="End date" value={endDate} onChange={(newValue) => setEndDate(newValue)} />
-          </LocalizationProvider>
+          <DatePicker label="Start date" value={startDate} onChange={(newValue) => setStartDate(newValue)} />
+          <DatePicker label="End date" value={endDate} onChange={(newValue) => setEndDate(newValue)} />
           <Button variant="contained" onClick={() => refetch()}>
             Apply
           </Button>

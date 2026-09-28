@@ -1,11 +1,11 @@
 import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
-import { createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
 import { jobPathOptions, yesNoOptions } from '../utils/selectOptions';
 
 import { EmploymentHistoryGroup } from './components/EmploymentHistoryGroup';
+import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileSelect } from '../profile/components/ProfileSelect';
-import { ProfileTextField } from '../profile/components/ProfileTextField';
 import { Stack } from '@mui/material';
+import { createValueChangeHandler } from '../utils/formHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
 /**
@@ -17,8 +17,7 @@ export const EmploymentInfo = () => {
   const { trainee, setTrainee, isEditMode: isEditing } = useTraineeProfileContext();
   const { employmentInfo: editedFields } = trainee;
 
-  const handleTextChange = createTextChangeHandler(setTrainee, 'employmentInfo');
-  const handleSelectChange = createSelectChangeHandler(setTrainee, 'employmentInfo');
+  const handleValueChange = createValueChangeHandler(setTrainee, 'employmentInfo');
 
   return (
     <Stack spacing={4} useFlexGap>
@@ -30,15 +29,14 @@ export const EmploymentInfo = () => {
             options={jobPathOptions}
             value={editedFields.jobPath}
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
-          <ProfileTextField
+          <ProfileDateField
             name="jobSupportEndDate"
             label="Job support end date"
-            type="date"
             value={editedFields.jobSupportEndDate}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
         <FieldRow>
@@ -47,8 +45,9 @@ export const EmploymentInfo = () => {
             label="Has a car"
             options={yesNoOptions}
             value={editedFields.hasCar}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
       </ProfileSection>

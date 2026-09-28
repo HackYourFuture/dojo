@@ -7,16 +7,21 @@ import {
   pronounOptions,
   yesNoOptions,
 } from '../utils/selectOptions';
-import { createNumberChangeHandler, createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
+import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
 import { FieldRow, PROFILE_FIELD_GAP, ProfileSection } from '../profile/components/ProfileSection';
 import { PROFILE_FIELD_WIDTH, ProfileTextField } from '../profile/components/ProfileTextField';
 
+import { ProfileDateField } from '../profile/components/ProfileDateField';
+import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../profile/components/ProfileSelect';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
 // Two fields and the gap between them, so the field lines up with the columns of the other rows.
 const DOUBLE_FIELD_WIDTH = `calc(2 * ${PROFILE_FIELD_WIDTH} + ${PROFILE_FIELD_GAP})`;
+
+// The most weekly work hours the API accepts.
+const MAX_WEEKLY_WORK_HOURS = 80;
 
 /**
  * Component for displaying and updating trainee profile data on the personal information tab.
@@ -28,8 +33,7 @@ const PersonalInfo = () => {
   const { personalInfo: editedFields } = trainee;
 
   const handleTextChange = createTextChangeHandler(setTrainee, 'personalInfo');
-  const handleNumberChange = createNumberChangeHandler(setTrainee, 'personalInfo');
-  const handleSelectChange = createSelectChangeHandler(setTrainee, 'personalInfo');
+  const handleValueChange = createValueChangeHandler(setTrainee, 'personalInfo');
 
   return (
     <Stack spacing={4} useFlexGap>
@@ -61,29 +65,30 @@ const PersonalInfo = () => {
           />
         </FieldRow>
         <FieldRow>
-          <ProfileTextField
+          <ProfileDateField
             name="dateOfBirth"
             label="Date of birth"
-            type="date"
             value={editedFields.dateOfBirth}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
           <ProfileSelect
             name="gender"
             label="Gender"
             options={genderOptions}
             value={editedFields.gender}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
           <ProfileSelect
             name="pronouns"
             label="Pronouns"
             options={pronounOptions}
             value={editedFields.pronouns}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
         <FieldRow>
@@ -112,8 +117,9 @@ const PersonalInfo = () => {
             label="Background"
             options={backgroundOptions}
             value={editedFields.background}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
           <ProfileTextField
             name="countryOfOrigin"
@@ -123,21 +129,19 @@ const PersonalInfo = () => {
             isEditing={isEditing}
             onChange={handleTextChange}
           />
-          <ProfileTextField
+          <ProfileDateField
             name="nlArrivalDate"
             label="Arrived in NL"
-            type="date"
             value={editedFields.nlArrivalDate}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
-          <ProfileTextField
+          <ProfileDateField
             name="firstPermitIssueDate"
             label="First permit issued"
-            type="date"
             value={editedFields.firstPermitIssueDate}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
       </ProfileSection>
@@ -149,16 +153,17 @@ const PersonalInfo = () => {
             label="Financial support"
             options={financialSupportOptions}
             value={editedFields.financialSupport}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
-          <ProfileTextField
+          <ProfileNumberField
             name="weeklyWorkHours"
             label="Weekly work hours"
             value={editedFields.weeklyWorkHours}
+            max={MAX_WEEKLY_WORK_HOURS}
             isEditing={isEditing}
-            onChange={handleNumberChange}
-            slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 2 } }}
+            onChange={handleValueChange}
           />
         </FieldRow>
       </ProfileSection>
@@ -170,16 +175,18 @@ const PersonalInfo = () => {
             label="English level"
             options={englishLevelOptions}
             value={editedFields.englishLevel}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
           <ProfileSelect
             name="professionalDutch"
             label="Professional Dutch"
             options={yesNoOptions}
             value={editedFields.professionalDutch}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
         <FieldRow>
@@ -188,8 +195,9 @@ const PersonalInfo = () => {
             label="Education level"
             options={educationLevelOptions}
             value={editedFields.educationLevel}
+            nullable
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
           <ProfileTextField
             name="educationBackground"

@@ -53,12 +53,12 @@ export enum LearningStatus {
 }
 
 export enum Track {
+  CoreProgram = 'core-program',
   Frontend = 'frontend',
   Backend = 'backend',
   Data = 'data',
   Tester = 'tester',
   Cloud = 'cloud',
-  CoreProgram = 'core-program',
   FullstackLegacy = 'fullstack-legacy',
 }
 

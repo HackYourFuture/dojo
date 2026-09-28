@@ -84,7 +84,7 @@ export const jobPathOptions: SelectOption[] = Object.values(JobPath).map((status
   value: status,
 }));
 
-// For true/false fields. The select change handler turns the values back into booleans.
+// For true/false fields. ProfileSelect turns the values back into booleans.
 export const yesNoOptions: SelectOption[] = [
   { label: 'Yes', value: 'true' },
   { label: 'No', value: 'false' },

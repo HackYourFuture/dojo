@@ -10,6 +10,7 @@ export const mapInteractionToDomain = (interaction: InteractionResponse): Intera
     title: interaction.title,
     details: interaction.details,
     reporter: {
+      id: interaction.reporter.id,
       name: interaction.reporter.name,
       thumbnailUrl: interaction.reporter.thumbnailUrl,
     },
