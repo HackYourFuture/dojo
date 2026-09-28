@@ -8,7 +8,7 @@ const SWITCH_COLORS = {
   sun: '#FFA500',
   moon: '#2C1810',
   trackActive: '#B8814E',
-  trackInactive: '#f5f5f5',
+  trackInactive: '#e0e0e0',
   iconLight: '#FFF',
   iconDark: '#fff',
 } as const;

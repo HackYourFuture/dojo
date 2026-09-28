@@ -31,7 +31,9 @@ const retryAfterRefresh = async (error: unknown) => {
   }
 
   const request = error.config;
-  if (request._retriedAfterRefresh || request.url?.startsWith('/api/auth/')) {
+  // Signing in and the refresh itself answer 401 for reasons a refresh cannot fix.
+  const isSignInOrRefresh = request.url?.startsWith('/api/auth/login') || request.url === '/api/auth/refresh';
+  if (request._retriedAfterRefresh || isSignInOrRefresh) {
     throw error;
   }
 
