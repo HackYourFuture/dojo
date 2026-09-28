@@ -140,6 +140,7 @@ export const TestDetailsModal = ({
                 <MenuItem value={TestType.CloudMidTermInterview}>Cloud mid-term interview</MenuItem>
                 <MenuItem value={TestType.DataMidTermInterview}>Data mid-term interview</MenuItem>
                 <MenuItem value={TestType.TesterMidTermInterview}>Tester mid-term interview</MenuItem>
+                <MenuItem value={TestType.FinalProjectInterview}>Final project interview</MenuItem>
               </Select>
               {typeError && <FormHelperText>Type is required</FormHelperText>}
             </FormControl>
