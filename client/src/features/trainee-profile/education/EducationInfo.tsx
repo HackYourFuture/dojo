@@ -1,13 +1,18 @@
 import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
-import { createNumberChangeHandler, createSelectChangeHandler, createTextChangeHandler } from '../utils/formHelper';
+import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
 import { learningStatusOptions, quitReasonOptions, trackOptions } from '../utils/selectOptions';
 
 import { AssessmentsComponent } from './assessments/AssessmentsComponent';
 import { LearningStatus } from '../../../data/types/Trainee';
+import { ProfileDateField } from '../profile/components/ProfileDateField';
+import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../profile/components/ProfileSelect';
 import { ProfileTextField } from '../profile/components/ProfileTextField';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
+
+// The highest cohort number the API accepts.
+const MAX_COHORT = 999;
 
 /**
  * Component for displaying trainee profile data on the education information tab.
@@ -22,8 +27,7 @@ const EducationInfo = () => {
   } = useTraineeProfileContext();
 
   const handleTextChange = createTextChangeHandler(setTrainee, 'educationInfo');
-  const handleNumberChange = createNumberChangeHandler(setTrainee, 'educationInfo');
-  const handleSelectChange = createSelectChangeHandler(setTrainee, 'educationInfo');
+  const handleValueChange = createValueChangeHandler(setTrainee, 'educationInfo');
 
   const hasGraduated = editedFields.learningStatus === LearningStatus.Graduated;
   const hasQuit = editedFields.learningStatus === LearningStatus.Quit;
@@ -32,13 +36,14 @@ const EducationInfo = () => {
     <Stack spacing={4} useFlexGap>
       <ProfileSection>
         <FieldRow>
-          <ProfileTextField
+          <ProfileNumberField
             name="currentCohort"
             label="Cohort"
-            value={editedFields.currentCohort ?? (isEditing ? null : 'No cohort assigned')}
+            value={editedFields.currentCohort}
+            max={MAX_COHORT}
+            emptyText="No cohort assigned"
             isEditing={isEditing}
-            onChange={handleNumberChange}
-            slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 3 } }}
+            onChange={handleValueChange}
           />
           <ProfileSelect
             name="track"
@@ -46,15 +51,14 @@ const EducationInfo = () => {
             options={trackOptions}
             value={editedFields.track}
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
-          <ProfileTextField
+          <ProfileDateField
             name="startDate"
             label="Start date"
-            type="date"
             value={editedFields.startDate}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
         <FieldRow>
@@ -64,47 +68,46 @@ const EducationInfo = () => {
             options={learningStatusOptions}
             value={editedFields.learningStatus}
             isEditing={isEditing}
-            onChange={handleSelectChange}
+            onChange={handleValueChange}
           />
           {hasGraduated && (
-            <ProfileTextField
+            <ProfileDateField
               name="graduationDate"
               label="Graduation date"
-              type="date"
               value={editedFields.graduationDate}
               isEditing={isEditing}
-              onChange={handleTextChange}
+              onChange={handleValueChange}
             />
           )}
           {hasQuit && (
             <>
-              <ProfileTextField
+              <ProfileDateField
                 name="quitDate"
                 label="Quit date"
-                type="date"
                 value={editedFields.quitDate}
                 isEditing={isEditing}
-                onChange={handleTextChange}
+                onChange={handleValueChange}
               />
               <ProfileSelect
                 name="quitReason"
                 label="Quit reason"
                 options={quitReasonOptions}
                 value={editedFields.quitReason}
+                nullable
                 isEditing={isEditing}
-                onChange={handleSelectChange}
+                onChange={handleValueChange}
               />
             </>
           )}
         </FieldRow>
         <FieldRow>
-          <ProfileTextField
+          <ProfileNumberField
             name="startCohort"
             label="Start cohort"
             value={editedFields.startCohort}
+            max={MAX_COHORT}
             isEditing={isEditing}
-            onChange={handleNumberChange}
-            slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 3 } }}
+            onChange={handleValueChange}
           />
         </FieldRow>
       </ProfileSection>

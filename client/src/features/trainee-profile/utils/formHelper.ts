@@ -1,31 +1,6 @@
 import { ChangeEvent, ReactNode } from 'react';
 import { JobPath, Trainee, TraineeInfoType } from '../../../data/types/Trainee';
 
-import { SelectChangeEvent } from '@mui/material';
-
-/**
- * This function is used to handle the change event for the select component.
- * @param setTrainee a function to set the trainee object in the context
- * @param propName must be a key of the Trainee object
- * @returns
- */
-export const createSelectChangeHandler = (
-  setTrainee: React.Dispatch<React.SetStateAction<Trainee>>,
-  propName: TraineeInfoType
-) => {
-  return (event: SelectChangeEvent<string | boolean | { name: string; value: ReactNode }>) => {
-    const { name, value } = event.target;
-    setTrainee((prevFields: Trainee) => {
-      const updatedInfo = {
-        ...prevFields[propName], // Update the specified prop (personalInfo, contactInfo, etc.)
-        [name]: value === 'true' ? true : value === 'false' ? false : value,
-      };
-
-      return { ...prevFields, [propName]: updatedInfo }; // Update the entire Trainee object with the new prop value
-    });
-  };
-};
-
 /**
  * Function to handle the change event for the input component.
  * @param setTrainee a function to set the trainee object in the context
@@ -50,22 +25,17 @@ export const createTextChangeHandler = (
 };
 
 /**
- * Like createTextChangeHandler, for a whole number: ignores anything but digits and stores a number, or null when empty.
+ * Like createTextChangeHandler, for the date, number and dropdown fields, which report their value instead of an event.
  */
-export const createNumberChangeHandler = (
+export const createValueChangeHandler = (
   setTrainee: React.Dispatch<React.SetStateAction<Trainee>>,
   propName: TraineeInfoType
 ) => {
-  return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-    const hasOnlyDigits = [...value].every((char) => char >= '0' && char <= '9');
-    if (!hasOnlyDigits) {
-      return;
-    }
+  return (name: string, value: string | number | boolean | null) => {
     setTrainee((prevFields: Trainee) => {
       const updatedInfo = {
         ...prevFields[propName],
-        [name]: value === '' ? null : Number(value),
+        [name]: value,
       };
 
       return { ...prevFields, [propName]: updatedInfo };

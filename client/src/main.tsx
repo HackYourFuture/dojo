@@ -1,7 +1,10 @@
 import './styles/index.css';
+import 'dayjs/locale/nl';
 
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CssBaseline from '@mui/material/CssBaseline';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
@@ -18,8 +21,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={googleClientId}>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <RouterProvider router={router} />
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="nl">
+          <CssBaseline />
+          <RouterProvider router={router} />
+        </LocalizationProvider>
       </ThemeProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>
