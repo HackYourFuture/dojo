@@ -8,6 +8,7 @@ export interface InteractionRequest {
 }
 
 interface ReporterResponse {
+  id: string;
   name: string;
   thumbnailUrl: string | null;
 }

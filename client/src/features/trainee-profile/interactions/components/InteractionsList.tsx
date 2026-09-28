@@ -8,6 +8,7 @@ import { ListItemActions } from '../../components/ListItemActions';
 import MarkdownText from '../../components/MarkdownText';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import { formatTextToFriendly } from '../../utils/formHelper';
+import { useAuth } from '../../../../auth/hooks/useAuth';
 import { useDeleteInteraction } from '../data/mutations';
 
 interface InteractionsListProps {
@@ -16,6 +17,7 @@ interface InteractionsListProps {
   onClickEdit: (id: string) => void;
 }
 const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId, onClickEdit }) => {
+  const { user } = useAuth();
   const { mutate: deleteInteraction, isPending: isDeleteLoading } = useDeleteInteraction(traineeId);
   const [error, setError] = useState<string>('');
   const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
@@ -118,10 +120,13 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
                     }
                     secondary={<MarkdownText>{interaction.details}</MarkdownText>}
                   />
-                  <ListItemActions
-                    onEdit={() => onClickEdit(interaction.id)}
-                    onDelete={() => handleClickOnDeleteButton(interaction)}
-                  />
+                  {/* Only the reporter may edit or delete an interaction. */}
+                  {interaction.reporter.id === user?.id && (
+                    <ListItemActions
+                      onEdit={() => onClickEdit(interaction.id)}
+                      onDelete={() => handleClickOnDeleteButton(interaction)}
+                    />
+                  )}
                 </ListItem>
               );
             })

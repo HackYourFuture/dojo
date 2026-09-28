@@ -133,7 +133,7 @@ trainee-profile/
 ├── api/                          # API calls, response types and mappers
 ├── data/                         # React Query keys, queries and mutations
 ├── components/                   # Shared UI components for trainee profile
-│   ├── ListItemActions.tsx       # Edit and delete buttons of the list items
+│   ├── ListItemActions.tsx       # "..." menu to edit or delete a list item
 │   └── MarkdownText.tsx
 ├── context/                      # State management for trainee profile
 │   ├── useTraineeProfileContext.tsx
