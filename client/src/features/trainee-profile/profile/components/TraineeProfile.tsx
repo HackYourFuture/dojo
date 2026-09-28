@@ -1,4 +1,4 @@
-import { Box, Snackbar } from '@mui/material';
+import { Box, Snackbar, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import ContactInfo from '../../contact/ContactInfo';
@@ -104,11 +104,15 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
     setTrainee(traineeData!);
   };
 
+  // Interactions are edited one by one, so their tab only needs Save and Cancel while the profile is being edited.
+  const showsEditButtons = activeTab !== 'interactions' || isEditMode;
+
   return (
-    <Box bgcolor={'background.default'}>
-      <ProfileHeader traineeId={id} />
-      <Box>
-        {/* Keeps its height on the interactions tab, which has no edit button. */}
+    // The tabs have no padding of their own, so everything lines up with the header.
+    <Box paddingX={8} bgcolor="background.default">
+      <Stack spacing={1} useFlexGap paddingTop={3}>
+        <ProfileHeader traineeId={id} />
+        {/* Keeps its height when the edit buttons are hidden. */}
         <Box
           display="flex"
           justifyContent="space-between"
@@ -116,12 +120,11 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
           flexWrap="wrap"
           gap={2}
           minHeight={56}
-          paddingX={3}
           borderBottom={1}
           borderColor="divider"
         >
           <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
-          {activeTab === 'interactions' ? null : (
+          {showsEditButtons && (
             <EditSaveButton
               isEditMode={isEditMode}
               isLoading={isSaveLoading}
@@ -130,17 +133,19 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
             />
           )}
         </Box>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={snackbarSeverity}>
-            {snackbarMessage}
-          </MuiAlert>
-        </Snackbar>
+      </Stack>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
 
+      <Box paddingY={3}>
         {activeTab === 'personal' && <PersonalInfo />}
         {activeTab === 'contact' && <ContactInfo />}
         {activeTab === 'education' && <EducationInfo />}

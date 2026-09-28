@@ -1,4 +1,4 @@
-import { Alert, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import { useAddAssessment, useDeleteAssessment, useEditAssessment } from './data/mutations';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -6,6 +6,7 @@ import { Assessment } from './models/assessment';
 import { AssessmentDetailsModal } from './components/AssessmentDetailsModal';
 import { AssessmentsList } from './components/AssessmentsList';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
+import { ProfileSection } from '../../profile/components/ProfileSection';
 import { useGetAssessments } from './data/assessment-queries';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
@@ -103,7 +104,7 @@ export const AssessmentsComponent = () => {
   };
 
   return (
-    <>
+    <Box width="50%">
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
@@ -113,18 +114,14 @@ export const AssessmentsComponent = () => {
         onConfirm={onConfirmDelete}
         onCancel={onCancelDelete}
       />
-      <div style={{ width: '50%' }}>
-        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6" padding="16px">
-            Assessments ({assessments?.length || 0})
-          </Typography>
-          <Stack direction="row" spacing={2}>
-            <Button startIcon={<AddIcon />} onClick={onClickAdd}>
-              New Assessment
-            </Button>
-          </Stack>
-        </Box>
-
+      <ProfileSection
+        title={`Assessments (${assessments?.length || 0})`}
+        action={
+          <Button startIcon={<AddIcon />} onClick={onClickAdd}>
+            New Assessment
+          </Button>
+        }
+      >
         {assessmentsError || deleteAssessmentError ? (
           <Alert severity="error">
             Oopsie! Something went wrong: {getErrorMessage(assessmentsError || deleteAssessmentError)}
@@ -136,18 +133,18 @@ export const AssessmentsComponent = () => {
         ) : (
           <AssessmentsList assessments={assessments || []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
         )}
+      </ProfileSection>
 
-        <AssessmentDetailsModal
-          key={initialAssessment?.id || `add-assessment-${isModalOpen}`} // Force remount to reset internal state when opening for a new assessment
-          isLoading={addAssessmentLoading || editAssessmentLoading}
-          error={modalError}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onConfirmAdd={onConfirmAdd}
-          onConfirmEdit={onConfirmEdit}
-          initialAssessment={initialAssessment}
-        />
-      </div>
-    </>
+      <AssessmentDetailsModal
+        key={initialAssessment?.id || `add-assessment-${isModalOpen}`} // Force remount to reset internal state when opening for a new assessment
+        isLoading={addAssessmentLoading || editAssessmentLoading}
+        error={modalError}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirmAdd={onConfirmAdd}
+        onConfirmEdit={onConfirmEdit}
+        initialAssessment={initialAssessment}
+      />
+    </Box>
   );
 };

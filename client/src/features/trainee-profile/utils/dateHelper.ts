@@ -16,6 +16,14 @@ export const formatDate = (date: Date | string | null | undefined) => {
   return formattedDate.toISOString().split('T')[0];
 };
 
+// Created once, as formatDateForDisplay runs for every date on every render.
+const displayDateFormat = new Intl.DateTimeFormat('nl-NL', {
+  timeZone: TIME_ZONE,
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
+
 /**
  * Function to format date value for display.
  * It uses the Dutch locale and the Europe/Amsterdam time zone.
@@ -27,13 +35,7 @@ export const formatDateForDisplay = (date: Date | string | null | undefined) => 
     return '';
   }
   try {
-    const formattedDate = new Intl.DateTimeFormat('nl-NL', {
-      timeZone: TIME_ZONE,
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(new Date(date));
-    return formattedDate;
+    return displayDateFormat.format(new Date(date));
   } catch (error) {
     console.error(error);
     return '';

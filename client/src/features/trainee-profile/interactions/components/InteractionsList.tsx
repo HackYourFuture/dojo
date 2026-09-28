@@ -1,11 +1,10 @@
-import { Alert, Box, Chip, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Alert, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import { AvatarWithTooltip } from '../../education/components/AvatarWithTooltip';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { Interaction } from '../models/interaction';
+import { ListItemActions } from '../../components/ListItemActions';
 import MarkdownText from '../../components/MarkdownText';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import { formatTextToFriendly } from '../../utils/formHelper';
@@ -78,58 +77,52 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
           ) : (
             interactions?.map((interaction: Interaction, index: number) => {
               return (
-                <Box key={interaction.id}>
-                  <ListItem
-                    alignItems="flex-start"
-                    disablePadding
+                <ListItem
+                  key={interaction.id}
+                  alignItems="flex-start"
+                  disablePadding
+                  sx={{
+                    paddingBottom: 1,
+                    bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
+                  }}
+                >
+                  <ListItemAvatar
                     sx={{
-                      paddingBottom: 1,
-                      bgcolor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingLeft: 2,
+                      paddingRight: 2,
+                      paddingTop: 1,
                     }}
                   >
-                    <ListItemAvatar
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: 2,
-                        paddingRight: 2,
-                        paddingTop: 1,
-                      }}
-                    >
-                      <AvatarWithTooltip
-                        imageUrl={interaction.reporter.thumbnailUrl}
-                        name={interaction.reporter.name}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Box
-                          display="flex"
-                          flexDirection="row"
-                          justifyContent="space-between"
-                          width="100%"
-                          paddingTop={1}
-                          paddingBottom={1}
-                        >
-                          <Box display="flex" flexDirection="row" gap={1}>
-                            <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
-                            <Typography>{interaction.title}</Typography>
-                          </Box>
-                          <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
+                    <AvatarWithTooltip imageUrl={interaction.reporter.thumbnailUrl} name={interaction.reporter.name} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    // A div, since the markdown details render paragraphs, which cannot be inside the default <p>.
+                    slotProps={{ secondary: { component: 'div' } }}
+                    primary={
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        justifyContent="space-between"
+                        width="100%"
+                        paddingTop={1}
+                        paddingBottom={1}
+                      >
+                        <Box display="flex" flexDirection="row" gap={1}>
+                          <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
+                          <Typography>{interaction.title}</Typography>
                         </Box>
-                      }
-                      secondary={<MarkdownText>{interaction.details}</MarkdownText>}
-                    />
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
-                      <IconButton aria-label="edit" onClick={() => onClickEdit(interaction.id)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton aria-label="delete" onClick={() => handleClickOnDeleteButton(interaction)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </ListItem>
-                </Box>
+                        <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
+                      </Box>
+                    }
+                    secondary={<MarkdownText>{interaction.details}</MarkdownText>}
+                  />
+                  <ListItemActions
+                    onEdit={() => onClickEdit(interaction.id)}
+                    onDelete={() => handleClickOnDeleteButton(interaction)}
+                  />
+                </ListItem>
               );
             })
           )}

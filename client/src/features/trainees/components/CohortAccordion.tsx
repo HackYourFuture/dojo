@@ -13,6 +13,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
 import Table from '@mui/material/Table';
+import { getSlackUserUrl } from '../../../data/links';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -92,7 +93,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   <TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'end' }} onClick={(e) => e.stopPropagation()}>
                     <div>
                       {trainee.slackId && (
-                        <IconButton aria-label="Slack Id" href={`slack://user?team=T0EJTUQ87&id=${trainee.slackId}`}>
+                        <IconButton aria-label="Slack Id" href={getSlackUserUrl(trainee.slackId)}>
                           <img src={slackLogo} alt="Slack" width="27" height="27" style={{ borderRadius: '50%' }} />
                         </IconButton>
                       )}

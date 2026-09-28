@@ -20,7 +20,3 @@ body {
   padding: 10px;
   margin-bottom: 50px;
 }
-
-#dateEmpty[type='date']::-webkit-datetime-edit {
-  display: none;
-}

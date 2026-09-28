@@ -50,6 +50,30 @@ export const createTextChangeHandler = (
 };
 
 /**
+ * Like createTextChangeHandler, for a whole number: ignores anything but digits and stores a number, or null when empty.
+ */
+export const createNumberChangeHandler = (
+  setTrainee: React.Dispatch<React.SetStateAction<Trainee>>,
+  propName: TraineeInfoType
+) => {
+  return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    const hasOnlyDigits = [...value].every((char) => char >= '0' && char <= '9');
+    if (!hasOnlyDigits) {
+      return;
+    }
+    setTrainee((prevFields: Trainee) => {
+      const updatedInfo = {
+        ...prevFields[propName],
+        [name]: value === '' ? null : Number(value),
+      };
+
+      return { ...prevFields, [propName]: updatedInfo };
+    });
+  };
+};
+
+/**
  * formats the text to a UI friendly format
  * for example: "in-progress" becomes "In progress"
  * @param value
