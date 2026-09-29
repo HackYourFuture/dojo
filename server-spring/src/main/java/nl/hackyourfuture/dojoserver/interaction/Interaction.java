@@ -42,6 +42,9 @@ public class Interaction {
     @Setter(AccessLevel.NONE)
     private String traineeId;
 
+    @Setter(AccessLevel.NONE)
+    private String organisationId;
+
     private Instant date;
 
     @Enumerated(EnumType.STRING)

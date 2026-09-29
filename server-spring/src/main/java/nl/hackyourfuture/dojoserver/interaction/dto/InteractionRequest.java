@@ -8,7 +8,7 @@ import nl.hackyourfuture.dojoserver.interaction.InteractionType;
 
 import java.time.Instant;
 
-@Schema(description = "An interaction with a trainee, as sent to create or update one")
+@Schema(description = "An interaction, as sent to create or update one")
 public record InteractionRequest(
         @NotNull
         @Schema(description = "The moment the interaction took place.", example = "2024-01-15T14:30:00Z")
