@@ -1,4 +1,6 @@
 Faker>=40.0
+# Faker needs Pillow to generate the organisation logos
+Pillow>=11.0
 psycopg[binary]>=3.2
 python-dotenv>=1.0
 requests>=2.32

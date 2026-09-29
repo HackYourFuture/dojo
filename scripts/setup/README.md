@@ -5,8 +5,9 @@ Fills a local Dojo environment with dummy data for development and testing:
 
 - A test user with the API token `DOJOTEST`
 - Trainees with profile pictures, assessments, interactions and employment history
+- Partner organisations with logos, contact persons and interactions
 
-The data is generated from a fixed seed, so every run produces exactly the same trainees. Names come
+The data is generated from a fixed seed, so every run produces exactly the same data. Names come
 from Arabic, Turkish, Ukrainian, Spanish, Russian and English backgrounds, all in Latin letters, to
 test special characters like ş, ğ, ı, é, ñ and ï, as well as hyphens and apostrophes.
 
@@ -31,29 +32,33 @@ cp .env.example .env   # then adjust the values to your environment
 python main.py
 ```
 
-The script walks through six steps:
+The script walks through seven steps:
 
 1. **Configuration**: reads `.env` and asks you to confirm the settings.
 2. **Database**: creates the test user and its API token if they don't exist yet. If the database
-   already has trainees, asks whether to continue.
+   already has trainees or organisations, asks whether to continue.
 3. **Dojo API**: checks that the server is reachable and accepts the token.
-4. **Options**: asks how many trainees to generate (500 by default).
+4. **Options**: asks how many trainees (500 by default) and organisations (200 by default) to
+   generate. Enter 0 to skip either.
 5. **Trainees**: generates the trainees and sends them to the API.
-6. **Summary**: shows what was created.
+6. **Organisations**: generates the organisations and sends them to the API. Logos are abstract
+   images drawn by Faker, which is why the script needs Pillow.
+7. **Summary**: shows what was created.
 
 Since the data is always the same, running the script again on a filled database rejects the
-trainees as duplicates. Start from an empty database to regenerate them.
+trainees as duplicates and adds the organisations a second time. Start from an empty database to
+regenerate them.
 
 ## Project structure
 
 ```
 main.py                  Entry point, runs the steps in order
 dojo_setup/
-├── steps.py             The six setup steps
+├── steps.py             The seven setup steps
 ├── config.py            Settings from .env and constants (seed, reference date, test user)
 ├── database.py          Creates the test user and API token
 ├── api.py               Dojo REST API client
-├── uploader.py          Sends a generated trainee and its records to the API
+├── uploader.py          Sends a generated trainee or organisation and its records to the API
 ├── output.py            Terminal output
 ├── errors.py            Errors that stop the setup
 ├── generators/          Seeded data generators, one per entity

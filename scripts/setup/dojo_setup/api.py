@@ -34,18 +34,33 @@ class DojoApi:
         """Creates the trainee and returns its id."""
         return self._post("/trainees", trainee)["id"]
 
-    def set_picture(self, trainee_id: str, image: bytes) -> None:
-        files = {"picture": ("portrait.jpg", image, "image/jpeg")}
-        _raise_for_status(self._request("PUT", f"/trainees/{trainee_id}/picture", files=files))
+    def set_trainee_picture(self, trainee_id: str, image: bytes) -> None:
+        self._put_picture(f"/trainees/{trainee_id}/picture", ("portrait.jpg", image, "image/jpeg"))
 
     def add_assessment(self, trainee_id: str, assessment: Payload) -> None:
         self._post(f"/trainees/{trainee_id}/assessments", assessment)
 
-    def add_interaction(self, trainee_id: str, interaction: Payload) -> None:
+    def add_trainee_interaction(self, trainee_id: str, interaction: Payload) -> None:
         self._post(f"/trainees/{trainee_id}/interactions", interaction)
 
     def add_employment_history(self, trainee_id: str, employment: Payload) -> None:
         self._post(f"/trainees/{trainee_id}/employment-history", employment)
+
+    def create_organisation(self, organisation: Payload) -> str:
+        """Creates the organisation and returns its id."""
+        return self._post("/organisations", organisation)["id"]
+
+    def set_organisation_logo(self, organisation_id: str, image: bytes) -> None:
+        self._put_picture(f"/organisations/{organisation_id}/picture", ("logo.png", image, "image/png"))
+
+    def add_contact_person(self, organisation_id: str, contact_person: Payload) -> None:
+        self._post(f"/organisations/{organisation_id}/contact-persons", contact_person)
+
+    def add_organisation_interaction(self, organisation_id: str, interaction: Payload) -> None:
+        self._post(f"/organisations/{organisation_id}/interactions", interaction)
+
+    def _put_picture(self, path: str, file: tuple[str, bytes, str]) -> None:
+        _raise_for_status(self._request("PUT", path, files={"picture": file}))
 
     def _post(self, path: str, payload: Payload) -> Payload:
         response = self._request(

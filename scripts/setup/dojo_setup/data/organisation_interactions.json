@@ -1,0 +1,502 @@
+[
+  {
+    "type": "call",
+    "title": "Introductory call",
+    "details": "First call to introduce HackYourFuture and our programme. They are curious about hiring juniors and asked for more information about the specialization tracks."
+  },
+  {
+    "type": "meeting",
+    "title": "Partnership kick-off",
+    "details": "Kick-off meeting with HR and an engineering manager. Agreed on a partnership for the coming year and a single point of contact on both sides."
+  },
+  {
+    "type": "email",
+    "title": "Sent partnership proposal",
+    "details": "Sent the partnership proposal with the placement fee structure and the timeline of the next cohort. They will review it internally."
+  },
+  {
+    "type": "email",
+    "title": "Partnership agreement signed",
+    "details": "Received the signed partnership agreement. Shared it with the finance team and added the organisation to the active partners list."
+  },
+  {
+    "type": "call",
+    "title": "Follow-up on proposal",
+    "details": "Followed up on the partnership proposal. They need approval from their management team and expect an answer within two weeks."
+  },
+  {
+    "type": "email",
+    "title": "No response to proposal",
+    "details": "Sent a reminder about the partnership proposal. No response yet after three weeks, will try once more by phone."
+  },
+  {
+    "type": "call",
+    "title": "Partnership declined",
+    "details": "They decided not to partner with us this year because of budget constraints. Open to reconnecting next year."
+  },
+  {
+    "type": "meeting",
+    "title": "Yearly partnership review",
+    "details": "Reviewed the past year together. Two graduates are still working there and they want to continue the partnership."
+  },
+  {
+    "type": "email",
+    "title": "New contact person",
+    "details": "Our contact person left the company. They introduced their successor from the talent acquisition team."
+  },
+  {
+    "type": "meeting",
+    "title": "Introduced the new programme",
+    "details": "Presented the updated programme structure with the core program and specialization tracks. They liked the focus on cloud and testing."
+  },
+  {
+    "type": "call",
+    "title": "Hiring needs for next quarter",
+    "details": "Discussed their hiring plans for the next quarter. They expect two junior frontend positions and one data role."
+  },
+  {
+    "type": "email",
+    "title": "Received job descriptions",
+    "details": "Received job descriptions for two junior developer positions. Shared them with the job preparation team."
+  },
+  {
+    "type": "meeting",
+    "title": "Internship positions",
+    "details": "They can offer three paid internships of six months, with the option of a permanent contract afterwards."
+  },
+  {
+    "type": "call",
+    "title": "Hiring freeze",
+    "details": "They put all hiring on hold until the end of the year due to a reorganisation. Will check in again next quarter."
+  },
+  {
+    "type": "email",
+    "title": "Hiring freeze lifted",
+    "details": "Good news: the hiring freeze is over and they are looking for junior backend developers again."
+  },
+  {
+    "type": "chat",
+    "title": "Question about available graduates",
+    "details": "They asked on Slack whether we have graduates available with React experience. Shared the upcoming graduation date."
+  },
+  {
+    "type": "meeting",
+    "title": "Tech stack and required skills",
+    "details": "Walked through their tech stack: TypeScript, Node.js and AWS. They mostly need strong fundamentals and good communication skills."
+  },
+  {
+    "type": "email",
+    "title": "Dutch language requirement",
+    "details": "Asked whether their open roles require Dutch. They confirmed English is fine for the development team."
+  },
+  {
+    "type": "call",
+    "title": "Tester role available",
+    "details": "They have an opening for a junior test automation engineer. Good fit for graduates of the tester track."
+  },
+  {
+    "type": "email",
+    "title": "Cloud traineeship programme",
+    "details": "They shared details about their own cloud traineeship. Graduates of the cloud track can apply directly."
+  },
+  {
+    "type": "email",
+    "title": "Shared candidate profiles",
+    "details": "Sent four anonymised candidate profiles matching their junior frontend vacancy. Asked for feedback within a week."
+  },
+  {
+    "type": "call",
+    "title": "Feedback on candidate profiles",
+    "details": "They want to invite two of the four candidates for a first interview. The other profiles lacked backend experience."
+  },
+  {
+    "type": "email",
+    "title": "Interviews scheduled",
+    "details": "Scheduled first interviews for two candidates next week. Shared the interview format with the trainees."
+  },
+  {
+    "type": "feedback",
+    "title": "Interview feedback",
+    "details": "Positive feedback after the first interview. The candidate showed good problem solving, but should prepare better questions about the company."
+  },
+  {
+    "type": "feedback",
+    "title": "Technical assignment feedback",
+    "details": "The candidate completed the take-home assignment well. They noted clean code and good tests, but missing error handling."
+  },
+  {
+    "type": "feedback",
+    "title": "Candidate not selected",
+    "details": "They decided not to continue with the candidate. The main reason was limited experience with databases. Shared the feedback with the trainee."
+  },
+  {
+    "type": "call",
+    "title": "Job offer made",
+    "details": "They made a job offer to one of our graduates for a junior developer role starting next month."
+  },
+  {
+    "type": "email",
+    "title": "Offer accepted",
+    "details": "The graduate accepted the offer. Asked them to send the contract details for our placement records."
+  },
+  {
+    "type": "email",
+    "title": "Internship offer",
+    "details": "They offered a six-month internship to one of our graduates. Start date and mentor are already arranged."
+  },
+  {
+    "type": "call",
+    "title": "Second interview round",
+    "details": "Invited the candidate for a second interview with the team lead, including a pair programming session."
+  },
+  {
+    "type": "meeting",
+    "title": "Check-in on placed graduate",
+    "details": "Checked in on the graduate who started last month. They are settling in well and already made their first contributions."
+  },
+  {
+    "type": "feedback",
+    "title": "Three-month performance feedback",
+    "details": "Their manager is happy with the progress of our graduate. Next step is taking more ownership of features."
+  },
+  {
+    "type": "feedback",
+    "title": "Concerns about a graduate",
+    "details": "The manager raised concerns about the graduate missing deadlines. Agreed to set up a meeting with the graduate and their mentor."
+  },
+  {
+    "type": "call",
+    "title": "Contract extension",
+    "details": "They extended the contract of our graduate for another year. Very positive about the collaboration."
+  },
+  {
+    "type": "email",
+    "title": "Internship converted to job",
+    "details": "The intern received a permanent contract after completing the internship. Updated the placement records."
+  },
+  {
+    "type": "call",
+    "title": "Graduate left the company",
+    "details": "Our graduate left for another job. They were happy with the graduate and are open to new candidates."
+  },
+  {
+    "type": "meeting",
+    "title": "Buddy programme for new hires",
+    "details": "Discussed setting up a buddy for our graduates in their first months. They will pair each new hire with a senior developer."
+  },
+  {
+    "type": "feedback",
+    "title": "Feedback on soft skills",
+    "details": "The team appreciates the communication skills of our graduate. They suggested more practice with estimating tasks."
+  },
+  {
+    "type": "email",
+    "title": "Probation period passed",
+    "details": "The graduate passed their probation period. The company thanked us for the good match."
+  },
+  {
+    "type": "call",
+    "title": "Onboarding issues",
+    "details": "The graduate did not have access to the systems in the first week. They apologised and fixed it quickly."
+  },
+  {
+    "type": "email",
+    "title": "Invoice for placement fee",
+    "details": "Sent the invoice for the placement fee of the graduate who started last month."
+  },
+  {
+    "type": "email",
+    "title": "Placement fee paid",
+    "details": "Received the payment of the placement fee. Confirmed receipt and thanked them for the support."
+  },
+  {
+    "type": "call",
+    "title": "Question about the fee structure",
+    "details": "They asked whether the placement fee also applies to internships. Explained that it only applies to permanent positions."
+  },
+  {
+    "type": "email",
+    "title": "Payment reminder",
+    "details": "The placement fee invoice is two months overdue. Sent a friendly reminder to their finance department."
+  },
+  {
+    "type": "meeting",
+    "title": "Sponsorship discussion",
+    "details": "Discussed a yearly sponsorship to support the programme. They will present it to their board next month."
+  },
+  {
+    "type": "email",
+    "title": "Donation received",
+    "details": "They made a donation to support the next cohort. Sent a thank-you note and the ANBI details for their records."
+  },
+  {
+    "type": "meeting",
+    "title": "Laptop donation",
+    "details": "They will donate ten refurbished laptops for trainees who don't have one. Agreed on a pick-up date."
+  },
+  {
+    "type": "email",
+    "title": "Budget for next year",
+    "details": "They confirmed their budget for the partnership is approved for next year."
+  },
+  {
+    "type": "call",
+    "title": "Mentors from their team",
+    "details": "Three of their developers want to volunteer as mentors for the next cohort. Shared the mentor sign-up link."
+  },
+  {
+    "type": "email",
+    "title": "Tech talk proposal",
+    "details": "They offered to give a tech talk about testing strategies. Proposed two dates in the coming month."
+  },
+  {
+    "type": "in-person",
+    "title": "Tech talk at Codam",
+    "details": "Their lead developer gave a talk about microservices at our weekly session. Trainees asked many questions."
+  },
+  {
+    "type": "in-person",
+    "title": "Workshop on Git workflows",
+    "details": "Two of their engineers ran a hands-on workshop on branching strategies and code reviews."
+  },
+  {
+    "type": "email",
+    "title": "Mock interviews",
+    "details": "They offered to run mock technical interviews with trainees in the job preparation phase."
+  },
+  {
+    "type": "feedback",
+    "title": "Mock interview results",
+    "details": "Shared feedback from the mock interviews. Most trainees did well on coding, but need to explain their thinking out loud more."
+  },
+  {
+    "type": "in-person",
+    "title": "Final project demo day",
+    "details": "Their team joined the final project demo day as guests and gave feedback to the project teams."
+  },
+  {
+    "type": "email",
+    "title": "Final project jury",
+    "details": "They agreed to be part of the jury for the final project presentations."
+  },
+  {
+    "type": "call",
+    "title": "Code review volunteers",
+    "details": "They want to help with reviewing trainee assignments. Explained how the review process works."
+  },
+  {
+    "type": "meeting",
+    "title": "Hosting a weekly session",
+    "details": "They offered their office as a venue for one of our weekly sessions. Discussed capacity and catering."
+  },
+  {
+    "type": "email",
+    "title": "Guest lecture about data engineering",
+    "details": "Their data engineer will give a guest lecture for the data track about building data pipelines."
+  },
+  {
+    "type": "in-person",
+    "title": "Office visit with trainees",
+    "details": "Visited their office with a group of trainees. They got a tour and met developers from different teams."
+  },
+  {
+    "type": "in-person",
+    "title": "Career fair",
+    "details": "Met their recruiters at a career fair in Amsterdam. They were interested in our upcoming graduates."
+  },
+  {
+    "type": "in-person",
+    "title": "Hackathon partner",
+    "details": "They co-organised a weekend hackathon with us. Four trainee teams worked on problems from their product."
+  },
+  {
+    "type": "email",
+    "title": "Invitation to graduation",
+    "details": "Invited them to the graduation ceremony of the current cohort."
+  },
+  {
+    "type": "in-person",
+    "title": "Networking evening",
+    "details": "Attended a networking evening at their office. Good chance for graduates to meet hiring managers."
+  },
+  {
+    "type": "email",
+    "title": "Meetup venue",
+    "details": "They offered to host our alumni meetup next month and will provide food and drinks."
+  },
+  {
+    "type": "in-person",
+    "title": "Speed dating with graduates",
+    "details": "Organised short introductions between their hiring managers and eight graduates. Three follow-up interviews planned."
+  },
+  {
+    "type": "meeting",
+    "title": "Curriculum feedback",
+    "details": "They suggested adding more attention to writing tests and working with legacy code in the curriculum."
+  },
+  {
+    "type": "feedback",
+    "title": "Skills gap in cloud",
+    "details": "They noticed graduates lack experience with infrastructure as code. Shared the feedback with the cloud track team."
+  },
+  {
+    "type": "email",
+    "title": "Suggested learning materials",
+    "details": "They sent a list of free courses their juniors use for learning Kubernetes."
+  },
+  {
+    "type": "meeting",
+    "title": "Advice on the tester track",
+    "details": "Their QA lead gave advice on which tools to teach in the tester track, mainly Playwright and API testing."
+  },
+  {
+    "type": "call",
+    "title": "Diversity and inclusion goals",
+    "details": "Discussed how partnering with us supports their diversity goals. They want to share the story internally."
+  },
+  {
+    "type": "email",
+    "title": "Data sharing agreement",
+    "details": "Sent the data sharing agreement for exchanging candidate profiles, in line with GDPR."
+  },
+  {
+    "type": "email",
+    "title": "Signed data sharing agreement",
+    "details": "Received the signed data sharing agreement. We can now share full candidate profiles with them."
+  },
+  {
+    "type": "email",
+    "title": "Updated company details",
+    "details": "They moved to a new office. Updated their address and main phone number."
+  },
+  {
+    "type": "call",
+    "title": "Question about trainee background",
+    "details": "They asked about the work permits of our graduates. Explained that all graduates are allowed to work in the Netherlands."
+  },
+  {
+    "type": "email",
+    "title": "Newsletter feature",
+    "details": "Asked if we can feature their partnership in our newsletter. They approved the text and a photo."
+  },
+  {
+    "type": "email",
+    "title": "Case study request",
+    "details": "They want to write a case study about hiring our graduates for their blog. Sent some background information."
+  },
+  {
+    "type": "other",
+    "title": "LinkedIn post about partnership",
+    "details": "They posted about our partnership on LinkedIn. Shared it from the HackYourFuture account."
+  },
+  {
+    "type": "chat",
+    "title": "Quick question about start dates",
+    "details": "They asked on Slack when the next group of graduates is available. Answered with the expected graduation month."
+  },
+  {
+    "type": "chat",
+    "title": "Shared open position",
+    "details": "They shared a new junior position in our Slack channel for partners. Forwarded it to the job preparation team."
+  },
+  {
+    "type": "chat",
+    "title": "Interview time change",
+    "details": "They asked to move an interview to the afternoon. Confirmed with the candidate and updated the invite."
+  },
+  {
+    "type": "chat",
+    "title": "Asked for a reference",
+    "details": "They asked for a reference for one of our graduates. Connected them with the graduate's mentor."
+  },
+  {
+    "type": "chat",
+    "title": "Thank you message",
+    "details": "They sent a thank-you message after the workshop. The trainees really enjoyed it."
+  },
+  {
+    "type": "meeting",
+    "title": "Quarterly check-in",
+    "details": "Quarterly check-in with their HR team. Discussed the progress of current placements and upcoming vacancies."
+  },
+  {
+    "type": "meeting",
+    "title": "Planning next cohort collaboration",
+    "details": "Planned how they can be involved in the next cohort, from mentoring to hosting a session and interviewing graduates."
+  },
+  {
+    "type": "call",
+    "title": "Reconnecting after a quiet period",
+    "details": "Reached out after a year without contact. They are hiring again and want to restart the collaboration."
+  },
+  {
+    "type": "email",
+    "title": "Partnership paused",
+    "details": "They paused the partnership while their team is restructured. Will reconnect in six months."
+  },
+  {
+    "type": "call",
+    "title": "Complaint about communication",
+    "details": "They felt our response to their vacancy was too slow. Apologised and agreed on a faster process for sharing profiles."
+  },
+  {
+    "type": "meeting",
+    "title": "Remote work policy",
+    "details": "They explained their hybrid work policy. Juniors work at the office three days a week during the first months."
+  },
+  {
+    "type": "email",
+    "title": "Salary range for juniors",
+    "details": "They shared the salary range for their junior positions, which helps us set expectations with graduates."
+  },
+  {
+    "type": "call",
+    "title": "Part-time position",
+    "details": "They have a part-time junior role of 24 hours a week. Could fit graduates who combine work with other obligations."
+  },
+  {
+    "type": "email",
+    "title": "Relocation question",
+    "details": "The position is in Eindhoven. Asked if candidates need to relocate. They offer a travel allowance instead."
+  },
+  {
+    "type": "meeting",
+    "title": "Introduction to their graduate programme",
+    "details": "They presented their two-year graduate programme with rotations through different teams."
+  },
+  {
+    "type": "feedback",
+    "title": "Feedback on HackYourFuture process",
+    "details": "They were happy with how smooth the hiring process was and the quality of the candidate preparation."
+  },
+  {
+    "type": "email",
+    "title": "Volunteer hours for employees",
+    "details": "Their employees get volunteer hours they can spend on mentoring our trainees. Shared the possibilities."
+  },
+  {
+    "type": "call",
+    "title": "Introduction to another company",
+    "details": "They introduced us to a partner company that is also looking for junior developers."
+  },
+  {
+    "type": "email",
+    "title": "Event cancelled",
+    "details": "The planned office visit is cancelled because of an internal event. Proposed a new date next month."
+  },
+  {
+    "type": "other",
+    "title": "Met at a conference",
+    "details": "Met one of their engineering managers at a developer conference. Exchanged contact details and planned a call."
+  },
+  {
+    "type": "other",
+    "title": "Referred by an alumnus",
+    "details": "One of our alumni works there and referred us to their recruitment team."
+  },
+  {
+    "type": "other",
+    "title": "Joined partner advisory board",
+    "details": "Their CTO joined our partner advisory board and will attend the meetings twice a year."
+  }
+]

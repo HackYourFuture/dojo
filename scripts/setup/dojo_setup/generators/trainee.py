@@ -9,7 +9,7 @@ from typing import Any
 
 from dojo_setup.generators.assessment import generate_assessment
 from dojo_setup.generators.employment_history import EMPLOYED_JOB_PATHS, generate_employment
-from dojo_setup.generators.interaction import generate_interaction
+from dojo_setup.generators.interaction import generate_trainee_interaction
 from dojo_setup.generators.portrait import generate_portrait_url
 from dojo_setup.generators.profile import generate_profile
 from dojo_setup.generators.randomness import fake
@@ -34,7 +34,7 @@ def generate_trainee() -> GeneratedTrainee:
         profile=profile,
         portrait_url=generate_portrait_url(profile["gender"]),
         assessments=[generate_assessment(profile) for _ in range(fake.random_int(0, 7))],
-        interactions=[generate_interaction(profile) for _ in range(fake.random_int(0, 20))],
+        interactions=[generate_trainee_interaction(profile) for _ in range(fake.random_int(0, 20))],
         employment_history=_employment_history(profile),
     )
 

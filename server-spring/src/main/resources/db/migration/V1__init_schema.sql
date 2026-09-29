@@ -7,13 +7,30 @@ create table users
     name       text        not null,
     google_id  text
         constraint users_unique_key_google_id unique,
-    picture_id  text,
+    picture_id text,
     is_active  boolean     not null,
     created_at timestamptz not null,
     updated_at timestamptz not null
 );
 
 create unique index users_email_upper_unique on users (upper(email));
+
+-- Tokens
+create table tokens
+(
+    id         text        not null
+        constraint tokens_pk primary key,
+    type       text        not null,
+    token_hash text        not null,
+    user_id    text        not null
+        constraint tokens_user_fk references users on delete cascade,
+    expires_at timestamptz not null,
+    created_at timestamptz not null,
+    updated_at timestamptz not null
+);
+
+create unique index tokens_hash_unique on tokens (token_hash);
+create index tokens_user_idx on tokens (user_id);
 
 -- Trainees
 create table trainees
@@ -120,38 +137,62 @@ create table assessments
 
 create index assessments_trainee_idx on assessments (trainee_id);
 
+-- Partner organisations
+create table organisations
+(
+    id           text        not null
+        constraint organisations_pk primary key,
+    picture_id   text,
+    name         text        not null,
+    website_url  text,
+    linkedin_url text,
+    location     text,
+    status       text        not null,
+    notes        text,
+    created_at   timestamptz not null,
+    updated_at   timestamptz not null
+);
+
+-- Organisation contact persons
+create table contact_persons
+(
+    id              text        not null
+        constraint contact_persons_pk primary key,
+    organisation_id text        not null
+        constraint contact_persons_organisation_fk references organisations on delete cascade,
+    name            text        not null,
+    email           text,
+    phone           text,
+    linkedin_url    text,
+    job_title       text,
+    notes           text,
+    created_at      timestamptz not null,
+    updated_at      timestamptz not null
+);
+
+create index contact_persons_organisation_idx on contact_persons (organisation_id);
+
+
 -- Interactions
 create table interactions
 (
-    id          text        not null
+    id              text        not null
         constraint interactions_pk primary key,
-    trainee_id  text        not null
+    trainee_id      text
         constraint interactions_trainee_fk references trainees on delete cascade,
-    date        timestamptz not null,
-    type        text        not null,
-    reporter_id text        not null
+    organisation_id text
+        constraint interactions_organisation_fk references organisations on delete cascade
+        -- Allow only one type of profile per constraint
+        constraint interactions_one_profile check (num_nonnulls(trainee_id, organisation_id) = 1),
+    date            timestamptz not null,
+    type            text        not null,
+    reporter_id     text        not null
         constraint interactions_reporter_fk references users on delete restrict,
-    title       text        not null,
-    details     text        not null,
-    created_at  timestamptz not null,
-    updated_at  timestamptz not null
+    title           text        not null,
+    details         text        not null,
+    created_at      timestamptz not null,
+    updated_at      timestamptz not null
 );
-
 create index interactions_trainee_idx on interactions (trainee_id);
+create index interactions_organisation_idx on interactions (organisation_id);
 
--- Tokens
-create table tokens
-(
-    id         text        not null
-        constraint tokens_pk primary key,
-    type       text        not null,
-    token_hash text        not null,
-    user_id    text        not null
-        constraint tokens_user_fk references users on delete cascade,
-    expires_at timestamptz not null,
-    created_at timestamptz not null,
-    updated_at timestamptz not null
-);
-
-create unique index tokens_hash_unique on tokens (token_hash);
-create index tokens_user_idx on tokens (user_id);

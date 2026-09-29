@@ -1,16 +1,16 @@
 """Generates the trainee profile: the payload that creates a trainee."""
 
-import re
-import unicodedata
 from datetime import date, timedelta
 from typing import Any
 
 from dojo_setup.config import REFERENCE_DATE
 from dojo_setup.data import CITIES, COUNTRIES, EDUCATION_BACKGROUNDS, NICKNAMES
-from dojo_setup.generators.names import generate_name, random_name_origin
+from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.randomness import YEAR, chance, date_after, date_before, fake, weighted
+from dojo_setup.generators.transliteration import to_ascii
 
 GENDERS = {"man": 50, "woman": 50, "non-binary": 1}
+NAME_ORIGINS = {"arabic": 30, "turkish": 20, "ukrainian": 15, "spanish": 15, "russian": 10, "english": 10}
 PRONOUNS = {"man": "He/him", "woman": "She/her", "non-binary": "They/them"}
 LEARNING_STATUSES = {"studying": 30, "graduated": 60, "on-hold": 1, "quit": 10}
 ENGLISH_LEVELS = ["good", "needs-work"]
@@ -29,7 +29,7 @@ EMAIL_DOMAINS = ["example.com", "example.net", "example.org"]
 
 def generate_profile() -> dict[str, Any]:
     gender = weighted(GENDERS)
-    name_origin = random_name_origin()
+    name_origin = weighted(NAME_ORIGINS)
     first_name, last_name = generate_name(name_origin, gender)
     return {
         **_personal_info(gender, first_name, last_name),
@@ -114,15 +114,8 @@ def _date_of_birth(min_age: int, max_age: int) -> date:
 
 
 def _example_email(first_name: str, last_name: str) -> str:
-    user = ".".join(part for part in (_to_ascii(first_name), _to_ascii(last_name)) if part)
+    user = ".".join(part for part in (to_ascii(first_name), to_ascii(last_name)) if part)
     return f"{user}{fake.random_int(1, 99)}@{fake.random_element(EMAIL_DOMAINS)}"
-
-
-def _to_ascii(text: str) -> str:
-    """Keeps only plain letters and digits, without accents, e.g. 'El Amrani' -> 'elamrani' and 'Şama' -> 'sama'."""
-    # The Turkish dotless ı has no decomposed form, so it's replaced by hand
-    decomposed = unicodedata.normalize("NFKD", text.lower().replace("ı", "i"))
-    return re.sub(r"[^a-z0-9]", "", decomposed)
 
 
 def _phone_number() -> str:
