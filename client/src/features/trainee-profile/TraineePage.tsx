@@ -30,7 +30,8 @@ const TraineePage = () => {
 
   if (data) {
     return (
-      <TraineeProfileProvider id={traineeId} originalTrainee={data}>
+      // Keyed by trainee, so going straight from one trainee to another does not keep the previous one's state.
+      <TraineeProfileProvider key={traineeId} id={traineeId} originalTrainee={data}>
         <TraineeProfile id={traineeId} />
       </TraineeProfileProvider>
     );

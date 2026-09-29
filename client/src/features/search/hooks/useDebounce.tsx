@@ -11,12 +11,8 @@ export function useDebounce(value: string, delay: number): string {
   const [debounceValue, setDebounceValue] = useState<string>('');
 
   useEffect(() => {
-    if (!value) {
-      return;
-    }
-    const handler = setTimeout(() => {
-      setDebounceValue(value);
-    }, delay);
+    // Clearing the text is not delayed, so the results close right away.
+    const handler = setTimeout(() => setDebounceValue(value), value ? delay : 0);
 
     return () => {
       clearTimeout(handler);
