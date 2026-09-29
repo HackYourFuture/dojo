@@ -27,14 +27,16 @@ public class ImageEditor {
     // Everything ImageIO can decode, which is what Thumbnailator reads: JPEG, PNG, GIF, BMP, WBMP, TIFF and WebP.
     public static final Set<String> SUPPORTED_CONTENT_TYPES = Set.copyOf(Arrays.asList(ImageIO.getReaderMIMETypes()));
 
-    /** Crops the image to fill width x height, turned upright, and re-encodes it as a JPEG without metadata. */
-    public static byte[] convertImage(InputStream data, int width, int height) throws IOException {
+    /** Scales the image to width x height, turned upright, and re-encodes it as a JPEG without metadata. */
+    public static byte[] convertImage(InputStream data, int width, int height, boolean crop) throws IOException {
         var out = new ByteArrayOutputStream();
         try {
-            Thumbnails.of(data)
-                    .size(width, height)
-                    .crop(Positions.CENTER)
-                    .imageType(BufferedImage.TYPE_INT_ARGB) // palette images such as GIFs come out black otherwise
+            // Cropped, the image fills the frame. Otherwise it fits inside whole, and the canvas pads it with white.
+            var image = Thumbnails.of(data).size(width, height);
+            if (crop) {
+                image.crop(Positions.CENTER);
+            }
+            image.imageType(BufferedImage.TYPE_INT_ARGB) // palette images such as GIFs come out black otherwise
                     .addFilter(new Canvas(width, height, Positions.CENTER, Color.WHITE)) // white behind transparency
                     .outputFormat("jpg")
                     .outputQuality(0.9)

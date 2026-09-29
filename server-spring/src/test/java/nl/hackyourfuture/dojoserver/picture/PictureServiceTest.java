@@ -14,13 +14,17 @@ import static org.mockito.Mockito.verifyNoInteractions;
 
 import nl.hackyourfuture.dojoserver.admin.user.User;
 import nl.hackyourfuture.dojoserver.filestorage.FileStorageService;
+import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
 
 import javax.imageio.ImageIO;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -97,6 +101,34 @@ public class PictureServiceTest {
     }
 
     @Test
+    void aPictureIsCroppedToFillTheSquare() throws IOException {
+        BufferedImage stored = savedPicture(user(null));
+
+        // Only the green middle of the red|green|blue strip is left, stretched edge to edge.
+        assertThat(stored.getWidth()).isEqualTo(700);
+        assertThat(stored.getHeight()).isEqualTo(700);
+        assertThat(colourAt(stored, 5, 350)).isEqualTo("green");
+        assertThat(colourAt(stored, 695, 350)).isEqualTo("green");
+        assertThat(colourAt(stored, 350, 5)).isEqualTo("green");
+    }
+
+    @Test
+    void aLogoIsFittedInsideTheSquareWhole() throws IOException {
+        Organisation organisation = Organisation.builder().id("Xk2pQ9rTbW").name("Acme").build();
+
+        BufferedImage stored = savedPicture(organisation);
+
+        // The whole strip survives, centred, with white above and below it.
+        assertThat(stored.getWidth()).isEqualTo(700);
+        assertThat(stored.getHeight()).isEqualTo(700);
+        assertThat(colourAt(stored, 5, 350)).isEqualTo("red");
+        assertThat(colourAt(stored, 350, 350)).isEqualTo("green");
+        assertThat(colourAt(stored, 695, 350)).isEqualTo("blue");
+        assertThat(colourAt(stored, 350, 5)).isEqualTo("white");
+        assertThat(colourAt(stored, 350, 695)).isEqualTo("white");
+    }
+
+    @Test
     void downloadReadsTheCurrentPictureAndThumbnail() {
         User user = user(CURRENT);
 
@@ -145,6 +177,39 @@ public class PictureServiceTest {
                 .pictureId(pictureId)
                 .isActive(true)
                 .build();
+    }
+
+    // Saves a wide red|green|blue strip for the owner and decodes the full-size picture it stored.
+    private BufferedImage savedPicture(PictureOwner owner) throws IOException {
+        var strip = new BufferedImage(300, 75, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = strip.createGraphics();
+        Color[] thirds = {Color.RED, Color.GREEN, Color.BLUE};
+        for (int i = 0; i < thirds.length; i++) {
+            graphics.setColor(thirds[i]);
+            graphics.fillRect(i * 100, 0, 100, 75);
+        }
+        graphics.dispose();
+        var out = new ByteArrayOutputStream();
+        ImageIO.write(strip, "png", out);
+
+        pictureService.save(owner, new MockMultipartFile("picture", "strip.png", "image/png", out.toByteArray()));
+
+        var picture = ArgumentCaptor.forClass(InputStream.class);
+        verify(fileStorageService).upload(eq(owner.getPictureStoragePrefix() + owner.getPictureId()),
+                eq("image/jpeg"), picture.capture(), anyLong());
+        return ImageIO.read(picture.getValue());
+    }
+
+    // The colour a pixel is closest to. JPEG shifts exact values, so compare the channels rather than the numbers.
+    private static String colourAt(BufferedImage image, int x, int y) {
+        var pixel = new Color(image.getRGB(x, y));
+        if (pixel.getRed() > 200 && pixel.getGreen() > 200 && pixel.getBlue() > 200) {
+            return "white";
+        }
+        if (pixel.getRed() > pixel.getGreen() && pixel.getRed() > pixel.getBlue()) {
+            return "red";
+        }
+        return pixel.getGreen() > pixel.getBlue() ? "green" : "blue";
     }
 
     private static MockMultipartFile png() throws IOException {

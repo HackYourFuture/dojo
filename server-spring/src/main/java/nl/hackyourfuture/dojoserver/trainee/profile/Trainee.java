@@ -22,7 +22,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Locale;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -136,10 +135,7 @@ public class Trainee implements PictureOwner {
     }
 
     public String getProfilePath() {
-        String name = StringUtils.stripAccents(getDisplayName())
-                .replaceAll("\\s+", "-")
-                .toLowerCase(Locale.ROOT);
-        return String.format("/trainee/%s_%s", name, id);
+        return String.format("/trainee/%s_%s", StringUtils.slug(getDisplayName()), id);
     }
 
     public String getPictureUrl() {
