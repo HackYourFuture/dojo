@@ -22,6 +22,21 @@ class StringUtilsTest {
     }
 
     @ParameterizedTest
+    @CsvSource(delimiter = '|', textBlock = """
+            Booking.com B.V.         | booking-com-b-v
+            ' Zoë & Müller / Co. '   | zoe-muller-co
+            ABN AMRO                 | abn-amro
+            Tech_Hub_NL              | tech-hub-nl
+            '(Café) 42?#'            | cafe-42
+            Иван                     | иван
+            '李𠀀明 & Co'              | 李𠀀明-co
+            '--'                     | ''
+            """)
+    void slugsKeepLettersAndDigitsJoinedByOneDash(String text, String expected) {
+        assertThat(StringUtils.slug(text)).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
     @CsvSource({"kitten, sitting, 3", "'', abc, 3", "abc, '', 3", "john, john, 0", "jhon, john, 2",
             "yusuf, youssef, 3"})
     void countsEdits(String a, String b, int edits) {

@@ -2,8 +2,11 @@ package nl.hackyourfuture.dojoserver.search;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
+import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.search.SearchMatcher.Field;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResult;
+import nl.hackyourfuture.dojoserver.search.dto.SearchResultType;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -218,7 +221,85 @@ class SearchRankingTest {
                 .containsExactly("b", "c", "d", "a");
     }
 
+    // ------------------------------------------------------------------ organisations and contact persons
+
+    @Test
+    void findsAnOrganisationByACloseSpellingOfItsName() {
+        Organisation adyen = Organisation.builder().id("adyen").name("Adyen").pictureId("IMGlogo").build();
+
+        List<SearchResult> results = rank("adyn", List.of(), List.of(adyen), List.of());
+
+        assertThat(results).singleElement().satisfies(result -> {
+            assertThat(result.type()).isEqualTo(SearchResultType.ORGANISATION);
+            assertThat(result.title()).isEqualTo("Adyen");
+            assertThat(result.subtitle()).isEqualTo("Organisation");
+            assertThat(result.thumbnailUrl()).isEqualTo("/api/organisations/adyen/picture/IMGlogo/thumbnail");
+            assertThat(result.path()).isEqualTo("/organisation/adyen_adyen");
+            assertThat(result.score()).isEqualTo(40.0);
+        });
+    }
+
+    @Test
+    void findsDottedOrganisationNamesWithOrWithoutTheDots() {
+        Organisation coolblue = Organisation.builder().id("coolblue").name("Coolblue B.V.").build();
+        Organisation booking = Organisation.builder().id("booking").name("Booking.com").build();
+        List<Organisation> organisations = List.of(coolblue, booking);
+
+        assertThat(scores(rank("coolblue bv", List.of(), organisations, List.of()))).containsExactly(10000.0);
+        assertThat(scores(rank("coolblue b.v.", List.of(), organisations, List.of()))).containsExactly(10000.0);
+        assertThat(scores(rank("booking com", List.of(), organisations, List.of()))).containsExactly(10000.0);
+        assertThat(scores(rank("booking.com", List.of(), organisations, List.of()))).containsExactly(5000.0);
+        assertThat(scores(rank("booking", List.of(), organisations, List.of()))).containsExactly(5000.0);
+    }
+
+    @Test
+    void aContactPersonOpensTheirOrganisation() {
+        Organisation acme = Organisation.builder().id("acme").name("Acme").build();
+        ContactPerson jane = ContactPerson.builder().id("jane").organisationId("acme").name("Jane Roe")
+                .jobTitle("Recruiter").build();
+
+        assertThat(rank("roe", List.of(), List.of(acme), List.of(jane))).singleElement().satisfies(result -> {
+            assertThat(result.type()).isEqualTo(SearchResultType.CONTACT_PERSON);
+            assertThat(result.subtitle()).isEqualTo("Acme");
+            assertThat(result.thumbnailUrl()).isNull();
+            assertThat(result.path()).isEqualTo(acme.getProfilePath());
+        });
+    }
+
+    @Test
+    void findsAContactPersonByJobTitleAndEmail() {
+        Organisation acme = Organisation.builder().id("acme").name("Acme").build();
+        ContactPerson jane = ContactPerson.builder().id("jane").organisationId("acme").name("Jane Roe")
+                .email("jane@acme.example").jobTitle("Recruiter").build();
+
+        assertThat(scores(rank("recruiter", List.of(), List.of(acme), List.of(jane)))).containsExactly(1000.0);
+        assertThat(scores(rank("jane@acme.example", List.of(), List.of(acme), List.of(jane))))
+                .containsExactly(2000.0);
+    }
+
+    @Test
+    void equalScoresPutTraineesBeforeOrganisationsBeforeContactPersons() {
+        // Named Haddad, the first trainee ties the organisation; with Haddad as last name, the second ties the contact.
+        Trainee firstName = trainee(null, "Haddad", "Aziz", 50);
+        Trainee lastName = trainee(null, "Omar", "Haddad", 50);
+        Organisation organisation = Organisation.builder().id("haddad").name("Haddad").build();
+        ContactPerson contactPerson = ContactPerson.builder().id("contact").organisationId("haddad")
+                .name("Sami Haddad").build();
+
+        List<SearchResult> results = rank("haddad", List.of(lastName, firstName), List.of(organisation),
+                List.of(contactPerson));
+
+        assertThat(results).extracting(SearchResult::type).containsExactly(SearchResultType.TRAINEE,
+                SearchResultType.ORGANISATION, SearchResultType.TRAINEE, SearchResultType.CONTACT_PERSON);
+        assertThat(scores(results)).containsExactly(5000.0, 5000.0, 3000.0, 3000.0);
+    }
+
     // ------------------------------------------------------------------ helpers
+
+    private static List<SearchResult> rank(String query, List<Trainee> trainees, List<Organisation> organisations,
+            List<ContactPerson> contactPersons) {
+        return SearchService.rank(trainees, organisations, contactPersons, SearchMatcher.tokenize(query));
+    }
 
     private static double score(String query, Field... fields) {
         return SearchMatcher.score(SearchMatcher.tokenize(query), List.of(fields));

@@ -1,6 +1,8 @@
 package nl.hackyourfuture.dojoserver.search.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
+import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 
 @Schema(description = "A search result.")
@@ -20,14 +22,14 @@ public record SearchResult(
         String id,
 
         @Schema(
-                description = "The main line to show, such as a trainee's display name",
+                description = "The main line to show, such as the record's name",
                 example = "John Doe",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         String title,
 
         @Schema(
-                description = "A second line to show, such as a trainee's cohort",
+                description = "A second line to show, with context about the record",
                 example = "Cohort 53",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
@@ -43,7 +45,7 @@ public record SearchResult(
         String thumbnailUrl,
 
         @Schema(
-                description = "The client route that opens the record",
+                description = "The client route that opens the record, or the record it belongs to if it has no page",
                 example = "/trainee/john-doe_TRAINEEID",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
@@ -66,6 +68,29 @@ public record SearchResult(
                 cohort == null ? "No cohort assigned" : "Cohort " + cohort,
                 trainee.getThumbnailUrl(),
                 trainee.getProfilePath(),
+                score);
+    }
+
+    public static SearchResult from(Organisation organisation, double score) {
+        return new SearchResult(
+                SearchResultType.ORGANISATION,
+                organisation.getId(),
+                organisation.getName(),
+                "Organisation",
+                organisation.getThumbnailUrl(),
+                organisation.getProfilePath(),
+                score);
+    }
+
+    // Contact persons have no page of their own, so the result opens their organisation.
+    public static SearchResult from(ContactPerson contactPerson, Organisation organisation, double score) {
+        return new SearchResult(
+                SearchResultType.CONTACT_PERSON,
+                contactPerson.getId(),
+                contactPerson.getName(),
+                organisation.getName(),
+                null,
+                organisation.getProfilePath(),
                 score);
     }
 }

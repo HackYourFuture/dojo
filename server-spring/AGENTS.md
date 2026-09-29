@@ -24,13 +24,13 @@ Package by feature under `nl.hackyourfuture.dojoserver`: a feature owns its enti
 service, repository and `dto/`. `config/` holds error handling, OpenAPI and security; `shared/` holds
 helpers and the `DojoException` family. Copy the closest reference instead of inventing a shape:
 
-| Package            | Reference for                                     |
-|--------------------|---------------------------------------------------|
-| `admin/user/`      | a plain CRUD endpoint                             |
-| `trainee/profile/` | PATCH, and a list that filters, sorts and pages   |
-| `interaction/`     | one record type shared by several profile types   |
-| `picture/`         | files that belong to a record                     |
-| `search/`          | ranking in Java                                   |
+| Package            | Reference for                                   |
+|--------------------|-------------------------------------------------|
+| `admin/user/`      | a plain CRUD endpoint                           |
+| `trainee/profile/` | PATCH, and a list that filters, sorts and pages |
+| `interaction/`     | one record type shared by several profile types |
+| `picture/`         | files that belong to a record                   |
+| `search/`          | ranking in Java                                 |
 
 ## Entities
 
@@ -133,12 +133,13 @@ helpers and the `DojoException` family. Copy the closest reference instead of in
   `num_nonnulls(...) = 1` check, not a shared `profile_id`, which could have no foreign key.
 - **Pictures** (`picture/`): owners implement `PictureOwner` and store only `pictureId`. Storage keys
   come from the stored id, never from a path variable. Every upload gets a new id, so a picture URL
-  never changes content. To delete an owner, delete and `flush()` it before
+  never changes content. Pictures are cropped to fill the square; a logo overrides `isPictureCropped()`
+  so it fits inside whole. To delete an owner, delete and `flush()` it before
   `PictureService.deleteAll`. Locally, storage is the MinIO in `../server/dev-services`
   (`docker compose up storage`).
-- **Search** (`search/`): ranking runs in Java over every trainee, because names match by close
-  spelling. Postgres full-text search and `pg_trgm` were measured and rejected. `SearchRankingTest`
-  pins the order.
+- **Search** (`search/`): ranking runs in Java over every trainee, organisation and contact person,
+  because names match by close spelling. Each type ranks on its own, then a stable sort by score merges them, so equal
+  scores list trainees first. `SearchRankingTest` pins the order.
 
 ## Configuration
 

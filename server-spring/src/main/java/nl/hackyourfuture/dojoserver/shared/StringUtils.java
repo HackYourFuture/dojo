@@ -1,6 +1,9 @@
 package nl.hackyourfuture.dojoserver.shared;
 
 import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class StringUtils {
     private StringUtils() {
@@ -11,6 +14,15 @@ public class StringUtils {
         // NFD splits "ë" into "e" plus a combining mark, and \p{M} matches every combining mark, so removing
         // them leaves the plain letters.
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+    }
+
+    // The text as a client route segment: its words of letters and digits, lower case and joined by dashes.
+    // "Booking.com B.V." is "booking-com-b-v". It never holds an underscore, which routes put before the id.
+    public static String slug(String text) {
+        String[] words = stripAccents(text).toLowerCase(Locale.ROOT).split("[^\\p{L}\\p{N}]+");
+        return Arrays.stream(words)
+                .filter(word -> !word.isEmpty()) // a leading separator leaves an empty first word
+                .collect(Collectors.joining("-"));
     }
 
     // The fewest single-character insertions, deletions and substitutions that turn one string into the other.

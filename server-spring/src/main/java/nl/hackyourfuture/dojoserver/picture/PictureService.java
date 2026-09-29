@@ -45,8 +45,8 @@ public class PictureService {
             throw new DojoBadRequestException("The picture must be a JPEG, PNG, GIF, BMP, TIFF or WebP image.");
         }
         // Convert both before uploading either, so a broken image leaves nothing behind.
-        byte[] pictureJpeg = convert(file, PICTURE_SIZE);
-        byte[] thumbnailJpeg = convert(file, THUMBNAIL_SIZE);
+        byte[] pictureJpeg = convert(file, PICTURE_SIZE, owner.isPictureCropped());
+        byte[] thumbnailJpeg = convert(file, THUMBNAIL_SIZE, owner.isPictureCropped());
 
         // Do the upload
         String oldPictureId = owner.getPictureId();
@@ -84,9 +84,9 @@ public class PictureService {
         }
     }
 
-    private static byte[] convert(MultipartFile file, int size) {
+    private static byte[] convert(MultipartFile file, int size, boolean crop) {
         try (InputStream data = file.getInputStream()) {
-            return ImageEditor.convertImage(data, size, size);
+            return ImageEditor.convertImage(data, size, size, crop);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
