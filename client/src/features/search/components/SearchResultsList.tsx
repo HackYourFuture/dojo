@@ -1,25 +1,27 @@
-import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Avatar, CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import { ErrorBox } from '../../../components/ErrorBox';
 import { Link } from 'react-router-dom';
-import { Loader } from '../../../components/Loader';
 import { SearchResult } from '../models/search-result';
+import { useGetSearchResults } from '../data/search-queries';
 
 interface SearchResultsListProps {
-  isLoading: boolean;
-  data: SearchResult[];
+  query: string;
 }
 
 /**
  * Component for showing a list of trainee search results with links.
  *
- * @param {string} results search value.
+ * @param {string} query the text to search for.
  * @returns {ReactNode} A React element that renders a list of matching trainee names list as a clickable link.
  */
-const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) => {
-  if (isLoading) {
-    return <Loader />;
+const SearchResultsList = ({ query }: SearchResultsListProps) => {
+  const { isLoading, data, error } = useGetSearchResults(query);
+
+  if (error) {
+    return <ErrorBox errorMessage={error.message} />;
   }
 
   return (
@@ -33,7 +35,11 @@ const SearchResultsList = ({ isLoading, data }: SearchResultsListProps) => {
         borderRadius: '10px',
       }}
     >
-      {data?.length ? (
+      {isLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+          <CircularProgress size={32} />
+        </Box>
+      ) : data?.length ? (
         <List>
           {data.map((result: SearchResult) => {
             return (

@@ -1,28 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
-import { ErrorBox } from '../../components';
 import HYFLogo from '../../assets/hyf-logo-red.png';
 import SearchBar from './components/SearchBar';
 import SearchResultsList from './components/SearchResultsList';
-import { useGetSearchResults } from './data/search-queries';
 
 /**
  * Component for displaying the home page / search page elements.
  */
 const SearchPage = () => {
   const [searchString, setSearchString] = useState('');
-  /**
-   * React Query hook to fetch matching trainees with a debounce time.
-   */
-  const { isLoading, data, isError, error } = useGetSearchResults(searchString);
 
   useEffect(() => {
     document.title = 'Home | Dojo';
-  }, []);
-
-  const handleTextChange = useCallback((text: string) => {
-    setSearchString(text);
   }, []);
 
   return (
@@ -54,12 +44,8 @@ const SearchPage = () => {
             marginBottom: '50px',
           }}
         />
-        <SearchBar onTextChange={handleTextChange} />
-        {isError && error instanceof Error ? (
-          <ErrorBox errorMessage={error.message} />
-        ) : (
-          searchString && <SearchResultsList isLoading={isLoading} data={data || []} />
-        )}
+        <SearchBar autoFocus onTextChange={setSearchString} sx={{ backgroundColor: 'background.dark' }} />
+        {searchString && <SearchResultsList query={searchString} />}
       </Box>
     </Box>
   );

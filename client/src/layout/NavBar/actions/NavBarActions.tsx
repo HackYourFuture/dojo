@@ -1,17 +1,15 @@
-import { Box, IconButton } from '@mui/material';
-
+import { Box } from '@mui/material';
+import { NavBarSearch } from '../../../features/search/NavBarSearch';
 import React from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export const NavBarActions: React.FC = () => {
-  const navigate = useNavigate();
+  const { key } = useLocation();
 
   return (
     <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', gap: 1 }}>
-      <IconButton onClick={() => navigate('/search')} size="large" aria-label="search" color="inherit">
-        <SearchIcon />
-      </IconButton>
+      {/* Keyed by page, so the search starts empty on every page and closes after picking a result. */}
+      <NavBarSearch key={key} />
     </Box>
   );
 };
