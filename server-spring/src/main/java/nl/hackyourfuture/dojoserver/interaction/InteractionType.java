@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 public enum InteractionType {
     CALL("call"),
     CHAT("chat"),
+    EMAIL("email"),
+    MEETING("meeting"),
     FEEDBACK("feedback"),
     IN_PERSON("in-person"),
     TECH_HOUR("tech-hour"),

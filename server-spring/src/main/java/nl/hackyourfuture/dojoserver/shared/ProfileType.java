@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ProfileType {
-    TRAINEE("Trainee");
+    TRAINEE("Trainee"),
+    ORGANISATION("Organisation");
 
     private final String label;
 }

@@ -128,9 +128,10 @@ helpers and the `DojoException` family. Copy the closest reference instead of in
 - **JPQL `@Query` returning a record** selects in the record's component order; aliases are ignored.
 - **Interactions** (`interaction/`): one table, service and repository for every profile type, and
   one controller per type that hardcodes its `ProfileType`. Never take it from the path or body.
-  Items are found with `findByIdAndTraineeId`, never `findById`. The reporter is the caller, and
-  only they may edit or delete. A second profile type gets its own nullable FK column plus a
-  `num_nonnulls(...) = 1` check, not a shared `profile_id`, which could have no foreign key.
+  Items are found by id and profile, like `findByIdAndTraineeId`, never `findById`. The reporter is
+  the caller, and only they may edit or delete. Each profile type has its own nullable FK column,
+  and a `num_nonnulls(...) = 1` check keeps exactly one set. A new type adds its column to that
+  check, never a shared `profile_id`, which could have no foreign key.
 - **Pictures** (`picture/`): owners implement `PictureOwner` and store only `pictureId`. Storage keys
   come from the stored id, never from a path variable. Every upload gets a new id, so a picture URL
   never changes content. Pictures are cropped to fill the square; a logo overrides `isPictureCropped()`

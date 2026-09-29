@@ -133,7 +133,7 @@ public class OrganisationController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an existing organisation",
-            description = "Permanently deletes the organisation profile together with its contact persons and logo.")
+            description = "Permanently deletes the organisation profile with its contact persons, interactions and logo.")
     @ApiResponse(responseCode = "204", description = "The organisation has been successfully deleted")
     @ApiResponse(
             responseCode = "404",

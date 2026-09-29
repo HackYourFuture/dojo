@@ -5,6 +5,7 @@ import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.interaction.dto.InteractionRequest;
 import nl.hackyourfuture.dojoserver.interaction.dto.InteractionResponse;
+import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationRepository;
 import nl.hackyourfuture.dojoserver.shared.ProfileType;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoForbiddenException;
@@ -22,6 +23,7 @@ import java.util.List;
 public class InteractionService {
     private final InteractionRepository interactionRepository;
     private final TraineeRepository traineeRepository;
+    private final OrganisationRepository organisationRepository;
     private final UserRepository userRepository;
     private final SlackNotificationSender slackNotificationSender;
 
@@ -50,13 +52,14 @@ public class InteractionService {
                 .title(request.title())
                 .details(request.details());
 
-        if (profile == ProfileType.TRAINEE) {
-            builder.traineeId(profileId);
+        switch (profile) {
+            case TRAINEE -> builder.traineeId(profileId);
+            case ORGANISATION -> builder.organisationId(profileId);
         }
 
         Interaction created = interactionRepository.save(builder.build());
 
-        // Send notification
+        // Only trainee interactions go to Slack.
         if (profile == ProfileType.TRAINEE) {
             var trainee = traineeRepository.findById(profileId)
                     .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
@@ -104,6 +107,7 @@ public class InteractionService {
     private void requireProfile(ProfileType profile, String profileId) {
         boolean exists = switch (profile) {
             case TRAINEE -> traineeRepository.existsById(profileId);
+            case ORGANISATION -> organisationRepository.existsById(profileId);
         };
 
         if (!exists) {
@@ -114,6 +118,7 @@ public class InteractionService {
     private List<Interaction> findAll(ProfileType profile, String profileId) {
         return switch (profile) {
             case TRAINEE -> interactionRepository.findByTraineeIdOrderByDateDesc(profileId);
+            case ORGANISATION -> interactionRepository.findByOrganisationIdOrderByDateDesc(profileId);
         };
     }
 
@@ -123,6 +128,7 @@ public class InteractionService {
 
         var interaction = switch (profile) {
             case TRAINEE -> interactionRepository.findByIdAndTraineeId(id, profileId);
+            case ORGANISATION -> interactionRepository.findByIdAndOrganisationId(id, profileId);
         };
         return interaction.orElseThrow(() -> new DojoNotFoundException("Interaction", id));
     }
