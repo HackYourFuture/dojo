@@ -10,6 +10,7 @@ from rich.table import Table
 from dojo_setup import database, output
 from dojo_setup.api import DojoApi
 from dojo_setup.config import (
+    DEFAULT_ORGANISATION_COUNT,
     DEFAULT_TRAINEE_COUNT,
     ENV_FILE,
     SEED,
@@ -19,10 +20,10 @@ from dojo_setup.config import (
     load_config,
 )
 from dojo_setup.errors import SetupCancelled
-from dojo_setup.generators import generate_trainee
-from dojo_setup.uploader import UploadReport, upload_trainee
+from dojo_setup.generators import generate_organisation, generate_trainee
+from dojo_setup.uploader import UploadReport, upload_organisation, upload_trainee
 
-TOTAL_STEPS = 6
+TOTAL_STEPS = 7
 _step_numbers = count(1)
 
 
@@ -76,11 +77,13 @@ def prepare_database(config: Config) -> None:
             output.skipped("Test user's API token already exists")
 
         existing_trainees = database.count_trainees(connection)
+        existing_organisations = database.count_organisations(connection)
 
-    if existing_trainees:
+    if existing_trainees or existing_organisations:
         output.warning(
-            f"The database already contains {existing_trainees} trainees. Every run generates the same "
-            "trainees, so any left over from an earlier run will be rejected as duplicates."
+            f"The database already contains {existing_trainees} trainees and {existing_organisations} organisations. "
+            "Every run generates the same data, so trainees from an earlier run will be rejected as duplicates "
+            "and organisations will be added again."
         )
         if not Confirm.ask("Continue anyway?", default=False, console=output.console):
             raise SetupCancelled()
@@ -94,43 +97,43 @@ def connect_to_api(config: Config) -> DojoApi:
     return api
 
 
-def choose_trainee_count() -> int:
+def choose_amounts() -> tuple[int, int]:
+    """Asks how many trainees and organisations to generate."""
     _start_step("Options")
-    output.info(f"Trainees are generated from seed {SEED}, so every run produces the same data.")
-    while True:
-        trainee_count = IntPrompt.ask(
-            "How many trainees should be generated?", default=DEFAULT_TRAINEE_COUNT, console=output.console
-        )
-        if trainee_count > 0:
-            break
-        output.warning("Please enter a number greater than 0.")
+    output.info(f"Data is generated from seed {SEED}, so every run produces the same data.")
+    trainee_count = _ask_count("How many trainees should be generated?", DEFAULT_TRAINEE_COUNT)
+    organisation_count = _ask_count("How many organisations should be generated?", DEFAULT_ORGANISATION_COUNT)
 
-    if not Confirm.ask(f"Generate {trainee_count} trainees now?", default=True, console=output.console):
+    question = f"Generate {trainee_count} trainees and {organisation_count} organisations now?"
+    if not Confirm.ask(question, default=True, console=output.console):
         raise SetupCancelled()
-    return trainee_count
+    return trainee_count, organisation_count
 
 
-def generate_trainees(api: DojoApi, trainee_count: int) -> UploadReport:
+def generate_trainees(api: DojoApi, trainee_count: int, report: UploadReport) -> None:
     _start_step("Trainees")
-    report = UploadReport()
-    progress = Progress(
-        SpinnerColumn(),
-        TextColumn("Generating trainees"),
-        BarColumn(),
-        MofNCompleteColumn(),
-        TextColumn("·"),
-        TimeRemainingColumn(),
-        console=output.console,
-    )
-    with progress:
+    if trainee_count == 0:
+        output.skipped("No trainees requested")
+        return
+    with _progress_bar("Generating trainees") as progress:
         for _ in progress.track(range(trainee_count)):
             errors_before = len(report.errors)
             upload_trainee(api, generate_trainee(), report)
-            for error in report.errors[errors_before:]:
-                output.warning(error)
-
+            _show_new_errors(report, errors_before)
     output.success(f"Created {report.trainees} of {trainee_count} trainees")
-    return report
+
+
+def generate_organisations(api: DojoApi, organisation_count: int, report: UploadReport) -> None:
+    _start_step("Organisations")
+    if organisation_count == 0:
+        output.skipped("No organisations requested")
+        return
+    with _progress_bar("Generating organisations") as progress:
+        for _ in progress.track(range(organisation_count)):
+            errors_before = len(report.errors)
+            upload_organisation(api, generate_organisation(), report)
+            _show_new_errors(report, errors_before)
+    output.success(f"Created {report.organisations} of {organisation_count} organisations")
 
 
 def show_summary(report: UploadReport) -> None:
@@ -139,8 +142,12 @@ def show_summary(report: UploadReport) -> None:
     table.add_row("Trainees", str(report.trainees))
     table.add_row("Profile pictures", str(report.pictures))
     table.add_row("Assessments", str(report.assessments))
-    table.add_row("Interactions", str(report.interactions))
+    table.add_row("Trainee interactions", str(report.trainee_interactions))
     table.add_row("Employment records", str(report.employment_history))
+    table.add_row("Organisations", str(report.organisations))
+    table.add_row("Logos", str(report.logos))
+    table.add_row("Contact persons", str(report.contact_persons))
+    table.add_row("Organisation interactions", str(report.organisation_interactions))
     output.console.print(table)
 
     if report.errors:
@@ -148,3 +155,28 @@ def show_summary(report: UploadReport) -> None:
     output.success(
         f"[bold]Done. You are ready to go![/] Use the API token [bold]{TEST_USER_API_TOKEN}[/] to call the API."
     )
+
+
+def _ask_count(question: str, default: int) -> int:
+    while True:
+        answer = IntPrompt.ask(question, default=default, console=output.console)
+        if answer >= 0:
+            return answer
+        output.warning("Please enter 0 or a positive number.")
+
+
+def _progress_bar(label: str) -> Progress:
+    return Progress(
+        SpinnerColumn(),
+        TextColumn(label),
+        BarColumn(),
+        MofNCompleteColumn(),
+        TextColumn("·"),
+        TimeRemainingColumn(),
+        console=output.console,
+    )
+
+
+def _show_new_errors(report: UploadReport, errors_before: int) -> None:
+    for error in report.errors[errors_before:]:
+        output.warning(error)

@@ -76,6 +76,10 @@ def count_trainees(connection: psycopg.Connection) -> int:
     return connection.execute("SELECT count(*) FROM trainees").fetchone()[0]
 
 
+def count_organisations(connection: psycopg.Connection) -> int:
+    return connection.execute("SELECT count(*) FROM organisations").fetchone()[0]
+
+
 def _random_id() -> str:
     # Not using the seeded faker, so the database step never changes the generated data
     alphabet = string.ascii_letters + string.digits

@@ -17,6 +17,13 @@ fake = Faker("en_US")
 fake.seed_instance(SEED)
 
 
+def localized(locale: str) -> Faker:
+    """A Faker for another locale that shares the seeded random generator of `fake`."""
+    localized_fake = Faker(locale)
+    localized_fake.random = fake.random
+    return localized_fake
+
+
 def chance(probability: float) -> bool:
     """True with the given probability, e.g. 0.05 for 5%."""
     return fake.random.random() < probability
@@ -35,6 +42,12 @@ def date_before(days: int, ref: date = REFERENCE_DATE) -> date:
 def date_after(days: int, ref: date = REFERENCE_DATE) -> date:
     """A random date within the given number of days after `ref`."""
     return fake.date_between_dates(ref, ref + timedelta(days=days))
+
+
+def datetime_before(days: int, ref: date = REFERENCE_DATE) -> datetime:
+    """A random UTC moment within the given number of days before `ref`."""
+    end = datetime.combine(ref, time(), UTC)
+    return fake.date_time_between_dates(end - timedelta(days=days), end, UTC)
 
 
 def datetime_after(days: int, ref: date) -> datetime:

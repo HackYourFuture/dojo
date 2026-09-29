@@ -1,4 +1,6 @@
-"""Writes Russian and Ukrainian names in Latin letters, the way they usually appear in passports."""
+"""Rewrites names in other alphabets: Cyrillic in Latin letters, and Latin names in plain ASCII."""
+
+import unicodedata
 
 _RUSSIAN = {
     "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo", "ж": "zh", "з": "z", "и": "i",
@@ -25,3 +27,16 @@ def to_latin(text: str, language: str) -> str:
         replacement = table.get(char.lower(), char)
         latin += replacement.capitalize() if char.isupper() else replacement
     return latin
+
+
+def to_ascii(text: str) -> str:
+    """Keeps only lowercase ASCII letters and digits, e.g. 'El Amrani' -> 'elamrani' and 'Şama' -> 'sama'."""
+    # The Turkish dotless ı has no decomposed form, so it's replaced by hand
+    decomposed = unicodedata.normalize("NFKD", text.lower().replace("ı", "i"))
+    return "".join(char for char in decomposed if char.isascii() and char.isalnum())
+
+
+def to_slug(text: str) -> str:
+    """For URLs, e.g. 'Gray, Clark and Freeman' -> 'gray-clark-and-freeman' and 'Bates-Pittman' -> 'bates-pittman'."""
+    words = [to_ascii(word) for word in text.replace("-", " ").split()]
+    return "-".join(word for word in words if word)
