@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -6,6 +6,8 @@ interface ConfirmationDialogProps {
   message: string;
   confirmButtonText: string;
   isLoading: boolean;
+  // Shown under the message, for a dialog that stays open when the action fails.
+  error?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -16,6 +18,7 @@ export const ConfirmationDialog = ({
   title,
   message,
   isLoading,
+  error,
   onConfirm,
   onCancel,
 }: ConfirmationDialogProps) => {
@@ -24,6 +27,11 @@ export const ConfirmationDialog = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{message}</DialogContentText>
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions>
         <Button disabled={isLoading} onClick={onCancel}>

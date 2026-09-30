@@ -1,5 +1,6 @@
 import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 
+import { EditableProfilePicture } from '../../profile-picture/components/EditableProfilePicture';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { LearningStatus } from '../../../data/types/Trainee';
 import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
@@ -54,11 +55,18 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
 
   return (
     <Box display="flex" alignItems="center" gap={3}>
-      <Avatar
-        src={data?.pictureUrl ?? undefined}
-        alt={data?.displayName}
-        sx={{ width: PICTURE_SIZE, height: PICTURE_SIZE }}
-      />
+      <EditableProfilePicture
+        profileType="trainee"
+        profileId={traineeId}
+        pictureUrl={data?.pictureUrl ?? null}
+        variant="circular"
+      >
+        <Avatar
+          src={data?.pictureUrl ?? undefined}
+          alt={data?.displayName}
+          sx={{ width: PICTURE_SIZE, height: PICTURE_SIZE }}
+        />
+      </EditableProfilePicture>
 
       {/* Spaced with a gap instead of margins, which would override the social links offset. */}
       <Stack spacing={1} useFlexGap minWidth={0}>

@@ -1,7 +1,8 @@
-import { Interaction, ProfileType } from '../Interaction';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import { addInteraction, deleteInteraction, editInteraction } from '../api/api';
 
+import { Interaction } from '../Interaction';
+import { ProfileType } from '../../../data/types/ProfileType';
 import { interactionKeys } from './keys';
 
 // Also run after a failure, which may still have changed the list, like a colleague deleting the interaction first.

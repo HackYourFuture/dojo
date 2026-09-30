@@ -1,11 +1,12 @@
 import { Alert, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from '@mui/material';
-import { Interaction, ProfileType } from '../Interaction';
 import React, { useState } from 'react';
 
 import { AvatarWithTooltip } from './AvatarWithTooltip';
 import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
+import { Interaction } from '../Interaction';
 import { ListItemActions } from '../../../components/ListItemActions';
 import MarkdownText from '../../trainee-profile/components/MarkdownText';
+import { ProfileType } from '../../../data/types/ProfileType';
 import { formatDateForDisplay, formatDateTimeForDisplay } from '../../trainee-profile/utils/dateHelper';
 import { formatTextToFriendly } from '../../trainee-profile/utils/formHelper';
 import { useAuth } from '../../../auth/hooks/useAuth';

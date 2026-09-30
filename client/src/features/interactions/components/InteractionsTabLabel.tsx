@@ -1,6 +1,6 @@
 import { Badge, Box } from '@mui/material';
 
-import { ProfileType } from '../Interaction';
+import { ProfileType } from '../../../data/types/ProfileType';
 import { useGetInteractions } from '../data/interaction-queries';
 
 interface InteractionsTabLabelProps {

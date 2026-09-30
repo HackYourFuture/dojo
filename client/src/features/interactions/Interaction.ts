@@ -1,3 +1,5 @@
+import { ProfileType } from '../../data/types/ProfileType';
+
 export interface Interaction {
   readonly id: string;
   date: Date;
@@ -27,9 +29,6 @@ export enum InteractionType {
   HRMentorship = 'hr-mentorship',
   Other = 'other',
 }
-
-// The kinds of profile that have interactions, like the server's ProfileType.
-export type ProfileType = 'trainee' | 'organisation';
 
 // The types each profile offers when adding or editing an interaction. The server accepts every type on both.
 export const INTERACTION_TYPES: Record<ProfileType, InteractionType[]> = {

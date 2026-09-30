@@ -1,11 +1,9 @@
-import { Interaction, ProfileType } from '../Interaction';
+import { PROFILE_PATHS, ProfileType } from '../../../data/types/ProfileType';
 import { mapDomainToInteractionRequest, mapInteractionToDomain } from './mapper';
 
+import { Interaction } from '../Interaction';
 import { InteractionResponse } from './types';
 import axios from 'axios';
-
-// The path of each kind of profile in the API.
-const PROFILE_PATHS: Record<ProfileType, string> = { trainee: 'trainees', organisation: 'organisations' };
 
 const interactionsUrl = (profileType: ProfileType, profileId: string) => {
   return `/api/${PROFILE_PATHS[profileType]}/${profileId}/interactions`;

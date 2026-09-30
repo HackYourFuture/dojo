@@ -1,4 +1,4 @@
-import { ProfileType } from '../Interaction';
+import { ProfileType } from '../../../data/types/ProfileType';
 
 const INTERACTIONS_QUERY_KEY = 'interactions';
 
