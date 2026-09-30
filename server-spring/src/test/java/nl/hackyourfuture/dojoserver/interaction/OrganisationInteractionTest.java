@@ -2,6 +2,8 @@ package nl.hackyourfuture.dojoserver.interaction;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import nl.hackyourfuture.dojoserver.admin.user.User;
@@ -13,6 +15,7 @@ import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationRepository;
 import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationStatus;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.slack.SlackClient;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
@@ -36,7 +39,8 @@ import java.time.Instant;
 
 /**
  * Organisation interactions over MockMvc, signed in with real API tokens because the endpoints read the caller.
- * Transactional like TraineeListTest. Storage is mocked because deleting an organisation sweeps its logo folder.
+ * Transactional like TraineeListTest. Storage is mocked because deleting an organisation sweeps its logo folder,
+ * and Slack so nothing is posted.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -63,6 +67,8 @@ class OrganisationInteractionTest {
     private InteractionRepository interactionRepository;
     @MockitoBean
     private FileStorageService fileStorageService;
+    @MockitoBean
+    private SlackClient slackClient;
 
     private User reporter;
     private String reporterToken;
@@ -88,6 +94,7 @@ class OrganisationInteractionTest {
         assertThat(interactionRepository.findByOrganisationIdOrderByDateDesc(acme.getId()))
                 .singleElement()
                 .satisfies(stored -> assertThat(stored.getTraineeId()).isNull());
+        verify(slackClient).sendNotification(contains("Organisation: [Acme]"));
     }
 
     @ParameterizedTest

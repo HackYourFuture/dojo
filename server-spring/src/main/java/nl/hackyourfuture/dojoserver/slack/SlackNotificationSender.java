@@ -3,6 +3,7 @@ package nl.hackyourfuture.dojoserver.slack;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.config.DojoProperties;
 import nl.hackyourfuture.dojoserver.interaction.Interaction;
+import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.trainee.assessment.Assessment;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.EmploymentHistory;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
@@ -24,7 +25,7 @@ public class SlackNotificationSender {
 
     public void traineeCreated(String reporter, Trainee trainee) {
         var message = """
-                ### :sparkles: New trainee
+                ### :mortar_board: New trainee
                 Trainee: %s
                 By: %s
 
@@ -119,12 +120,61 @@ public class SlackNotificationSender {
         slackClient.sendNotification(message);
     }
 
+    public void organisationCreated(String reporter, Organisation organisation) {
+        var message = """
+                ### :office: New organisation
+                Organisation: %s
+                By: %s
+
+                | Status | Location |
+                | --- | --- |
+                | %s | %s |
+                ---""".formatted(
+                organisationLink(organisation),
+                reporter,
+                value(organisation.getStatus()),
+                cell(organisation.getLocation()));
+        slackClient.sendNotification(message);
+    }
+
+    public void organisationDeleted(String reporter, Organisation organisation) {
+        // No link: the profile it would point at is gone.
+        var message = """
+                ### :wastebasket: Organisation deleted
+                Organisation: %s
+                By: %s
+                ---""".formatted(organisation.getName(), reporter);
+        slackClient.sendNotification(message);
+    }
+
+    public void organisationInteractionCreated(String reporter, Organisation organisation, Interaction interaction) {
+        var message = """
+                ### :speech_balloon: Interaction logged
+                Organisation: %s
+                By: %s
+
+                | Type | Title |
+                | --- | --- |
+                | %s | %s |
+                ---""".formatted(organisationLink(organisation), reporter,
+                value(interaction.getType()), cell(interaction.getTitle()));
+        slackClient.sendNotification(message);
+    }
+
     private String traineeLink(Trainee trainee) {
+        return link(trainee.getDisplayName(), trainee.getProfilePath());
+    }
+
+    private String organisationLink(Organisation organisation) {
+        return link(organisation.getName(), organisation.getProfilePath());
+    }
+
+    private String link(String name, String path) {
         var absoluteUrl = UriComponentsBuilder.fromUriString(dojoProperties.baseUrl())
-                .path(trainee.getProfilePath())
+                .path(path)
                 .build()
                 .toUriString();
-        return String.format("[%s](%s)", cell(trainee.getDisplayName()), absoluteUrl);
+        return String.format("[%s](%s)", cell(name), absoluteUrl);
     }
 
     private static String value(Object object) {
