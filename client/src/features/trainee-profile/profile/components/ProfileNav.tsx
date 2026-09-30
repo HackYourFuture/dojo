@@ -1,6 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
 
+import { InteractionsTabLabel } from '../../../interactions/components/InteractionsTabLabel';
+
 interface ProfileNavProps {
+  traineeId: string;
   activeTab: string;
   onTabChange: (tab: string) => void;
 }
@@ -8,11 +11,12 @@ interface ProfileNavProps {
 /**
  * Component for navigating between trainee profile page tabs.
  *
- * @param {string} activeTab trainee id.
+ * @param {string} traineeId trainee id.
+ * @param {string} activeTab the active tab.
  * @param {string} onTabChange callback for when tab is changed.
  * @returns {ReactNode} A React element that renders trainee profile page tabs and active tab logic.
  */
-const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
+const ProfileNav = ({ traineeId, activeTab, onTabChange }: ProfileNavProps) => {
   return (
     // Sits on the bottom border of the tab bar, so the active tab line covers it.
     <Box display="flex" alignSelf="flex-end" minWidth={0}>
@@ -27,7 +31,7 @@ const ProfileNav = ({ activeTab, onTabChange }: ProfileNavProps) => {
         <Tab label="Contact" value="contact" />
         <Tab label="Education" value="education" />
         <Tab label="Employment" value="employment" />
-        <Tab label="Interactions" value="interactions" />
+        <Tab label={<InteractionsTabLabel profileType="trainee" profileId={traineeId} />} value="interactions" />
       </Tabs>
     </Box>
   );

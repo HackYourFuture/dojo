@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { EditSaveButton } from '../../trainee-profile/profile/components/EditSaveButton';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
+import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
 import MuiAlert from '@mui/material/Alert';
 import OrganisationHeader from './OrganisationHeader';
 import OrganisationInfo from './OrganisationInfo';
@@ -21,7 +22,7 @@ interface OrganisationProfileProps {
 
 /** The organisation profile: the header, the tabs and the content of the active tab. */
 const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
-  const [activeTab, setActiveTab] = useState('organisation');
+  const [activeTab, setActiveTab] = useState('overview');
   const [isEditMode, setIsEditMode] = useState(false);
   // A copy of the organisation with the changes made while editing.
   const [editedOrganisation, setEditedOrganisation] = useState<Organisation>(organisation);
@@ -109,8 +110,11 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
               variant="scrollable"
               scrollButtons="auto"
             >
-              <Tab label="Organisation" value="organisation" />
-              <Tab label="Interactions" value="interactions" />
+              <Tab label="Overview" value="overview" />
+              <Tab
+                label={<InteractionsTabLabel profileType="organisation" profileId={organisation.id} />}
+                value="interactions"
+              />
             </Tabs>
           </Box>
           {showsEditButtons && (
@@ -135,7 +139,7 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
       </Snackbar>
 
       <Box paddingY={3}>
-        {activeTab === 'organisation' && (
+        {activeTab === 'overview' && (
           <OrganisationInfo
             organisation={isEditMode ? editedOrganisation : organisation}
             setOrganisation={setEditedOrganisation}

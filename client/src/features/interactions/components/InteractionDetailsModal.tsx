@@ -8,14 +8,14 @@ import {
   FormHelperText,
   Modal,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from '@mui/material';
 import { Interaction, InteractionType } from '../Interaction';
 
+import FormDateTimeField from './FormDateTimeField';
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
-import { formatDate } from '../../trainee-profile/utils/dateHelper';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 
 type InteractionDetailsModalProps = {
@@ -42,7 +42,8 @@ export const InteractionDetailsModal = ({
 }: InteractionDetailsModalProps) => {
   const [interactionFields, setInteractionFields] = useState<Partial<Interaction>>({
     id: initialInteraction?.id || '',
-    date: initialInteraction?.date || new Date(),
+    // Now, without the seconds the picker does not show.
+    date: initialInteraction?.date || dayjs().startOf('minute').toDate(),
     type: initialInteraction?.type || undefined,
     title: initialInteraction?.title || '',
     details: initialInteraction?.details || '',
@@ -63,9 +64,6 @@ export const InteractionDetailsModal = ({
   const handleChange = (field: keyof Interaction) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (field === 'date') {
-      setDateError(false);
-    }
     if (field === 'details') {
       setDetailsError(false);
     }
@@ -75,7 +73,15 @@ export const InteractionDetailsModal = ({
 
     setInteractionFields((prev) => ({
       ...prev,
-      [field]: field === 'date' ? (value ? new Date(value) : undefined) : value,
+      [field]: value,
+    }));
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setDateError(false);
+    setInteractionFields((prev) => ({
+      ...prev,
+      date: date ?? undefined,
     }));
   };
 
@@ -164,16 +170,13 @@ export const InteractionDetailsModal = ({
               {typeError && <FormHelperText error>Type is required</FormHelperText>}
             </Box>
             <FormControl fullWidth>
-              <TextField
+              <FormDateTimeField
                 disabled={isLoading}
-                id="date"
-                name="date"
                 label="Interaction Date"
-                type="date"
-                value={formatDate(interactionFields.date)}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange('date')}
+                value={interactionFields.date}
+                onChange={handleDateChange}
                 error={dateError}
+                required
               />
               {dateError && <FormHelperText error>Date is required</FormHelperText>}
             </FormControl>
