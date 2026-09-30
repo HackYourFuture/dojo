@@ -1,6 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { FieldRow, ProfileSection } from '../../trainee-profile/profile/components/ProfileSection';
 
+import { ContactPersons } from '../contact-persons/ContactPersons';
 import MarkdownText from '../../trainee-profile/components/MarkdownText';
 import { Organisation } from '../Organisation';
 import { ProfileSelect } from '../../trainee-profile/profile/components/ProfileSelect';
@@ -14,7 +15,7 @@ interface OrganisationInfoProps {
   isEditing: boolean;
 }
 
-/** The organisation tab, which shows the details of the organisation and edits them. */
+/** The organisation tab: the details and notes, edited with the profile, and the contacts, managed on their own. */
 const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: OrganisationInfoProps) => {
   // The dropdown reports its value instead of an event.
   const handleValueChange = (name: string, value: string | boolean | null) => {
@@ -77,6 +78,8 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
           />
         </FieldRow>
       </ProfileSection>
+
+      <ContactPersons organisationId={organisation.id} />
 
       {/* The section title labels the field. The notes are written in Markdown, and shown formatted. */}
       <ProfileSection title="Notes">

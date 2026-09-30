@@ -28,7 +28,7 @@ export const mapOrganisationToDomain = (organisation: OrganisationResponse): Org
 };
 
 // The API rejects empty text for most fields, so an empty field is sent as null.
-const isBlank = (value: unknown) => typeof value === 'string' && value.trim() === '';
+export const isBlank = (value: unknown) => typeof value === 'string' && value.trim() === '';
 
 export const mapDomainToUpdateOrganisationRequest = (changes: OrganisationChanges): UpdateOrganisationRequest => {
   const request: UpdateOrganisationRequest = { ...changes };
