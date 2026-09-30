@@ -1,8 +1,10 @@
 import { QueryClient, QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 import { deletePicture, uploadPicture } from '../api/api';
 
+import { PercentCrop } from 'react-image-crop';
 import { ProfilePicture } from '../ProfilePicture';
 import { ProfileType } from '../../../data/types/ProfileType';
+import { cropPicture } from '../utils/pictureHelper';
 import { organisationKeys } from '../../organisations/data/keys';
 import { searchKeys } from '../../search/data/keys';
 import { traineeKeys } from '../../trainee-profile/data/keys';
@@ -29,12 +31,14 @@ const updatePictureQueries = (
   queryClient.resetQueries({ queryKey: searchKeys.all() });
 };
 
-/** Hook to upload a new picture for a trainee or an organisation. */
+/** Hook to crop a new picture for a trainee or an organisation and upload it. */
 export const useUploadPicture = (profileType: ProfileType, profileId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (picture: Blob) => uploadPicture(profileType, profileId, picture),
+    // Crops here too, so saving shows as busy while a big photo is encoded.
+    mutationFn: async ({ image, crop }: { image: HTMLImageElement; crop: PercentCrop }) =>
+      uploadPicture(profileType, profileId, await cropPicture(image, crop)),
     onSuccess: (picture) => updatePictureQueries(queryClient, profileType, profileId, picture),
   });
 };

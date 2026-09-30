@@ -1,11 +1,5 @@
 import { PercentCrop } from 'react-image-crop';
 
-// The size of the pictures the server stores, so it does not scale them again.
-const PICTURE_SIZE = 700;
-
-// The crop a new picture starts with: the whole image, fitted in the square.
-export const WHOLE_IMAGE_CROP: PercentCrop = { unit: '%', x: 0, y: 0, width: 100, height: 100 };
-
 // Read as a data URL, because the CSP in nginx.conf does not allow blob: images.
 export const loadImageFile = (file: File) => {
   return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -34,31 +28,31 @@ export const loadImageFile = (file: File) => {
   });
 };
 
-// Crops the image to a square PNG. The crop is in percent of the white square the cropper centres the image in.
+// The crop is in percent of the white square the cropper centres the image in, so it can take in some of the white.
 export const cropPicture = (image: HTMLImageElement, crop: PercentCrop) => {
   const { naturalWidth: width, naturalHeight: height } = image;
   const side = Math.max(width, height);
-  const scale = PICTURE_SIZE / ((crop.width / 100) * side);
+  const size = Math.round((crop.width / 100) * side);
+  // Where the crop starts on the image, negative when it starts in the white.
+  const left = Math.round((crop.x / 100) * side - (side - width) / 2);
+  const top = Math.round((crop.y / 100) * side - (side - height) / 2);
 
   const canvas = document.createElement('canvas');
-  canvas.width = PICTURE_SIZE;
-  canvas.height = PICTURE_SIZE;
+  canvas.width = size;
+  canvas.height = size;
   const context = canvas.getContext('2d')!;
-  // White where the crop is outside the image.
   context.fillStyle = '#fff';
-  context.fillRect(0, 0, PICTURE_SIZE, PICTURE_SIZE);
-  context.imageSmoothingQuality = 'high';
-  const x = ((side - width) / 2 - (crop.x / 100) * side) * scale;
-  const y = ((side - height) / 2 - (crop.y / 100) * side) * scale;
-  context.drawImage(image, x, y, width * scale, height * scale);
+  context.fillRect(0, 0, size, size);
+  context.drawImage(image, -left, -top);
 
   return new Promise<Blob>((resolve, reject) => {
+    // A JPEG, because a PNG of a phone photo is bigger than the server's 10 MB limit.
     canvas.toBlob((blob) => {
       if (blob) {
         resolve(blob);
       } else {
         reject(new Error('The picture could not be cropped.'));
       }
-    }, 'image/png');
+    }, 'image/jpeg');
   });
 };

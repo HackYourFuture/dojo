@@ -6,7 +6,7 @@ import axios from 'axios';
 // Replaces the current picture of the profile, and returns the URLs of the new one.
 export const uploadPicture = async (profileType: ProfileType, profileId: string, picture: Blob) => {
   const formData = new FormData();
-  formData.append('picture', picture, 'picture.png');
+  formData.append('picture', picture, 'picture.jpg');
   const { data } = await axios.put<ProfilePicture>(`/api/${PROFILE_PATHS[profileType]}/${profileId}/picture`, formData);
   return data;
 };

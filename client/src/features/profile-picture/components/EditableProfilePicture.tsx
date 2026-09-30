@@ -1,12 +1,12 @@
 import { Box, IconButton, Stack, Tooltip } from '@mui/material';
 import { ReactNode, useState } from 'react';
-import { useDeletePicture, useUploadPicture } from '../data/mutations';
 
 import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { PictureUploadDialog } from './PictureUploadDialog';
 import { ProfileType } from '../../../data/types/ProfileType';
+import { useDeletePicture } from '../data/mutations';
 
 interface EditableProfilePictureProps {
   profileType: ProfileType;
@@ -30,22 +30,11 @@ export const EditableProfilePicture = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
-    mutate: uploadPicture,
-    isPending: isUploading,
-    error: uploadError,
-    reset: resetUpload,
-  } = useUploadPicture(profileType, profileId);
-  const {
     mutate: deletePicture,
     isPending: isDeleting,
     error: deleteError,
     reset: resetDelete,
   } = useDeletePicture(profileType, profileId);
-
-  const closeUploadDialog = () => {
-    setIsUploadDialogOpen(false);
-    resetUpload();
-  };
 
   const closeDeleteDialog = () => {
     setIsDeleteDialogOpen(false);
@@ -108,11 +97,10 @@ export const EditableProfilePicture = ({
 
       <PictureUploadDialog
         key={`upload-picture-${isUploadDialogOpen}`}
+        profileType={profileType}
+        profileId={profileId}
         isOpen={isUploadDialogOpen}
-        isLoading={isUploading}
-        error={uploadError?.message ?? ''}
-        onClose={closeUploadDialog}
-        onSave={(picture) => uploadPicture(picture, { onSuccess: closeUploadDialog })}
+        onClose={() => setIsUploadDialogOpen(false)}
       />
       <ConfirmationDialog
         isOpen={isDeleteDialogOpen}
