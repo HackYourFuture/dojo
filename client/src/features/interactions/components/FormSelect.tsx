@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, SxProps } from '@mui/material';
 
 import React from 'react';
-import { formatTextToFriendly } from '../../utils/formHelper';
+import { formatTextToFriendly } from '../../trainee-profile/utils/formHelper';
 
 interface FormSelectProps {
   id: string;
@@ -32,7 +32,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
 
       <Select id={id} name={id} value={value} onChange={onChange} label={label} sx={sx} disabled={disabled}>
         {options.map((option: string) => {
-          // Convert the option to lowercase and replace spaces with hyphens
+          // For example, 'in-person' becomes 'In person'.
           const label = formatTextToFriendly(option);
 
           return (

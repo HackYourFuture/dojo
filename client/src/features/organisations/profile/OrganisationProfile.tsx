@@ -3,6 +3,7 @@ import { EDITABLE_ORGANISATION_FIELDS, Organisation, OrganisationChanges } from 
 import { useEffect, useState } from 'react';
 
 import { EditSaveButton } from '../../trainee-profile/profile/components/EditSaveButton';
+import InteractionsInfo from '../../interactions/InteractionsInfo';
 import MuiAlert from '@mui/material/Alert';
 import OrganisationHeader from './OrganisationHeader';
 import OrganisationInfo from './OrganisationInfo';
@@ -80,7 +81,7 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
     setIsEditMode(false);
   };
 
-  // The interactions tab has nothing to edit, so it only needs Save and Cancel while the profile is being edited.
+  // Interactions are edited one by one, so their tab only needs Save and Cancel while the profile is being edited.
   const showsEditButtons = activeTab !== 'interactions' || isEditMode;
 
   return (
@@ -133,7 +134,6 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
         </MuiAlert>
       </Snackbar>
 
-      {/* The interactions are not built yet, so their tab is empty. */}
       <Box paddingY={3}>
         {activeTab === 'organisation' && (
           <OrganisationInfo
@@ -142,6 +142,7 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
             isEditing={isEditMode}
           />
         )}
+        {activeTab === 'interactions' && <InteractionsInfo profileType="organisation" profileId={organisation.id} />}
       </Box>
     </Box>
   );

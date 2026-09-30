@@ -1,6 +1,6 @@
 import { InteractionRequest, InteractionResponse } from './types';
 
-import { Interaction } from '../models/interaction';
+import { Interaction } from '../Interaction';
 
 export const mapInteractionToDomain = (interaction: InteractionResponse): Interaction => {
   return {

@@ -11,14 +11,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Interaction, InteractionType } from '../models/interaction';
+import { Interaction, InteractionType } from '../Interaction';
 
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
-import { formatDate } from '../../utils/dateHelper';
+import { formatDate } from '../../trainee-profile/utils/dateHelper';
 import { useState } from 'react';
-
-const types = Object.values(InteractionType);
 
 type InteractionDetailsModalProps = {
   isOpen: boolean;
@@ -28,6 +26,8 @@ type InteractionDetailsModalProps = {
   onConfirmAdd: (t: Interaction) => void;
   onConfirmEdit: (t: Interaction) => void;
   initialInteraction: Interaction | null;
+  // The types to pick from, which differ per profile.
+  types: InteractionType[];
 };
 
 export const InteractionDetailsModal = ({
@@ -38,6 +38,7 @@ export const InteractionDetailsModal = ({
   onConfirmAdd,
   onConfirmEdit,
   initialInteraction,
+  types,
 }: InteractionDetailsModalProps) => {
   const [interactionFields, setInteractionFields] = useState<Partial<Interaction>>({
     id: initialInteraction?.id || '',
@@ -149,16 +150,19 @@ export const InteractionDetailsModal = ({
           </Typography>
 
           <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
-            <FormSelect
-              disabled={isLoading}
-              id="interactionType"
-              label="Type"
-              value={interactionFields.type ?? ''}
-              onChange={handleTypeChange}
-              optionLabels={types}
-              required
-            />
-            {typeError && <FormHelperText error>Type is required</FormHelperText>}
+            {/* Keeps the error under the type, not between the type and the date. */}
+            <Box width="100%">
+              <FormSelect
+                disabled={isLoading}
+                id="interactionType"
+                label="Type"
+                value={interactionFields.type ?? ''}
+                onChange={handleTypeChange}
+                optionLabels={types}
+                required
+              />
+              {typeError && <FormHelperText error>Type is required</FormHelperText>}
+            </Box>
             <FormControl fullWidth>
               <TextField
                 disabled={isLoading}

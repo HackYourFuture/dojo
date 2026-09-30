@@ -79,6 +79,7 @@ Global data management:
 ```
 features/
 ├── dashboard/               # Dashboard feature
+├── interactions/            # Interactions tab of the trainee and organisation profiles
 ├── login/                   # Login feature
 ├── search/                  # Search feature
 └── trainee-profile/         # Trainee profile feature (see detailed structure below)
@@ -164,8 +165,6 @@ trainee-profile/
 │   └── EducationInfo.tsx
 ├── employment/                   # Employment information tab, with the employment history
 │   └── EmploymentInfo.tsx
-├── interactions/                 # Interactions tab
-│   └── InteractionsInfo.tsx
 └── create/                       # Dialog to add a trainee
 ```
 
