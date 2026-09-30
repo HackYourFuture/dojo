@@ -1,4 +1,4 @@
-import { Alert, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Alert, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from '@mui/material';
 import { Interaction, ProfileType } from '../Interaction';
 import React, { useState } from 'react';
 
@@ -6,7 +6,7 @@ import { AvatarWithTooltip } from './AvatarWithTooltip';
 import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 import { ListItemActions } from '../../../components/ListItemActions';
 import MarkdownText from '../../trainee-profile/components/MarkdownText';
-import { formatDateForDisplay } from '../../trainee-profile/utils/dateHelper';
+import { formatDateForDisplay, formatDateTimeForDisplay } from '../../trainee-profile/utils/dateHelper';
 import { formatTextToFriendly } from '../../trainee-profile/utils/formHelper';
 import { useAuth } from '../../../auth/hooks/useAuth';
 import { useDeleteInteraction } from '../data/mutations';
@@ -113,7 +113,9 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profi
                           <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
                           <Typography>{interaction.title}</Typography>
                         </Box>
-                        <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
+                        <Tooltip title={formatDateTimeForDisplay(interaction.date)} placement="top">
+                          <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>
+                        </Tooltip>
                       </Box>
                     }
                     secondary={<MarkdownText>{interaction.details}</MarkdownText>}

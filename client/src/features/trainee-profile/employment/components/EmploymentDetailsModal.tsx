@@ -19,7 +19,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { formatDate, today } from '../../utils/dateHelper';
+import { FormDateField } from '../../../../components/FormDateField';
+import { today } from '../../utils/dateHelper';
 
 interface EmploymentDetailsModalProps {
   isOpen: boolean;
@@ -31,11 +32,8 @@ interface EmploymentDetailsModalProps {
   initialEmployment: EmploymentHistory | null;
 }
 
-// The inputs give text: the dates as YYYY-MM-DD and the fee as a number string.
+// The inputs give text: the fee as a number string.
 const parseInputValue = (name: string, value: string) => {
-  if (name === 'startDate' || name === 'endDate') {
-    return value ? new Date(value) : null;
-  }
   if (name === 'feeAmount') {
     return value === '' ? null : Number(value);
   }
@@ -83,6 +81,12 @@ export const EmploymentDetailsModal = ({
       [name]: parseInputValue(name, value),
     }));
   };
+  const handleDateChange = (name: 'startDate' | 'endDate') => (date: Date | null) => {
+    setEmploymentFields((prevEmployment: EmploymentHistory) => ({
+      ...prevEmployment,
+      [name]: date,
+    }));
+  };
   const handleEmploymentCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     setEmploymentFields((prevEmployment: EmploymentHistory) => ({
@@ -90,7 +94,7 @@ export const EmploymentDetailsModal = ({
       [name]: checked,
       feeAmount: checked ? employmentFields.feeAmount : null,
     }));
-  }
+  };
 
   const handleEmploymentSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
@@ -108,10 +112,10 @@ export const EmploymentDetailsModal = ({
       role: !employmentFields.role,
       startDate: !employmentFields.startDate,
       feeAmount: employmentFields.feeCollected && (!employmentFields.feeAmount || employmentFields.feeAmount <= 0),
-    }
+    };
 
     setRequiredFieldError(newErrors);
-    const errors = Object.values(newErrors).some(Boolean)
+    const errors = Object.values(newErrors).some(Boolean);
     if (errors) {
       return;
     }
@@ -202,38 +206,30 @@ export const EmploymentDetailsModal = ({
           </FormControl>
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
-              <TextField
+              <FormDateField
                 required
                 disabled={isLoading}
-                id="startDate"
-                name="startDate"
                 label="Start date"
-                type="date"
-                value={formatDate(employmentFields.startDate)}
-                slotProps={{ inputLabel: { shrink: true } }}
+                value={employmentFields.startDate}
                 error={requiredFieldError.startDate}
-                onChange={handleEmploymentChange}
-                fullWidth
+                onChange={handleDateChange('startDate')}
               />
               {requiredFieldError.startDate && <FormHelperText error>Start date is required</FormHelperText>}
             </FormControl>
             <FormControl fullWidth>
-              <TextField
+              <FormDateField
                 disabled={isLoading}
-                id="endDate"
-                name="endDate"
                 label="End date"
-                type="date"
-                value={formatDate(employmentFields.endDate)}
-                slotProps={{ inputLabel: { shrink: true } }}
-                onChange={handleEmploymentChange}
-                fullWidth
+                value={employmentFields.endDate}
+                onChange={handleDateChange('endDate')}
+                clearable
               />
             </FormControl>
           </Box>
           <Box display="flex" flexDirection="row" gap={2}>
             <FormControl fullWidth>
-              <FormControlLabel sx={{ pl: 1 }}
+              <FormControlLabel
+                sx={{ pl: 1 }}
                 control={
                   <Checkbox
                     disabled={isLoading}

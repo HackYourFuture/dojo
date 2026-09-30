@@ -121,7 +121,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
           borderBottom={1}
           borderColor="divider"
         >
-          <ProfileNav activeTab={activeTab} onTabChange={handleTabChange} />
+          <ProfileNav traineeId={id} activeTab={activeTab} onTabChange={handleTabChange} />
           {showsEditButtons && (
             <EditSaveButton
               isEditMode={isEditMode}

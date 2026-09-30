@@ -9,6 +9,8 @@ export const useGetInteractions = (profileType: ProfileType, profileId: string) 
     queryKey: interactionKeys.list(profileType, profileId),
     queryFn: () => getInteractions(profileType, profileId),
     enabled: !!profileId,
+    // The tab label loads the list with the profile, so opening the tab reuses it. Changes invalidate it.
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 };

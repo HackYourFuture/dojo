@@ -16,7 +16,8 @@ import {
 } from '@mui/material';
 import { Assessment, AssessmentResult, AssessmentType } from '../models/assessment';
 
-import { formatDate, today } from '../../../utils/dateHelper';
+import { FormDateField } from '../../../../../components/FormDateField';
+import { today } from '../../../utils/dateHelper';
 import { useState } from 'react';
 
 type AssessmentDetailsModalProps = {
@@ -29,11 +30,8 @@ type AssessmentDetailsModalProps = {
   initialAssessment: Assessment | null;
 };
 
-// The inputs give text: the date as YYYY-MM-DD and the score as a number string.
+// The inputs give text: the score as a number string.
 const parseInputValue = (name: string, value: string) => {
-  if (name === 'date') {
-    return value ? new Date(value) : undefined;
-  }
   if (name === 'score') {
     return value === '' ? null : Number(value);
   }
@@ -75,13 +73,18 @@ export const AssessmentDetailsModal = ({
     if (name === 'score') {
       setScoreError(false);
     }
-    if (name === 'date') {
-      setDateError(false);
-    }
 
     setAssessmentFields((prevAssessment) => ({
       ...prevAssessment,
       [name]: parseInputValue(name, value),
+    }));
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setDateError(false);
+    setAssessmentFields((prevAssessment) => ({
+      ...prevAssessment,
+      date: date ?? undefined,
     }));
   };
 
@@ -176,17 +179,12 @@ export const AssessmentDetailsModal = ({
             </FormControl>
 
             <FormControl fullWidth error={dateError}>
-              <TextField
+              <FormDateField
                 error={dateError}
                 disabled={isLoading}
-                id="date"
-                name="date"
                 label="Assessment date"
-                type="date"
-                value={formatDate(assessmentFields.date)}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-                fullWidth
+                value={assessmentFields.date}
+                onChange={handleDateChange}
               />
               {dateError && <FormHelperText>Date is required</FormHelperText>}
             </FormControl>
