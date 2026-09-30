@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationPictureResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationRequest;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -98,9 +100,11 @@ public class OrganisationController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public OrganisationResponse createOrganisation(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Valid @RequestBody
             OrganisationRequest request) {
-        return organisationService.createOrganisation(request);
+        return organisationService.createOrganisation(currentUser, request);
     }
 
     @PatchMapping("/{id}")
@@ -141,10 +145,12 @@ public class OrganisationController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public void deleteOrganisation(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the organisation to delete", example = "Xk2pQ9rTbW")
             @PathVariable
             String id) {
-        organisationService.deleteOrganisation(id);
+        organisationService.deleteOrganisation(currentUser, id);
     }
 
     // Logo methods

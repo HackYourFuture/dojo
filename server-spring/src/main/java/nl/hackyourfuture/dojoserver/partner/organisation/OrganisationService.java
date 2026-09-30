@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationPictureResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationRequest;
@@ -13,6 +14,7 @@ import nl.hackyourfuture.dojoserver.picture.PictureService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,6 +32,7 @@ public class OrganisationService {
     private final JsonMergePatch jsonMergePatch;
     private final Validator validator;
     private final PictureService pictureService;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public Page<OrganisationSummaryResponse> getOrganisations(Sort.Direction direction, int page, int size) {
@@ -44,7 +47,7 @@ public class OrganisationService {
     }
 
     @Transactional
-    public OrganisationResponse createOrganisation(OrganisationRequest request) {
+    public OrganisationResponse createOrganisation(AuthenticatedUser currentUser, OrganisationRequest request) {
         var newOrganisation = Organisation.builder()
                 .id(RandomUtils.generateRandomId())
                 .name(request.name())
@@ -55,7 +58,9 @@ public class OrganisationService {
                 .notes(request.notes())
                 .build();
 
-        return OrganisationResponse.from(organisationRepository.save(newOrganisation));
+        Organisation created = organisationRepository.save(newOrganisation);
+        slackNotificationSender.organisationCreated(currentUser.name(), created);
+        return OrganisationResponse.from(created);
     }
 
     // Partial update: the sent fields overlay the stored organisation, and the merged whole is validated.
@@ -81,12 +86,13 @@ public class OrganisationService {
     }
 
     @Transactional
-    public void deleteOrganisation(String id) {
+    public void deleteOrganisation(AuthenticatedUser currentUser, String id) {
         Organisation organisation = findOrganisation(id);
         organisationRepository.delete(organisation);
         // Flush before touching storage, so a delete the database refuses keeps the logo.
         organisationRepository.flush();
         pictureService.deleteAll(organisation);
+        slackNotificationSender.organisationDeleted(currentUser.name(), organisation);
     }
 
     @Transactional(readOnly = true)

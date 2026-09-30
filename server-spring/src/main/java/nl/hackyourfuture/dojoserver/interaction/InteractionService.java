@@ -59,11 +59,17 @@ public class InteractionService {
 
         Interaction created = interactionRepository.save(builder.build());
 
-        // Only trainee interactions go to Slack.
-        if (profile == ProfileType.TRAINEE) {
-            var trainee = traineeRepository.findById(profileId)
-                    .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
-            slackNotificationSender.traineeInteractionCreated(currentUser.name(), trainee, created);
+        switch (profile) {
+            case TRAINEE -> {
+                var trainee = traineeRepository.findById(profileId)
+                        .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
+                slackNotificationSender.traineeInteractionCreated(currentUser.name(), trainee, created);
+            }
+            case ORGANISATION -> {
+                var organisation = organisationRepository.findById(profileId)
+                        .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
+                slackNotificationSender.organisationInteractionCreated(currentUser.name(), organisation, created);
+            }
         }
 
         return InteractionResponse.from(created);

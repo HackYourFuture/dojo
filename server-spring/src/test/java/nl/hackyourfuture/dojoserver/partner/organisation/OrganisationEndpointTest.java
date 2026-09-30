@@ -1,14 +1,22 @@
 package nl.hackyourfuture.dojoserver.partner.organisation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.jayway.jsonpath.JsonPath;
+import nl.hackyourfuture.dojoserver.admin.user.User;
+import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
 import nl.hackyourfuture.dojoserver.filestorage.FileStorageService;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPersonRepository;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.slack.SlackClient;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +35,8 @@ import java.util.Map;
 
 /**
  * The organisation endpoints over MockMvc. Transactional, because it runs against the local development database,
- * whose own organisations share the list with the seeded ones. Storage is mocked because CI has no S3.
+ * whose own organisations share the list with the seeded ones. Storage is mocked because CI has no S3, and Slack
+ * so nothing is posted. Create and delete read the caller, so they sign in with a real token.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,8 +52,27 @@ class OrganisationEndpointTest {
     private OrganisationRepository organisationRepository;
     @Autowired
     private ContactPersonRepository contactPersonRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
     @MockitoBean
     private FileStorageService fileStorageService;
+    @MockitoBean
+    private SlackClient slackClient;
+
+    private String token;
+
+    @BeforeEach
+    void givenASignedInUser() {
+        User user = userRepository.save(User.builder()
+                .id(RandomUtils.generateRandomId())
+                .email(RandomUtils.generateRandomId() + "@example.org")
+                .name("Reporter")
+                .isActive(true)
+                .build());
+        token = tokenService.issue(user, TokenType.API_TOKEN).plaintextToken();
+    }
 
     // ------------------------------------------------------------------ create
 
@@ -63,6 +91,7 @@ class OrganisationEndpointTest {
             assertThat(created.thumbnailUrl()).isNull();
             assertThat(created.profilePath()).isEqualTo("/organisation/acme-b-v_" + created.id());
             assertThat(organisationRepository.findById(created.id())).isPresent();
+            verify(slackClient).sendNotification(contains(created.profilePath()));
         });
     }
 
@@ -121,7 +150,7 @@ class OrganisationEndpointTest {
         assertThat(patch(unknown, """
                 {"status": "inactive"}
                 """)).hasStatus(404);
-        assertThat(mvc.delete().uri(ORGANISATIONS + "/{id}", unknown)).hasStatus(404);
+        assertThat(delete(unknown)).hasStatus(404);
     }
 
     // ------------------------------------------------------------------ update
@@ -168,13 +197,14 @@ class OrganisationEndpointTest {
                 .name("Jane Roe")
                 .build());
 
-        assertThat(mvc.delete().uri(ORGANISATIONS + "/{id}", organisation.getId())).hasStatus(204);
+        assertThat(delete(organisation.getId())).hasStatus(204);
 
         // The cascade runs in the database, so write the delete before asking it.
         organisationRepository.flush();
         assertThat(organisationRepository.existsById(organisation.getId())).isFalse();
         assertThat(contactPersonRepository.existsById(contactPerson.getId())).isFalse();
         verify(fileStorageService).deleteAllWithPrefix("images/organisations/" + organisation.getId() + "/");
+        verify(slackClient).sendNotification(contains("Organisation deleted"));
     }
 
     // ------------------------------------------------------------------ list
@@ -221,7 +251,12 @@ class OrganisationEndpointTest {
     // ------------------------------------------------------------------ helpers
 
     private MvcTestResult post(String body) {
-        return mvc.post().uri(ORGANISATIONS).contentType(MediaType.APPLICATION_JSON).content(body).exchange();
+        return mvc.post().uri(ORGANISATIONS).header(AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(body).exchange();
+    }
+
+    private MvcTestResult delete(String id) {
+        return mvc.delete().uri(ORGANISATIONS + "/{id}", id).header(AUTHORIZATION, "Bearer " + token).exchange();
     }
 
     private MvcTestResult patch(String id, String body) {
