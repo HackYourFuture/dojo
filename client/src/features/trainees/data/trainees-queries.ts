@@ -1,5 +1,6 @@
-import { Cohort, TraineeSummary, TraineeSummaryPage } from '../models/trainee-summary';
+import { Cohort, TraineeSummary } from '../models/trainee-summary';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
+import { Page, getLoadedItems, getNextPageParam } from '../../../data/pagination';
 
 import { LearningStatus } from '../../../data/types/Trainee';
 import { traineeListKeys } from './keys';
@@ -21,17 +22,10 @@ const compareTrainees = (a: TraineeSummary, b: TraineeSummary) => {
  * Groups the loaded pages by cohort, keeping the server's order of the cohorts.
  * Defined outside the hook so that React Query only runs it when the pages change.
  */
-const selectCohorts = (data: InfiniteData<TraineeSummaryPage>): Cohort[] => {
+const selectCohorts = (data: InfiniteData<Page<TraineeSummary>>): Cohort[] => {
   const cohorts = new Map<number | null, TraineeSummary[]>();
-  const seenIds = new Set<string>();
 
-  for (const trainee of data.pages.flatMap((page) => page.trainees)) {
-    // Pages are fetched by offset, so a trainee added or removed while scrolling can repeat a row.
-    if (seenIds.has(trainee.id)) {
-      continue;
-    }
-    seenIds.add(trainee.id);
-
+  for (const trainee of getLoadedItems(data)) {
     const cohort = cohorts.get(trainee.cohort);
     if (cohort) {
       cohort.push(trainee);
@@ -51,8 +45,7 @@ export const useGetTraineesByCohort = () => {
     queryKey: traineeListKeys.list(),
     queryFn: ({ pageParam }) => getTraineeSummaries(pageParam),
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _allPages, lastPageParam) =>
-      lastPageParam + 1 < lastPage.totalPages ? lastPageParam + 1 : undefined,
+    getNextPageParam,
     select: selectCohorts,
     refetchOnWindowFocus: false, // Prevent refetching on window focus
   });

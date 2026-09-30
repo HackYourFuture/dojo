@@ -10,7 +10,8 @@ export const useUpdateOrganisation = (organisationId: string) => {
 
   return useMutation({
     mutationFn: (changes: OrganisationChanges) => updateOrganisation(organisationId, changes),
-    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: organisationKeys.details(organisationId) }),
+    // The response is the saved organisation, so the profile shows it without loading it again.
+    onSuccess: (organisation) => queryClient.setQueryData(organisationKeys.details(organisationId), organisation),
   });
 };
 
@@ -18,5 +19,7 @@ export const useUpdateOrganisation = (organisationId: string) => {
 export const useCreateOrganisation = () => {
   return useMutation({
     mutationFn: (newOrganisation: NewOrganisation) => createOrganisation(newOrganisation),
+    // A failed request may still have created it, and nothing stops a second organisation with the same name.
+    retry: false,
   });
 };

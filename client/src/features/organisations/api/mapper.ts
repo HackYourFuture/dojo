@@ -2,16 +2,9 @@ import {
   CreateOrganisationRequest,
   OrganisationResponse,
   OrganisationSummaryResponse,
-  PagedModel,
   UpdateOrganisationRequest,
 } from './types';
-import {
-  NewOrganisation,
-  Organisation,
-  OrganisationChanges,
-  OrganisationSummary,
-  OrganisationSummaryPage,
-} from '../Organisation';
+import { NewOrganisation, Organisation, OrganisationChanges, OrganisationSummary } from '../Organisation';
 
 export const mapOrganisationSummaryToDomain = (organisation: OrganisationSummaryResponse): OrganisationSummary => {
   return {
@@ -23,15 +16,6 @@ export const mapOrganisationSummaryToDomain = (organisation: OrganisationSummary
     linkedinUrl: organisation.linkedinUrl,
     location: organisation.location,
     status: organisation.status,
-  };
-};
-
-export const mapOrganisationSummaryPageToDomain = (
-  page: PagedModel<OrganisationSummaryResponse>
-): OrganisationSummaryPage => {
-  return {
-    organisations: page.content.map((organisation) => mapOrganisationSummaryToDomain(organisation)),
-    totalPages: page.page.totalPages,
   };
 };
 

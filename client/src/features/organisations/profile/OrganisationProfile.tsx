@@ -22,7 +22,7 @@ interface OrganisationProfileProps {
 const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
   const [activeTab, setActiveTab] = useState('organisation');
   const [isEditMode, setIsEditMode] = useState(false);
-  // The organisation with the changes made while editing.
+  // A copy of the organisation with the changes made while editing.
   const [editedOrganisation, setEditedOrganisation] = useState<Organisation>(organisation);
   const { isPending: isSaveLoading, mutate: updateOrganisation } = useUpdateOrganisation(organisation.id);
 
@@ -41,11 +41,10 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
   // Saves the changes and shows the result in a snackbar.
   const saveOrganisation = (changes: OrganisationChanges) => {
     updateOrganisation(changes, {
-      onSuccess: (updatedOrganisation) => {
+      onSuccess: () => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Organisation data saved successfully');
         setSnackbarOpen(true);
-        setEditedOrganisation(updatedOrganisation);
         setIsEditMode(false);
       },
       onError: (error) => {
@@ -61,6 +60,8 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
   // Starts editing, or saves the changes while editing.
   const onClickEditButton = () => {
     if (!isEditMode) {
+      // A colleague's change may have been loaded since the page opened, so start from the latest data.
+      setEditedOrganisation(organisation);
       setIsEditMode(true);
       return;
     }
@@ -77,7 +78,6 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
   // Stops editing and drops the changes.
   const onCancelEdit = () => {
     setIsEditMode(false);
-    setEditedOrganisation(organisation);
   };
 
   // The interactions tab has nothing to edit, so it only needs Save and Cancel while the profile is being edited.
@@ -137,7 +137,7 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
       <Box paddingY={3}>
         {activeTab === 'organisation' && (
           <OrganisationInfo
-            organisation={editedOrganisation}
+            organisation={isEditMode ? editedOrganisation : organisation}
             setOrganisation={setEditedOrganisation}
             isEditing={isEditMode}
           />

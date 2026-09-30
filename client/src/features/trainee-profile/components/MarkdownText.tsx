@@ -9,19 +9,19 @@ const preStyle = { whiteSpace: 'pre-wrap' as const, overflowWrap: 'break-word' a
 // Markdown blocks have top margins, which would add a gap above the text. Long links wrap instead of overflowing.
 const rootStyle = { overflowWrap: 'anywhere', '& > *': { marginTop: 0 } } as const;
 
-const MarkDownText = ({ children }: { children: string }) => (
+const MarkdownText = ({ children }: { children: string }) => (
   <Box sx={rootStyle}>
     <Markdown
       remarkPlugins={[remarkBreaks, remarkGfm]}
       components={{
         pre: ({ children }) => <pre style={preStyle}>{children}</pre>,
         a: ({ href, children }) => {
-          const isExternal = href ? /^https?:\/\//.test(href) : false;
-          if (!isExternal) {
+          // Only links to web pages are clickable, and they open in a new tab.
+          if (!href?.startsWith('http://') && !href?.startsWith('https://')) {
             return <>{children}</>;
           }
           return (
-            <Link href={href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            <Link href={href} target="_blank" rel="noopener noreferrer">
               {children}
             </Link>
           );
@@ -32,4 +32,4 @@ const MarkDownText = ({ children }: { children: string }) => (
     </Markdown>
   </Box>
 );
-export default MarkDownText;
+export default MarkdownText;

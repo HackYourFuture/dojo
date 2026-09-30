@@ -1,22 +1,21 @@
 import { NewOrganisation, OrganisationChanges } from '../Organisation';
-import { OrganisationResponse, OrganisationSummaryResponse, PagedModel } from './types';
+import { OrganisationResponse, OrganisationSummaryResponse } from './types';
+import { PAGE_SIZE, PagedModel, mapPageToDomain } from '../../../data/pagination';
 import {
   mapDomainToCreateOrganisationRequest,
   mapDomainToUpdateOrganisationRequest,
-  mapOrganisationSummaryPageToDomain,
+  mapOrganisationSummaryToDomain,
   mapOrganisationToDomain,
 } from './mapper';
 
 import axios from 'axios';
-
-const PAGE_SIZE = 50;
 
 // Sorted by name, from A to Z.
 export const getOrganisationSummaries = async (page: number) => {
   const { data } = await axios.get<PagedModel<OrganisationSummaryResponse>>('/api/organisations', {
     params: { page, size: PAGE_SIZE },
   });
-  return mapOrganisationSummaryPageToDomain(data);
+  return mapPageToDomain(data, mapOrganisationSummaryToDomain);
 };
 
 export const getOrganisation = async (organisationId: string) => {

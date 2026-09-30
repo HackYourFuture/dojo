@@ -1,4 +1,4 @@
-import { OrganisationStatus } from '../Organisation';
+import { EDITABLE_ORGANISATION_FIELDS, OrganisationStatus } from '../Organisation';
 
 export interface OrganisationSummaryResponse {
   id: string;
@@ -16,14 +16,7 @@ export interface OrganisationResponse extends OrganisationSummaryResponse {
   notes: string | null;
 }
 
-export interface PagedModel<T> {
-  content: T[];
-  page: {
-    totalPages: number;
-  };
-}
-
-type EditableField = Exclude<keyof OrganisationResponse, 'id' | 'profilePath' | 'pictureUrl' | 'thumbnailUrl'>;
+type EditableField = (typeof EDITABLE_ORGANISATION_FIELDS)[number];
 
 // A merge patch: every field that is sent is stored, and null clears it.
 export type UpdateOrganisationRequest = { [Field in EditableField]?: OrganisationResponse[Field] | null };

@@ -21,8 +21,3 @@ export interface TraineeSummary {
   averageAssessmentScore: number | null;
   cohort: number | null;
 }
-
-export interface TraineeSummaryPage {
-  trainees: TraineeSummary[];
-  totalPages: number;
-}

@@ -16,10 +16,3 @@ export interface TraineeSummaryResponse {
   averageAssessmentScore: number | null;
   cohort: number | null;
 }
-
-export interface PagedModel<T> {
-  content: T[];
-  page: {
-    totalPages: number;
-  };
-}

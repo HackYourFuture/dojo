@@ -16,11 +16,6 @@ export interface OrganisationSummary {
   status: OrganisationStatus;
 }
 
-export interface OrganisationSummaryPage {
-  organisations: OrganisationSummary[];
-  totalPages: number;
-}
-
 export interface Organisation extends OrganisationSummary {
   pictureUrl: string | null;
   notes: string | null;
