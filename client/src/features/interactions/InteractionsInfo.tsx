@@ -1,28 +1,32 @@
 import { Alert, Box, Button, CircularProgress } from '@mui/material';
+import { INTERACTION_TYPES, Interaction, ProfileType } from './Interaction';
 import { useAddInteraction, useEditInteraction } from './data/mutations';
 
 import AddIcon from '@mui/icons-material/Add';
-import { Interaction } from './models/interaction';
 import { InteractionDetailsModal } from './components/InteractionDetailsModal';
 import InteractionsList from './components/InteractionsList';
-import { ProfileSection } from '../profile/components/ProfileSection';
+import { ProfileSection } from '../trainee-profile/profile/components/ProfileSection';
 import { useGetInteractions } from './data/interaction-queries';
 import { useState } from 'react';
-import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
-const InteractionsInfo = () => {
+interface InteractionsInfoProps {
+  profileType: ProfileType;
+  profileId: string;
+}
+
+/** The interactions tab of a trainee or an organisation profile. */
+const InteractionsInfo = ({ profileType, profileId }: InteractionsInfoProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalError, setModalError] = useState<string>('');
   const [interactionToEdit, setInteractionToEdit] = useState<Interaction | null>(null);
-  const { traineeId } = useTraineeProfileContext();
 
-  const { mutate: addInteraction, isPending: addInteractionLoading } = useAddInteraction(traineeId);
-  const { mutate: editInteraction, isPending: editInteractionLoading } = useEditInteraction(traineeId);
+  const { mutate: addInteraction, isPending: addInteractionLoading } = useAddInteraction(profileType, profileId);
+  const { mutate: editInteraction, isPending: editInteractionLoading } = useEditInteraction(profileType, profileId);
   const {
     data: interactions,
     isLoading: interactionsLoading,
     error: interactionsError,
-  } = useGetInteractions(traineeId);
+  } = useGetInteractions(profileType, profileId);
 
   const handleSuccess = () => {
     setIsModalOpen(false);
@@ -39,7 +43,7 @@ const InteractionsInfo = () => {
     setIsModalOpen(true);
   };
 
-  const onConfirmAdd = async (interaction: Interaction) => {
+  const onConfirmAdd = (interaction: Interaction) => {
     if (modalError) {
       setModalError('');
     }
@@ -90,7 +94,12 @@ const InteractionsInfo = () => {
             <CircularProgress />
           </Box>
         ) : (
-          <InteractionsList traineeId={traineeId} interactions={interactions || []} onClickEdit={onClickEdit} />
+          <InteractionsList
+            profileType={profileType}
+            profileId={profileId}
+            interactions={interactions || []}
+            onClickEdit={onClickEdit}
+          />
         )}
       </ProfileSection>
 
@@ -103,6 +112,7 @@ const InteractionsInfo = () => {
         onConfirmAdd={onConfirmAdd}
         onConfirmEdit={onConfirmEdit}
         initialInteraction={interactionToEdit}
+        types={INTERACTION_TYPES[profileType]}
       />
     </Box>
   );

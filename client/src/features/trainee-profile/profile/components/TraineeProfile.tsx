@@ -5,7 +5,7 @@ import ContactInfo from '../../contact/ContactInfo';
 import { EditSaveButton } from './EditSaveButton';
 import EducationInfo from '../../education/EducationInfo';
 import EmploymentInfo from '../../employment/EmploymentInfo';
-import InteractionsInfo from '../../interactions/InteractionsInfo';
+import InteractionsInfo from '../../../interactions/InteractionsInfo';
 import MuiAlert from '@mui/material/Alert';
 import PersonalInfo from '../../personal-info/PersonalInfo';
 import ProfileHeader from '../ProfileHeader';
@@ -148,7 +148,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
         {activeTab === 'contact' && <ContactInfo />}
         {activeTab === 'education' && <EducationInfo />}
         {activeTab === 'employment' && <EmploymentInfo />}
-        {activeTab === 'interactions' && <InteractionsInfo />}
+        {activeTab === 'interactions' && <InteractionsInfo profileType="trainee" profileId={id} />}
       </Box>
     </Box>
   );

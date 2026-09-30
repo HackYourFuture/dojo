@@ -1,32 +1,34 @@
 import { Alert, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Interaction, ProfileType } from '../Interaction';
 import React, { useState } from 'react';
 
-import { AvatarWithTooltip } from '../../education/components/AvatarWithTooltip';
-import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
-import { Interaction } from '../models/interaction';
-import { ListItemActions } from '../../../../components/ListItemActions';
-import MarkdownText from '../../components/MarkdownText';
-import { formatDateForDisplay } from '../../utils/dateHelper';
-import { formatTextToFriendly } from '../../utils/formHelper';
-import { useAuth } from '../../../../auth/hooks/useAuth';
+import { AvatarWithTooltip } from './AvatarWithTooltip';
+import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
+import { ListItemActions } from '../../../components/ListItemActions';
+import MarkdownText from '../../trainee-profile/components/MarkdownText';
+import { formatDateForDisplay } from '../../trainee-profile/utils/dateHelper';
+import { formatTextToFriendly } from '../../trainee-profile/utils/formHelper';
+import { useAuth } from '../../../auth/hooks/useAuth';
 import { useDeleteInteraction } from '../data/mutations';
 
 interface InteractionsListProps {
   interactions: Interaction[];
-  traineeId: string;
+  profileType: ProfileType;
+  profileId: string;
   onClickEdit: (id: string) => void;
 }
-const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, traineeId, onClickEdit }) => {
+const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profileType, profileId, onClickEdit }) => {
   const { user } = useAuth();
-  const { mutate: deleteInteraction, isPending: isDeleteLoading } = useDeleteInteraction(traineeId);
+  const { mutate: deleteInteraction, isPending: isDeleteLoading } = useDeleteInteraction(profileType, profileId);
   const [error, setError] = useState<string>('');
-  const [interactionToDelete, setInteractionToDelete] = React.useState<Interaction | null>(null);
-  const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+  // Kept after the confirmation closes, so the title in it does not disappear while it fades out.
+  const [interactionToDelete, setInteractionToDelete] = useState<Interaction | null>(null);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState<boolean>(false);
 
   const handleClickOnDeleteButton = (interaction: Interaction) => {
     setError('');
     setInteractionToDelete(interaction);
-    setIsModalOpen(true);
+    setIsConfirmationDialogOpen(true);
   };
 
   const onConfirmDelete = () => {
@@ -34,31 +36,27 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, train
       return;
     }
     deleteInteraction(interactionToDelete.id, {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        setInteractionToDelete(null);
+      // Also closes on failure, so the error above the list is not hidden behind the dialog.
+      onSettled: () => {
+        setIsConfirmationDialogOpen(false);
       },
       onError: (error) => {
-        // Close the dialog so the error above the list is visible.
-        setIsModalOpen(false);
         setError(error.message);
       },
     });
   };
 
   const onCancelDelete = () => {
-    setIsModalOpen(false);
+    setIsConfirmationDialogOpen(false);
   };
 
   return (
     <React.Fragment>
       <ConfirmationDialog
         confirmButtonText="Delete"
-        isOpen={isModalOpen}
+        isOpen={isConfirmationDialogOpen}
         title="Confirm Delete"
-        message={`
-        Are you sure you want to delete the following interaction: ${interactionToDelete?.title || interactionToDelete?.type}
-      `}
+        message={`Are you sure you want to delete the following interaction: ${interactionToDelete?.title}`}
         isLoading={isDeleteLoading}
         onConfirm={onConfirmDelete}
         onCancel={onCancelDelete}

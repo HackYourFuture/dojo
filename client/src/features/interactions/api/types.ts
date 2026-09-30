@@ -1,4 +1,4 @@
-import { InteractionType } from '../models/interaction';
+import { InteractionType } from '../Interaction';
 
 export interface InteractionRequest {
   date: string; // ISO date and time
