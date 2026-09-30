@@ -1,38 +1,15 @@
-import { useState } from 'react';
-import { Skeleton, Avatar } from '@mui/material';
+import { Avatar } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 
-export interface TraineeAvatarProps {
-  imageUrl: string;
-  altText: string;
+interface TraineeAvatarProps {
+  src: string | null;
+  name: string;
+  size: number;
 }
 
-export const TraineeAvatar = ({ imageUrl, altText }: TraineeAvatarProps) => {
-  const size = { width: 40, height: 40 };
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  if (imageUrl.trim().length === 0 || isError) {
-    return <Avatar sx={size} alt={altText} variant="square"></Avatar>;
-  }
-
-  return (
-    <>
-      {isLoading && <Skeleton variant="rectangular" width={size.width} height={size.height} />}
-      <img
-        loading="lazy"
-        src={imageUrl}
-        alt={altText}
-        style={{
-          width: `${isLoading ? 0 : size.width}px`,
-          height: `${isLoading ? 0 : size.height}px`,
-          display: 'block',
-        }}
-        onError={() => {
-          setIsLoading(false);
-          setIsError(true);
-        }}
-        onLoad={() => setIsLoading(false)}
-      />
-    </>
-  );
-};
+/** The picture of a trainee, or a person when there is no picture or the picture does not load. */
+export const TraineeAvatar = ({ src, name, size }: TraineeAvatarProps) => (
+  <Avatar variant="rounded" src={src ?? undefined} alt={name} sx={{ width: size, height: size }}>
+    <PersonIcon sx={{ width: '75%', height: '75%' }} />
+  </Avatar>
+);

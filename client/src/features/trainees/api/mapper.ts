@@ -1,5 +1,5 @@
-import { PagedModel, TraineeSummaryResponse } from './types';
-import { TraineeSummary, TraineeSummaryPage } from '../models/trainee-summary';
+import { TraineeSummary } from '../models/trainee-summary';
+import { TraineeSummaryResponse } from './types';
 
 export const mapTraineeSummaryToDomain = (trainee: TraineeSummaryResponse): TraineeSummary => {
   return {
@@ -17,12 +17,5 @@ export const mapTraineeSummaryToDomain = (trainee: TraineeSummaryResponse): Trai
     jobPath: trainee.jobPath,
     averageAssessmentScore: trainee.averageAssessmentScore,
     cohort: trainee.cohort,
-  };
-};
-
-export const mapTraineeSummaryPageToDomain = (page: PagedModel<TraineeSummaryResponse>): TraineeSummaryPage => {
-  return {
-    trainees: page.content.map((trainee) => mapTraineeSummaryToDomain(trainee)),
-    totalPages: page.page.totalPages,
   };
 };

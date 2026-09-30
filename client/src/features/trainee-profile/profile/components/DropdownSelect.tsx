@@ -15,7 +15,7 @@ type DropdownSelectProps = {
 };
 
 /**
- * An outlined dropdown with an error message below it, used by the create dialog.
+ * An outlined dropdown with an error message below it, used by the dialogs that add a trainee or an organisation.
  */
 export const DropdownSelect = ({
   id,

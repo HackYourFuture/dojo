@@ -1,22 +1,18 @@
 import { Avatar, CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { SearchResult, SearchResultType } from '../models/search-result';
 
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { ErrorBox } from '../../../components/ErrorBox';
 import { Link } from 'react-router-dom';
-import { SearchResult } from '../models/search-result';
+import { OrganisationLogo } from '../../../components/OrganisationLogo';
 import { useGetSearchResults } from '../data/search-queries';
 
 interface SearchResultsListProps {
   query: string;
 }
 
-/**
- * Component for showing a list of trainee search results with links.
- *
- * @param {string} query the text to search for.
- * @returns {ReactNode} A React element that renders a list of matching trainee names list as a clickable link.
- */
+/** The search results for the query, each a link that opens its trainee or organisation. */
 const SearchResultsList = ({ query }: SearchResultsListProps) => {
   const { isLoading, data, error } = useGetSearchResults(query);
 
@@ -58,7 +54,15 @@ const SearchResultsList = ({ query }: SearchResultsListProps) => {
                     }}
                   >
                     <ListItemIcon>
-                      <Avatar src={result.thumbnailUrl ?? ''} sx={{ width: 32, height: 32 }} variant="rounded"></Avatar>
+                      {result.type === SearchResultType.Organisation ? (
+                        <OrganisationLogo src={result.thumbnailUrl} name={result.title} size={32} />
+                      ) : (
+                        <Avatar
+                          src={result.thumbnailUrl ?? ''}
+                          sx={{ width: 32, height: 32 }}
+                          variant="rounded"
+                        ></Avatar>
+                      )}
                     </ListItemIcon>
                     <ListItemText primary={result.title}></ListItemText>
                     <ListItemText secondary={result.subtitle} sx={{ textAlign: 'right' }}></ListItemText>

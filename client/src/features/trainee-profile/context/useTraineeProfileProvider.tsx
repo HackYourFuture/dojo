@@ -27,6 +27,10 @@ export const TraineeProfileProvider = ({
   const [trainee, setTrainee] = useState<Trainee>(originalTrainee);
 
   const setIsEditMode = (isEditMode: boolean) => {
+    // A colleague's change may have been loaded since the page opened, so editing starts from the latest data.
+    if (isEditMode) {
+      setTrainee(originalTrainee);
+    }
     setIsEditing(isEditMode);
   };
 
@@ -103,7 +107,8 @@ export const TraineeProfileProvider = ({
       value={{
         traineeId,
         setTraineeId,
-        trainee,
+        // The tabs show the loaded trainee, and the copy with the changes while editing.
+        trainee: isEditing ? trainee : originalTrainee,
         setTrainee,
         isEditMode: isEditing,
         isSavingProfile,

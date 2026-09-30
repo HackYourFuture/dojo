@@ -13,7 +13,8 @@ export const useUpdateTrainee = (traineeId: string) => {
 
   return useMutation({
     mutationFn: (changes: TraineeChanges) => updateTrainee(traineeId, changes),
-    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: traineeKeys.details(traineeId) }),
+    // The response is the saved trainee, so the profile shows it without loading it again.
+    onSuccess: (trainee) => queryClient.setQueryData(traineeKeys.details(traineeId), trainee),
   });
 };
 

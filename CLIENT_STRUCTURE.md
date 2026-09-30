@@ -19,6 +19,7 @@ client/
 │   ├── components/               # Shared UI components
 │   ├── data/                     # Global data management (React Query)
 │   ├── features/                 # Feature-based modules
+│   ├── hooks/                    # Hooks shared across features
 │   ├── layout/                   # Layout components (navbar, etc.)
 │   ├── routes/                   # Route definitions and protected routes
 │   └── styles/                   # Global styles
@@ -154,7 +155,7 @@ trainee-profile/
 │       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
 │       ├── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
 │       ├── ProfileSelect.tsx     # Dropdown, with "- Not set -" for a nullable field
-│       └── DropdownSelect.tsx    # The create dialog's dropdowns
+│       └── DropdownSelect.tsx    # The dropdowns of the dialogs that add a trainee or an organisation
 ├── personal-info/                # Personal information tab
 │   └── PersonalInfo.tsx
 ├── contact/                      # Contact information tab

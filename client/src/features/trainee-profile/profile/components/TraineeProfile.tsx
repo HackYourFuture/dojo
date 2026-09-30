@@ -30,7 +30,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
   const [activeTab, setActiveTab] = useState('personal');
   const { data: traineeData } = useGetTrainee(id);
   const { isPending: isSaveLoading, mutate: updateTrainee } = useUpdateTrainee(id);
-  const { isEditMode, setTrainee, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
+  const { isEditMode, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
@@ -59,11 +59,10 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
    */
   const saveTraineeData = (changes: TraineeChanges) => {
     updateTrainee(changes, {
-      onSuccess: (trainee) => {
+      onSuccess: () => {
         setSnackbarSeverity('success');
         setSnackbarMessage('Trainee data saved successfully');
         setSnackbarOpen(true);
-        setTrainee(trainee);
         setIsEditMode(false);
       },
       onError: (error) => {
@@ -97,11 +96,10 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   /**
    * Handle cancel edit button click.
-   * Resets the trainee data to the original data.
+   * Drops the changes, so the tabs show the saved trainee again.
    */
   const onCancelEdit = () => {
     setIsEditMode(false);
-    setTrainee(traineeData!);
   };
 
   // Interactions are edited one by one, so their tab only needs Save and Cancel while the profile is being edited.

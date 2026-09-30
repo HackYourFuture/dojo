@@ -75,7 +75,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   to={trainee.profilePath}
                 >
                   <TableCell component="th" scope="row">
-                    <TraineeAvatar imageUrl={trainee.thumbnailUrl ?? ''} altText={trainee.displayName}></TraineeAvatar>
+                    <TraineeAvatar src={trainee.thumbnailUrl} name={trainee.displayName} size={40} />
                   </TableCell>
                   <TableCell>{trainee.displayName}</TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap', minWidth: '240px' }}>

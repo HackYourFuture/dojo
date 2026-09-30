@@ -28,11 +28,12 @@ Dojo is HackYourFuture's in-house management tool designed to track HackYourFutu
 
 ## Features
 
-- Search for trainees
+- Search for trainees and organisations
 - View and update trainee profile
 - Track trainee progress and performance
 - Generate real-time reports
 - Trainees overview, grouped by cohort
+- Partner organisations overview, with a profile to view and update each one
 - Secure authentication using Google OAuth
 
 ## Technology Stack
