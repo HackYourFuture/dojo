@@ -3,6 +3,7 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import { NewOrganisation, OrganisationStatus } from '../Organisation';
 
 import { DropdownSelect } from '../../trainee-profile/profile/components/DropdownSelect';
+import { nameValidationError } from '../utils/nameValidation';
 import { organisationStatusOptions } from '../utils/organisationStatus';
 import { useCreateOrganisation } from '../data/mutations';
 import { useNavigate } from 'react-router-dom';
@@ -18,18 +19,6 @@ const INITIAL_STATE: NewOrganisation = {
   location: '',
   websiteUrl: '',
   linkedinUrl: '',
-};
-
-// The server checks the other fields, and its message is shown below the form.
-const nameValidationError = (name: string): string | null => {
-  const trimmedName = name.trim();
-  if (!trimmedName) {
-    return 'This field is required';
-  }
-  if (trimmedName.length < 2) {
-    return 'Name must be at least 2 characters';
-  }
-  return null;
 };
 
 /** The dialog to add an organisation, which opens the profile of the new organisation. */
@@ -62,6 +51,7 @@ export const AddOrganisationDialog = ({ isOpen, handleClose }: AddOrganisationDi
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // The server checks the other fields, and its message is shown below the form.
     const error = nameValidationError(formState.name);
     if (error) {
       setNameError(error);
