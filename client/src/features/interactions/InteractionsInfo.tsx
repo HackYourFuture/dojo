@@ -1,11 +1,12 @@
 import { Alert, Box, Button, CircularProgress } from '@mui/material';
-import { INTERACTION_TYPES, Interaction, ProfileType } from './Interaction';
+import { INTERACTION_TYPES, Interaction } from './Interaction';
 import { useAddInteraction, useEditInteraction } from './data/mutations';
 
 import AddIcon from '@mui/icons-material/Add';
 import { InteractionDetailsModal } from './components/InteractionDetailsModal';
 import InteractionsList from './components/InteractionsList';
 import { ProfileSection } from '../trainee-profile/profile/components/ProfileSection';
+import { ProfileType } from '../../data/types/ProfileType';
 import { useGetInteractions } from './data/interaction-queries';
 import { useState } from 'react';
 

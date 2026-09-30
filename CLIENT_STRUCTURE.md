@@ -81,6 +81,7 @@ features/
 ├── dashboard/               # Dashboard feature
 ├── interactions/            # Interactions tab of the trainee and organisation profiles
 ├── login/                   # Login feature
+├── profile-picture/         # Picture of the trainee and organisation profiles
 ├── search/                  # Search feature
 └── trainee-profile/         # Trainee profile feature (see detailed structure below)
 ```

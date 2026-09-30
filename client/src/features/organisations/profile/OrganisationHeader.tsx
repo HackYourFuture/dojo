@@ -1,5 +1,6 @@
 import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 
+import { EditableProfilePicture } from '../../profile-picture/components/EditableProfilePicture';
 import LanguageIcon from '@mui/icons-material/Language';
 import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
 import { Organisation } from '../Organisation';
@@ -36,7 +37,14 @@ const OrganisationHeader = ({ organisation }: OrganisationHeaderProps) => {
 
   return (
     <Box display="flex" alignItems="center" gap={3}>
-      <OrganisationLogo src={organisation.pictureUrl} name={organisation.name} size={LOGO_SIZE} />
+      <EditableProfilePicture
+        profileType="organisation"
+        profileId={organisation.id}
+        pictureUrl={organisation.pictureUrl}
+        variant="rounded"
+      >
+        <OrganisationLogo src={organisation.pictureUrl} name={organisation.name} size={LOGO_SIZE} />
+      </EditableProfilePicture>
 
       {/* Spaced with a gap instead of margins, which would override the social links offset. */}
       <Stack spacing={1} useFlexGap minWidth={0}>

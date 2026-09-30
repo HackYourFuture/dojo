@@ -1,4 +1,4 @@
-import { ProfileType } from '../Interaction';
+import { ProfileType } from '../../../data/types/ProfileType';
 import { getInteractions } from '../api/api';
 import { interactionKeys } from './keys';
 import { useQuery } from '@tanstack/react-query';
