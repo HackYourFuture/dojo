@@ -4,6 +4,7 @@ import { SearchResultResponse } from './types';
 export const mapSearchResultToDomain = (result: SearchResultResponse): SearchResult => {
   return {
     id: result.id,
+    type: result.type,
     title: result.title,
     subtitle: result.subtitle,
     thumbnailUrl: result.thumbnailUrl,

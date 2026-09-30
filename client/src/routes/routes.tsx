@@ -3,7 +3,8 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { ApiProvider } from '../auth/hooks/useAuthProvider';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import LoginPage from '../features/login/LoginPage';
-import PartnersPage from '../features/partners/PartnersPage';
+import OrganisationProfilePage from '../features/organisations/OrganisationProfilePage';
+import OrganisationsOverviewPage from '../features/organisations/OrganisationsOverviewPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import Root from './root';
 import SearchPage from '../features/search/SearchPage';
@@ -49,10 +50,10 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: '/partners',
+            path: '/organisations',
             element: (
               <ProtectedRoute>
-                <PartnersPage />
+                <OrganisationsOverviewPage />
               </ProtectedRoute>
             ),
           },
@@ -85,6 +86,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <TraineePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/organisation/:organisationInfo',
+            element: (
+              <ProtectedRoute>
+                <OrganisationProfilePage />
               </ProtectedRoute>
             ),
           },

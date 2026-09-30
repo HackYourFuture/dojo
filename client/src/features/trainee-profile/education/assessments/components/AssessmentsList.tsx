@@ -81,7 +81,7 @@ export const AssessmentsList: React.FC<AssessmentsListProps> = ({ assessments, o
                   </Box>
                 }
                 secondary={
-                  <Box ml={5} mt={-1}>
+                  <Box ml={5} mt={1}>
                     <MarkdownText>{assessment.comments ?? ''}</MarkdownText>
                   </Box>
                 }

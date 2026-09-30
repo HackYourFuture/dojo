@@ -1,9 +1,9 @@
 import AdminIcon from '@mui/icons-material/AdminPanelSettings';
 import AdminOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
 import DashboardIcon from '@mui/icons-material/SpaceDashboard';
 import DashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
-import HandshakeIcon from '@mui/icons-material/Handshake';
-import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SchoolIcon from '@mui/icons-material/School';
@@ -45,7 +45,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     relatedPaths: ['/trainee'],
   },
   { name: 'Volunteers', path: '/volunteers', icon: VolunteerOutlinedIcon, activeIcon: VolunteerIcon },
-  { name: 'Partners', path: '/partners', icon: HandshakeOutlinedIcon, activeIcon: HandshakeIcon },
+  {
+    name: 'Organisations',
+    path: '/organisations',
+    icon: CorporateFareOutlinedIcon,
+    activeIcon: CorporateFareIcon,
+    relatedPaths: ['/organisation'],
+  },
   { name: 'Dashboard', path: '/dashboard', icon: DashboardOutlinedIcon, activeIcon: DashboardIcon },
   {
     name: 'Admin',
