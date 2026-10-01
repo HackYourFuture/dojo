@@ -1,13 +1,16 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { FieldRow, ProfileSection } from '../../trainee-profile/profile/components/ProfileSection';
+import { Organisation, PartnershipType, Responsible } from '../Organisation';
 
 import { ContactPersons } from '../contact-persons/ContactPersons';
 import MarkdownText from '../../trainee-profile/components/MarkdownText';
-import { Organisation } from '../Organisation';
+import { ProfileMultiSelect } from '../../trainee-profile/profile/components/ProfileMultiSelect';
 import { ProfileSelect } from '../../trainee-profile/profile/components/ProfileSelect';
 import { ProfileTextField } from '../../trainee-profile/profile/components/ProfileTextField';
+import { ResponsiblesSelect } from './ResponsiblesSelect';
 import { Stack } from '@mui/material';
 import { organisationStatusOptions } from '../utils/organisationStatus';
+import { partnershipTypeLabels } from '../utils/partnershipTypes';
 
 interface OrganisationInfoProps {
   organisation: Organisation;
@@ -24,6 +27,18 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     handleValueChange(event.target.name, event.target.value);
+  };
+
+  // Kept in the order the server sorts them, so picking them in another order is not a change.
+  const handlePartnershipTypesChange = (partnershipTypes: PartnershipType[]) => {
+    setOrganisation((prevOrganisation) => ({
+      ...prevOrganisation,
+      partnershipTypes: Object.values(PartnershipType).filter((type) => partnershipTypes.includes(type)),
+    }));
+  };
+
+  const handleResponsiblesChange = (responsibles: Responsible[]) => {
+    setOrganisation((prevOrganisation) => ({ ...prevOrganisation, responsibles }));
   };
 
   return (
@@ -53,6 +68,22 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
             value={organisation.location}
             isEditing={isEditing}
             onChange={handleTextChange}
+          />
+        </FieldRow>
+        <FieldRow fill>
+          <ProfileMultiSelect
+            name="partnershipTypes"
+            label="Partnership types"
+            options={Object.values(PartnershipType)}
+            value={organisation.partnershipTypes}
+            getOptionLabel={(type) => partnershipTypeLabels[type]}
+            isEditing={isEditing}
+            onChange={handlePartnershipTypesChange}
+          />
+          <ResponsiblesSelect
+            value={organisation.responsibles}
+            isEditing={isEditing}
+            onChange={handleResponsiblesChange}
           />
         </FieldRow>
         <FieldRow fill>
