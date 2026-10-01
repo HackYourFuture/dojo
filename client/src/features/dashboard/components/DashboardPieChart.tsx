@@ -26,7 +26,7 @@ export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
   };
 
   return (
-    <Stack direction="row" useFlexGap flexWrap="wrap">
+    <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap' }}>
       {piesData.map((pie: ChartData[], index: number) => {
         // Map ChartData to PieValueType with all required fields
         const formattedData: PieValueType[] = pie.map((item) => ({
@@ -35,8 +35,8 @@ export const DashboardPieChart = ({ chartData }: DashboardPieChartProps) => {
           value: item.value,
         }));
         return (
-          <Box key={index} height={250} width={450} my={4} p={2}>
-            <Typography variant="h5" p={2}>
+          <Box key={index} sx={{ height: 250, width: 450, my: 4, p: 2 }}>
+            <Typography variant="h5" sx={{ p: 2 }}>
               {chartTitle[index]}
             </Typography>
             <PieChart

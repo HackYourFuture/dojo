@@ -60,15 +60,15 @@ export const ContactPersonDialog = ({
   return (
     // Stays open while saving, so the error of a failed save is shown in it.
     <Dialog open={isOpen} onClose={isLoading ? undefined : onClose} fullWidth maxWidth="sm">
-      <Box padding={5}>
+      <Box sx={{ padding: 5 }}>
         <Typography variant="h4" gutterBottom>
           {isEditMode ? 'Edit contact' : 'New contact'}
         </Typography>
         <form onSubmit={handleSubmit} noValidate>
           {/* No ids, so MUI generates them: the profile's inputs use these names as ids while it is edited. */}
-          <Stack spacing={2} pt={2}>
+          <Stack spacing={2} sx={{ pt: 2 }}>
             {/* Aligned to the top, so the name's error message does not stretch the job title. */}
-            <Stack direction="row" spacing={2} alignItems="flex-start">
+            <Stack direction="row" spacing={2} sx={{ alignItems: 'flex-start' }}>
               <TextField
                 required
                 disabled={isLoading}
@@ -142,7 +142,7 @@ export const ContactPersonDialog = ({
             </Alert>
           )}
 
-          <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+          <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', mt: 2 }}>
             <Button variant="outlined" disabled={isLoading} onClick={onClose}>
               Cancel
             </Button>

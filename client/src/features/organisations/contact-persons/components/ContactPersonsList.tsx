@@ -13,7 +13,7 @@ interface ContactPersonsListProps {
 export const ContactPersonsList = ({ contactPersons, onClickEdit, onClickDelete }: ContactPersonsListProps) => {
   if (contactPersons.length === 0) {
     return (
-      <Typography color="text.secondary" paddingX={2} paddingY={3} bgcolor="background.paper">
+      <Typography sx={{ color: 'text.secondary', paddingX: 2, paddingY: 3, bgcolor: 'background.paper' }}>
         No contacts yet
       </Typography>
     );

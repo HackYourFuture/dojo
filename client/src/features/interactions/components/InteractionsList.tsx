@@ -72,7 +72,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profi
           }}
         >
           {interactions.length === 0 ? (
-            <Typography variant="body1" color="text.secondary" padding="16px" textAlign="center">
+            <Typography variant="body1" sx={{ color: 'text.secondary', padding: '16px', textAlign: 'center' }}>
               No interactions yet!
             </Typography>
           ) : (
@@ -103,14 +103,16 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profi
                     slotProps={{ secondary: { component: 'div' } }}
                     primary={
                       <Box
-                        display="flex"
-                        flexDirection="row"
-                        justifyContent="space-between"
-                        width="100%"
-                        paddingTop={1}
-                        paddingBottom={1}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          paddingTop: 1,
+                          paddingBottom: 1,
+                        }}
                       >
-                        <Box display="flex" flexDirection="row" gap={1}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
                           <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
                           <Typography>{interaction.title}</Typography>
                         </Box>

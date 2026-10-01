@@ -41,7 +41,7 @@ export const AssessmentsList: React.FC<AssessmentsListProps> = ({ assessments, o
       }}
     >
       {assessments.length === 0 ? (
-        <Typography variant="body1" color="text.secondary" padding="16px">
+        <Typography variant="body1" sx={{ color: 'text.secondary', padding: '16px' }}>
           No assessments found
         </Typography>
       ) : (
@@ -60,8 +60,16 @@ export const AssessmentsList: React.FC<AssessmentsListProps> = ({ assessments, o
                 // A div, since the markdown comments render paragraphs, which cannot be inside the default <p>.
                 slotProps={{ secondary: { component: 'div' } }}
                 primary={
-                  <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" paddingTop={0.5}>
-                    <Box display="flex" flexDirection="row" width="50%" gap={1} ml={1}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      paddingTop: 0.5,
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', flexDirection: 'row', width: '50%', gap: 1, ml: 1 }}>
                       <Tooltip title={formatTextToFriendly(assessment.result || '')}>
                         {resultIconMap(assessment.result)}
                       </Tooltip>
@@ -81,7 +89,7 @@ export const AssessmentsList: React.FC<AssessmentsListProps> = ({ assessments, o
                   </Box>
                 }
                 secondary={
-                  <Box ml={5} mt={1}>
+                  <Box sx={{ ml: 5, mt: 1 }}>
                     <MarkdownText>{assessment.comments ?? ''}</MarkdownText>
                   </Box>
                 }

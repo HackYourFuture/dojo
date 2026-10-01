@@ -26,7 +26,12 @@ const FormDateTimeField = ({ label, value, onChange, disabled, error, required }
       views={['year', 'month', 'day', 'hours', 'minutes']}
       slotProps={{
         // Only forces the error on, so the picker still marks an invalid date itself.
-        textField: { required, fullWidth: true, error: error || undefined, InputLabelProps: { shrink: true } },
+        textField: {
+          required,
+          fullWidth: true,
+          error: error || undefined,
+          slotProps: { inputLabel: { shrink: true } },
+        },
       }}
     />
   );

@@ -20,9 +20,16 @@ type ContactFieldProps = Omit<ProfileTextFieldProps, 'sx'> & {
  * A contact field with an icon in front of it.
  */
 const ContactField = ({ icon, ...props }: ContactFieldProps) => (
-  <Stack direction="row" alignItems="flex-end" spacing={1.5}>
+  <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-end' }}>
     {/* As tall as the input, with the icon on its middle, or on the line of the value when not editing. */}
-    <Box display="flex" alignItems={props.isEditing ? 'center' : 'flex-start'} height={40} color="action.active">
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: props.isEditing ? 'center' : 'flex-start',
+        height: 40,
+        color: 'action.active',
+      }}
+    >
       {icon}
     </Box>
     <ProfileTextField {...props} sx={{ flex: 1, minWidth: 0 }} />
@@ -68,7 +75,7 @@ const ContactInfo = () => {
         </FieldRow>
         <FieldRow fill>
           <ContactField
-            icon={<Box component="img" src={slackIcon} alt="" width={24} height={24} />}
+            icon={<Box component="img" src={slackIcon} alt="" sx={{ width: 24, height: 24 }} />}
             name="slackId"
             label="Slack ID"
             placeholder="UXXXXXXXXXX"

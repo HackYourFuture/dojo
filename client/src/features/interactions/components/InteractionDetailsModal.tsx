@@ -128,19 +128,17 @@ export const InteractionDetailsModal = ({
       open={isOpen}
       onClose={handleClose}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
+      slots={{ backdrop: Backdrop }}
+      slotProps={{ backdrop: { timeout: 500 } }}
     >
       <Fade in={isOpen}>
         <Box
-          minWidth={550}
           component="form"
-          display="flex"
-          flexDirection="column"
-          gap={3}
           sx={{
+            minWidth: 550,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
             position: 'absolute',
             top: '50%',
             left: '50%',
@@ -151,13 +149,13 @@ export const InteractionDetailsModal = ({
             borderRadius: 1,
           }}
         >
-          <Typography variant="h6" mb={0.5}>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>
             {isEditMode ? 'Edit an interaction' : 'Add a new interaction'}
           </Typography>
 
-          <Box display="flex" sx={{ gap: 3 }} justifyContent="space-between">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 3 }}>
             {/* Keeps the error under the type, not between the type and the date. */}
-            <Box width="100%">
+            <Box sx={{ width: '100%' }}>
               <FormSelect
                 disabled={isLoading}
                 id="interactionType"
@@ -212,7 +210,7 @@ export const InteractionDetailsModal = ({
 
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box display="flex" gap={2} justifyContent="flex-end">
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
             <Button variant="outlined" disabled={isLoading} onClick={handleClose}>
               Cancel
             </Button>

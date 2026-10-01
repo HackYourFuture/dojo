@@ -1,7 +1,7 @@
 import { AppBar, Box, Container, IconButton, Toolbar } from '@mui/material';
 
 import HYFLogo from '../assets/hyf-logo-beige.png';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavBarActions } from './NavBar/actions/NavBarActions';
 import { useAuth } from '../auth/hooks/useAuth';

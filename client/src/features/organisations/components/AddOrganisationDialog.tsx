@@ -6,7 +6,7 @@ import { DropdownSelect } from '../../trainee-profile/profile/components/Dropdow
 import { nameValidationError } from '../utils/nameValidation';
 import { organisationStatusOptions } from '../utils/organisationStatus';
 import { useCreateOrganisation } from '../data/mutations';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 interface AddOrganisationDialogProps {
   isOpen: boolean;
@@ -69,12 +69,12 @@ export const AddOrganisationDialog = ({ isOpen, handleClose }: AddOrganisationDi
   return (
     // Stays open while the organisation is created, so its profile still opens when it is ready.
     <Dialog open={isOpen} onClose={isPending ? undefined : onClose} fullWidth maxWidth="sm">
-      <Box padding={5} sx={{ backgroundColor: 'background.paper' }}>
+      <Box sx={{ padding: 5, backgroundColor: 'background.paper' }}>
         <Typography variant="h4" gutterBottom>
           New organisation
         </Typography>
         <form onSubmit={handleSubmit} noValidate>
-          <Stack spacing={2} pt={2}>
+          <Stack spacing={2} sx={{ pt: 2 }}>
             <TextField
               required
               disabled={isPending}
@@ -138,7 +138,7 @@ export const AddOrganisationDialog = ({ isOpen, handleClose }: AddOrganisationDi
             </Alert>
           )}
 
-          <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+          <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', mt: 2 }}>
             <Button variant="outlined" disabled={isPending} onClick={onClose}>
               Cancel
             </Button>

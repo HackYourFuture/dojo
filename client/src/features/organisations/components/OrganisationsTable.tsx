@@ -20,7 +20,7 @@ import { OrganisationLogo } from '../../../components/OrganisationLogo';
 import { OrganisationStatusChip } from './OrganisationStatusChip';
 import { OrganisationSummary } from '../Organisation';
 import { partnershipTypeLabels } from '../utils/partnershipTypes';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const RESPONSIBLE_AVATAR_SIZE = 28;
 
@@ -72,7 +72,7 @@ export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) =
               </TableCell>
               <TableCell>
                 {/* On one line, as wrapping makes the rows tall even when there is room for the chips. */}
-                <Box display="flex" gap={0.5}>
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
                   {organisation.partnershipTypes.map((type) => (
                     <Chip key={type} label={partnershipTypeLabels[type]} size="small" variant="outlined" />
                   ))}

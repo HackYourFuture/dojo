@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         // This maps the '@' symbol to your 'src' folder
-        '@': path.resolve(__dirname, './src'),
+        '@': path.resolve(import.meta.dirname, './src'),
       },
     },
     server: {

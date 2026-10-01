@@ -1,5 +1,5 @@
 import { Box, Toolbar } from '@mui/material';
-import { Outlet, ScrollRestoration } from 'react-router-dom';
+import { Outlet, ScrollRestoration } from 'react-router';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ResponsiveNavBar } from '../components';

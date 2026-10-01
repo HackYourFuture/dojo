@@ -54,7 +54,7 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
   const linkedIn = data?.contactInfo?.linkedinUrl;
 
   return (
-    <Box display="flex" alignItems="center" gap={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
       <EditableProfilePicture
         profileType="trainee"
         profileId={traineeId}
@@ -69,20 +69,20 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
       </EditableProfilePicture>
 
       {/* Spaced with a gap instead of margins, which would override the social links offset. */}
-      <Stack spacing={1} useFlexGap minWidth={0}>
-        <Box display="flex" alignItems="baseline" flexWrap="wrap" columnGap={1.5}>
-          <Typography variant="h5" component="h1" fontWeight={600}>
+      <Stack spacing={1} useFlexGap sx={{ minWidth: 0 }}>
+        <Box sx={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', columnGap: 1.5 }}>
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 600 }}>
             {data?.displayName}
           </Typography>
-          {pronouns && <Typography color="text.secondary">{pronouns}</Typography>}
+          {pronouns && <Typography sx={{ color: 'text.secondary' }}>{pronouns}</Typography>}
         </Box>
-        <Box display="flex" alignItems="center" flexWrap="wrap" gap={1.5}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}>
           {data?.educationInfo?.learningStatus === LearningStatus.Graduated ? (
             <SidebarJobPath jobPath={data?.employmentInfo?.jobPath}></SidebarJobPath>
           ) : (
             <SidebarLearningStatus learningStatus={data?.educationInfo?.learningStatus}></SidebarLearningStatus>
           )}
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Cohort {data?.educationInfo?.currentCohort ?? 'not assigned'}
           </Typography>
         </Box>
@@ -98,9 +98,7 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
                     component="img"
                     src={slackLogo}
                     alt=""
-                    width={SOCIAL_ICON_SIZE}
-                    height={SOCIAL_ICON_SIZE}
-                    borderRadius="50%"
+                    sx={{ width: SOCIAL_ICON_SIZE, height: SOCIAL_ICON_SIZE, borderRadius: '50%' }}
                   />
                 }
               />
@@ -118,7 +116,12 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
                 title="LinkedIn"
                 href={linkedIn}
                 icon={
-                  <Box component="img" src={LinkedInLogo} alt="" width={SOCIAL_ICON_SIZE} height={SOCIAL_ICON_SIZE} />
+                  <Box
+                    component="img"
+                    src={LinkedInLogo}
+                    alt=""
+                    sx={{ width: SOCIAL_ICON_SIZE, height: SOCIAL_ICON_SIZE }}
+                  />
                 }
                 isExternal
               />

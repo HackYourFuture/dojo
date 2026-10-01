@@ -28,9 +28,9 @@ export const ProfileUserPicker = ({ name, label, value, isEditing, onChange, sx 
   if (!isEditing) {
     // Spans, as the value is shown in a paragraph. The avatars have no alt text, as the names are next to them.
     const pickedUsers = (
-      <Box component="span" display="flex" flexWrap="wrap" columnGap={2} rowGap={0.5}>
+      <Box component="span" sx={{ display: 'flex', flexWrap: 'wrap', columnGap: 2, rowGap: 0.5 }}>
         {value.map((user) => (
-          <Box key={user.id} component="span" display="inline-flex" alignItems="center" gap={0.75}>
+          <Box key={user.id} component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
             <Avatar component="span" src={user.thumbnailUrl ?? undefined} alt="" sx={{ width: 20, height: 20 }} />
             {user.name}
           </Box>
@@ -82,7 +82,11 @@ export const ProfileUserPicker = ({ name, label, value, isEditing, onChange, sx 
       sx={[profileInputStyle, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
         // Keeps the label props of the Autocomplete, which link the label to the input.
-        <TextField {...params} label={label} slotProps={{ inputLabel: { ...params.InputLabelProps, shrink: true } }} />
+        <TextField
+          {...params}
+          label={label}
+          slotProps={{ ...params.slotProps, inputLabel: { ...params.slotProps.inputLabel, shrink: true } }}
+        />
       )}
     />
   );

@@ -12,7 +12,7 @@ export interface ComingSoonProps {
 export const ComingSoon = ({ title, description, icon: Icon }: ComingSoonProps) => {
   return (
     <Container fixed>
-      <Box p={2}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="h4">{title}</Typography>
         <Paper
           variant="outlined"
@@ -44,9 +44,7 @@ export const ComingSoon = ({ title, description, icon: Icon }: ComingSoonProps) 
             <Icon sx={{ fontSize: 36 }} />
           </Box>
           <Typography variant="h6">Coming soon</Typography>
-          <Typography color="text.secondary" maxWidth={420}>
-            {description}
-          </Typography>
+          <Typography sx={{ color: 'text.secondary', maxWidth: 420 }}>{description}</Typography>
         </Paper>
       </Box>
     </Container>

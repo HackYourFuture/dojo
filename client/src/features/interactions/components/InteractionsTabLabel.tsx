@@ -13,7 +13,7 @@ export const InteractionsTabLabel = ({ profileType, profileId }: InteractionsTab
   const { data: interactions } = useGetInteractions(profileType, profileId);
 
   return (
-    <Box display="flex" alignItems="center" gap={1}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       Interactions
       {/* Static, so the badge sits next to the label instead of on its corner. Hidden while loading. */}
       <Badge

@@ -3,7 +3,7 @@ import { ErrorBox, Loader } from '../../components';
 import { Box } from '@mui/material';
 import TraineeProfile from './profile/components/TraineeProfile';
 import { TraineeProfileProvider } from './context/useTraineeProfileProvider';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useGetTrainee } from './data/trainee-queries';
 
 /**
@@ -22,7 +22,7 @@ const TraineePage = () => {
 
   if (isError && error instanceof Error) {
     return (
-      <Box width="50%" margin="auto" marginTop="2rem">
+      <Box sx={{ width: '50%', margin: 'auto', marginTop: '2rem' }}>
         <ErrorBox errorMessage={error.message} />
       </Box>
     );

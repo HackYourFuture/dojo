@@ -105,7 +105,7 @@ export const EmploymentHistoryGroup = () => {
   };
 
   return (
-    <Box width="70ch">
+    <Box sx={{ width: '70ch' }}>
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
@@ -129,7 +129,7 @@ export const EmploymentHistoryGroup = () => {
             Oopsie! Something went wrong: {getErrorMessage(employmentHistoryError || deleteEmploymentError)}
           </Alert>
         ) : employmentHistoryLoading ? (
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <CircularProgress />
           </Box>
         ) : (

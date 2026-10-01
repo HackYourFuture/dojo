@@ -24,7 +24,7 @@ export const NewTraineeForm: React.FC<{
 }> = ({ isLoading, formState, errors, handleChange, handleSelect, handleSubmit, handleClose }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing={2} pt={2}>
+      <Stack spacing={2} sx={{ pt: 2 }}>
         <TextFieldWrapper
           disabled={isLoading}
           id="firstName"
@@ -65,7 +65,7 @@ export const NewTraineeForm: React.FC<{
           value={formState.email}
           onChange={handleChange}
         />
-        <Stack direction="row" spacing={2} pb={2}>
+        <Stack direction="row" spacing={2} sx={{ pb: 2 }}>
           <TextFieldWrapper
             disabled={isLoading}
             id="cohort"
@@ -99,7 +99,7 @@ export const NewTraineeForm: React.FC<{
           />
         </Stack>
       </Stack>
-      <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+      <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', mt: 2 }}>
         <Button variant="outlined" color="secondary" disabled={isLoading} onClick={handleClose}>
           Cancel
         </Button>

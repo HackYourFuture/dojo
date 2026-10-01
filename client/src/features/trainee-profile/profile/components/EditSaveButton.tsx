@@ -9,7 +9,7 @@ export interface EditSaveButtonProps {
 
 export const EditSaveButton = ({ isEditMode, isLoading, onCancel, onClickEditButton }: EditSaveButtonProps) => {
   return (
-    <Box display="flex" justifyContent="flex-end" paddingY={1} gap={1}>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingY: 1, gap: 1 }}>
       {isEditMode && (
         <Button variant="outlined" disabled={isLoading} onClick={onCancel}>
           Cancel

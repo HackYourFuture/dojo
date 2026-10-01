@@ -103,22 +103,24 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
 
   return (
     // The tabs have no padding of their own, so everything lines up with the header.
-    <Box paddingX={8} bgcolor="background.default">
-      <Stack spacing={1} useFlexGap paddingTop={3}>
+    <Box sx={{ paddingX: 8, bgcolor: 'background.default' }}>
+      <Stack spacing={1} useFlexGap sx={{ paddingTop: 3 }}>
         <OrganisationHeader organisation={organisation} />
         {/* Keeps its height when the edit buttons are hidden. */}
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          flexWrap="wrap"
-          gap={2}
-          minHeight={56}
-          borderBottom={1}
-          borderColor="divider"
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 2,
+            minHeight: 56,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
         >
           {/* Sits on the bottom border of the tab bar, so the active tab line covers it. */}
-          <Box display="flex" alignSelf="flex-end" minWidth={0}>
+          <Box sx={{ display: 'flex', alignSelf: 'flex-end', minWidth: 0 }}>
             <Tabs
               value={activeTab}
               onChange={(_, value) => setActiveTab(value)}
@@ -154,7 +156,7 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
         </MuiAlert>
       </Snackbar>
 
-      <Box paddingY={3}>
+      <Box sx={{ paddingY: 3 }}>
         {activeTab === 'overview' && (
           <OrganisationInfo
             organisation={isEditMode ? editedOrganisation : organisation}

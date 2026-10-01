@@ -62,7 +62,7 @@ const UsersPage = () => {
 
   return (
     <Container fixed>
-      <Box p={2}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="h4">Users</Typography>
         <Box sx={{ my: 2, py: 2, pr: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button variant="contained" startIcon={<AddIcon />} onClick={onClickAdd}>
@@ -70,7 +70,7 @@ const UsersPage = () => {
           </Button>
         </Box>
         {isPending && (
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
             <Loader />
           </Box>
         )}

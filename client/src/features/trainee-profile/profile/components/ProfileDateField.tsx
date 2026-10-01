@@ -35,7 +35,7 @@ export const ProfileDateField = ({ name, label, value, isEditing, onChange }: Pr
       sx={profileInputStyle}
       slotProps={{
         field: { clearable: true },
-        textField: { size: 'small', InputLabelProps: { shrink: true } },
+        textField: { size: 'small', slotProps: { inputLabel: { shrink: true } } },
       }}
     />
   );

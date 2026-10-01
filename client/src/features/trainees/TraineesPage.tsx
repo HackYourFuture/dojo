@@ -25,16 +25,16 @@ const TraineesPage = () => {
 
   return (
     <Container fixed>
-      <Box p={2}>
+      <Box sx={{ p: 2 }}>
         <Typography variant="h4">Trainees</Typography>
         <ActionsCard />
         {isPending && (
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
             <Loader />
           </Box>
         )}
         {isError && !isFetchNextPageError && (
-          <Box width="50%" margin="auto" marginTop="2rem" marginBottom="2rem">
+          <Box sx={{ width: '50%', margin: 'auto', marginTop: '2rem', marginBottom: '2rem' }}>
             <ErrorBox errorMessage={errorMessage} />
           </Box>
         )}

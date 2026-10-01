@@ -133,15 +133,15 @@ export const AssessmentDetailsModal = ({
   };
 
   return (
-    <Modal open={isOpen} closeAfterTransition BackdropComponent={Backdrop} BackdropProps={{ timeout: 500 }}>
+    <Modal open={isOpen} closeAfterTransition slots={{ backdrop: Backdrop }} slotProps={{ backdrop: { timeout: 500 } }}>
       <Fade in={isOpen}>
         <Box
-          minWidth={550}
           component="form"
-          display="flex"
-          flexDirection="column"
-          gap={3}
           sx={{
+            minWidth: 550,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
             position: 'absolute',
             top: '50%',
             left: '50%',
@@ -151,11 +151,11 @@ export const AssessmentDetailsModal = ({
             p: 4,
           }}
         >
-          <Typography variant="h6" mb={0.5}>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>
             {isEditMode ? 'Edit assessment' : 'Add new assessment'}
           </Typography>
 
-          <Box display="flex" flexDirection="row" gap={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
             <FormControl fullWidth error={typeError}>
               <InputLabel htmlFor="type">Assessment type</InputLabel>
               <Select
@@ -190,7 +190,7 @@ export const AssessmentDetailsModal = ({
             </FormControl>
           </Box>
 
-          <Box display="flex" gap={2}>
+          <Box sx={{ display: 'flex', gap: 2 }}>
             <FormControl fullWidth error={resultError}>
               <InputLabel htmlFor="result">Result</InputLabel>
               <Select
@@ -217,10 +217,10 @@ export const AssessmentDetailsModal = ({
                 name="score"
                 label="Score"
                 type="number"
-                inputProps={{ min: 0, max: 10, step: 0.1 }}
                 value={assessmentFields.score ?? ''}
                 onChange={handleChange}
                 fullWidth
+                slotProps={{ htmlInput: { min: 0, max: 10, step: 0.1 } }}
               />
               {scoreError && <FormHelperText>Score from 0 to 10 is required</FormHelperText>}
             </FormControl>
@@ -237,15 +237,15 @@ export const AssessmentDetailsModal = ({
               minRows={2}
               maxRows={4}
               value={assessmentFields.comments || ''}
-              InputLabelProps={{ shrink: true }}
               onChange={handleChange}
               fullWidth
+              slotProps={{ inputLabel: { shrink: true } }}
             />
           </FormControl>
 
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box display="flex" gap={2} alignSelf="flex-end">
+          <Box sx={{ display: 'flex', gap: 2, alignSelf: 'flex-end' }}>
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>

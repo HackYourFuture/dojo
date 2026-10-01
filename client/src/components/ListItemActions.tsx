@@ -22,7 +22,7 @@ export const ListItemActions = ({ onEdit, onDelete }: ListItemActionsProps) => {
   };
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="flex-end" paddingRight={1}>
+    <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}>
       <IconButton
         aria-label="More actions"
         aria-haspopup="menu"

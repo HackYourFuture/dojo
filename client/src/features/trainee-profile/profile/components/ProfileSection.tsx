@@ -22,7 +22,7 @@ interface ProfileSectionProps {
 export const ProfileSection = ({ title, action, children }: ProfileSectionProps) => (
   <Stack spacing={2} useFlexGap>
     {title && (
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography variant="h6">{title}</Typography>
         {action}
       </Stack>
@@ -44,10 +44,12 @@ interface FieldRowProps {
 export const FieldRow = ({ fill = false, children }: FieldRowProps) => (
   <Stack
     direction="row"
-    flexWrap="wrap"
-    columnGap={PROFILE_FIELD_GAP}
-    rowGap={2}
-    sx={fill ? { '& > *': { flex: 1, minWidth: 0 } } : undefined}
+    sx={{
+      flexWrap: 'wrap',
+      columnGap: PROFILE_FIELD_GAP,
+      rowGap: 2,
+      ...(fill && { '& > *': { flex: 1, minWidth: 0 } }),
+    }}
   >
     {children}
   </Stack>

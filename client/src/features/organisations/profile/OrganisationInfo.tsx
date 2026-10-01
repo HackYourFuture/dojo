@@ -133,7 +133,7 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
 
       {/* The section title labels the field. The notes are written in Markdown, and shown formatted. */}
       <ProfileSection title="Notes">
-        <Box maxWidth={ROW_WIDTH}>
+        <Box sx={{ maxWidth: ROW_WIDTH }}>
           {isEditing || !organisation.notes ? (
             <ProfileTextField
               name="notes"

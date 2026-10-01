@@ -79,7 +79,7 @@ const InteractionsInfo = ({ profileType, profileId }: InteractionsInfoProps) => 
   };
 
   return (
-    <Box maxWidth={1000}>
+    <Box sx={{ maxWidth: 1000 }}>
       <ProfileSection
         title={`Interactions (${interactions?.length || 0})`}
         action={
@@ -91,7 +91,7 @@ const InteractionsInfo = ({ profileType, profileId }: InteractionsInfoProps) => 
         {interactionsError ? (
           <Alert severity="error">Oopsie! Something went wrong: {getErrorMessage(interactionsError)}</Alert>
         ) : interactionsLoading ? (
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <CircularProgress />
           </Box>
         ) : (

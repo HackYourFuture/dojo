@@ -3,7 +3,7 @@ import { ErrorBox, Loader } from '../../components';
 import { Box } from '@mui/material';
 import OrganisationProfile from './profile/OrganisationProfile';
 import { useGetOrganisation } from './data/organisation-queries';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 /** The profile page of an organisation. */
 const OrganisationProfilePage = () => {
@@ -19,7 +19,7 @@ const OrganisationProfilePage = () => {
 
   if (isError && error instanceof Error) {
     return (
-      <Box width="50%" margin="auto" marginTop="2rem">
+      <Box sx={{ width: '50%', margin: 'auto', marginTop: '2rem' }}>
         <ErrorBox errorMessage={error.message} />
       </Box>
     );
