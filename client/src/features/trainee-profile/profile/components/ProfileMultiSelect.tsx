@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, SxProps, TextField, Theme } from '@mui/material';
 
 import { ProfileValue } from './ProfileValue';
 import { profileInputStyle } from './fieldStyles';
@@ -11,6 +11,7 @@ interface ProfileMultiSelectProps<T extends string> {
   getOptionLabel: (option: T) => string;
   isEditing: boolean;
   onChange: (value: T[]) => void;
+  sx?: SxProps<Theme>;
 }
 
 /** Several values on the profile tabs, sized like ProfileTextField: chips while editing, their labels otherwise. */
@@ -22,9 +23,10 @@ export const ProfileMultiSelect = <T extends string>({
   getOptionLabel,
   isEditing,
   onChange,
+  sx = [],
 }: ProfileMultiSelectProps<T>) => {
   if (!isEditing) {
-    return <ProfileValue label={label} value={value.map(getOptionLabel).join(', ')} />;
+    return <ProfileValue label={label} value={value.map(getOptionLabel).join(', ')} sx={sx} />;
   }
 
   return (
@@ -38,7 +40,7 @@ export const ProfileMultiSelect = <T extends string>({
       value={value}
       getOptionLabel={getOptionLabel}
       onChange={(_, selected) => onChange(selected)}
-      sx={profileInputStyle}
+      sx={[profileInputStyle, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
         // Keeps the label props of the Autocomplete, which link the label to the input.
         <TextField {...params} label={label} slotProps={{ inputLabel: { ...params.InputLabelProps, shrink: true } }} />

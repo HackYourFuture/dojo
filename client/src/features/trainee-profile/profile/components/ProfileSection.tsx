@@ -1,9 +1,13 @@
-import { Stack, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 
+import { PROFILE_FIELD_WIDTH } from './fieldStyles';
 import { ReactNode } from 'react';
 
 // The space between the fields of a FieldRow.
 export const PROFILE_FIELD_GAP = '24px';
+
+// Two fields and the gap between them, so a wide field lines up with the columns of the other rows.
+export const PROFILE_DOUBLE_FIELD_WIDTH = `calc(2 * ${PROFILE_FIELD_WIDTH} + ${PROFILE_FIELD_GAP})`;
 
 interface ProfileSectionProps {
   title?: string;
@@ -24,6 +28,7 @@ export const ProfileSection = ({ title, action, children }: ProfileSectionProps)
       </Stack>
     )}
     {children}
+    <Divider />
   </Stack>
 );
 

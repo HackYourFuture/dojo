@@ -8,18 +8,14 @@ import {
   yesNoOptions,
 } from '../utils/selectOptions';
 import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
-import { FieldRow, PROFILE_FIELD_GAP, ProfileSection } from '../profile/components/ProfileSection';
+import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../profile/components/ProfileSection';
 
-import { PROFILE_FIELD_WIDTH } from '../profile/components/fieldStyles';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../profile/components/ProfileSelect';
 import { ProfileTextField } from '../profile/components/ProfileTextField';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
-
-// Two fields and the gap between them, so the field lines up with the columns of the other rows.
-const DOUBLE_FIELD_WIDTH = `calc(2 * ${PROFILE_FIELD_WIDTH} + ${PROFILE_FIELD_GAP})`;
 
 // The most weekly work hours the API accepts.
 const MAX_WEEKLY_WORK_HOURS = 80;
@@ -207,7 +203,7 @@ const PersonalInfo = () => {
             value={editedFields.educationBackground}
             isEditing={isEditing}
             onChange={handleTextChange}
-            sx={{ width: DOUBLE_FIELD_WIDTH }}
+            sx={{ width: PROFILE_DOUBLE_FIELD_WIDTH }}
           />
         </FieldRow>
       </ProfileSection>

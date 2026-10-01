@@ -1,4 +1,4 @@
-import { Autocomplete, Avatar, Box, Chip, TextField } from '@mui/material';
+import { Autocomplete, Avatar, Box, Chip, SxProps, TextField, Theme } from '@mui/material';
 
 import { ProfileValue } from './ProfileValue';
 import { profileInputStyle } from './fieldStyles';
@@ -17,10 +17,11 @@ interface ProfileUserPickerProps {
   value: PickerUser[];
   isEditing: boolean;
   onChange: (users: PickerUser[]) => void;
+  sx?: SxProps<Theme>;
 }
 
 /** Users on the profile tabs with their avatars, picked from the active users in the order they are picked. */
-export const ProfileUserPicker = ({ name, label, value, isEditing, onChange }: ProfileUserPickerProps) => {
+export const ProfileUserPicker = ({ name, label, value, isEditing, onChange, sx = [] }: ProfileUserPickerProps) => {
   // The users are only needed to pick from.
   const { data: users = [], isLoading } = useGetUsers({ enabled: isEditing });
 
@@ -36,7 +37,7 @@ export const ProfileUserPicker = ({ name, label, value, isEditing, onChange }: P
         ))}
       </Box>
     );
-    return <ProfileValue label={label} value={value.length > 0 ? pickedUsers : null} />;
+    return <ProfileValue label={label} value={value.length > 0 ? pickedUsers : null} sx={sx} />;
   }
 
   // Inactive users cannot be picked, but stay when they already are.
@@ -78,7 +79,7 @@ export const ProfileUserPicker = ({ name, label, value, isEditing, onChange }: P
           );
         })
       }
-      sx={profileInputStyle}
+      sx={[profileInputStyle, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
         // Keeps the label props of the Autocomplete, which link the label to the input.
         <TextField {...params} label={label} slotProps={{ inputLabel: { ...params.InputLabelProps, shrink: true } }} />
