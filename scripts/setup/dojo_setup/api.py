@@ -46,6 +46,9 @@ class DojoApi:
     def add_employment_history(self, trainee_id: str, employment: Payload) -> None:
         self._post(f"/trainees/{trainee_id}/employment-history", employment)
 
+    def get_users(self) -> list[Payload]:
+        return self._get("/admin/users")
+
     def create_organisation(self, organisation: Payload) -> str:
         """Creates the organisation and returns its id."""
         return self._post("/organisations", organisation)["id"]
@@ -61,6 +64,11 @@ class DojoApi:
 
     def _put_picture(self, path: str, file: tuple[str, bytes, str]) -> None:
         _raise_for_status(self._request("PUT", path, files={"picture": file}))
+
+    def _get(self, path: str) -> Any:
+        response = self._request("GET", path)
+        _raise_for_status(response)
+        return response.json()
 
     def _post(self, path: str, payload: Payload) -> Payload:
         response = self._request(

@@ -1,8 +1,15 @@
 package nl.hackyourfuture.dojoserver.partner.organisation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.admin.user.User;
+import nl.hackyourfuture.dojoserver.admin.user.dto.ReporterResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationStatus;
+import nl.hackyourfuture.dojoserver.partner.organisation.PartnershipType;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Schema(description = "Organisation summary.")
 public record OrganisationSummaryResponse(
@@ -64,9 +71,23 @@ public record OrganisationSummaryResponse(
                 example = "active",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        OrganisationStatus status
+        OrganisationStatus status,
+
+        @Schema(
+                description = "What the organisation can offer HYF",
+                example = "[\"funding\", \"events\"]",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        List<PartnershipType> partnershipTypes,
+
+        @Schema(
+                description = "The users responsible for the organisation, the primary first",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        List<ReporterResponse> responsibles
 ) {
-    public static OrganisationSummaryResponse from(Organisation organisation) {
+    // An id whose user is gone is left out rather than failing the response.
+    public static OrganisationSummaryResponse from(Organisation organisation, Map<String, User> users) {
         return new OrganisationSummaryResponse(
                 organisation.getId(),
                 organisation.getName(),
@@ -75,6 +96,12 @@ public record OrganisationSummaryResponse(
                 organisation.getWebsiteUrl(),
                 organisation.getLinkedinUrl(),
                 organisation.getLocation(),
-                organisation.getStatus());
+                organisation.getStatus(),
+                organisation.getPartnershipTypes().stream().sorted().toList(),
+                organisation.getResponsibleIds().stream()
+                        .map(users::get)
+                        .filter(Objects::nonNull)
+                        .map(ReporterResponse::from)
+                        .toList());
     }
 }
