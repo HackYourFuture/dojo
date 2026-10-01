@@ -5,7 +5,7 @@ Fills a local Dojo environment with dummy data for development and testing:
 
 - A test user with the API token `DOJOTEST`
 - Trainees with profile pictures, assessments, interactions and employment history
-- Partner organisations with logos, contact persons and interactions
+- Partner organisations with logos, partnership types, responsibles, contact persons and interactions
 
 The data is generated from a fixed seed, so every run produces exactly the same data. Names come
 from Arabic, Turkish, Ukrainian, Spanish, Russian and English backgrounds, all in Latin letters, to
@@ -42,7 +42,9 @@ The script walks through seven steps:
    generate. Enter 0 to skip either.
 5. **Trainees**: generates the trainees and sends them to the API.
 6. **Organisations**: generates the organisations and sends them to the API. Logos are abstract
-   images drawn by Faker, which is why the script needs Pillow.
+   images drawn by Faker, which is why the script needs Pillow. The responsibles are picked from
+   the active users in the database, so the organisations only repeat on a database with the same
+   users.
 7. **Summary**: shows what was created.
 
 Since the data is always the same, running the script again on a filled database rejects the

@@ -10,6 +10,7 @@ from dojo_setup.generators.randomness import chance, fake, localized, weighted
 from dojo_setup.generators.transliteration import to_slug
 
 STATUSES = {"active": 50, "inactive": 20, "never-engaged": 30}
+PARTNERSHIP_TYPES = ["volunteer", "funding", "employment", "events"]
 # Faker's Dutch company() also picks from a list of real companies, so only its made-up formats are used
 DUTCH_COMPANY_FORMATS = [
     "{{last_name}} {{company_suffix}}",
@@ -32,7 +33,8 @@ class GeneratedOrganisation:
         return self.details["name"]
 
 
-def generate_organisation() -> GeneratedOrganisation:
+def generate_organisation(staff_ids: list[str]) -> GeneratedOrganisation:
+    """An organisation with up to two of the given users as its responsibles, the primary first."""
     name = _company_name()
     slug = to_slug(name)
     # Subdomains of example.com, so the links never lead to a real company
@@ -44,6 +46,8 @@ def generate_organisation() -> GeneratedOrganisation:
             "linkedinUrl": f"https://www.linkedin.com/company/{slug}" if chance(0.7) else None,
             "location": fake.random_element(CITIES),
             "status": weighted(STATUSES),
+            "partnershipTypes": fake.random_sample(PARTNERSHIP_TYPES, length=fake.random_int(0, 3)),
+            "responsibleIds": fake.random_sample(staff_ids, length=fake.random_int(0, min(2, len(staff_ids)))),
             "notes": "🤖 Auto generated dummy data for testing",
         },
         # Faker draws a random polygon on a coloured background, which makes a decent abstract logo

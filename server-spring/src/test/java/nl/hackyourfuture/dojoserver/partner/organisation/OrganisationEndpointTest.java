@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.jayway.jsonpath.JsonPath;
+import jakarta.persistence.EntityManager;
 import nl.hackyourfuture.dojoserver.admin.user.User;
 import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
@@ -32,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The organisation endpoints over MockMvc. Transactional, because it runs against the local development database,
@@ -56,21 +58,19 @@ class OrganisationEndpointTest {
     private UserRepository userRepository;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private EntityManager entityManager;
     @MockitoBean
     private FileStorageService fileStorageService;
     @MockitoBean
     private SlackClient slackClient;
 
+    private User user;
     private String token;
 
     @BeforeEach
     void givenASignedInUser() {
-        User user = userRepository.save(User.builder()
-                .id(RandomUtils.generateRandomId())
-                .email(RandomUtils.generateRandomId() + "@example.org")
-                .name("Reporter")
-                .isActive(true)
-                .build());
+        user = userRepository.save(user("Reporter"));
         token = tokenService.issue(user, TokenType.API_TOKEN).plaintextToken();
     }
 
@@ -160,6 +160,8 @@ class OrganisationEndpointTest {
         Organisation organisation = organisation("Acme");
         organisation.setLocation("Amsterdam");
         organisation.setNotes("Hires interns.");
+        organisation.setPartnershipTypes(Set.of(PartnershipType.FUNDING));
+        organisation.setResponsibleIds(List.of(user.getId()));
         organisationRepository.save(organisation);
 
         MvcTestResult result = patch(organisation.getId(), """
@@ -171,6 +173,8 @@ class OrganisationEndpointTest {
         assertThat(result).bodyJson().extractingPath("$.location").isNull();
         assertThat(result).bodyJson().extractingPath("$.notes").isEqualTo("Hires interns.");
         assertThat(result).bodyJson().extractingPath("$.name").isEqualTo(organisation.getName());
+        assertThat(result).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("funding");
+        assertThat(result).bodyJson().extractingPath("$.responsibles[*].id").asArray().containsExactly(user.getId());
     }
 
     @Test
@@ -184,6 +188,112 @@ class OrganisationEndpointTest {
                 {"websiteUrl": "not a url"}
                 """)).hasStatus(400);
         assertThat(patch(organisation.getId(), "{}")).hasStatus(400);
+    }
+
+    // ------------------------------------------------------------------ partnership types and responsibles
+
+    @Test
+    void createStoresThePartnershipTypesAndTheResponsiblesInOrder() {
+        User other = userRepository.save(user("Other"));
+
+        MvcTestResult result = post("""
+                {"name": "Acme", "status": "active", "partnershipTypes": ["events", "funding", "events"],
+                 "responsibleIds": ["%s", "%s", "%s"]}
+                """.formatted(other.getId(), user.getId(), other.getId()));
+
+        assertThat(result).hasStatus(201);
+        // Each once: the types in declaration order, the responsibles in the order they were sent.
+        assertThat(result).bodyJson().extractingPath("$.partnershipTypes").asArray()
+                .containsExactly("funding", "events");
+        assertThat(result).bodyJson().extractingPath("$.responsibles[*].id").asArray()
+                .containsExactly(other.getId(), user.getId());
+        assertThat(result).bodyJson().extractingPath("$.responsibles[0].name").isEqualTo("Other");
+    }
+
+    @Test
+    void invalidValuesInTheListsAreRejected() {
+        Organisation organisation = organisationRepository.save(organisation("Acme"));
+
+        assertThat(post("""
+                {"name": "Acme", "status": "active", "partnershipTypes": ["catering"]}
+                """)).hasStatus(400);
+        assertThat(patch(organisation.getId(), """
+                {"partnershipTypes": [null]}
+                """)).hasStatus(400);
+        assertThat(patch(organisation.getId(), """
+                {"responsibleIds": [null]}
+                """)).hasStatus(400);
+        assertThat(patch(organisation.getId(), """
+                {"responsibleIds": "%s"}
+                """.formatted(user.getId()))).hasStatus(400);
+    }
+
+    @Test
+    void aResponsibleMustBeAUser() {
+        Organisation organisation = organisationRepository.save(organisation("Acme"));
+        String unknown = RandomUtils.generateRandomId();
+
+        assertThat(post("""
+                {"name": "Acme", "status": "active", "responsibleIds": ["%s"]}
+                """.formatted(unknown))).hasStatus(400);
+        assertThat(patch(organisation.getId(), """
+                {"responsibleIds": ["%s"]}
+                """.formatted(unknown))).hasStatus(400);
+    }
+
+    @Test
+    void patchReplacesThePartnershipTypesAndTheResponsiblesAndNullClearsThem() {
+        Organisation organisation = organisation("Acme");
+        organisation.setPartnershipTypes(Set.of(PartnershipType.FUNDING));
+        organisation.setResponsibleIds(List.of(user.getId()));
+        organisationRepository.save(organisation);
+        User other = userRepository.save(user("Other"));
+
+        MvcTestResult replaced = patch(organisation.getId(), """
+                {"partnershipTypes": ["volunteer"], "responsibleIds": ["%s"]}
+                """.formatted(other.getId()));
+
+        assertThat(replaced).hasStatusOk();
+        assertThat(replaced).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("volunteer");
+        assertThat(replaced).bodyJson().extractingPath("$.responsibles[*].id").asArray()
+                .containsExactly(other.getId());
+
+        MvcTestResult cleared = patch(organisation.getId(), """
+                {"partnershipTypes": null, "responsibleIds": null}
+                """);
+
+        assertThat(cleared).hasStatusOk();
+        assertThat(cleared).bodyJson().extractingPath("$.partnershipTypes").asArray().isEmpty();
+        assertThat(cleared).bodyJson().extractingPath("$.responsibles").asArray().isEmpty();
+    }
+
+    @Test
+    void deletingAUserTakesThemOffTheOrganisationsTheyAreResponsibleFor() {
+        User other = userRepository.save(user("Other"));
+        Organisation organisation = organisation("Acme");
+        organisation.setResponsibleIds(List.of(other.getId(), user.getId()));
+        organisationRepository.saveAndFlush(organisation);
+
+        assertThat(mvc.delete().uri("/api/admin/users/{id}", other.getId())).hasStatus(204);
+
+        // The cleanup is a native update, which the loaded organisation doesn't see.
+        entityManager.clear();
+        assertThat(organisationRepository.findById(organisation.getId()).orElseThrow().getResponsibleIds())
+                .containsExactly(user.getId());
+    }
+
+    @Test
+    void aResponsibleWhoseUserIsGoneIsLeftOut() {
+        Organisation organisation = organisation("Acme");
+        organisation.setResponsibleIds(List.of(RandomUtils.generateRandomId(), user.getId()));
+        organisationRepository.save(organisation);
+
+        assertThat(mvc.get().uri(ORGANISATIONS + "/{id}", organisation.getId())).bodyJson()
+                .extractingPath("$.responsibles[*].id").asArray().containsExactly(user.getId());
+        // Only a changed list is checked, so the gone id doesn't block other changes.
+        assertThat(patch(organisation.getId(), """
+                {"location": "Utrecht"}
+                """)).hasStatusOk();
     }
 
     // ------------------------------------------------------------------ delete
@@ -226,6 +336,8 @@ class OrganisationEndpointTest {
         Organisation organisation = organisation("Acme");
         organisation.setPictureId("IMGlogo0001");
         organisation.setNotes("Hires interns.");
+        organisation.setPartnershipTypes(Set.of(PartnershipType.EVENTS));
+        organisation.setResponsibleIds(List.of(user.getId()));
         organisationRepository.save(organisation);
 
         Map<String, Object> summary = everySummary("ASC").stream()
@@ -237,7 +349,9 @@ class OrganisationEndpointTest {
                 .containsEntry("profilePath", organisation.getProfilePath())
                 .containsEntry("thumbnailUrl", organisation.getThumbnailUrl())
                 .containsEntry("status", "active")
+                .containsEntry("partnershipTypes", List.of("events"))
                 .doesNotContainKeys("notes", "pictureUrl");
+        assertThat(JsonPath.<List<Object>>read(summary, "$.responsibles[*].name")).containsExactly("Reporter");
     }
 
     @Test
@@ -284,6 +398,15 @@ class OrganisationEndpointTest {
 
     private static List<Object> ids(List<Map<String, Object>> summaries) {
         return summaries.stream().map(summary -> summary.get("id")).toList();
+    }
+
+    private static User user(String name) {
+        return User.builder()
+                .id(RandomUtils.generateRandomId())
+                .email(RandomUtils.generateRandomId() + "@example.org")
+                .name(name)
+                .isActive(true)
+                .build();
     }
 
     private static Organisation organisation(String name) {

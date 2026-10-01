@@ -6,6 +6,7 @@ import nl.hackyourfuture.dojoserver.admin.user.dto.UserRequest;
 import nl.hackyourfuture.dojoserver.admin.user.dto.UserResponse;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationRepository;
 import nl.hackyourfuture.dojoserver.picture.PictureService;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
@@ -22,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final PictureService pictureService;
+    private final OrganisationRepository organisationRepository;
 
     @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
@@ -76,6 +78,7 @@ public class UserService {
     public void deleteUser(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("User", id));
         tokenService.revokeAllForUser(id);
+        organisationRepository.removeResponsible(id);
         userRepository.delete(user);
         // Flush before touching storage: a user who reported an interaction fails here and keeps the pictures.
         userRepository.flush();

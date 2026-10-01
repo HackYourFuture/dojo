@@ -21,6 +21,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -45,6 +49,15 @@ public class Organisation implements PictureOwner {
 
     @Enumerated(EnumType.STRING)
     private OrganisationStatus status;
+
+    // Stored as a Postgres array.
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<PartnershipType> partnershipTypes = new HashSet<>();
+
+    // Stored as a Postgres array.
+    @Builder.Default
+    private List<String> responsibleIds = new ArrayList<>();
 
     private String notes;
 

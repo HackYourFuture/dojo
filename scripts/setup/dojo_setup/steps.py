@@ -128,10 +128,12 @@ def generate_organisations(api: DojoApi, organisation_count: int, report: Upload
     if organisation_count == 0:
         output.skipped("No organisations requested")
         return
+    # The script only creates the test user, so any other user in the database can be a responsible too.
+    staff_ids = [user["id"] for user in api.get_users() if user["isActive"]]
     with _progress_bar("Generating organisations") as progress:
         for _ in progress.track(range(organisation_count)):
             errors_before = len(report.errors)
-            upload_organisation(api, generate_organisation(), report)
+            upload_organisation(api, generate_organisation(staff_ids), report)
             _show_new_errors(report, errors_before)
     output.success(f"Created {report.organisations} of {organisation_count} organisations")
 
