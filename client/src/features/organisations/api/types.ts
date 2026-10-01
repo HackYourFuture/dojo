@@ -1,4 +1,10 @@
-import { EDITABLE_ORGANISATION_FIELDS, OrganisationStatus } from '../Organisation';
+import { EditableOrganisationField, OrganisationStatus, PartnershipType } from '../Organisation';
+
+interface ResponsibleResponse {
+  id: string;
+  name: string;
+  thumbnailUrl: string | null;
+}
 
 export interface OrganisationSummaryResponse {
   id: string;
@@ -9,6 +15,8 @@ export interface OrganisationSummaryResponse {
   linkedinUrl: string | null;
   location: string | null;
   status: OrganisationStatus;
+  partnershipTypes: PartnershipType[];
+  responsibles: ResponsibleResponse[];
 }
 
 export interface OrganisationResponse extends OrganisationSummaryResponse {
@@ -16,10 +24,10 @@ export interface OrganisationResponse extends OrganisationSummaryResponse {
   notes: string | null;
 }
 
-type EditableField = (typeof EDITABLE_ORGANISATION_FIELDS)[number];
-
-// A merge patch: every field that is sent is stored, and null clears it.
-export type UpdateOrganisationRequest = { [Field in EditableField]?: OrganisationResponse[Field] | null };
+// A merge patch: every field that is sent is stored, and null clears it. The responsibles are sent as their ids.
+export type UpdateOrganisationRequest = {
+  [Field in Exclude<EditableOrganisationField, 'responsibles'>]?: OrganisationResponse[Field] | null;
+} & { responsibleIds?: string[] | null };
 
 export type CreateOrganisationRequest = Pick<
   OrganisationResponse,

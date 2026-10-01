@@ -1,5 +1,10 @@
 import { Box, Snackbar, Stack, Tab, Tabs } from '@mui/material';
-import { EDITABLE_ORGANISATION_FIELDS, Organisation, OrganisationChanges } from '../Organisation';
+import {
+  EDITABLE_ORGANISATION_FIELDS,
+  EditableOrganisationField,
+  Organisation,
+  OrganisationChanges,
+} from '../Organisation';
 import { useEffect, useState } from 'react';
 
 import { EditSaveButton } from '../../trainee-profile/profile/components/EditSaveButton';
@@ -10,9 +15,20 @@ import OrganisationHeader from './OrganisationHeader';
 import OrganisationInfo from './OrganisationInfo';
 import { useUpdateOrganisation } from '../data/mutations';
 
+// Lists are compared by their items, and responsibles by id, as the edited ones come from the users list.
+const comparableValue = (organisation: Organisation, field: EditableOrganisationField) => {
+  if (field === 'responsibles') {
+    return organisation.responsibles.map((responsible) => responsible.id).join();
+  }
+  const value = organisation[field];
+  return Array.isArray(value) ? value.join() : value;
+};
+
 // The fields that were changed while editing, with their new values.
 const getChangedFields = (original: Organisation, edited: Organisation): OrganisationChanges => {
-  const changedFields = EDITABLE_ORGANISATION_FIELDS.filter((field) => original[field] !== edited[field]);
+  const changedFields = EDITABLE_ORGANISATION_FIELDS.filter(
+    (field) => comparableValue(original, field) !== comparableValue(edited, field)
+  );
   return Object.fromEntries(changedFields.map((field) => [field, edited[field]]));
 };
 

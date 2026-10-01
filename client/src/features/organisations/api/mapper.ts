@@ -16,6 +16,12 @@ export const mapOrganisationSummaryToDomain = (organisation: OrganisationSummary
     linkedinUrl: organisation.linkedinUrl,
     location: organisation.location,
     status: organisation.status,
+    partnershipTypes: organisation.partnershipTypes,
+    responsibles: organisation.responsibles.map((responsible) => ({
+      id: responsible.id,
+      name: responsible.name,
+      thumbnailUrl: responsible.thumbnailUrl,
+    })),
   };
 };
 
@@ -31,7 +37,12 @@ export const mapOrganisationToDomain = (organisation: OrganisationResponse): Org
 export const isBlank = (value: unknown) => typeof value === 'string' && value.trim() === '';
 
 export const mapDomainToUpdateOrganisationRequest = (changes: OrganisationChanges): UpdateOrganisationRequest => {
-  const request: UpdateOrganisationRequest = { ...changes };
+  // The API takes the ids of the responsibles, and ignores a responsibles field.
+  const { responsibles, ...fields } = changes;
+  const request: UpdateOrganisationRequest = { ...fields };
+  if (responsibles) {
+    request.responsibleIds = responsibles.map((responsible) => responsible.id);
+  }
 
   for (const field of Object.keys(request) as (keyof UpdateOrganisationRequest)[]) {
     if (isBlank(request[field])) {

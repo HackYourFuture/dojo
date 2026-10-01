@@ -157,6 +157,8 @@ trainee-profile/
 │       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
 │       ├── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
 │       ├── ProfileSelect.tsx     # Dropdown, with "- Not set -" for a nullable field
+│       ├── ProfileMultiSelect.tsx # Autocomplete for several values, shown as their labels until the profile is edited
+│       ├── ProfileUserPicker.tsx # Autocomplete for users, with their avatars, picked from the active users
 │       └── DropdownSelect.tsx    # The dropdowns of the dialogs that add a trainee or an organisation
 ├── personal-info/                # Personal information tab
 │   └── PersonalInfo.tsx
@@ -169,7 +171,7 @@ trainee-profile/
 └── create/                       # Dialog to add a trainee
 ```
 
-**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileDateField`, `ProfileNumberField` and `ProfileSelect`, so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
+**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileDateField`, `ProfileNumberField`, `ProfileSelect`, `ProfileMultiSelect` and `ProfileUserPicker`, so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 

@@ -5,6 +5,21 @@ export enum OrganisationStatus {
   NeverEngaged = 'never-engaged',
 }
 
+// What the organisation can offer HYF.
+export enum PartnershipType {
+  Volunteer = 'volunteer',
+  Funding = 'funding',
+  Employment = 'employment',
+  Events = 'events',
+}
+
+// A user responsible for the organisation.
+export interface Responsible {
+  readonly id: string;
+  name: string;
+  thumbnailUrl: string | null;
+}
+
 export interface OrganisationSummary {
   readonly id: string;
   name: string;
@@ -14,6 +29,9 @@ export interface OrganisationSummary {
   linkedinUrl: string | null;
   location: string | null;
   status: OrganisationStatus;
+  partnershipTypes: PartnershipType[];
+  // The primary responsible comes first.
+  responsibles: Responsible[];
 }
 
 export interface Organisation extends OrganisationSummary {
@@ -28,10 +46,14 @@ export const EDITABLE_ORGANISATION_FIELDS = [
   'location',
   'websiteUrl',
   'linkedinUrl',
+  'partnershipTypes',
+  'responsibles',
   'notes',
 ] as const;
 
-export type OrganisationChanges = Partial<Pick<Organisation, (typeof EDITABLE_ORGANISATION_FIELDS)[number]>>;
+export type EditableOrganisationField = (typeof EDITABLE_ORGANISATION_FIELDS)[number];
+
+export type OrganisationChanges = Partial<Pick<Organisation, EditableOrganisationField>>;
 
 // The fields of the add dialog, where the optional ones are empty text until they are filled in.
 export interface NewOrganisation {
