@@ -7,7 +7,7 @@ import MarkdownText from '../../trainee-profile/components/MarkdownText';
 import { ProfileMultiSelect } from '../../trainee-profile/profile/components/ProfileMultiSelect';
 import { ProfileSelect } from '../../trainee-profile/profile/components/ProfileSelect';
 import { ProfileTextField } from '../../trainee-profile/profile/components/ProfileTextField';
-import { ResponsiblesSelect } from './ResponsiblesSelect';
+import { ProfileUserPicker } from '../../trainee-profile/profile/components/ProfileUserPicker';
 import { Stack } from '@mui/material';
 import { organisationStatusOptions } from '../utils/organisationStatus';
 import { partnershipTypeLabels } from '../utils/partnershipTypes';
@@ -80,7 +80,9 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
             isEditing={isEditing}
             onChange={handlePartnershipTypesChange}
           />
-          <ResponsiblesSelect
+          <ProfileUserPicker
+            name="responsibles"
+            label="Responsible"
             value={organisation.responsibles}
             isEditing={isEditing}
             onChange={handleResponsiblesChange}

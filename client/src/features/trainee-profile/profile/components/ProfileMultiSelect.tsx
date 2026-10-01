@@ -3,28 +3,23 @@ import { Autocomplete, TextField } from '@mui/material';
 import { ProfileValue } from './ProfileValue';
 import { profileInputStyle } from './fieldStyles';
 
-interface ProfileMultiSelectProps<T> {
+interface ProfileMultiSelectProps<T extends string> {
   name: string;
   label: string;
   options: T[];
   value: T[];
   getOptionLabel: (option: T) => string;
-  // Identifies options that are objects, which are compared by reference and keyed by their label otherwise.
-  getOptionKey?: (option: T) => string;
-  loading?: boolean;
   isEditing: boolean;
   onChange: (value: T[]) => void;
 }
 
 /** Several values on the profile tabs, sized like ProfileTextField: chips while editing, their labels otherwise. */
-export const ProfileMultiSelect = <T,>({
+export const ProfileMultiSelect = <T extends string>({
   name,
   label,
   options,
   value,
   getOptionLabel,
-  getOptionKey,
-  loading,
   isEditing,
   onChange,
 }: ProfileMultiSelectProps<T>) => {
@@ -41,10 +36,7 @@ export const ProfileMultiSelect = <T,>({
       size="small"
       options={options}
       value={value}
-      loading={loading}
       getOptionLabel={getOptionLabel}
-      getOptionKey={getOptionKey}
-      isOptionEqualToValue={getOptionKey && ((option, selected) => getOptionKey(option) === getOptionKey(selected))}
       onChange={(_, selected) => onChange(selected)}
       sx={profileInputStyle}
       renderInput={(params) => (

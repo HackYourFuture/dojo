@@ -5,7 +5,8 @@ import { ReactNode } from 'react';
 
 interface ProfileValueProps {
   label?: ReactNode;
-  value: string | number | null;
+  // Text, or inline elements like the avatars of ProfileUserPicker.
+  value: ReactNode;
   // Shown instead of an empty value.
   emptyText?: string;
   // Makes the value a link, opened in a new tab when it is a web page.
