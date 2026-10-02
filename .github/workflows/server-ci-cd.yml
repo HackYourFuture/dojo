@@ -123,8 +123,13 @@ jobs:
           cache-from: type=gha,scope=dojo-server
           cache-to: type=gha,scope=dojo-server,mode=max
 
+  backend-deploy:
+    runs-on: ubuntu-latest
+    needs: [backend-build]
+    if: github.event_name == 'push'
+    permissions: {}
+    steps:
       - name: Deploy to Railway (Test)
-        if: github.event_name == 'push'
         run: npx -y @railway/cli@5 redeploy --service dojo-server --from-source --yes
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_TEST }}
