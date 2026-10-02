@@ -95,12 +95,12 @@ export const UserDetailsDialog = ({
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
-      <Box padding={5}>
+      <Box sx={{ padding: 5 }}>
         <Typography variant="h4" gutterBottom>
           {isEditMode ? 'Edit user' : 'New user'}
         </Typography>
         <form onSubmit={handleSubmit} noValidate>
-          <Stack spacing={2} pt={2}>
+          <Stack spacing={2} sx={{ pt: 2 }}>
             <TextField
               required
               disabled={isLoading}
@@ -136,7 +136,7 @@ export const UserDetailsDialog = ({
             </Alert>
           )}
 
-          <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+          <Stack direction="row" spacing={2} sx={{ justifyContent: 'flex-end', mt: 2 }}>
             <Button variant="outlined" disabled={isLoading} onClick={onClose}>
               Cancel
             </Button>

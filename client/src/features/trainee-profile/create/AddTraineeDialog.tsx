@@ -3,7 +3,7 @@ import { FormErrors, NewTraineeForm } from './components/NewTraineeForm';
 import { JobPath, LearningStatus, NewTrainee } from '../../../data/types/Trainee';
 
 import { useCreateTrainee } from '../data/mutations';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { validateAndCollectFormErrors } from './lib/formValidation';
 
@@ -68,7 +68,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
 
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="sm">
-      <Box padding={5} sx={{ backgroundColor: 'background.paper' }}>
+      <Box sx={{ padding: 5, backgroundColor: 'background.paper' }}>
         <Typography variant="h4" gutterBottom>
           New trainee profile
         </Typography>
@@ -83,7 +83,7 @@ export const AddTraineeDialog: React.FC<AddTraineeDialogProps> = ({ isOpen, hand
         />
 
         {submitError && (
-          <Box paddingTop={2}>
+          <Box sx={{ paddingTop: 2 }}>
             <Alert severity="error">
               An error occurred while creating the trainee profile: {submitError.message || 'unknown'}
             </Alert>

@@ -131,12 +131,12 @@ export const EmploymentDetailsModal = ({
     <Modal open={isOpen} closeAfterTransition slots={{ backdrop: Backdrop }} slotProps={{ backdrop: { timeout: 500 } }}>
       <Fade in={isOpen}>
         <Box
-          minWidth={550}
           component="form"
-          display="flex"
-          flexDirection="column"
-          gap={3}
           sx={{
+            minWidth: 550,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
             position: 'absolute',
             top: '50%',
             left: '50%',
@@ -146,10 +146,10 @@ export const EmploymentDetailsModal = ({
             p: 4,
           }}
         >
-          <Typography variant="h6" mb={0.5}>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>
             {isEditMode ? 'Edit employment' : 'Add a new employment'}
           </Typography>
-          <Box display="flex" flexDirection="row" gap={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
             <FormControl fullWidth>
               <TextField
                 required
@@ -204,7 +204,7 @@ export const EmploymentDetailsModal = ({
             />
             {requiredFieldError.role && <FormHelperText error>Role is required</FormHelperText>}
           </FormControl>
-          <Box display="flex" flexDirection="row" gap={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
             <FormControl fullWidth>
               <FormDateField
                 required
@@ -226,7 +226,7 @@ export const EmploymentDetailsModal = ({
               />
             </FormControl>
           </Box>
-          <Box display="flex" flexDirection="row" gap={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
             <FormControl fullWidth>
               <FormControlLabel
                 sx={{ pl: 1 }}
@@ -285,7 +285,7 @@ export const EmploymentDetailsModal = ({
           </FormControl>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Box display="flex" flexDirection="row" gap={2} alignSelf="flex-end">
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignSelf: 'flex-end' }}>
             <Button variant="outlined" disabled={isLoading} onClick={handleClose} fullWidth>
               Cancel
             </Button>

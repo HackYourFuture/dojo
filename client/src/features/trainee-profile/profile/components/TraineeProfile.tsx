@@ -107,19 +107,21 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
 
   return (
     // The tabs have no padding of their own, so everything lines up with the header.
-    <Box paddingX={8} bgcolor="background.default">
-      <Stack spacing={1} useFlexGap paddingTop={3}>
+    <Box sx={{ paddingX: 8, bgcolor: 'background.default' }}>
+      <Stack spacing={1} useFlexGap sx={{ paddingTop: 3 }}>
         <ProfileHeader traineeId={id} />
         {/* Keeps its height when the edit buttons are hidden. */}
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          flexWrap="wrap"
-          gap={2}
-          minHeight={56}
-          borderBottom={1}
-          borderColor="divider"
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 2,
+            minHeight: 56,
+            borderBottom: 1,
+            borderColor: 'divider',
+          }}
         >
           <ProfileNav traineeId={id} activeTab={activeTab} onTabChange={handleTabChange} />
           {showsEditButtons && (
@@ -143,7 +145,7 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
         </MuiAlert>
       </Snackbar>
 
-      <Box paddingY={3}>
+      <Box sx={{ paddingY: 3 }}>
         {activeTab === 'personal' && <PersonalInfo />}
         {activeTab === 'contact' && <ContactInfo />}
         {activeTab === 'education' && <EducationInfo />}

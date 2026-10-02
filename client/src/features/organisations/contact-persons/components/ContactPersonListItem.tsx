@@ -17,7 +17,7 @@ interface ContactDetailProps {
 
 // The email address or the phone number as text, after an icon that opens it in the mail or phone app.
 const ContactDetail = ({ label, href, icon, children }: ContactDetailProps) => (
-  <Stack direction="row" alignItems="center" minWidth={0}>
+  <Stack direction="row" sx={{ alignItems: 'center', minWidth: 0 }}>
     <IconButton size="small" edge="start" aria-label={label} href={href}>
       {icon}
     </IconButton>
@@ -39,35 +39,37 @@ export const ContactPersonListItem = ({ contactPerson, onEdit, onDelete }: Conta
 
   return (
     <ListItem alignItems="flex-start" disablePadding>
-      <Box flex={1} minWidth={0} paddingLeft={2} paddingY={1}>
+      <Box sx={{ flex: 1, minWidth: 0, paddingLeft: 2, paddingY: 1 }}>
         {/* The job title wraps below the name as a whole. The padding lines the name up with the button icons. */}
         <Box
-          display="flex"
-          flexWrap="wrap"
-          alignItems="baseline"
-          columnGap={1}
-          paddingY={1}
-          sx={{ overflowWrap: 'anywhere' }}
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'baseline',
+            columnGap: 1,
+            paddingY: 1,
+            overflowWrap: 'anywhere',
+          }}
         >
-          <Typography fontWeight="bold">{name}</Typography>
+          <Typography sx={{ fontWeight: 'bold' }}>{name}</Typography>
           {jobTitle && (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {jobTitle}
             </Typography>
           )}
         </Box>
         {/* Left out without any details, so a contact with only a name has no extra space at the bottom. */}
         {(email || phone || notes) && (
-          <Stack spacing={0.5} paddingBottom={1}>
+          <Stack spacing={0.5} sx={{ paddingBottom: 1 }}>
             {(email || phone) && (
-              <Stack direction="row" alignItems="center" flexWrap="wrap" columnGap={1}>
+              <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', columnGap: 1 }}>
                 {email && (
                   <ContactDetail label="Email" href={`mailto:${email}`} icon={<EmailIcon fontSize="small" />}>
                     {email}
                   </ContactDetail>
                 )}
                 {email && phone && (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     •
                   </Typography>
                 )}
@@ -82,9 +84,8 @@ export const ContactPersonListItem = ({ contactPerson, onEdit, onDelete }: Conta
               // Without the margin under the last paragraph, the notes end as far from the bottom as the other lines.
               <Typography
                 variant="body2"
-                color="text.secondary"
                 component="div"
-                sx={{ '& > * > :last-child': { marginBottom: 0 } }}
+                sx={{ color: 'text.secondary', '& > * > :last-child': { marginBottom: 0 } }}
               >
                 <MarkdownText>{notes}</MarkdownText>
               </Typography>
@@ -92,7 +93,7 @@ export const ContactPersonListItem = ({ contactPerson, onEdit, onDelete }: Conta
           </Stack>
         )}
       </Box>
-      <Stack direction="row" paddingY={1}>
+      <Stack direction="row" sx={{ paddingY: 1 }}>
         {linkedinUrl && (
           <IconButton aria-label="LinkedIn" href={linkedinUrl} target="_blank" rel="noopener">
             <LinkedInIcon sx={{ color: 'action.active' }} />

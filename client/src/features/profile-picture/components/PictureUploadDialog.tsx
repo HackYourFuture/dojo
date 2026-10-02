@@ -79,11 +79,11 @@ export const PictureUploadDialog = ({ profileType, profileId, isOpen, onClose }:
       fullWidth
       maxWidth="sm"
     >
-      <Box padding={5}>
+      <Box sx={{ padding: 5 }}>
         <Typography variant="h4" gutterBottom>
           Upload picture
         </Typography>
-        <Box pt={2}>
+        <Box sx={{ pt: 2 }}>
           {image ? (
             <PictureCropper image={image} crop={crop} onChange={setCrop} />
           ) : (
@@ -98,7 +98,7 @@ export const PictureUploadDialog = ({ profileType, profileId, isOpen, onClose }:
         )}
 
         {/* A gap, as margins would undo the first button's auto margin. Wraps on a phone, too narrow for three. */}
-        <Stack direction="row" spacing={2} useFlexGap flexWrap="wrap" justifyContent="flex-end" mt={2}>
+        <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap', justifyContent: 'flex-end', mt: 2 }}>
           {image && (
             <Button disabled={isUploading} onClick={() => changeImage(null)} sx={{ mr: 'auto' }}>
               Choose another picture

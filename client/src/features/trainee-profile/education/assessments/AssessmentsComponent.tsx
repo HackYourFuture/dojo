@@ -104,7 +104,7 @@ export const AssessmentsComponent = () => {
   };
 
   return (
-    <Box width="50%">
+    <Box sx={{ width: '50%' }}>
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
@@ -127,7 +127,7 @@ export const AssessmentsComponent = () => {
             Oopsie! Something went wrong: {getErrorMessage(assessmentsError || deleteAssessmentError)}
           </Alert>
         ) : assessmentsLoading ? (
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <CircularProgress />
           </Box>
         ) : (

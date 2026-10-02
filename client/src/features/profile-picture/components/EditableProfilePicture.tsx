@@ -50,19 +50,21 @@ export const EditableProfilePicture = ({
   return (
     <>
       <Box
-        position="relative"
-        flexShrink={0}
-        overflow="hidden"
-        borderRadius={variant === 'circular' ? '50%' : 1}
-        sx={{ '&:hover .picture-actions, &:focus-within .picture-actions': { opacity: 1 } }}
+        sx={{
+          position: 'relative',
+          flexShrink: 0,
+          overflow: 'hidden',
+          borderRadius: variant === 'circular' ? '50%' : 1,
+          '&:hover .picture-actions, &:focus-within .picture-actions': { opacity: 1 },
+        }}
       >
         {children}
         <Stack
           className="picture-actions"
           direction="row"
-          justifyContent="center"
-          alignItems="center"
           sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
             position: 'absolute',
             inset: 0,
             bgcolor: 'rgba(0, 0, 0, 0.5)',

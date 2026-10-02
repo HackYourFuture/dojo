@@ -30,17 +30,16 @@ export const ProfileValue = ({ label, value, emptyText = '—', href, sx }: Prof
   );
 
   return (
-    <Box width={PROFILE_FIELD_WIDTH} sx={sx}>
-      {label && (
-        <Typography color="text.secondary" sx={profileLabelStyle}>
-          {label}
-        </Typography>
-      )}
+    <Box sx={[{ width: PROFILE_FIELD_WIDTH }, ...(Array.isArray(sx) ? sx : [sx])]}>
+      {label && <Typography sx={{ color: 'text.secondary', ...profileLabelStyle }}>{label}</Typography>}
       {/* As tall as a small input, so the fields do not move when editing starts. */}
       <Typography
-        color={isEmpty ? 'text.disabled' : undefined}
-        paddingBottom={2}
-        sx={{ whiteSpace: 'pre-line', overflowWrap: 'anywhere' }}
+        sx={{
+          color: isEmpty ? 'text.disabled' : undefined,
+          paddingBottom: 2,
+          whiteSpace: 'pre-line',
+          overflowWrap: 'anywhere',
+        }}
       >
         {isEmpty ? emptyText : text}
       </Typography>

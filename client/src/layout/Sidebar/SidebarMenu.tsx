@@ -11,7 +11,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { Link, matchPath, useLocation } from 'react-router-dom';
+import { Link, matchPath, useLocation } from 'react-router';
 import { SIDEBAR_ITEMS, SidebarGroupItem, SidebarLinkItem } from './constants';
 
 import { DarkModeToggle } from '../../features/dark-mode/DarkModeToggle';
@@ -64,7 +64,7 @@ const SidebarLink = ({ item, isNested = false, onClick }: SidebarLinkProps) => {
         <ListItemIcon>
           <Icon />
         </ListItemIcon>
-        <ListItemText primary={item.name} slotProps={{ primary: { fontWeight: isActive ? 600 : 500 } }} />
+        <ListItemText primary={item.name} slotProps={{ primary: { sx: { fontWeight: isActive ? 600 : 500 } } }} />
       </ListItemButton>
     </ListItem>
   );
@@ -91,7 +91,7 @@ const SidebarGroup = ({ item, onItemClick }: SidebarGroupProps) => {
         <ListItemIcon>
           <Icon />
         </ListItemIcon>
-        <ListItemText primary={item.name} slotProps={{ primary: { fontWeight: hasActiveChild ? 600 : 500 } }} />
+        <ListItemText primary={item.name} slotProps={{ primary: { sx: { fontWeight: hasActiveChild ? 600 : 500 } } }} />
         {isOpen ? (
           <ExpandLessIcon sx={{ color: 'text.secondary' }} />
         ) : (
@@ -116,7 +116,7 @@ const SidebarUser = () => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 3, pt: 3, pb: 2 }}>
       <Avatar alt={user?.name} src={user?.thumbnailUrl ?? undefined} sx={{ width: 32, height: 32 }} />
-      <Typography fontWeight={600}>{user?.name}</Typography>
+      <Typography sx={{ fontWeight: 600 }}>{user?.name}</Typography>
     </Box>
   );
 };
@@ -130,7 +130,7 @@ const LogoutButton = () => {
         <ListItemIcon>
           <LogoutIcon />
         </ListItemIcon>
-        <ListItemText primary="Log out" slotProps={{ primary: { fontWeight: 500 } }} />
+        <ListItemText primary="Log out" slotProps={{ primary: { sx: { fontWeight: 500 } } }} />
       </ListItemButton>
     </ListItem>
   );

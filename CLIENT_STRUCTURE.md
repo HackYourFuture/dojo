@@ -156,7 +156,7 @@ trainee-profile/
 │       ├── ProfileTextField.tsx  # Text field, shown as a ProfileValue until the profile is edited
 │       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
 │       ├── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
-│       ├── ProfileSelect.tsx     # Dropdown, with "- Not set -" for a nullable field
+│       ├── ProfileSelect.tsx     # Dropdown, with an empty option for a nullable field
 │       ├── ProfileMultiSelect.tsx # Autocomplete for several values, shown as their labels until the profile is edited
 │       ├── ProfileUserPicker.tsx # Autocomplete for users, with their avatars, picked from the active users
 │       └── DropdownSelect.tsx    # The dropdowns of the dialogs that add a trainee or an organisation

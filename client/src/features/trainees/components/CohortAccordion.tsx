@@ -8,7 +8,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import IconButton from '@mui/material/IconButton';
 import { LearningStatus } from '../../../data/types/Trainee';
 import { getTrackLabel } from '../../../data/labels/traineeLabels';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';

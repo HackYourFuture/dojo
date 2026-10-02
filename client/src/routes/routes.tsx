@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router';
 
 import { ApiProvider } from '../auth/hooks/useAuthProvider';
 import DashboardPage from '../features/dashboard/DashboardPage';

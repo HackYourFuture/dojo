@@ -19,7 +19,7 @@ interface ProfileNavProps {
 const ProfileNav = ({ traineeId, activeTab, onTabChange }: ProfileNavProps) => {
   return (
     // Sits on the bottom border of the tab bar, so the active tab line covers it.
-    <Box display="flex" alignSelf="flex-end" minWidth={0}>
+    <Box sx={{ display: 'flex', alignSelf: 'flex-end', minWidth: 0 }}>
       <Tabs
         value={activeTab}
         onChange={(_, value) => onTabChange(value)}

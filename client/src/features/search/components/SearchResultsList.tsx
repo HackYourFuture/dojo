@@ -4,7 +4,7 @@ import { SearchResult, SearchResultType } from '../models/search-result';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { ErrorBox } from '../../../components/ErrorBox';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { OrganisationLogo } from '../../../components/OrganisationLogo';
 import { useGetSearchResults } from '../data/search-queries';
 
@@ -53,7 +53,8 @@ const SearchResultsList = ({ query }: SearchResultsListProps) => {
                       color: 'text.primary',
                     }}
                   >
-                    <ListItemIcon>
+                    {/* Keeps the v7 default width, so the space between avatar and name stays the same. */}
+                    <ListItemIcon sx={{ minWidth: 56 }}>
                       {result.type === SearchResultType.Organisation ? (
                         <OrganisationLogo src={result.thumbnailUrl} name={result.title} size={32} />
                       ) : (

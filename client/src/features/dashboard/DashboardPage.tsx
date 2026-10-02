@@ -34,7 +34,7 @@ const DashboardPage = () => {
 
   if (isError && error instanceof Error) {
     return (
-      <Box width="50%" margin="auto" marginTop="2rem">
+      <Box sx={{ width: '50%', margin: 'auto', marginTop: '2rem' }}>
         <ErrorBox errorMessage={error.message} />;
       </Box>
     );
@@ -42,7 +42,7 @@ const DashboardPage = () => {
 
   return (
     <Container fixed sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-      <Box my={3} display="flex" alignItems="start" justifyContent="start" p={2}>
+      <Box sx={{ my: 3, display: 'flex', alignItems: 'start', justifyContent: 'start', p: 2 }}>
         <Stack direction="row" spacing={3}>
           <DatePicker label="Start date" value={startDate} onChange={(newValue) => setStartDate(newValue)} />
           <DatePicker label="End date" value={endDate} onChange={(newValue) => setEndDate(newValue)} />

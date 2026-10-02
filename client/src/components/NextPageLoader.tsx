@@ -18,7 +18,7 @@ export const NextPageLoader = ({ query }: NextPageLoaderProps) => {
   const loadMoreRef = useInfiniteScroll(fetchNextPage, hasNextPage && !isFetching && !isFetchNextPageError);
 
   return (
-    <Box ref={loadMoreRef} display="flex" flexDirection="column" alignItems="center" gap={1} paddingY={2}>
+    <Box ref={loadMoreRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, paddingY: 2 }}>
       {isFetchingNextPage && <CircularProgress />}
       {/* The error state lasts until a page loads, so it is hidden while the retry is running. */}
       {isFetchNextPageError && !isFetchingNextPage && (

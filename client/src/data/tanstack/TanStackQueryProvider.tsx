@@ -3,7 +3,7 @@ import { queryClient, resetOnSessionEnd, setOnSessionEnd } from './tanstackClien
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useAuth } from '../../auth/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 /**
  * TanStackQueryProvider

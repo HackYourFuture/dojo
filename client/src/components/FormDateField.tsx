@@ -29,7 +29,12 @@ export const FormDateField = ({ label, value, onChange, disabled, error, require
       slotProps={{
         field: { clearable },
         // Only forces the error on, so the picker still marks an invalid date itself.
-        textField: { required, fullWidth: true, error: error || undefined, InputLabelProps: { shrink: true } },
+        textField: {
+          required,
+          fullWidth: true,
+          error: error || undefined,
+          slotProps: { inputLabel: { shrink: true } },
+        },
       }}
     />
   );

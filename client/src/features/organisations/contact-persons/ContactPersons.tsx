@@ -83,7 +83,7 @@ export const ContactPersons = ({ organisationId }: ContactPersonsProps) => {
 
   return (
     // As wide as the employment history on the trainee profile, so the list does not stretch across a wide screen.
-    <Box maxWidth="70ch">
+    <Box sx={{ maxWidth: '70ch' }}>
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
@@ -110,7 +110,7 @@ export const ContactPersons = ({ organisationId }: ContactPersonsProps) => {
         {error ? (
           <Alert severity="error">Error loading the contacts: {error.message}</Alert>
         ) : isPending ? (
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <CircularProgress />
           </Box>
         ) : (

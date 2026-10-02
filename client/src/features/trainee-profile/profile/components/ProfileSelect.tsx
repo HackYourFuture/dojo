@@ -11,7 +11,7 @@ interface ProfileSelectProps {
   label: string;
   options: SelectOption[];
   value: ProfileSelectValue;
-  // Adds a "- Not set -" option, which clears the field.
+  // Adds an empty option, which clears the field.
   nullable?: boolean;
   isEditing: boolean;
   onChange: (name: string, value: ProfileSelectValue) => void;
@@ -60,7 +60,7 @@ export const ProfileSelect = ({
       isEditing
       onChange={(event) => onChange(name, parseSelectValue(event.target.value))}
     >
-      {nullable && <MenuItem value="">- Not set -</MenuItem>}
+      {nullable && <MenuItem value="">-</MenuItem>}
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>
           {option.label}

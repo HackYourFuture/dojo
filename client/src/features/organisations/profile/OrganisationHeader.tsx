@@ -36,7 +36,7 @@ const OrganisationHeader = ({ organisation }: OrganisationHeaderProps) => {
   const { websiteUrl, linkedinUrl } = organisation;
 
   return (
-    <Box display="flex" alignItems="center" gap={3}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
       <EditableProfilePicture
         profileType="organisation"
         profileId={organisation.id}
@@ -47,14 +47,14 @@ const OrganisationHeader = ({ organisation }: OrganisationHeaderProps) => {
       </EditableProfilePicture>
 
       {/* Spaced with a gap instead of margins, which would override the social links offset. */}
-      <Stack spacing={1} useFlexGap minWidth={0}>
-        <Typography variant="h5" component="h1" fontWeight={600}>
+      <Stack spacing={1} useFlexGap sx={{ minWidth: 0 }}>
+        <Typography variant="h5" component="h1" sx={{ fontWeight: 600 }}>
           {organisation.name}
         </Typography>
-        <Box display="flex" alignItems="center" flexWrap="wrap" gap={1.5}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}>
           <OrganisationStatusChip status={organisation.status} />
           {organisation.location && (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {organisation.location}
             </Typography>
           )}
@@ -74,7 +74,12 @@ const OrganisationHeader = ({ organisation }: OrganisationHeaderProps) => {
                 title="LinkedIn"
                 href={linkedinUrl}
                 icon={
-                  <Box component="img" src={LinkedInLogo} alt="" width={SOCIAL_ICON_SIZE} height={SOCIAL_ICON_SIZE} />
+                  <Box
+                    component="img"
+                    src={LinkedInLogo}
+                    alt=""
+                    sx={{ width: SOCIAL_ICON_SIZE, height: SOCIAL_ICON_SIZE }}
+                  />
                 }
               />
             )}

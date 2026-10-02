@@ -43,7 +43,11 @@ export const ProfileMultiSelect = <T extends string>({
       sx={[profileInputStyle, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
         // Keeps the label props of the Autocomplete, which link the label to the input.
-        <TextField {...params} label={label} slotProps={{ inputLabel: { ...params.InputLabelProps, shrink: true } }} />
+        <TextField
+          {...params}
+          label={label}
+          slotProps={{ ...params.slotProps, inputLabel: { ...params.slotProps.inputLabel, shrink: true } }}
+        />
       )}
     />
   );

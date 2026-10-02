@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { NavBarSearch } from '../../../features/search/NavBarSearch';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 export const NavBarActions: React.FC = () => {
   const { key } = useLocation();

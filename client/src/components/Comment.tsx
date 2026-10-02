@@ -21,7 +21,7 @@ export const Comment = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <img src={CommentImg} alt="Comment Icon" style={{ width: '28px', height: '32px', marginRight: '8px' }} />
-          <Typography variant="h6" color="white">
+          <Typography variant="h6" sx={{ color: 'white' }}>
             Comments
           </Typography>
         </div>
@@ -73,7 +73,7 @@ export const Comment = () => {
           <div style={{ marginLeft: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
               <Typography variant="h6">Giuseppina</Typography>
-              <Typography variant="body2" color="gray">
+              <Typography variant="body2" sx={{ color: 'gray' }}>
                 March 28, 2024
               </Typography>
             </div>
@@ -112,7 +112,7 @@ export const Comment = () => {
               }}
             >
               <Typography variant="h6">Josephine</Typography>
-              <Typography variant="body2" color="gray">
+              <Typography variant="body2" sx={{ color: 'gray' }}>
                 March 29, 2024
               </Typography>
             </div>

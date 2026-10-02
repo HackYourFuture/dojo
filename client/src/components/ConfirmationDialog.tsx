@@ -23,7 +23,7 @@ export const ConfirmationDialog = ({
   onCancel,
 }: ConfirmationDialogProps) => {
   return (
-    <Dialog open={isOpen} onClose={onCancel} PaperProps={{ style: { padding: 10 } }}>
+    <Dialog open={isOpen} onClose={onCancel} slotProps={{ paper: { style: { padding: 10 } } }}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{message}</DialogContentText>

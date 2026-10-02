@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router';
 import { getSession, loginWithGoogle, logoutSession } from '../api/api';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { useCallback, useEffect, useMemo, useState } from 'react';

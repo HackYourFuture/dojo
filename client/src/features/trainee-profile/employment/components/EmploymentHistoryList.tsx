@@ -27,7 +27,7 @@ export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({
       }}
     >
       {employmentHistory.length === 0 ? (
-        <Typography variant="body1" color="text.secondary" padding="16px">
+        <Typography variant="body1" sx={{ color: 'text.secondary', padding: '16px' }}>
           No employment history found
         </Typography>
       ) : (
@@ -41,17 +41,13 @@ export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({
                 backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
               }}
             >
-              <Box px={2} width="100%">
+              <Box sx={{ px: 2, width: '100%' }}>
                 <ListItemText
                   // A div, since the secondary text holds paragraphs, which cannot be inside the default <p>.
                   slotProps={{ secondary: { component: 'div' } }}
-                  primary={
-                    <Box pt={1} fontWeight="bold">
-                      {employment.companyName}
-                    </Box>
-                  }
+                  primary={<Box sx={{ pt: 1, fontWeight: 'bold' }}>{employment.companyName}</Box>}
                   secondary={
-                    <Box py={1}>
+                    <Box sx={{ py: 1 }}>
                       <Typography variant="body2">
                         {employment.role} • {formatTextToFriendly(employment.type)}
                       </Typography>
@@ -63,7 +59,7 @@ export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({
                   }
                 />
                 {employment.comments && (
-                  <Typography variant="subtitle1" pb={2}>
+                  <Typography variant="subtitle1" sx={{ pb: 2 }}>
                     {employment.comments}
                   </Typography>
                 )}
