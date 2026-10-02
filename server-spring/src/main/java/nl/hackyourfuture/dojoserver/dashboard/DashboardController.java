@@ -23,7 +23,7 @@ public class DashboardController {
 
     @GetMapping
     @Operation(summary = "Get dashboard",
-            description = "Returns the headline numbers and trainee counts by status, track, education level, country and gender, optionally for a range of current cohorts.")
+            description = "Returns the headline numbers and trainee counts by status, track, education level, country and gender, optionally for a range of cohorts.")
     @ApiResponse(responseCode = "200", description = "The dashboard statistics")
     @ApiResponse(
             responseCode = "400",
@@ -32,13 +32,13 @@ public class DashboardController {
     )
     public DashboardResponse getDashboard(
             @Parameter(
-                    description = "Only trainees whose current cohort is this one or later",
+                    description = "Only trainees whose current cohort, or start cohort when they have none, is this one or later",
                     example = "40")
             @RequestParam(required = false)
             Integer startCohort,
 
             @Parameter(
-                    description = "Only trainees whose current cohort is this one or earlier",
+                    description = "Only trainees whose current cohort, or start cohort when they have none, is this one or earlier",
                     example = "55")
             @RequestParam(required = false)
             Integer endCohort

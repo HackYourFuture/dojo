@@ -114,6 +114,14 @@ public class DashboardEndpointTest {
     }
 
     @Test
+    void aTraineeCountsInItsCurrentCohortOrElseItsStartCohort() {
+        save(trainee(9003).currentCohort(null));
+        save(trainee(9003).currentCohort(9004));
+        assertThat(get("/api/dashboard?startCohort=9003&endCohort=9003")).bodyJson()
+                .extractingPath("$.overview.total").isEqualTo(1);
+    }
+
+    @Test
     void aRangeWithoutTraineesCountsNothing() {
         var json = assertThat(get("/api/dashboard?startCohort=9003&endCohort=9004")).bodyJson();
         json.extractingPath("$.overview.total").isEqualTo(0);

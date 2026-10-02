@@ -15,9 +15,6 @@ import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
-import nl.hackyourfuture.dojoserver.trainee.profile.TraineeSpecifications;
-import org.springframework.data.jpa.domain.PredicateSpecification;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,17 +35,11 @@ import java.util.stream.Collectors;
 public class DashboardService {
     private final TraineeRepository traineeRepository;
 
-    // Counts in Java: there are only a few hundred trainees.
     @Transactional(readOnly = true)
     public DashboardResponse getDashboard(Integer startCohort, Integer endCohort) {
-        List<PredicateSpecification<Trainee>> filters = new ArrayList<>();
-        if (startCohort != null) {
-            filters.add(TraineeSpecifications.currentCohortFrom(startCohort));
-        }
-        if (endCohort != null) {
-            filters.add(TraineeSpecifications.currentCohortTo(endCohort));
-        }
-        List<Trainee> trainees = traineeRepository.findAll(Specification.where(PredicateSpecification.allOf(filters)));
+        List<Trainee> trainees = traineeRepository.findAll().stream()
+                .filter(trainee -> isInRange(cohortOf(trainee), startCohort, endCohort))
+                .toList();
 
         return new DashboardResponse(
                 overview(trainees),
@@ -57,6 +48,16 @@ public class DashboardService {
                 countBy(trainees, Trainee::getEducationLevel, EducationLevel.values(), EducationLevelCount::new),
                 countCountries(trainees),
                 countBy(trainees, Trainee::getGender, Gender.values(), GenderCount::new));
+    }
+
+    // The current cohort, or the start cohort for a trainee without one, so nobody drops out of a range.
+    private static int cohortOf(Trainee trainee) {
+        return trainee.getCurrentCohort() != null ? trainee.getCurrentCohort() : trainee.getStartCohort();
+    }
+
+    // A missing bound leaves that side of the range open.
+    private static boolean isInRange(int cohort, Integer startCohort, Integer endCohort) {
+        return (startCohort == null || cohort >= startCohort) && (endCohort == null || cohort <= endCohort);
     }
 
     private static Overview overview(List<Trainee> trainees) {

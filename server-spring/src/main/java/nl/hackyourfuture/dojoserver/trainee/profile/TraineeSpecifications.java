@@ -3,15 +3,15 @@ package nl.hackyourfuture.dojoserver.trainee.profile;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 
 // Criteria fragments for the trainee list filters. Each one is only built when its filter is present.
-public final class TraineeSpecifications {
+final class TraineeSpecifications {
     private TraineeSpecifications() {
     }
 
-    public static PredicateSpecification<Trainee> currentCohortFrom(Integer cohort) {
+    static PredicateSpecification<Trainee> currentCohortFrom(Integer cohort) {
         return (trainee, cb) -> cb.greaterThanOrEqualTo(trainee.get("currentCohort"), cohort);
     }
 
-    public static PredicateSpecification<Trainee> currentCohortTo(Integer cohort) {
+    static PredicateSpecification<Trainee> currentCohortTo(Integer cohort) {
         return (trainee, cb) -> cb.lessThanOrEqualTo(trainee.get("currentCohort"), cohort);
     }
 }
