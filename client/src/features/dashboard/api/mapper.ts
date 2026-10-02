@@ -25,6 +25,7 @@ export const mapDashboardToDomain = (dashboard: DashboardResponse): DashboardDat
     learningStatuses: dashboard.learningStatuses,
     tracks: dashboard.tracks.map(({ track, count }) => ({ label: getTrackLabel(track), count })),
     educationLevels: dashboard.educationLevels.map(({ educationLevel, count }) => ({
+      educationLevel,
       label: optionLabel(educationLevelOptions, educationLevel),
       count,
     })),

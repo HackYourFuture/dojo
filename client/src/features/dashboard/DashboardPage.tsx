@@ -6,6 +6,7 @@ import { DashboardCard } from './components/DashboardCard';
 import { DashboardSection } from './components/DashboardSection';
 import { DistributionBarChart } from './components/DistributionBarChart';
 import { DistributionPieChart } from './components/DistributionPieChart';
+import { EducationLevelChart } from './components/EducationLevelChart';
 import { LearningStatusChart } from './components/LearningStatusChart';
 import { SplitBar } from './components/SplitBar';
 import { StatCard } from './components/StatCard';
@@ -60,7 +61,6 @@ const DashboardPage = () => {
                 info="Trainees studying or on hold, plus graduates whose job path is searching."
                 value={data.overview.active}
               >
-                {/* The same colors as the learning status chart. */}
                 <SplitBar
                   parts={[
                     { label: 'studying', value: data.overview.studying, color: 'info.main' },
@@ -97,7 +97,7 @@ const DashboardPage = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <DashboardCard title="Education level">
-                <DistributionPieChart rows={data.educationLevels} />
+                <EducationLevelChart rows={data.educationLevels} />
               </DashboardCard>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>

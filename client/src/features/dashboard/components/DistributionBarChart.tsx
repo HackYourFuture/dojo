@@ -1,5 +1,6 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LabelCount } from '../models/dashboard';
+import { useTheme } from '@mui/material';
 
 interface DistributionBarChartProps {
   rows: LabelCount[];
@@ -7,9 +8,10 @@ interface DistributionBarChartProps {
 }
 
 export const DistributionBarChart = ({ rows, layout }: DistributionBarChartProps) => {
+  const { palette } = useTheme();
   const labelAxis = { scaleType: 'band' as const, data: rows.map((row) => row.label) };
   const countAxis = { tickMinStep: 1 };
-  const series = [{ data: rows.map((row) => row.count), label: 'Trainees' }];
+  const series = [{ data: rows.map((row) => row.count), label: 'Trainees', color: palette.primary.main }];
 
   if (layout === 'horizontal') {
     // Grows with the rows, and makes room for the longest label.

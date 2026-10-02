@@ -1,8 +1,12 @@
-import { LearningStatus } from '../../../data/types/Trainee';
+import { EducationLevel, LearningStatus } from '../../../data/types/Trainee';
 
 export interface LabelCount {
   label: string;
   count: number;
+}
+
+export interface EducationLevelCount extends LabelCount {
+  educationLevel: EducationLevel | null;
 }
 
 export interface Overview {
@@ -19,7 +23,7 @@ export interface DashboardData {
   overview: Overview;
   learningStatuses: { status: LearningStatus; count: number }[];
   tracks: LabelCount[];
-  educationLevels: LabelCount[];
+  educationLevels: EducationLevelCount[];
   countries: LabelCount[];
   genders: LabelCount[];
 }
