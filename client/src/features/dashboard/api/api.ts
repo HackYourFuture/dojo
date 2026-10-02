@@ -2,12 +2,8 @@ import { DashboardResponse } from './types';
 import axios from 'axios';
 import { mapDashboardToDomain } from './mapper';
 
-export const getDashboard = async (startDate?: string, endDate?: string) => {
-  const params = {
-    ...(startDate && { startDate }),
-    ...(endDate && { endDate }),
-  };
-
-  const { data } = await axios.get<DashboardResponse>('/api/dashboard', { params });
+// A null bound is left out of the query, which leaves that side of the range open.
+export const getDashboard = async (startCohort: number | null, endCohort: number | null) => {
+  const { data } = await axios.get<DashboardResponse>('/api/dashboard', { params: { startCohort, endCohort } });
   return mapDashboardToDomain(data);
 };

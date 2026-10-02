@@ -1,11 +1,6 @@
-import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
-
-import { NumberField } from '@base-ui/react/number-field';
+import { NumberField } from '../../../../components/NumberField';
 import { ProfileValue } from './ProfileValue';
 import { profileInputStyle } from './fieldStyles';
-
-// Rounds a typed decimal to a whole number.
-const WHOLE_NUMBER_FORMAT: Intl.NumberFormatOptions = { maximumFractionDigits: 0 };
 
 interface ProfileNumberFieldProps {
   name: string;
@@ -19,7 +14,7 @@ interface ProfileNumberFieldProps {
 }
 
 /**
- * A whole number on the profile tabs: MUI's number field without the arrow buttons while editing, the label and value otherwise.
+ * A whole number on the profile tabs: the number field while editing, the label and value otherwise.
  */
 export const ProfileNumberField = ({
   name,
@@ -34,37 +29,14 @@ export const ProfileNumberField = ({
     return <ProfileValue label={label} value={value} emptyText={emptyText} />;
   }
 
-  // Composed as in https://mui.com/material-ui/react-number-field/
   return (
-    <NumberField.Root
+    <NumberField
       id={name}
+      label={label}
       value={value}
-      min={0}
       max={max}
-      format={WHOLE_NUMBER_FORMAT}
       onValueChange={(newValue) => onChange(name, newValue)}
-      render={(props) => (
-        <FormControl ref={props.ref} size="small" sx={profileInputStyle}>
-          {props.children}
-        </FormControl>
-      )}
-    >
-      <InputLabel htmlFor={name} shrink>
-        {label}
-      </InputLabel>
-      <NumberField.Input
-        render={(props, state) => (
-          <OutlinedInput
-            slotProps={{ input: props }}
-            // OutlinedInput handles the ref, value, focus and change of its input itself, so these go to it as props too.
-            inputRef={props.ref}
-            value={state.inputValue}
-            onBlur={props.onBlur}
-            onChange={props.onChange}
-            onFocus={props.onFocus}
-          />
-        )}
-      />
-    </NumberField.Root>
+      sx={profileInputStyle}
+    />
   );
 };

@@ -1,20 +1,34 @@
-export interface ChartData {
+import { EducationLevel, LearningStatus } from '../../../data/types/Trainee';
+
+export interface LabelCount {
   label: string;
-  value: number;
-  percent: number;
+  count: number;
 }
 
-export interface Demographics {
-  genderDistribution: ChartData[];
-  countryOfOrigin: ChartData[];
+export interface LearningStatusCount {
+  status: LearningStatus;
+  count: number;
 }
 
-export interface Program {
-  graduations: ChartData[];
-  employment: ChartData[];
+export interface EducationLevelCount extends LabelCount {
+  educationLevel: EducationLevel | null;
+}
+
+export interface Overview {
+  studying: number;
+  onHold: number;
+  searching: number;
+  active: number;
+  workingInIt: number;
+  leftWithoutItJob: number;
+  total: number;
 }
 
 export interface DashboardData {
-  demographics: Demographics;
-  program: Program;
+  overview: Overview;
+  learningStatuses: LearningStatusCount[];
+  tracks: LabelCount[];
+  educationLevels: EducationLevelCount[];
+  countries: LabelCount[];
+  genders: LabelCount[];
 }
