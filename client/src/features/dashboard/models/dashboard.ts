@@ -5,6 +5,11 @@ export interface LabelCount {
   count: number;
 }
 
+export interface LearningStatusCount {
+  status: LearningStatus;
+  count: number;
+}
+
 export interface EducationLevelCount extends LabelCount {
   educationLevel: EducationLevel | null;
 }
@@ -21,7 +26,7 @@ export interface Overview {
 
 export interface DashboardData {
   overview: Overview;
-  learningStatuses: { status: LearningStatus; count: number }[];
+  learningStatuses: LearningStatusCount[];
   tracks: LabelCount[];
   educationLevels: EducationLevelCount[];
   countries: LabelCount[];

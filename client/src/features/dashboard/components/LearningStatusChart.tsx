@@ -1,10 +1,11 @@
 import { DistributionPieChart } from './DistributionPieChart';
 import { LearningStatus } from '../../../data/types/Trainee';
+import { LearningStatusCount } from '../models/dashboard';
 import { learningStatusToLabel } from '../../../data/labels/traineeLabels';
 import { useTheme } from '@mui/material';
 
 interface LearningStatusChartProps {
-  rows: { status: LearningStatus; count: number }[];
+  rows: LearningStatusCount[];
 }
 
 export const LearningStatusChart = ({ rows }: LearningStatusChartProps) => {
