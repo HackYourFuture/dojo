@@ -1,17 +1,12 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { dashboardKeys } from './keys';
 import { getDashboard } from '../api/api';
-import { useQuery } from '@tanstack/react-query';
 
-/**
- * Hook to get the dashboard data for a date range.
- *
- * @param {string | undefined} startDate
- * @param {string | undefined} endDate
- */
-export const useGetDashboard = (startDate: string | undefined, endDate: string | undefined) => {
+// Keeps the previous numbers on screen while a new cohort range loads.
+export const useGetDashboard = (startCohort: number | null, endCohort: number | null) => {
   return useQuery({
-    queryKey: dashboardKeys.details(),
-    queryFn: () => getDashboard(startDate, endDate),
-    refetchOnWindowFocus: false, // Prevent refetching on window focus
+    queryKey: dashboardKeys.byRange(startCohort, endCohort),
+    queryFn: () => getDashboard(startCohort, endCohort),
+    placeholderData: keepPreviousData,
   });
 };

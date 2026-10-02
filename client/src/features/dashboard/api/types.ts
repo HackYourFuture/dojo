@@ -1,16 +1,18 @@
-interface ChartDataResponse {
-  label: string;
-  value: number;
-  percent: number;
-}
+import { EducationLevel, Gender, LearningStatus, Track } from '../../../data/types/Trainee';
 
 export interface DashboardResponse {
-  demographics: {
-    genderDistribution: ChartDataResponse[];
-    countryOfOrigin: ChartDataResponse[];
+  overview: {
+    studying: number;
+    onHold: number;
+    searching: number;
+    active: number;
+    workingInIt: number;
+    leftWithoutItJob: number;
+    total: number;
   };
-  program: {
-    graduations: ChartDataResponse[];
-    employment: ChartDataResponse[];
-  };
+  learningStatuses: { status: LearningStatus; count: number }[];
+  tracks: { track: Track; count: number }[];
+  educationLevels: { educationLevel: EducationLevel | null; count: number }[];
+  countries: { country: string | null; count: number }[];
+  genders: { gender: Gender | null; count: number }[];
 }

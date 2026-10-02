@@ -1,5 +1,6 @@
 const DASHBOARD_QUERY_KEY = 'dashboard';
 
 export const dashboardKeys = {
-  details: () => [DASHBOARD_QUERY_KEY, 'details'] as const,
+  byRange: (startCohort: number | null, endCohort: number | null) =>
+    [DASHBOARD_QUERY_KEY, startCohort, endCohort] as const,
 };
