@@ -24,7 +24,7 @@ const MAX_QUERY_LENGTH = 100;
 const SearchBar = ({ onTextChange, size, autoFocus, sx }: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   // You can change search debounce time using this hook.
-  const debouncedSearchTerm: string = useDebounce(searchTerm, 400);
+  const debouncedSearchTerm: string = useDebounce(searchTerm, 250);
 
   useEffect(() => {
     onTextChange(debouncedSearchTerm);

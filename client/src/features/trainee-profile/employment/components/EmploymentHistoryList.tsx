@@ -1,9 +1,82 @@
-import { EmploymentHistory } from '../models/employment-history';
-import { Box, List, ListItem, ListItemText, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, List, ListItem, Stack, Typography } from '@mui/material';
+import { EmploymentHistory, EmploymentType } from '../models/employment-history';
+
+import CheckIcon from '@mui/icons-material/Check';
 import { ListItemActions } from '../../../../components/ListItemActions';
+import MarkdownText from '../../components/MarkdownText';
 import React from 'react';
 import { formatDateForDisplay } from '../../utils/dateHelper';
 import { formatTextToFriendly } from '../../utils/formHelper';
+
+const feeFormat = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+interface EmploymentHistoryListItemProps {
+  employment: EmploymentHistory;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+/** One job or internship: the company and role, then the type, dates and fee, and the comments. */
+const EmploymentHistoryListItem = ({ employment, onEdit, onDelete }: EmploymentHistoryListItemProps) => {
+  const { companyName, role, type, startDate, endDate, feeCollected, feeAmount, comments } = employment;
+
+  return (
+    <ListItem alignItems="flex-start" disablePadding>
+      <Box sx={{ flex: 1, minWidth: 0, paddingLeft: 2, paddingY: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'baseline',
+            columnGap: 1,
+            paddingY: 1,
+            overflowWrap: 'anywhere',
+          }}
+        >
+          <Typography sx={{ fontWeight: 'bold' }}>{companyName}</Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {role}
+          </Typography>
+        </Box>
+        <Stack spacing={1} sx={{ paddingBottom: 1 }}>
+          <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+            <Chip
+              label={formatTextToFriendly(type)}
+              size="small"
+              variant="outlined"
+              color={type === EmploymentType.Job ? 'info' : 'default'}
+            />
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {formatDateForDisplay(startDate)} – {endDate ? formatDateForDisplay(endDate) : 'present'}
+            </Typography>
+          </Stack>
+          {comments && (
+            // Without the margin under the last paragraph, the comments end as far from the bottom as the other lines.
+            <Typography
+              variant="body2"
+              component="div"
+              sx={{ color: 'text.secondary', '& > * > :last-child': { marginBottom: 0 } }}
+            >
+              <MarkdownText>{comments}</MarkdownText>
+            </Typography>
+          )}
+        </Stack>
+      </Box>
+      <Stack direction="row" sx={{ alignItems: 'center', gap: 1, paddingY: 1 }}>
+        {feeCollected && (
+          <Chip
+            icon={<CheckIcon />}
+            label={`Fee ${feeAmount !== null ? feeFormat.format(feeAmount) : 'collected'}`}
+            size="small"
+            color="success"
+            variant="outlined"
+          />
+        )}
+        <ListItemActions onEdit={onEdit} onDelete={onDelete} />
+      </Stack>
+    </ListItem>
+  );
+};
 
 interface EmploymentHistoryListProps {
   employmentHistory: EmploymentHistory[];
@@ -16,67 +89,33 @@ export const EmploymentHistoryList: React.FC<EmploymentHistoryListProps> = ({
   onClickEdit,
   onClickDelete,
 }) => {
+  if (employmentHistory.length === 0) {
+    return (
+      <Typography sx={{ color: 'text.secondary', paddingX: 2, paddingY: 3, bgcolor: 'background.paper' }}>
+        No employment history yet
+      </Typography>
+    );
+  }
+
   return (
     <List
       sx={{
         width: '100%',
-        backgroundColor: 'background.paper',
-        maxHeight: 300,
+        bgcolor: 'background.paper',
+        maxHeight: 400,
         overflow: 'auto',
         scrollbarWidth: 'thin',
+        '& > :nth-of-type(odd)': { bgcolor: 'background.paperAlt' },
       }}
     >
-      {employmentHistory.length === 0 ? (
-        <Typography variant="body1" sx={{ color: 'text.secondary', padding: '16px' }}>
-          No employment history found
-        </Typography>
-      ) : (
-        employmentHistory.map((employment: EmploymentHistory, index: number) => {
-          return (
-            <ListItem
-              key={employment.id}
-              alignItems="flex-start"
-              disablePadding
-              sx={{
-                backgroundColor: index % 2 === 0 ? 'background.paperAlt' : 'background.paper',
-              }}
-            >
-              <Box sx={{ px: 2, width: '100%' }}>
-                <ListItemText
-                  // A div, since the secondary text holds paragraphs, which cannot be inside the default <p>.
-                  slotProps={{ secondary: { component: 'div' } }}
-                  primary={<Box sx={{ pt: 1, fontWeight: 'bold' }}>{employment.companyName}</Box>}
-                  secondary={
-                    <Box sx={{ py: 1 }}>
-                      <Typography variant="body2">
-                        {employment.role} • {formatTextToFriendly(employment.type)}
-                      </Typography>
-                      <Typography variant="body2">
-                        Start: {formatDateForDisplay(employment.startDate)}
-                        {employment.endDate && ` • End: ${formatDateForDisplay(employment.endDate)}`}
-                      </Typography>
-                    </Box>
-                  }
-                />
-                {employment.comments && (
-                  <Typography variant="subtitle1" sx={{ pb: 2 }}>
-                    {employment.comments}
-                  </Typography>
-                )}
-              </Box>
-              <Box>
-                <ListItemActions
-                  onEdit={() => onClickEdit(employment.id)}
-                  onDelete={() => onClickDelete(employment.id)}
-                />
-                <Tooltip title="Education fee">
-                  <Typography>€ {employment.feeAmount ?? '---'}</Typography>
-                </Tooltip>
-              </Box>
-            </ListItem>
-          );
-        })
-      )}
+      {employmentHistory.map((employment) => (
+        <EmploymentHistoryListItem
+          key={employment.id}
+          employment={employment}
+          onEdit={() => onClickEdit(employment.id)}
+          onDelete={() => onClickDelete(employment.id)}
+        />
+      ))}
     </List>
   );
 };
