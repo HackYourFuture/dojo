@@ -106,7 +106,7 @@ export const AssessmentsComponent = () => {
   };
 
   return (
-    <Box sx={{ width: '70ch' }}>
+    <Box sx={{ width: '70ch', maxWidth: '100%' }}>
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
