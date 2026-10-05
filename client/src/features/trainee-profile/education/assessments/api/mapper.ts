@@ -1,6 +1,6 @@
-import { AssessmentRequest, AssessmentResponse } from './types';
+import { AssessmentRequest, AssessmentResponse, AssessmentsResponse } from './types';
 
-import { Assessment } from '../models/assessment';
+import { Assessment, TraineeAssessments } from '../models/assessment';
 import { toISODateString } from '../../../utils/dateHelper';
 
 export const mapAssessmentToDomain = (assessment: AssessmentResponse): Assessment => {
@@ -11,6 +11,13 @@ export const mapAssessmentToDomain = (assessment: AssessmentResponse): Assessmen
     score: assessment.score,
     result: assessment.result,
     comments: assessment.comments,
+  };
+};
+
+export const mapAssessmentsToDomain = (response: AssessmentsResponse): TraineeAssessments => {
+  return {
+    averageScore: response.averageScore,
+    assessments: response.assessments.map(mapAssessmentToDomain),
   };
 };
 

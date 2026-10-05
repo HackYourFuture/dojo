@@ -7,6 +7,11 @@ export interface Assessment {
   comments: string | null;
 }
 
+export interface TraineeAssessments {
+  averageScore: number | null;
+  assessments: Assessment[];
+}
+
 export enum AssessmentResult {
   Passed = 'passed',
   PassedWithWarning = 'passed-with-warning',

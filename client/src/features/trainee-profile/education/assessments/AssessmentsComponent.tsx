@@ -24,7 +24,9 @@ export const AssessmentsComponent = () => {
     error: deleteAssessmentError,
   } = useDeleteAssessment(traineeId);
   const { mutate: editAssessment, isPending: editAssessmentLoading } = useEditAssessment(traineeId);
-  const { data: assessments, isPending: assessmentsLoading, error: assessmentsError } = useGetAssessments(traineeId);
+  const { data, isPending: assessmentsLoading, error: assessmentsError } = useGetAssessments(traineeId);
+  const assessments = data?.assessments;
+  const averageScore = data?.averageScore ?? null;
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState(false);
 
   const [idToDelete, setIdToDelete] = useState<string>('');
@@ -104,7 +106,7 @@ export const AssessmentsComponent = () => {
   };
 
   return (
-    <Box sx={{ width: '50%' }}>
+    <Box sx={{ width: '70ch', maxWidth: '100%' }}>
       <ConfirmationDialog
         confirmButtonText="Delete"
         isOpen={isConfirmationDialogOpen}
@@ -115,7 +117,7 @@ export const AssessmentsComponent = () => {
         onCancel={onCancelDelete}
       />
       <ProfileSection
-        title={`Assessments (${assessments?.length || 0})`}
+        title={averageScore !== null ? `Assessments (avg ${averageScore.toFixed(1)})` : 'Assessments'}
         action={
           <Button startIcon={<AddIcon />} onClick={onClickAdd}>
             New Assessment

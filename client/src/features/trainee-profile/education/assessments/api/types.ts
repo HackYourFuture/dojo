@@ -16,3 +16,8 @@ export interface AssessmentResponse {
   score: number | null;
   comments: string | null;
 }
+
+export interface AssessmentsResponse {
+  averageScore: number | null;
+  assessments: AssessmentResponse[];
+}

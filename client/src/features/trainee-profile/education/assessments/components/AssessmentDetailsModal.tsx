@@ -7,6 +7,7 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
+  ListSubheader,
   MenuItem,
   Modal,
   Select,
@@ -166,13 +167,16 @@ export const AssessmentDetailsModal = ({
                 value={assessmentFields.type ?? ''}
                 onChange={handleAssessmentSelectChange}
               >
+                <ListSubheader>Core Program</ListSubheader>
                 <MenuItem value={AssessmentType.CoreMidTermInterview}>Core mid-term interview</MenuItem>
                 <MenuItem value={AssessmentType.CoreEndInterview}>Core end interview</MenuItem>
+                <ListSubheader>Specialization tracks</ListSubheader>
                 <MenuItem value={AssessmentType.FrontEndMidTermInterview}>Frontend mid-term interview</MenuItem>
                 <MenuItem value={AssessmentType.BackEndMidTermInterview}>Backend mid-term interview</MenuItem>
                 <MenuItem value={AssessmentType.CloudMidTermInterview}>Cloud mid-term interview</MenuItem>
                 <MenuItem value={AssessmentType.DataMidTermInterview}>Data mid-term interview</MenuItem>
                 <MenuItem value={AssessmentType.TesterMidTermInterview}>Tester mid-term interview</MenuItem>
+                <ListSubheader>Final project</ListSubheader>
                 <MenuItem value={AssessmentType.FinalProjectInterview}>Final project interview</MenuItem>
               </Select>
               {typeError && <FormHelperText>Type is required</FormHelperText>}

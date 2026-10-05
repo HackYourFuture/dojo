@@ -4,9 +4,9 @@ import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 
-const preStyle = { whiteSpace: 'pre-wrap' as const, overflowWrap: 'break-word' as const };
+const preStyle = { whiteSpace: 'pre-wrap' as const };
 
-// Markdown blocks have top margins, which would add a gap above the text. Long links wrap instead of overflowing.
+// Markdown blocks have top margins, which would add a gap above the text. Long lines wrap instead of overflowing.
 const rootStyle = { overflowWrap: 'anywhere', '& > *': { marginTop: 0 } } as const;
 
 const MarkdownText = ({ children }: { children: string }) => (

@@ -7,6 +7,7 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentRequest;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentResponse;
+import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentsResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,12 @@ public class AssessmentService {
     private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
-    public List<AssessmentResponse> getAssessments(String traineeId) {
+    public AssessmentsResponse getAssessments(String traineeId) {
         requireTrainee(traineeId);
-        return assessmentRepository.findByTraineeIdOrderByDateDesc(traineeId).stream()
+        List<AssessmentResponse> assessments = assessmentRepository.findByTraineeIdOrderByDateDesc(traineeId).stream()
                 .map(AssessmentResponse::from)
                 .toList();
+        return new AssessmentsResponse(getAverageScores(List.of(traineeId)).get(traineeId), assessments);
     }
 
     /** Average score per trainee, for the ids given. A trainee with no scored assessment is absent from the map. */
