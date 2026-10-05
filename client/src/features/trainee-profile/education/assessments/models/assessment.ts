@@ -7,6 +7,12 @@ export interface Assessment {
   comments: string | null;
 }
 
+// The assessments of a trainee, with the average the API works out from their best score per type.
+export interface TraineeAssessments {
+  averageScore: number | null;
+  assessments: Assessment[];
+}
+
 export enum AssessmentResult {
   Passed = 'passed',
   PassedWithWarning = 'passed-with-warning',

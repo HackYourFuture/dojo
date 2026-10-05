@@ -128,6 +128,26 @@ public class TraineeListTest {
                 .containsEntry("averageAssessmentScore", null);
     }
 
+    @Test
+    void theAssessmentsCarryTheSameAverage() {
+        score(earlier, AssessmentType.JAVASCRIPT, "4.0");
+        score(earlier, AssessmentType.JAVASCRIPT, "8.0");
+        score(earlier, AssessmentType.NODEJS, "6.5");
+
+        MvcTestResult result = assessments(earlier);
+        assertThat(result).bodyJson().extractingPath("$.assessments").asArray().hasSize(3);
+        assertThat(result).bodyJson()
+                .extractingPath("$.averageScore")
+                .convertTo(InstanceOfAssertFactories.BIG_DECIMAL).isEqualByComparingTo("7.25");
+    }
+
+    @Test
+    void theAssessmentsOfATraineeWithoutScoresCarryANullAverage() {
+        assertThat(assessments(earlier)).bodyJson()
+                .extractingPath("$").asMap()
+                .containsEntry("averageScore", null);
+    }
+
     // ------------------------------------------------------------------ paging
 
     @Test
@@ -149,6 +169,10 @@ public class TraineeListTest {
 
     private MvcTestResult list(String query) {
         return mvc.get().uri(TRAINEES + query).exchange();
+    }
+
+    private MvcTestResult assessments(Trainee trainee) {
+        return mvc.get().uri(TRAINEES + "/{id}/assessments", trainee.getId()).exchange();
     }
 
     private ObjectArrayAssert<Object> ids(String query) {

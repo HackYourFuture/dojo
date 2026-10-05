@@ -12,6 +12,7 @@ import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentRequest;
 import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentResponse;
+import nl.hackyourfuture.dojoserver.trainee.assessment.dto.AssessmentsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/trainees/{traineeId}/assessments")
 @RequiredArgsConstructor
@@ -36,14 +35,14 @@ public class AssessmentController {
 
     @GetMapping
     @Operation(summary = "List the assessments of a trainee",
-            description = "Returns every assessment the trainee took.")
-    @ApiResponse(responseCode = "200", description = "The assessments of the trainee")
+            description = "Returns every assessment the trainee took, with their average score.")
+    @ApiResponse(responseCode = "200", description = "The assessments and average score of the trainee")
     @ApiResponse(
             responseCode = "404",
             description = "The trainee id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public List<AssessmentResponse> getAssessments(
+    public AssessmentsResponse getAssessments(
             @Parameter(description = "ID of the trainee", example = "HpOjvmwXsL")
             @PathVariable
             String traineeId) {
