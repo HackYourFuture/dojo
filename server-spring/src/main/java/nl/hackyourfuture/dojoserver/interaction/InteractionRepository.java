@@ -20,4 +20,10 @@ public interface InteractionRepository extends JpaRepository<Interaction, String
 
     @EntityGraph(attributePaths = "reporter")
     Optional<Interaction> findByIdAndOrganisationId(String id, String organisationId);
+
+    @EntityGraph(attributePaths = "reporter")
+    List<Interaction> findByVolunteerIdOrderByDateDesc(String volunteerId);
+
+    @EntityGraph(attributePaths = "reporter")
+    Optional<Interaction> findByIdAndVolunteerId(String id, String volunteerId);
 }

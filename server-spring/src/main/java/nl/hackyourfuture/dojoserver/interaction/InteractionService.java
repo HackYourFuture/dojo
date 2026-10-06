@@ -12,6 +12,7 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoForbiddenException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class InteractionService {
     private final InteractionRepository interactionRepository;
     private final TraineeRepository traineeRepository;
     private final OrganisationRepository organisationRepository;
+    private final VolunteerRepository volunteerRepository;
     private final UserRepository userRepository;
     private final SlackNotificationSender slackNotificationSender;
 
@@ -55,6 +57,7 @@ public class InteractionService {
         switch (profile) {
             case TRAINEE -> builder.traineeId(profileId);
             case ORGANISATION -> builder.organisationId(profileId);
+            case VOLUNTEER -> builder.volunteerId(profileId);
         }
 
         Interaction created = interactionRepository.save(builder.build());
@@ -69,6 +72,11 @@ public class InteractionService {
                 var organisation = organisationRepository.findById(profileId)
                         .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
                 slackNotificationSender.organisationInteractionCreated(currentUser.name(), organisation, created);
+            }
+            case VOLUNTEER -> {
+                var volunteer = volunteerRepository.findById(profileId)
+                        .orElseThrow(() -> new DojoNotFoundException(profile.getLabel(), profileId));
+                slackNotificationSender.volunteerInteractionCreated(currentUser.name(), volunteer, created);
             }
         }
 
@@ -114,6 +122,7 @@ public class InteractionService {
         boolean exists = switch (profile) {
             case TRAINEE -> traineeRepository.existsById(profileId);
             case ORGANISATION -> organisationRepository.existsById(profileId);
+            case VOLUNTEER -> volunteerRepository.existsById(profileId);
         };
 
         if (!exists) {
@@ -125,6 +134,7 @@ public class InteractionService {
         return switch (profile) {
             case TRAINEE -> interactionRepository.findByTraineeIdOrderByDateDesc(profileId);
             case ORGANISATION -> interactionRepository.findByOrganisationIdOrderByDateDesc(profileId);
+            case VOLUNTEER -> interactionRepository.findByVolunteerIdOrderByDateDesc(profileId);
         };
     }
 
@@ -135,6 +145,7 @@ public class InteractionService {
         var interaction = switch (profile) {
             case TRAINEE -> interactionRepository.findByIdAndTraineeId(id, profileId);
             case ORGANISATION -> interactionRepository.findByIdAndOrganisationId(id, profileId);
+            case VOLUNTEER -> interactionRepository.findByIdAndVolunteerId(id, profileId);
         };
         return interaction.orElseThrow(() -> new DojoNotFoundException("Interaction", id));
     }
