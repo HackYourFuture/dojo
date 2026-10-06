@@ -46,6 +46,16 @@ class DojoApi:
     def add_employment_history(self, trainee_id: str, employment: Payload) -> None:
         self._post(f"/trainees/{trainee_id}/employment-history", employment)
 
+    def create_volunteer(self, volunteer: Payload) -> str:
+        """Creates the volunteer and returns its id."""
+        return self._post("/volunteers", volunteer)["id"]
+
+    def set_volunteer_picture(self, volunteer_id: str, image: bytes) -> None:
+        self._put_picture(f"/volunteers/{volunteer_id}/picture", ("portrait.jpg", image, "image/jpeg"))
+
+    def add_volunteer_interaction(self, volunteer_id: str, interaction: Payload) -> None:
+        self._post(f"/volunteers/{volunteer_id}/interactions", interaction)
+
     def get_users(self) -> list[Payload]:
         return self._get("/admin/users")
 

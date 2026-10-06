@@ -2,5 +2,13 @@
 
 from dojo_setup.generators.organisation import GeneratedOrganisation, generate_organisation
 from dojo_setup.generators.trainee import GeneratedTrainee, generate_trainee
+from dojo_setup.generators.volunteer import GeneratedVolunteer, generate_volunteer
 
-__all__ = ["GeneratedOrganisation", "GeneratedTrainee", "generate_organisation", "generate_trainee"]
+__all__ = [
+    "GeneratedOrganisation",
+    "GeneratedTrainee",
+    "GeneratedVolunteer",
+    "generate_organisation",
+    "generate_trainee",
+    "generate_volunteer",
+]

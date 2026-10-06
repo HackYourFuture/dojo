@@ -1,4 +1,4 @@
-"""Sends generated trainees and organisations to the Dojo API and keeps count of what was created."""
+"""Sends generated trainees, volunteers and organisations to the Dojo API and keeps count of what was created."""
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -6,16 +6,19 @@ from functools import cache
 from typing import Any
 
 from dojo_setup.api import ApiError, DojoApi, download_image
-from dojo_setup.generators import GeneratedOrganisation, GeneratedTrainee
+from dojo_setup.generators import GeneratedOrganisation, GeneratedTrainee, GeneratedVolunteer
 
 
 @dataclass
 class UploadReport:
     trainees: int = 0
-    pictures: int = 0
+    trainee_pictures: int = 0
     assessments: int = 0
     trainee_interactions: int = 0
     employment_history: int = 0
+    volunteers: int = 0
+    volunteer_pictures: int = 0
+    volunteer_interactions: int = 0
     organisations: int = 0
     logos: int = 0
     contact_persons: int = 0
@@ -34,7 +37,7 @@ def upload_trainee(api: DojoApi, trainee: GeneratedTrainee, report: UploadReport
 
     try:
         api.set_trainee_picture(trainee_id, _download_portrait(trainee.portrait_url))
-        report.pictures += 1
+        report.trainee_pictures += 1
     except ApiError as error:
         report.errors.append(f"Picture of {trainee.name} was not set. {error}")
 
@@ -44,6 +47,26 @@ def upload_trainee(api: DojoApi, trainee: GeneratedTrainee, report: UploadReport
     )
     report.employment_history += _add_all(
         api.add_employment_history, trainee_id, trainee.name, trainee.employment_history, report
+    )
+
+
+def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: UploadReport) -> None:
+    """Creates the volunteer with its picture and interactions. Rejected requests are added to the report."""
+    try:
+        volunteer_id = api.create_volunteer(volunteer.profile)
+    except ApiError as error:
+        report.errors.append(f"Volunteer {volunteer.name} was not created. {error}")
+        return
+    report.volunteers += 1
+
+    try:
+        api.set_volunteer_picture(volunteer_id, _download_portrait(volunteer.portrait_url))
+        report.volunteer_pictures += 1
+    except ApiError as error:
+        report.errors.append(f"Picture of {volunteer.name} was not set. {error}")
+
+    report.volunteer_interactions += _add_all(
+        api.add_volunteer_interaction, volunteer_id, volunteer.name, volunteer.interactions, report
     )
 
 
@@ -77,7 +100,7 @@ def _add_all(
     records: list[dict[str, Any]],
     report: UploadReport,
 ) -> int:
-    """Adds each record to its trainee or organisation and returns how many were accepted."""
+    """Adds each record to its trainee, volunteer or organisation and returns how many were accepted."""
     added = 0
     for record in records:
         try:

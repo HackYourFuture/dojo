@@ -76,6 +76,10 @@ def count_trainees(connection: psycopg.Connection) -> int:
     return connection.execute("SELECT count(*) FROM trainees").fetchone()[0]
 
 
+def count_volunteers(connection: psycopg.Connection) -> int:
+    return connection.execute("SELECT count(*) FROM volunteers").fetchone()[0]
+
+
 def count_organisations(connection: psycopg.Connection) -> int:
     return connection.execute("SELECT count(*) FROM organisations").fetchone()[0]
 

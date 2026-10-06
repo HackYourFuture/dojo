@@ -14,6 +14,7 @@ SEED = 422841832
 # Acts as "today" for all generated dates, so every run produces the same data. Must not be in the future.
 REFERENCE_DATE = date(2026, 9, 1)
 DEFAULT_TRAINEE_COUNT = 500
+DEFAULT_VOLUNTEER_COUNT = 300
 DEFAULT_ORGANISATION_COUNT = 200
 
 # The user the script authenticates as. Created in the database if missing.

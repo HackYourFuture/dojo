@@ -1,0 +1,502 @@
+[
+  {
+    "type": "email",
+    "title": "Volunteer sign-up received",
+    "details": "Filled in the volunteer sign-up form and would like to mentor in the Back-End track. Replied with information about the next cohort."
+  },
+  {
+    "type": "call",
+    "title": "Introductory call",
+    "details": "First call with a new volunteer who heard about HackYourFuture from a colleague. Explained how mentoring works and how much time it takes each week."
+  },
+  {
+    "type": "chat",
+    "title": "Question about time commitment",
+    "details": "Asked on Slack how much time mentoring takes. Explained it is about four hours a week, including the weekly session and homework reviews."
+  },
+  {
+    "type": "call",
+    "title": "Matched with a module",
+    "details": "Discussed which part of the programme suits them best. Their React experience makes them a good fit for the Front-End track."
+  },
+  {
+    "type": "email",
+    "title": "Certificate of conduct requested",
+    "details": "Asked them to request a certificate of conduct (VOG) before they start working with trainees. Shared the instructions."
+  },
+  {
+    "type": "email",
+    "title": "Certificate of conduct received",
+    "details": "Received their certificate of conduct (VOG). Everything is in place for them to start mentoring next week."
+  },
+  {
+    "type": "email",
+    "title": "Volunteer agreement signed",
+    "details": "Returned the signed volunteer agreement, including the confidentiality terms for trainee data."
+  },
+  {
+    "type": "email",
+    "title": "Welcome email",
+    "details": "Sent the welcome email with the mentor guide, the cohort schedule and who to contact with questions."
+  },
+  {
+    "type": "email",
+    "title": "Slack invite sent",
+    "details": "Sent an invite to the HackYourFuture Slack and added them to the mentors channel and the channel of their cohort."
+  },
+  {
+    "type": "email",
+    "title": "GitHub access",
+    "details": "Asked for access to the HackYourFuture GitHub organisation to review pull requests. Added them to the mentors team."
+  },
+  {
+    "type": "in-person",
+    "title": "Onboarding session",
+    "details": "Joined the volunteer onboarding at Codam. Went through the code of conduct, the learning platform and how the weekly sessions work."
+  },
+  {
+    "type": "in-person",
+    "title": "Shadowed a session",
+    "details": "Shadowed an experienced mentor during the weekly session before teaching on their own. They felt well prepared afterwards."
+  },
+  {
+    "type": "feedback",
+    "title": "Feedback on onboarding",
+    "details": "Found the onboarding clear, but would have liked to meet the other mentors before their first session."
+  },
+  {
+    "type": "in-person",
+    "title": "First class taught",
+    "details": "Taught their first class on JavaScript fundamentals. The trainees were engaged and the session finished on time."
+  },
+  {
+    "type": "call",
+    "title": "Check-in after first month",
+    "details": "Checked in after their first month of mentoring. They enjoy it, but would like more guidance on how detailed homework reviews should be."
+  },
+  {
+    "type": "call",
+    "title": "Check-in: going well",
+    "details": "Regular check-in. Mentoring is going well, they get along with the other mentors and want to continue with the next module."
+  },
+  {
+    "type": "call",
+    "title": "Check-in: feeling stretched",
+    "details": "They feel stretched between work and mentoring. Agreed they will teach every other week and another mentor covers the rest."
+  },
+  {
+    "type": "chat",
+    "title": "Question about the curriculum",
+    "details": "Asked where to find the learning goals for next week. Shared the module page on the learning platform."
+  },
+  {
+    "type": "chat",
+    "title": "Slides for the session",
+    "details": "Asked for last year's slides on CSS layouts to prepare their session. Shared the folder with the session materials."
+  },
+  {
+    "type": "email",
+    "title": "Session schedule shared",
+    "details": "Sent the schedule of the upcoming module with the dates they agreed to teach. They confirmed all of them."
+  },
+  {
+    "type": "chat",
+    "title": "Session swap",
+    "details": "Asked to swap sessions with another mentor because of a work trip. Updated the schedule and let the cohort know."
+  },
+  {
+    "type": "chat",
+    "title": "Can't make this week's session",
+    "details": "Messaged that they are sick and cannot make this week's session. Found another mentor to take over."
+  },
+  {
+    "type": "other",
+    "title": "Covered a session last minute",
+    "details": "Stepped in to teach the weekly session when the scheduled mentor got sick. Thanked them for the flexibility."
+  },
+  {
+    "type": "chat",
+    "title": "Tech hour reminder",
+    "details": "Reminded them about the tech hour they signed up to host this week. They confirmed they will be there."
+  },
+  {
+    "type": "in-person",
+    "title": "Tech hour hosted",
+    "details": "Hosted a tech hour and helped five trainees debug their homework. Most questions were about asynchronous code."
+  },
+  {
+    "type": "in-person",
+    "title": "Pair programming session",
+    "details": "Ran a pair programming session in which trainees built a small REST API together."
+  },
+  {
+    "type": "in-person",
+    "title": "Code review workshop",
+    "details": "Ran a code review workshop for the cohort. Trainees practised giving feedback on each other's pull requests."
+  },
+  {
+    "type": "in-person",
+    "title": "Testing workshop",
+    "details": "Gave a workshop on unit testing for the Tester track. Trainees wrote their first automated tests."
+  },
+  {
+    "type": "call",
+    "title": "Planning a workshop",
+    "details": "Planned a workshop on web accessibility for the Front-End track. Agreed on the date, the exercises and what trainees should prepare."
+  },
+  {
+    "type": "call",
+    "title": "Specialization track planning",
+    "details": "Planned the Cloud track together. They will teach the sessions on Docker and Kubernetes and help with the final assignment."
+  },
+  {
+    "type": "email",
+    "title": "Session materials shared",
+    "details": "Shared the slides and code examples of their session, so they can be added to the learning platform."
+  },
+  {
+    "type": "chat",
+    "title": "Asked for session feedback",
+    "details": "Asked whether the trainees liked their session on REST APIs. Shared the results of the session survey with them."
+  },
+  {
+    "type": "feedback",
+    "title": "Positive trainee feedback",
+    "details": "Trainees rated their session highly. They appreciated the clear explanations and the live coding examples."
+  },
+  {
+    "type": "feedback",
+    "title": "Session moved too fast",
+    "details": "Several trainees said the session moved too fast. Shared the feedback and suggested more breaks for questions."
+  },
+  {
+    "type": "feedback",
+    "title": "Feedback from co-mentor",
+    "details": "Their co-mentor shared that they always come well prepared and explain concepts clearly."
+  },
+  {
+    "type": "feedback",
+    "title": "Late to sessions",
+    "details": "Trainees mentioned they arrived late to the last two sessions. Discussed it with them and they will plan their travel better."
+  },
+  {
+    "type": "call",
+    "title": "Discussed a difficult session",
+    "details": "Talked through a session where the group was hard to keep focused. Shared tips for timeboxing exercises and keeping discussions on track."
+  },
+  {
+    "type": "chat",
+    "title": "Question about homework submissions",
+    "details": "Asked how to see which trainees handed in their homework. Explained where to find the submitted pull requests."
+  },
+  {
+    "type": "chat",
+    "title": "Homework review backlog",
+    "details": "Mentioned they are behind on reviewing homework pull requests. Asked another mentor to help with this week's reviews."
+  },
+  {
+    "type": "feedback",
+    "title": "Trainees find reviews helpful",
+    "details": "Trainees said their homework reviews are detailed and help them write cleaner code."
+  },
+  {
+    "type": "feedback",
+    "title": "Reviews too short",
+    "details": "Some trainees found their homework reviews too short. Shared a few examples of detailed reviews with them."
+  },
+  {
+    "type": "chat",
+    "title": "Question about grading",
+    "details": "Asked how to grade the mid-term assignment. Shared the assessment criteria and an example of a good review."
+  },
+  {
+    "type": "call",
+    "title": "Concern about a trainee",
+    "details": "Called to share concerns about a trainee who missed the last two sessions. Passed it on to the trainee's coordinator, who will reach out."
+  },
+  {
+    "type": "call",
+    "title": "Follow-up on trainee concern",
+    "details": "Followed up on the trainee they were worried about. The trainee is back in class and catching up with the homework."
+  },
+  {
+    "type": "chat",
+    "title": "Trainee asked for extra help",
+    "details": "A trainee asked them for extra help with React hooks. They offered an online one-on-one session this week."
+  },
+  {
+    "type": "chat",
+    "title": "Laptop for a trainee",
+    "details": "Offered their old laptop for a trainee who does not have one. Arranged the handover at the next session."
+  },
+  {
+    "type": "feedback",
+    "title": "Mentor feedback on cohort",
+    "details": "Shared that the cohort is motivated, but struggles with Git. Planned an extra Git workshop before the next module."
+  },
+  {
+    "type": "feedback",
+    "title": "Curriculum feedback",
+    "details": "Thinks the database module has too much content for one week. Suggested moving SQL joins to a separate session."
+  },
+  {
+    "type": "email",
+    "title": "Proposed curriculum improvement",
+    "details": "Proposed updating the Node.js exercises to the latest Express version. Forwarded the proposal to the curriculum team."
+  },
+  {
+    "type": "feedback",
+    "title": "Learning platform suggestion",
+    "details": "Suggested making the exercises on the learning platform easier to find. Passed it on to the curriculum team."
+  },
+  {
+    "type": "other",
+    "title": "Wrote documentation",
+    "details": "Wrote a setup guide for the Cloud track exercises. It is now part of the learning platform."
+  },
+  {
+    "type": "other",
+    "title": "Fixed curriculum issues",
+    "details": "Opened pull requests to fix broken links and typos in the curriculum repository."
+  },
+  {
+    "type": "chat",
+    "title": "Shared a useful resource",
+    "details": "Shared an article about teaching Git to beginners in the mentors channel. Several mentors found it useful."
+  },
+  {
+    "type": "chat",
+    "title": "Access to the learning platform",
+    "details": "Could not log in to the learning platform to prepare their session. Fixed their account and they could access it again."
+  },
+  {
+    "type": "in-person",
+    "title": "Mid-term interview panel",
+    "details": "Joined the panel for the Core Program mid-term interviews. Interviewed four trainees and wrote a short report for each."
+  },
+  {
+    "type": "feedback",
+    "title": "Interview reports submitted",
+    "details": "Submitted clear reports with scores for the mid-term interviews. Asked them to add examples of what went well."
+  },
+  {
+    "type": "in-person",
+    "title": "Final project kick-off",
+    "details": "Joined the final project kick-off as a technical mentor. Helped two teams scope their project ideas."
+  },
+  {
+    "type": "feedback",
+    "title": "Final project mentoring update",
+    "details": "Their final project team works well together, but needs help with deployment. Shared the deployment guide of the Cloud track."
+  },
+  {
+    "type": "in-person",
+    "title": "Demo day jury",
+    "details": "Was part of the jury on demo day. Gave thoughtful feedback on every final project presentation."
+  },
+  {
+    "type": "in-person",
+    "title": "CV review session",
+    "details": "Reviewed CVs with trainees during job preparation. Most CVs needed clearer descriptions of the projects."
+  },
+  {
+    "type": "in-person",
+    "title": "LinkedIn workshop",
+    "details": "Gave a workshop on building a strong LinkedIn profile. Trainees updated their headlines and summaries during the session."
+  },
+  {
+    "type": "in-person",
+    "title": "Salary negotiation talk",
+    "details": "Gave a talk on salary negotiation and employment contracts in the Netherlands. Trainees asked lots of questions."
+  },
+  {
+    "type": "in-person",
+    "title": "English conversation practice",
+    "details": "Led an English conversation group. Trainees practised introducing themselves and their projects for job interviews."
+  },
+  {
+    "type": "feedback",
+    "title": "English mentoring progress",
+    "details": "Their mentee is more confident speaking English in class. They suggest continuing the mentoring for one more month."
+  },
+  {
+    "type": "call",
+    "title": "HR mentoring match",
+    "details": "Matched them as HR mentor with a trainee preparing for the Dutch job market. Explained what we expect and how often to meet."
+  },
+  {
+    "type": "call",
+    "title": "Mock interview",
+    "details": "Did an online technical mock interview with a graduate. Shared notes with the job preparation team on how the graduate explained their final project."
+  },
+  {
+    "type": "feedback",
+    "title": "Mock interview feedback",
+    "details": "The graduate found the mock interview very useful. The questions were close to a real interview they had a week later."
+  },
+  {
+    "type": "chat",
+    "title": "Offered to mentor a graduate",
+    "details": "Offered to support a graduate during their job search. Matched them with a recent graduate of the Data track."
+  },
+  {
+    "type": "feedback",
+    "title": "Graduate mentoring update",
+    "details": "Their mentee has two job interviews lined up. They meet every two weeks to prepare."
+  },
+  {
+    "type": "email",
+    "title": "Job opening at their company",
+    "details": "Shared a junior developer vacancy at their company. Forwarded it to the job preparation team for the graduates."
+  },
+  {
+    "type": "call",
+    "title": "Referral for a graduate",
+    "details": "Referred one of our graduates for an open position on their team. They will let us know how the first interview goes."
+  },
+  {
+    "type": "in-person",
+    "title": "Guest talk",
+    "details": "Gave a guest talk about their own career switch into tech. Trainees found it very inspiring."
+  },
+  {
+    "type": "chat",
+    "title": "Availability for the next cohort",
+    "details": "Asked about their availability for the next cohort. They can teach two sessions in the second half of the Core Program."
+  },
+  {
+    "type": "call",
+    "title": "Reduced availability",
+    "details": "Their new job leaves less time for volunteering. They prefer to host an occasional tech hour instead of mentoring a full module."
+  },
+  {
+    "type": "email",
+    "title": "Pausing for a few months",
+    "details": "Let us know they are pausing their volunteering for three months because of a busy period at work."
+  },
+  {
+    "type": "email",
+    "title": "Parental leave",
+    "details": "They are going on parental leave and will not be available for the coming months. Will check in when they are back."
+  },
+  {
+    "type": "call",
+    "title": "Back from a break",
+    "details": "Called after their break. They are ready to mentor again and would like to join the Back-End track of the next cohort."
+  },
+  {
+    "type": "email",
+    "title": "Returning volunteer",
+    "details": "Wants to come back after a year away. Sent an overview of what changed in the curriculum since they last mentored."
+  },
+  {
+    "type": "other",
+    "title": "No response to availability check",
+    "details": "Did not respond to the last two availability checks. Will not plan them in for the next cohort."
+  },
+  {
+    "type": "email",
+    "title": "Stopped volunteering",
+    "details": "They decided to stop volunteering after moving abroad. Thanked them for two years of mentoring."
+  },
+  {
+    "type": "call",
+    "title": "Offboarding call",
+    "details": "Offboarding call to hear about their experience. They enjoyed mentoring, but want to focus on their studies this year."
+  },
+  {
+    "type": "feedback",
+    "title": "Exit feedback",
+    "details": "Said in the exit survey that preparing sessions took more time than expected. Suggested sharing session plans earlier."
+  },
+  {
+    "type": "in-person",
+    "title": "Mentor meetup",
+    "details": "Joined the mentor meetup to share teaching tips and discuss the plans for the curriculum."
+  },
+  {
+    "type": "call",
+    "title": "Lead mentor role",
+    "details": "Asked whether they would like to be the lead mentor for the next Core Program. They accepted and will help onboard the new mentors."
+  },
+  {
+    "type": "in-person",
+    "title": "Graduation ceremony",
+    "details": "Attended the graduation ceremony of the cohort they mentored and gave a short speech for the graduates."
+  },
+  {
+    "type": "in-person",
+    "title": "Volunteer drinks",
+    "details": "Came to the volunteer drinks after the graduation ceremony. Talked about mentoring in the next specialization track."
+  },
+  {
+    "type": "email",
+    "title": "Thank-you note",
+    "details": "Sent a thank-you note for mentoring the whole Core Program. Trainees mentioned them in the end of module survey."
+  },
+  {
+    "type": "other",
+    "title": "Volunteer of the month",
+    "details": "Featured as volunteer of the month in the newsletter for all their homework reviews this module."
+  },
+  {
+    "type": "email",
+    "title": "Volunteer certificate",
+    "details": "Sent a letter confirming their volunteer work at HackYourFuture, which they asked for their employer."
+  },
+  {
+    "type": "email",
+    "title": "Yearly volunteer survey",
+    "details": "Sent the yearly volunteer survey. They replied with detailed feedback about the onboarding and the curriculum."
+  },
+  {
+    "type": "chat",
+    "title": "Recommended a colleague",
+    "details": "Recommended a colleague who wants to become a mentor. Sent the colleague the link to the volunteer sign-up form."
+  },
+  {
+    "type": "other",
+    "title": "Recruited colleagues",
+    "details": "Brought two colleagues to the volunteer information evening. Both want to start as mentors."
+  },
+  {
+    "type": "other",
+    "title": "Company volunteering day",
+    "details": "Organised a volunteering day with their team at work. They reviewed homework and held mock interviews."
+  },
+  {
+    "type": "email",
+    "title": "Employer matches volunteer hours",
+    "details": "Their employer donates to charity for every volunteer hour. Sent them the details they need to register their hours."
+  },
+  {
+    "type": "other",
+    "title": "Donated laptops",
+    "details": "Their company donated five refurbished laptops for trainees who need one."
+  },
+  {
+    "type": "other",
+    "title": "Media interview",
+    "details": "Agreed to be interviewed for an article about volunteering at HackYourFuture."
+  },
+  {
+    "type": "email",
+    "title": "Travel expenses",
+    "details": "Sent their travel expenses for the sessions at Codam. Forwarded them to finance for reimbursement."
+  },
+  {
+    "type": "other",
+    "title": "Trouble getting into the building",
+    "details": "Could not get into the building for the weekly session at Codam. Shared the entrance instructions for next time."
+  },
+  {
+    "type": "other",
+    "title": "Updated contact details",
+    "details": "Shared their new phone number and email address after changing jobs."
+  },
+  {
+    "type": "other",
+    "title": "Code of conduct concern",
+    "details": "Reported a code of conduct concern from a session. Followed up with everyone involved and closed the case."
+  }
+]
