@@ -69,7 +69,7 @@ def _contact_info(first_name: str, last_name: str, name_origin: str) -> dict[str
     # A relative or friend, with a name from the same background as the trainee
     emergency_contact_name = " ".join(generate_name(name_origin, weighted({"man": 1, "woman": 1})))
     return {
-        "email": _example_email(first_name, last_name),
+        "email": example_email(first_name, last_name),
         "slackId": "USLACKBOT",
         "phone": _phone_number(),
         "githubHandle": "HackYourFuture",
@@ -113,7 +113,7 @@ def _date_of_birth(min_age: int, max_age: int) -> date:
     return date_before((max_age - min_age) * YEAR, youngest)
 
 
-def _example_email(first_name: str, last_name: str) -> str:
+def example_email(first_name: str, last_name: str) -> str:
     user = ".".join(part for part in (to_ascii(first_name), to_ascii(last_name)) if part)
     return f"{user}{fake.random_int(1, 99)}@{fake.random_element(EMAIL_DOMAINS)}"
 

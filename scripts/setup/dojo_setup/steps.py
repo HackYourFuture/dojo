@@ -12,6 +12,7 @@ from dojo_setup.api import DojoApi
 from dojo_setup.config import (
     DEFAULT_ORGANISATION_COUNT,
     DEFAULT_TRAINEE_COUNT,
+    DEFAULT_VOLUNTEER_COUNT,
     ENV_FILE,
     SEED,
     TEST_USER_API_TOKEN,
@@ -20,10 +21,10 @@ from dojo_setup.config import (
     load_config,
 )
 from dojo_setup.errors import SetupCancelled
-from dojo_setup.generators import generate_organisation, generate_trainee
-from dojo_setup.uploader import UploadReport, upload_organisation, upload_trainee
+from dojo_setup.generators import generate_organisation, generate_trainee, generate_volunteer
+from dojo_setup.uploader import UploadReport, upload_organisation, upload_trainee, upload_volunteer
 
-TOTAL_STEPS = 7
+TOTAL_STEPS = 8
 _step_numbers = count(1)
 
 
@@ -77,13 +78,14 @@ def prepare_database(config: Config) -> None:
             output.skipped("Test user's API token already exists")
 
         existing_trainees = database.count_trainees(connection)
+        existing_volunteers = database.count_volunteers(connection)
         existing_organisations = database.count_organisations(connection)
 
-    if existing_trainees or existing_organisations:
+    if existing_trainees or existing_volunteers or existing_organisations:
         output.warning(
-            f"The database already contains {existing_trainees} trainees and {existing_organisations} organisations. "
-            "Every run generates the same data, so trainees from an earlier run will be rejected as duplicates "
-            "and organisations will be added again."
+            f"The database already contains {existing_trainees} trainees, {existing_volunteers} volunteers "
+            f"and {existing_organisations} organisations. Every run generates the same data, so trainees and "
+            "volunteers from an earlier run will be rejected as duplicates and organisations will be added again."
         )
         if not Confirm.ask("Continue anyway?", default=False, console=output.console):
             raise SetupCancelled()
@@ -97,17 +99,20 @@ def connect_to_api(config: Config) -> DojoApi:
     return api
 
 
-def choose_amounts() -> tuple[int, int]:
-    """Asks how many trainees and organisations to generate."""
+def choose_amounts() -> tuple[int, int, int]:
+    """Asks how many trainees, volunteers and organisations to generate."""
     _start_step("Options")
     output.info(f"Data is generated from seed {SEED}, so every run produces the same data.")
     trainee_count = _ask_count("How many trainees should be generated?", DEFAULT_TRAINEE_COUNT)
+    volunteer_count = _ask_count("How many volunteers should be generated?", DEFAULT_VOLUNTEER_COUNT)
     organisation_count = _ask_count("How many organisations should be generated?", DEFAULT_ORGANISATION_COUNT)
 
-    question = f"Generate {trainee_count} trainees and {organisation_count} organisations now?"
+    question = (
+        f"Generate {trainee_count} trainees, {volunteer_count} volunteers and {organisation_count} organisations now?"
+    )
     if not Confirm.ask(question, default=True, console=output.console):
         raise SetupCancelled()
-    return trainee_count, organisation_count
+    return trainee_count, volunteer_count, organisation_count
 
 
 def generate_trainees(api: DojoApi, trainee_count: int, report: UploadReport) -> None:
@@ -121,6 +126,19 @@ def generate_trainees(api: DojoApi, trainee_count: int, report: UploadReport) ->
             upload_trainee(api, generate_trainee(), report)
             _show_new_errors(report, errors_before)
     output.success(f"Created {report.trainees} of {trainee_count} trainees")
+
+
+def generate_volunteers(api: DojoApi, volunteer_count: int, report: UploadReport) -> None:
+    _start_step("Volunteers")
+    if volunteer_count == 0:
+        output.skipped("No volunteers requested")
+        return
+    with _progress_bar("Generating volunteers") as progress:
+        for _ in progress.track(range(volunteer_count)):
+            errors_before = len(report.errors)
+            upload_volunteer(api, generate_volunteer(), report)
+            _show_new_errors(report, errors_before)
+    output.success(f"Created {report.volunteers} of {volunteer_count} volunteers")
 
 
 def generate_organisations(api: DojoApi, organisation_count: int, report: UploadReport) -> None:
@@ -142,10 +160,13 @@ def show_summary(report: UploadReport) -> None:
     _start_step("Summary")
     table = Table(show_header=False, box=None, padding=(0, 2))
     table.add_row("Trainees", str(report.trainees))
-    table.add_row("Profile pictures", str(report.pictures))
+    table.add_row("Trainee pictures", str(report.trainee_pictures))
     table.add_row("Assessments", str(report.assessments))
     table.add_row("Trainee interactions", str(report.trainee_interactions))
     table.add_row("Employment records", str(report.employment_history))
+    table.add_row("Volunteers", str(report.volunteers))
+    table.add_row("Volunteer pictures", str(report.volunteer_pictures))
+    table.add_row("Volunteer interactions", str(report.volunteer_interactions))
     table.add_row("Organisations", str(report.organisations))
     table.add_row("Logos", str(report.logos))
     table.add_row("Contact persons", str(report.contact_persons))

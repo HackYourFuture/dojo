@@ -1,8 +1,8 @@
 """Dojo database setup.
 
 Fills a local Dojo environment with reproducible dummy data: a test user with an API token,
-trainees with profile pictures, assessments, interactions and employment history, and partner
-organisations with logos, contact persons and interactions.
+trainees with profile pictures, assessments, interactions and employment history, volunteers with
+profile pictures and interactions, and partner organisations with logos, contact persons and interactions.
 
 Usage: python main.py
 """
@@ -19,9 +19,10 @@ def main() -> None:
     config = steps.load_configuration()
     steps.prepare_database(config)
     api = steps.connect_to_api(config)
-    trainee_count, organisation_count = steps.choose_amounts()
+    trainee_count, volunteer_count, organisation_count = steps.choose_amounts()
     report = UploadReport()
     steps.generate_trainees(api, trainee_count, report)
+    steps.generate_volunteers(api, volunteer_count, report)
     steps.generate_organisations(api, organisation_count, report)
     steps.show_summary(report)
 
