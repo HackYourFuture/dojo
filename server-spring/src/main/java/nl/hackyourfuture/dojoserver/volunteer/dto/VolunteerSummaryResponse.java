@@ -36,7 +36,7 @@ public record VolunteerSummaryResponse(
         String thumbnailUrl,
 
         @Schema(
-                description = "Whether the volunteer is currently helping out",
+                description = "Where the volunteer stands with HackYourFuture",
                 example = "active",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
@@ -66,20 +66,20 @@ public record VolunteerSummaryResponse(
         String email,
 
         @Schema(
-                description = "The volunteer's Slack member id",
-                example = "U068AQ9G99F",
-                requiredMode = Schema.RequiredMode.REQUIRED,
-                nullable = true
-        )
-        String slackId,
-
-        @Schema(
                 description = "The volunteer's GitHub username, without the URL",
                 example = "janeroe",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
         String githubHandle,
+
+        @Schema(
+                description = "The volunteer's Slack member id",
+                example = "U068AQ9G99F",
+                requiredMode = Schema.RequiredMode.REQUIRED,
+                nullable = true
+        )
+        String slackId,
 
         @Schema(
                 description = "The URL to the volunteer's LinkedIn profile",
@@ -99,8 +99,8 @@ public record VolunteerSummaryResponse(
                 volunteer.getCompanyName(),
                 volunteer.getJobRole(),
                 volunteer.getEmail(),
-                volunteer.getSlackId(),
                 volunteer.getGithubHandle(),
+                volunteer.getSlackId(),
                 volunteer.getLinkedinUrl());
     }
 }

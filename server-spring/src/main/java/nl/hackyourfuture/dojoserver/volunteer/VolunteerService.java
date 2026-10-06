@@ -38,7 +38,8 @@ public class VolunteerService {
 
     @Transactional(readOnly = true)
     public Page<VolunteerSummaryResponse> getVolunteers(Sort.Direction direction, int page, int size) {
-        Sort sort = Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase()).and(Sort.by("lastName", "id"));
+        Sort sort = Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase(),
+                Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
         return volunteerRepository.findAll(PageRequest.of(page, size, sort)).map(VolunteerSummaryResponse::from);
     }
 

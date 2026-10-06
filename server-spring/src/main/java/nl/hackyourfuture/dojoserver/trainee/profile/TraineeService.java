@@ -56,8 +56,8 @@ public class TraineeService {
         }
 
         // Trainees with no cohort come first either way.
-        Sort sort = Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst())
-                .and(Sort.by("lastName", "id"));
+        Sort sort = Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst(),
+                Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
 
         Page<Trainee> trainees = traineeRepository.findAll(
                 Specification.where(PredicateSpecification.allOf(filters)),
@@ -71,7 +71,7 @@ public class TraineeService {
 
     @Transactional(readOnly = true)
     public TraineeResponse getTrainee(String id) {
-        Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
+        Trainee trainee = findTrainee(id);
         return TraineeResponse.from(trainee);
     }
 
@@ -133,13 +133,10 @@ public class TraineeService {
         return TraineeResponse.from(created);
     }
 
-    /**
-     * Partial update: the fields the caller sent are applied on top of the stored trainee and the
-     * result is validated as a whole, so the create rules hold for anything that changed.
-     */
+    // Partial update: the sent fields overlay the stored trainee, and the merged whole is validated.
     @Transactional
     public TraineeResponse updateTrainee(AuthenticatedUser currentUser, String id, ObjectNode patch) {
-        Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
+        Trainee trainee = findTrainee(id);
         TraineeRequest current = TraineeRequest.from(trainee);
         TraineeRequest merged = jsonMergePatch.apply(current, patch);
 
@@ -206,7 +203,7 @@ public class TraineeService {
 
     @Transactional
     public void deleteTrainee(AuthenticatedUser currentUser, String id) {
-        Trainee trainee = traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
+        Trainee trainee = findTrainee(id);
         traineeRepository.delete(trainee);
         // Flush before touching storage, so a delete the database refuses keeps the pictures.
         traineeRepository.flush();

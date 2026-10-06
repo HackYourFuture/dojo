@@ -161,6 +161,7 @@ create table volunteers
 );
 
 create unique index volunteers_email_upper_unique on volunteers (upper(email));
+
 -- Partner organisations
 create table organisations
 (
@@ -198,7 +199,6 @@ create table contact_persons
 
 create index contact_persons_organisation_idx on contact_persons (organisation_id);
 
-
 -- Interactions
 create table interactions
 (
@@ -208,10 +208,8 @@ create table interactions
         constraint interactions_trainee_fk references trainees on delete cascade,
     organisation_id text
         constraint interactions_organisation_fk references organisations on delete cascade,
-    volunteer_id text
-        constraint interactions_volunteers_fk references volunteers on delete cascade,
-        -- Allow only one type of profile per constraint
-        constraint interactions_one_profile check (num_nonnulls(trainee_id, organisation_id, volunteer_id) = 1),
+    volunteer_id    text
+        constraint interactions_volunteer_fk references volunteers on delete cascade,
     date            timestamptz not null,
     type            text        not null,
     reporter_id     text        not null
@@ -219,8 +217,11 @@ create table interactions
     title           text        not null,
     details         text        not null,
     created_at      timestamptz not null,
-    updated_at      timestamptz not null
+    updated_at      timestamptz not null,
+    -- Exactly one profile per interaction
+    constraint interactions_one_profile check (num_nonnulls(trainee_id, organisation_id, volunteer_id) = 1)
 );
+
 create index interactions_trainee_idx on interactions (trainee_id);
 create index interactions_organisation_idx on interactions (organisation_id);
-
+create index interactions_volunteer_idx on interactions (volunteer_id);

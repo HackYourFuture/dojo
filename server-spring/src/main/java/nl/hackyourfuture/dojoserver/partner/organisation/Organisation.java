@@ -41,6 +41,7 @@ public class Organisation implements PictureOwner {
     @EqualsAndHashCode.Include
     @Setter(AccessLevel.NONE)
     private String id;
+
     private String pictureId;
     private String name;
     private String websiteUrl;
@@ -70,6 +71,7 @@ public class Organisation implements PictureOwner {
     @Setter(AccessLevel.NONE)
     private Instant updatedAt;
 
+    // Helper methods
     public String getProfilePath() {
         return String.format("/organisation/%s_%s", StringUtils.slug(name), id);
     }

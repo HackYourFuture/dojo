@@ -74,7 +74,7 @@ public class VolunteerController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get volunteer", description = "Returns the profile of a specific volunteer")
+    @Operation(summary = "Get volunteer", description = "Returns the profile of a specific volunteer.")
     @ApiResponse(responseCode = "200", description = "The profile of a specific volunteer")
     @ApiResponse(
             responseCode = "404",

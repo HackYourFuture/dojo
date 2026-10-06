@@ -220,7 +220,7 @@ public record TraineeResponse(
         String esfId,
 
         @Schema(
-                description = "The trainee Email. Unique across all trainees.",
+                description = "The trainee's email address. Unique across all trainees.",
                 example = "john.doe@example.com",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )

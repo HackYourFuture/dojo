@@ -8,7 +8,7 @@ import java.util.List;
 
 class FieldChangeTest {
 
-    private record Sample(String name, Integer count, String note) {
+    private record Sample(String name, Integer count, String label) {
     }
 
     @Test
@@ -20,7 +20,7 @@ class FieldChangeTest {
     void reportsEachChangedComponentInDeclarationOrder() {
         List<FieldChange> changes = FieldChange.between(new Sample("a", 1, "x"), new Sample("b", 1, "y"));
 
-        assertThat(changes).containsExactly(new FieldChange("name", "a", "b"), new FieldChange("note", "x", "y"));
+        assertThat(changes).containsExactly(new FieldChange("name", "a", "b"), new FieldChange("label", "x", "y"));
     }
 
     @Test
@@ -28,6 +28,6 @@ class FieldChangeTest {
         assertThat(FieldChange.between(new Sample("a", null, null), new Sample("a", 2, null)))
                 .containsExactly(new FieldChange("count", null, 2));
         assertThat(FieldChange.between(new Sample("a", 2, "x"), new Sample("a", 2, null)))
-                .containsExactly(new FieldChange("note", "x", null));
+                .containsExactly(new FieldChange("label", "x", null));
     }
 }

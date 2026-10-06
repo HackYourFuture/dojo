@@ -84,16 +84,29 @@ class VolunteerEndpointTest {
         String email = RandomUtils.generateRandomId() + "@Example.ORG";
 
         MvcTestResult result = post("""
-                {"firstName": "  Jane ", "lastName": "Roe", "email": " %s ", "status": "active",
-                 "companyName": "Acme B.V."}
+                {"firstName": "  Jane ", "lastName": " Roe ", "gender": "non-binary", "pronouns": " They/them ",
+                 "companyName": " Acme B.V. ", "jobRole": " Developer ", "email": " %s ", "phone": " +31612345678 ",
+                 "githubHandle": " janeroe ", "slackId": " U068AQ9G99F ",
+                 "linkedinUrl": " https://linkedin.com/in/jane-roe ", "status": "active", "notes": " Mentors. "}
                 """.formatted(email));
 
         assertThat(result).hasStatus(201);
         assertThat(result).bodyJson().convertTo(VolunteerResponse.class).satisfies(created -> {
+            // Every field lands in its own place, stripped.
             assertThat(created.firstName()).isEqualTo("Jane");
+            assertThat(created.lastName()).isEqualTo("Roe");
+            assertThat(created.gender()).isEqualTo(Gender.NON_BINARY);
+            assertThat(created.pronouns()).isEqualTo("They/them");
+            assertThat(created.companyName()).isEqualTo("Acme B.V.");
+            assertThat(created.jobRole()).isEqualTo("Developer");
             assertThat(created.email()).isEqualTo(email.toLowerCase(Locale.ROOT));
-            assertThat(created.displayName()).isEqualTo("Jane Roe");
+            assertThat(created.phone()).isEqualTo("+31612345678");
+            assertThat(created.githubHandle()).isEqualTo("janeroe");
+            assertThat(created.slackId()).isEqualTo("U068AQ9G99F");
+            assertThat(created.linkedinUrl()).isEqualTo("https://linkedin.com/in/jane-roe");
             assertThat(created.status()).isEqualTo(VolunteerStatus.ACTIVE);
+            assertThat(created.notes()).isEqualTo("Mentors.");
+            assertThat(created.displayName()).isEqualTo("Jane Roe");
             assertThat(created.pictureUrl()).isNull();
             assertThat(created.thumbnailUrl()).isNull();
             assertThat(created.profilePath()).isEqualTo("/volunteer/jane-roe_" + created.id());
@@ -104,11 +117,11 @@ class VolunteerEndpointTest {
 
     @Test
     void createRejectsAMissingNameEmailOrStatus() {
-        assertThat(post(valid("firstName", null))).hasStatus(400);
-        assertThat(post(valid("firstName", "  "))).hasStatus(400);
-        assertThat(post(valid("lastName", "  "))).hasStatus(400);
-        assertThat(post(valid("email", null))).hasStatus(400);
-        assertThat(post(valid("status", null))).hasStatus(400);
+        assertThat(post(bodyWith("firstName", null))).hasStatus(400);
+        assertThat(post(bodyWith("firstName", "  "))).hasStatus(400);
+        assertThat(post(bodyWith("lastName", "  "))).hasStatus(400);
+        assertThat(post(bodyWith("email", null))).hasStatus(400);
+        assertThat(post(bodyWith("status", null))).hasStatus(400);
         // The keys may also be left out altogether.
         assertThat(post("""
                 {"firstName": "Jane", "lastName": "Roe", "status": "active"}
@@ -120,24 +133,31 @@ class VolunteerEndpointTest {
 
     @Test
     void createRejectsAnUnknownStatusOrGender() {
-        assertThat(post(valid("status", "retired"))).hasStatus(400);
-        assertThat(post(valid("gender", "unknown"))).hasStatus(400);
+        assertThat(post(bodyWith("status", "retired"))).hasStatus(400);
+        assertThat(post(bodyWith("gender", "unknown"))).hasStatus(400);
+        // Enum indexes are not values either.
+        assertThat(post(bodyWith("status", 1))).hasStatus(400);
+        assertThat(post(bodyWith("status", "1"))).hasStatus(400);
+        assertThat(post(bodyWith("gender", 0))).hasStatus(400);
     }
 
     @Test
     void createRejectsAnInvalidEmailOrLinkedinUrl() {
-        assertThat(post(valid("email", "not-an-email"))).hasStatus(400);
-        assertThat(post(valid("linkedinUrl", "linkedin.com/in/jane"))).hasStatus(400);
-        assertThat(post(valid("linkedinUrl", "javascript:alert(1)"))).hasStatus(400);
+        assertThat(post(bodyWith("email", "not-an-email"))).hasStatus(400);
+        assertThat(post(bodyWith("linkedinUrl", "linkedin.com/in/jane"))).hasStatus(400);
+        assertThat(post(bodyWith("linkedinUrl", "javascript:alert(1)"))).hasStatus(400);
         // An empty string passes @URL, so it is the size limit that turns it away.
-        assertThat(post(valid("linkedinUrl", ""))).hasStatus(400);
+        assertThat(post(bodyWith("linkedinUrl", ""))).hasStatus(400);
     }
 
     @Test
     void createRejectsAnEmailAnotherVolunteerUsesIgnoringCase() {
-        Volunteer existing = volunteerRepository.save(volunteer("Jane", "Roe"));
+        // Stored in mixed case, which the API never does, so only a case-insensitive lookup finds it.
+        Volunteer existing = volunteer("Jane", "Roe");
+        existing.setEmail("Jane." + RandomUtils.generateRandomId() + "@Example.org");
+        volunteerRepository.save(existing);
 
-        MvcTestResult result = post(valid("email", existing.getEmail().toUpperCase(Locale.ROOT)));
+        MvcTestResult result = post(bodyWith("email", existing.getEmail().toLowerCase(Locale.ROOT)));
 
         assertThat(result).hasStatus(409);
         assertThat(result).bodyJson().extractingPath("$.error")
@@ -209,6 +229,7 @@ class VolunteerEndpointTest {
         });
         verify(slackClient).sendNotification(contains("Volunteer updated"));
         verify(slackClient).sendNotification(contains("| Status | Active | Paused |"));
+        verify(slackClient).sendNotification(contains("| Company name | Acme | — |"));
     }
 
     @Test
@@ -248,14 +269,22 @@ class VolunteerEndpointTest {
     void patchRejectsAnEmailAnotherVolunteerUsesButAcceptsItsOwn() {
         Volunteer first = volunteerRepository.save(volunteer("Jane", "Roe"));
         Volunteer second = volunteerRepository.save(volunteer("John", "Doe"));
+        // Read before the PATCH, which writes to this same managed entity.
+        String ownEmail = second.getEmail();
 
-        assertThat(patch(second.getId(), "{\"email\": \"" + first.getEmail().toUpperCase(Locale.ROOT) + "\"}"))
-                .hasStatus(409);
+        MvcTestResult taken = patch(second.getId(), """
+                {"email": "%s"}
+                """.formatted(first.getEmail().toUpperCase(Locale.ROOT)));
+        assertThat(taken).hasStatus(409);
+        assertThat(taken).bodyJson().extractingPath("$.error")
+                .isEqualTo("Email is already in use by another volunteer.");
+
         // Re-sending its own email in capitals is no change, so it must not conflict with itself.
-        MvcTestResult own = patch(second.getId(), "{\"email\": \"" + second.getEmail().toUpperCase(Locale.ROOT)
-                + "\"}");
+        MvcTestResult own = patch(second.getId(), """
+                {"email": "%s"}
+                """.formatted(ownEmail.toUpperCase(Locale.ROOT)));
         assertThat(own).hasStatusOk();
-        assertThat(own).bodyJson().extractingPath("$.email").isEqualTo(second.getEmail());
+        assertThat(own).bodyJson().extractingPath("$.email").isEqualTo(ownEmail);
     }
 
     // ------------------------------------------------------------------ delete
@@ -274,15 +303,19 @@ class VolunteerEndpointTest {
     // ------------------------------------------------------------------ list
 
     @Test
-    void theListIsOrderedByFirstNameIgnoringCaseInEitherDirection() {
-        // The shared random prefix keeps local volunteers from sorting between these three.
+    void theListIsOrderedByFirstNameThenLastNameIgnoringCaseInEitherDirection() {
+        // The shared random prefix keeps local volunteers from sorting between these.
         String prefix = RandomUtils.generateRandomId();
         Volunteer bravo = volunteerRepository.save(volunteer(prefix + " Bravo", "Roe"));
         Volunteer charlie = volunteerRepository.save(volunteer(prefix + " charlie", "Roe"));
-        Volunteer alpha = volunteerRepository.save(volunteer(prefix + " alpha", "Roe"));
+        Volunteer alphaZwart = volunteerRepository.save(volunteer(prefix + " alpha", "Zwart"));
+        Volunteer alphaDeJong = volunteerRepository.save(volunteer(prefix + " alpha", "de Jong"));
 
-        assertThat(ids(everySummary("ASC"))).containsSubsequence(alpha.getId(), bravo.getId(), charlie.getId());
-        assertThat(ids(everySummary("DESC"))).containsSubsequence(charlie.getId(), bravo.getId(), alpha.getId());
+        // The last name breaks ties and stays ascending in both directions.
+        assertThat(ids(everySummary("ASC"))).containsSubsequence(alphaDeJong.getId(), alphaZwart.getId(),
+                bravo.getId(), charlie.getId());
+        assertThat(ids(everySummary("DESC"))).containsSubsequence(charlie.getId(), bravo.getId(),
+                alphaDeJong.getId(), alphaZwart.getId());
     }
 
     @Test
@@ -291,6 +324,9 @@ class VolunteerEndpointTest {
         volunteer.setPictureId("IMGface00001");
         volunteer.setCompanyName("Acme");
         volunteer.setJobRole("Recruiter");
+        volunteer.setGithubHandle("janeroe");
+        volunteer.setSlackId("U068AQ9G99F");
+        volunteer.setLinkedinUrl("https://linkedin.com/in/jane-roe");
         volunteer.setNotes("Hires interns.");
         volunteerRepository.save(volunteer);
 
@@ -307,6 +343,9 @@ class VolunteerEndpointTest {
                 .containsEntry("companyName", "Acme")
                 .containsEntry("jobRole", "Recruiter")
                 .containsEntry("email", volunteer.getEmail())
+                .containsEntry("githubHandle", "janeroe")
+                .containsEntry("slackId", "U068AQ9G99F")
+                .containsEntry("linkedinUrl", "https://linkedin.com/in/jane-roe")
                 .doesNotContainKeys("notes", "pictureUrl");
     }
 
@@ -325,7 +364,6 @@ class VolunteerEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON).content(body).exchange();
     }
 
-    // Unlike the organisation test, PATCH reads the caller too, so it signs in as well.
     private MvcTestResult patch(String id, String body) {
         return mvc.patch().uri(VOLUNTEERS + "/{id}", id).header(AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON).content(body).exchange();
@@ -340,7 +378,7 @@ class VolunteerEndpointTest {
     }
 
     // A valid create body with one member replaced, so a 400 can only come from that member.
-    private String valid(String key, Object value) {
+    private String bodyWith(String key, Object value) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("firstName", "Jane");
         body.put("lastName", "Roe");
@@ -354,14 +392,13 @@ class VolunteerEndpointTest {
     private List<Map<String, Object>> everySummary(String direction) {
         List<Map<String, Object>> summaries = new ArrayList<>();
         for (int page = 0;; page++) {
-            byte[] content = list("?direction=" + direction + "&size=100&page=" + page).getResponse()
+            byte[] body = list("?direction=" + direction + "&size=100&page=" + page).getResponse()
                     .getContentAsByteArray();
-            List<Map<String, Object>> pageContent = JsonPath.read(new String(content, StandardCharsets.UTF_8),
-                    "$.content");
-            if (pageContent.isEmpty()) {
+            List<Map<String, Object>> content = JsonPath.read(new String(body, StandardCharsets.UTF_8), "$.content");
+            if (content.isEmpty()) {
                 return summaries;
             }
-            summaries.addAll(pageContent);
+            summaries.addAll(content);
         }
     }
 

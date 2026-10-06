@@ -19,6 +19,7 @@ import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.QuitReason;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public record TraineeRequest(
 
         @Min(0)
         @Max(80)
-        @Schema(description = "How many hours a week the trainee does paid work while enrolled. 0 - means not working ",
+        @Schema(description = "How many hours a week the trainee does paid work while enrolled. 0 means not working.",
                 example = "16")
         Integer weeklyWorkHours,
 
@@ -115,7 +116,7 @@ public record TraineeRequest(
         @NotBlank
         @Size(min = 3, max = 100)
         @Email
-        @Schema(description = "The trainee Email. Must be unique across all trainees.",
+        @Schema(description = "The trainee's email address. Must be unique across all trainees.",
                 example = "john.doe@example.com")
         String email,
 
@@ -132,6 +133,7 @@ public record TraineeRequest(
         String githubHandle,
 
         @Size(min = 5, max = 200)
+        @URL
         @Schema(description = "The URL to the trainee's LinkedIn profile.",
                 example = "https://linkedin.com/in/john-doe")
         String linkedinUrl,

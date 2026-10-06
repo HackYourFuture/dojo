@@ -63,7 +63,7 @@ public class SearchService {
                 .toList();
     }
 
-    // The matching trainees, best first. Equal scores put the newest cohort first; the id keeps the order stable.
+    // The matching trainees, best first. Equal scores go by newest cohort, then name; the id keeps the order stable.
     static List<SearchResult> rankTrainees(List<Trainee> trainees, List<String> tokens) {
         record Hit(Trainee trainee, double score) {
         }
@@ -145,6 +145,7 @@ public class SearchService {
                 Field.text(volunteer.getEmail(), 2),
                 Field.text(volunteer.getGithubHandle(), 1),
                 Field.text(volunteer.getCompanyName(), 1),
+                Field.text(withoutDots(volunteer.getCompanyName()), 1),
                 Field.text(volunteer.getJobRole(), 1),
                 Field.text(volunteer.getNotes(), 0.001));
     }
@@ -153,8 +154,7 @@ public class SearchService {
         String name = organisation.getName();
         return List.of(
                 Field.name(name, 5),
-                // Search keeps dots and underscores inside words, so without them "coolblue bv" finds "Coolblue B.V.".
-                Field.name(name.replace('.', ' ').replace('_', ' '), 5),
+                Field.name(withoutDots(name), 5),
                 Field.text(organisation.getWebsiteUrl(), 3),
                 Field.text(organisation.getNotes(), 0.001));
     }
@@ -166,5 +166,10 @@ public class SearchService {
                 Field.text(contactPerson.getEmail(), 2),
                 Field.text(contactPerson.getJobTitle(), 1),
                 Field.text(contactPerson.getNotes(), 0.001));
+    }
+
+    // Search keeps dots and underscores inside words, so without them "coolblue bv" finds "Coolblue B.V.".
+    private static String withoutDots(String name) {
+        return name == null ? null : name.replace('.', ' ').replace('_', ' ');
     }
 }

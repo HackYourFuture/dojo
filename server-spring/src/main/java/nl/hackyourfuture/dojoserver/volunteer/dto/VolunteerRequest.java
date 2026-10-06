@@ -28,8 +28,7 @@ public record VolunteerRequest(
         Gender gender,
 
         @Size(min = 2, max = 100)
-        @Schema(description = "The pronouns the volunteer goes by.",
-                example = "She/her")
+        @Schema(description = "The pronouns the volunteer goes by.", example = "She/her")
         String pronouns,
 
         @Size(min = 2, max = 200)
@@ -66,7 +65,7 @@ public record VolunteerRequest(
         String linkedinUrl,
 
         @NotNull
-        @Schema(description = "Whether the volunteer is currently helping out.", example = "active")
+        @Schema(description = "Where the volunteer stands with HackYourFuture.", example = "active")
         VolunteerStatus status,
 
         @Size(max = 5000)

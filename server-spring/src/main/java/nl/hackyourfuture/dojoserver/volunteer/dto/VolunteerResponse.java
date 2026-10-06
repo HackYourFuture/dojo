@@ -130,7 +130,7 @@ public record VolunteerResponse(
         String linkedinUrl,
 
         @Schema(
-                description = "Whether the volunteer is currently helping out",
+                description = "Where the volunteer stands with HackYourFuture",
                 example = "active",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )

@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import nl.hackyourfuture.dojoserver.filestorage.FileStorageService;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
-import nl.hackyourfuture.dojoserver.slack.SlackClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-/** Volunteer pictures over MockMvc. Storage and Slack are mocked; transactional like TraineeListTest. */
+/** Volunteer pictures over MockMvc. Storage is mocked because CI has no S3; transactional like TraineeListTest. */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -49,8 +48,6 @@ class VolunteerPictureTest {
     private VolunteerRepository volunteerRepository;
     @MockitoBean
     private FileStorageService fileStorageService;
-    @MockitoBean
-    private SlackClient slackClient;
 
     private Volunteer volunteer;
     private String prefix;

@@ -201,12 +201,20 @@ public class SlackNotificationSender {
         return link(trainee.getDisplayName(), trainee.getProfilePath());
     }
 
+    private String volunteerLink(Volunteer volunteer) {
+        return link(volunteer.getDisplayName(), volunteer.getProfilePath());
+    }
+
     private String organisationLink(Organisation organisation) {
         return link(organisation.getName(), organisation.getProfilePath());
     }
 
-    private String volunteerLink(Volunteer volunteer) {
-        return link(volunteer.getDisplayName(), volunteer.getProfilePath());
+    private String link(String name, String path) {
+        var absoluteUrl = UriComponentsBuilder.fromUriString(dojoProperties.baseUrl())
+                .path(path)
+                .build()
+                .toUriString();
+        return String.format("[%s](%s)", cell(name), absoluteUrl);
     }
 
     // One table row per changed field.
@@ -218,14 +226,6 @@ public class SlackNotificationSender {
                 value(change.to())
         )));
         return rows.toString();
-    }
-
-    private String link(String name, String path) {
-        var absoluteUrl = UriComponentsBuilder.fromUriString(dojoProperties.baseUrl())
-                .path(path)
-                .build()
-                .toUriString();
-        return String.format("[%s](%s)", cell(name), absoluteUrl);
     }
 
     private static String value(Object object) {

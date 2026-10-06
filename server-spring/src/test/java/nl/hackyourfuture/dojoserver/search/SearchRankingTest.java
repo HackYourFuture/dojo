@@ -222,6 +222,58 @@ class SearchRankingTest {
                 .containsExactly("b", "c", "d", "a");
     }
 
+    // ------------------------------------------------------------------ volunteers
+
+    @Test
+    void findsAVolunteerByNameCompanyAndJobRole() {
+        Volunteer jane = Volunteer.builder().id("jane").firstName("Jane").lastName("Roe").companyName("Adyen")
+                .jobRole("Recruiter").pictureId("IMGface").build();
+
+        assertThat(rank("jane", List.of(), List.of(jane), List.of(), List.of())).singleElement().satisfies(result -> {
+            assertThat(result.type()).isEqualTo(SearchResultType.VOLUNTEER);
+            assertThat(result.title()).isEqualTo("Jane Roe");
+            assertThat(result.subtitle()).isEqualTo("Volunteer");
+            assertThat(result.thumbnailUrl()).isEqualTo("/api/volunteers/jane/picture/IMGface/thumbnail");
+            assertThat(result.path()).isEqualTo("/volunteer/jane-roe_jane");
+            assertThat(result.score()).isEqualTo(5000.0);
+        });
+        assertThat(scores(rank("adyen", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1000.0);
+        assertThat(scores(rank("recruiter", List.of(), List.of(jane), List.of(), List.of())))
+                .containsExactly(1000.0);
+    }
+
+    @Test
+    void findsAVolunteerByEmailAndGithubHandle() {
+        Volunteer jane = Volunteer.builder().id("jane").firstName("Jane").lastName("Roe").email("jroe@example.org")
+                .githubHandle("jroe").build();
+
+        assertThat(scores(rank("jroe@example.org", List.of(), List.of(jane), List.of(), List.of())))
+                .containsExactly(2000.0);
+        assertThat(scores(rank("jroe", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1000.0);
+    }
+
+    @Test
+    void findsADottedCompanyNameWithOrWithoutTheDots() {
+        Volunteer jane = Volunteer.builder().id("jane").firstName("Jane").lastName("Roe").companyName("Coolblue B.V.")
+                .build();
+
+        assertThat(scores(rank("coolblue bv", List.of(), List.of(jane), List.of(), List.of())))
+                .containsExactly(2000.0);
+        assertThat(scores(rank("coolblue b.v.", List.of(), List.of(jane), List.of(), List.of())))
+                .containsExactly(2000.0);
+    }
+
+    @Test
+    void breaksVolunteerTiesByDisplayNameThenId() {
+        Volunteer zaki = Volunteer.builder().id("a").firstName("Mariam").lastName("Zaki").build();
+        Volunteer aziz = Volunteer.builder().id("b").firstName("Mariam").lastName("Aziz").build();
+        Volunteer sameNameLaterId = Volunteer.builder().id("d").firstName("Mariam").lastName("Aziz").build();
+        Volunteer sameNameEarlierId = Volunteer.builder().id("c").firstName("Mariam").lastName("Aziz").build();
+
+        assertThat(rank("mariam", List.of(), List.of(zaki, sameNameLaterId, aziz, sameNameEarlierId), List.of(),
+                List.of())).extracting(SearchResult::id).containsExactly("b", "c", "d", "a");
+    }
+
     // ------------------------------------------------------------------ organisations and contact persons
 
     @Test
@@ -283,6 +335,8 @@ class SearchRankingTest {
                 .containsExactly(2000.0);
     }
 
+    // ------------------------------------------------------------------ merging
+
     @Test
     void equalScoresPutTraineesBeforeVolunteersBeforeOrganisationsBeforeContactPersons() {
         // Named Haddad, the first of each ties the organisation; with Haddad as last name, the second ties the contact.
@@ -301,37 +355,6 @@ class SearchRankingTest {
                 SearchResultType.VOLUNTEER, SearchResultType.ORGANISATION, SearchResultType.TRAINEE,
                 SearchResultType.VOLUNTEER, SearchResultType.CONTACT_PERSON);
         assertThat(scores(results)).containsExactly(5000.0, 5000.0, 5000.0, 3000.0, 3000.0, 3000.0);
-    }
-
-    // ------------------------------------------------------------------ volunteers
-
-    @Test
-    void findsAVolunteerByNameCompanyAndJobRole() {
-        Volunteer jane = Volunteer.builder().id("jane").firstName("Jane").lastName("Roe").companyName("Adyen")
-                .jobRole("Recruiter").pictureId("IMGface").build();
-
-        assertThat(rank("jane", List.of(), List.of(jane), List.of(), List.of())).singleElement().satisfies(result -> {
-            assertThat(result.type()).isEqualTo(SearchResultType.VOLUNTEER);
-            assertThat(result.title()).isEqualTo("Jane Roe");
-            assertThat(result.subtitle()).isEqualTo("Volunteer");
-            assertThat(result.thumbnailUrl()).isEqualTo("/api/volunteers/jane/picture/IMGface/thumbnail");
-            assertThat(result.path()).isEqualTo("/volunteer/jane-roe_jane");
-            assertThat(result.score()).isEqualTo(5000.0);
-        });
-        assertThat(scores(rank("adyen", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1000.0);
-        assertThat(scores(rank("recruiter", List.of(), List.of(jane), List.of(), List.of())))
-                .containsExactly(1000.0);
-    }
-
-    @Test
-    void breaksVolunteerTiesByDisplayNameThenId() {
-        Volunteer zaki = Volunteer.builder().id("a").firstName("Mariam").lastName("Zaki").build();
-        Volunteer aziz = Volunteer.builder().id("b").firstName("Mariam").lastName("Aziz").build();
-        Volunteer sameNameLaterId = Volunteer.builder().id("d").firstName("Mariam").lastName("Aziz").build();
-        Volunteer sameNameEarlierId = Volunteer.builder().id("c").firstName("Mariam").lastName("Aziz").build();
-
-        assertThat(rank("mariam", List.of(), List.of(zaki, sameNameLaterId, aziz, sameNameEarlierId), List.of(),
-                List.of())).extracting(SearchResult::id).containsExactly("b", "c", "d", "a");
     }
 
     // ------------------------------------------------------------------ helpers

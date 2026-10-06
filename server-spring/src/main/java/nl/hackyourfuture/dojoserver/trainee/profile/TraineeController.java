@@ -47,7 +47,7 @@ public class TraineeController {
 
     @GetMapping
     @Operation(summary = "List trainees",
-            description = "Returns a page of trainee summaries, ordered by the current cohort. ")
+            description = "Returns a page of trainee summaries, ordered by the current cohort.")
     @ApiResponse(responseCode = "200", description = "The page of trainee summaries")
     @ApiResponse(
             responseCode = "400",
@@ -86,7 +86,7 @@ public class TraineeController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get trainee", description = "Returns the profile of a specific trainee")
+    @Operation(summary = "Get trainee", description = "Returns the profile of a specific trainee.")
     @ApiResponse(responseCode = "200", description = "The profile of a specific trainee")
     @ApiResponse(
             responseCode = "404",
@@ -113,7 +113,7 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "409",
-            description = "The email address is already in use by another trainee.",
+            description = "The email address is already in use by another trainee",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public TraineeResponse createTrainee(
@@ -144,15 +144,13 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "409",
-            description = "The email address is already in use by another trainee.",
+            description = "The email address is already in use by another trainee",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public TraineeResponse updateTrainee(
             @AuthenticationPrincipal
             AuthenticatedUser currentUser,
-            @Parameter(
-                    description = "ID of the trainee to update",
-                    example = "HpOjvmwXsL")
+            @Parameter(description = "ID of the trainee to update", example = "TRAINEEID")
             @PathVariable
             String id,
             @RequestBody
@@ -279,6 +277,6 @@ public class TraineeController {
             @PathVariable
             String pictureId
     ) {
-        this.traineeService.deletePicture(traineeId, pictureId);
+        traineeService.deletePicture(traineeId, pictureId);
     }
 }
