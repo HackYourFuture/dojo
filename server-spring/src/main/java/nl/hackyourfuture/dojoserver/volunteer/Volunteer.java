@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.partner.organisation;
+package nl.hackyourfuture.dojoserver.volunteer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -15,50 +15,48 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.hackyourfuture.dojoserver.picture.PictureOwner;
 import nl.hackyourfuture.dojoserver.shared.StringUtils;
+import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Builder
 @Entity
-@Table(name = "organisations")
+@Table(name = "volunteers")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 @DynamicUpdate // for PATCH
 @Setter
-public class Organisation implements PictureOwner {
+public class Volunteer implements PictureOwner {
     @Id
     @EqualsAndHashCode.Include
     @Setter(AccessLevel.NONE)
     private String id;
 
     private String pictureId;
-    private String name;
-    private String websiteUrl;
+    private String firstName;
+    private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private String pronouns;
+    private String companyName;
+    private String jobRole;
+    private String email;
+    private String phone;
+    private String githubHandle;
+    private String slackId;
     private String linkedinUrl;
-    private String location;
 
     @Enumerated(EnumType.STRING)
-    private OrganisationStatus status;
-
-    // Stored as a Postgres array.
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private Set<PartnershipType> partnershipTypes = new HashSet<>();
-
-    // Stored as a Postgres array.
-    @Builder.Default
-    private List<String> responsibleIds = new ArrayList<>();
+    private VolunteerStatus status;
 
     private String notes;
 
@@ -72,15 +70,19 @@ public class Organisation implements PictureOwner {
     private Instant updatedAt;
 
     // Helper methods
+    public String getDisplayName() {
+        return String.format("%s %s", firstName, lastName).strip();
+    }
+
     public String getProfilePath() {
-        return String.format("/organisation/%s_%s", StringUtils.slug(name), id);
+        return String.format("/volunteer/%s_%s", StringUtils.slug(getDisplayName()), id);
     }
 
     public String getPictureUrl() {
         if (getPictureId() == null) {
             return null;
         }
-        return "/api/organisations/" + getId() + "/picture/" + getPictureId();
+        return "/api/volunteers/" + getId() + "/picture/" + getPictureId();
     }
 
     public String getThumbnailUrl() {
@@ -92,12 +94,6 @@ public class Organisation implements PictureOwner {
 
     @Override
     public String getPictureStoragePrefix() {
-        return "images/organisations/" + getId() + "/";
-    }
-
-    // A logo is often wide, and cropping it to a square would cut off its sides.
-    @Override
-    public boolean isPictureCropped() {
-        return false;
+        return "images/volunteers/" + getId() + "/";
     }
 }

@@ -1,14 +1,13 @@
-package nl.hackyourfuture.dojoserver.trainee.profile;
+package nl.hackyourfuture.dojoserver.volunteer;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum Gender {
-    MAN("man"),
-    WOMAN("woman"),
-    NON_BINARY("non-binary"),
-    OTHER("other");
+public enum VolunteerStatus {
+    ACTIVE("active"),
+    PAUSED("paused"),
+    STOPPED("stopped");
 
     @JsonValue
     private final String value;

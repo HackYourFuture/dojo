@@ -28,7 +28,7 @@ Dojo is HackYourFuture's in-house management tool designed to track HackYourFutu
 
 ## Features
 
-- Search for trainees and organisations
+- Search for trainees, volunteers and organisations
 - View and update trainee profile
 - Track trainee progress and performance
 - Generate real-time reports
@@ -38,7 +38,7 @@ Dojo is HackYourFuture's in-house management tool designed to track HackYourFutu
 
 ## Technology Stack
 
-A React single-page app on top of a Spring Boot REST API and a PostgreSQL database. Sign-in is Google OAuth, profile pictures are kept in S3-compatible storage, and trainee changes are posted to Slack.
+A React single-page app on top of a Spring Boot REST API and a PostgreSQL database. Sign-in is Google OAuth, profile pictures are kept in S3-compatible storage, and trainee and volunteer changes are posted to Slack.
 
 ### Front-end
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)

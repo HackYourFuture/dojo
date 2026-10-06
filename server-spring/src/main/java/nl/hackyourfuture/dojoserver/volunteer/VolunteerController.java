@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.trainee.profile;
+package nl.hackyourfuture.dojoserver.volunteer;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.picture.PictureResponses;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
-import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineePictureResponse;
-import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
-import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
-import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
+import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerPictureResponse;
+import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerRequest;
+import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerResponse;
+import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerSummaryResponse;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -39,35 +39,23 @@ import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
 @RestController
-@RequestMapping("/api/trainees")
+@RequestMapping("/api/volunteers")
 @RequiredArgsConstructor
-@Tag(name = "Trainees", description = "Operations on trainee profiles")
-public class TraineeController {
-    private final TraineeService traineeService;
+@Tag(name = "Volunteers", description = "Operations on volunteer profiles")
+public class VolunteerController {
+    private final VolunteerService volunteerService;
 
     @GetMapping
-    @Operation(summary = "List trainees",
-            description = "Returns a page of trainee summaries, ordered by the current cohort.")
-    @ApiResponse(responseCode = "200", description = "The page of trainee summaries")
+    @Operation(summary = "List volunteers",
+            description = "Returns a page of volunteer summaries, ordered by first name.")
+    @ApiResponse(responseCode = "200", description = "The page of volunteer summaries")
     @ApiResponse(
             responseCode = "400",
             description = "A request parameter is invalid",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public Page<TraineeSummaryResponse> getTrainees(
-            @Parameter(
-                    description = "Only trainees whose current cohort is this one or later",
-                    example = "0")
-            @RequestParam(required = false)
-            Integer startCohort,
-
-            @Parameter(
-                    description = "Only trainees whose current cohort is this one or earlier",
-                    example = "99")
-            @RequestParam(required = false)
-            Integer endCohort,
-
-            @Parameter(description = "The direction to order the cohorts in")
+    public Page<VolunteerSummaryResponse> getVolunteers(
+            @Parameter(description = "The direction to order the first names in")
             @RequestParam(defaultValue = "ASC")
             Sort.Direction direction,
 
@@ -76,36 +64,36 @@ public class TraineeController {
             @Min(0)
             int page,
 
-            @Parameter(description = "Number of trainees per page", example = "25")
+            @Parameter(description = "Number of volunteers per page", example = "25")
             @RequestParam(defaultValue = "25")
             @Min(1)
             @Max(100)
             int size
     ) {
-        return traineeService.getTrainees(startCohort, endCohort, direction, page, size);
+        return volunteerService.getVolunteers(direction, page, size);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get trainee", description = "Returns the profile of a specific trainee.")
-    @ApiResponse(responseCode = "200", description = "The profile of a specific trainee")
+    @Operation(summary = "Get volunteer", description = "Returns the profile of a specific volunteer.")
+    @ApiResponse(responseCode = "200", description = "The profile of a specific volunteer")
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found",
+            description = "The volunteer id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public TraineeResponse getTrainee(
-            @Parameter(description = "ID of the trainee to fetch", example = "HpOjvmwXsL")
+    public VolunteerResponse getVolunteer(
+            @Parameter(description = "ID of the volunteer to fetch", example = "Vq7mKp2XaB")
             @PathVariable
             String id
     ) {
-        return traineeService.getTrainee(id);
+        return volunteerService.getVolunteer(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a new trainee",
-            description = "Creates a new trainee profile and returns it with its generated id.")
-    @ApiResponse(responseCode = "201", description = "The trainee was created")
+    @Operation(summary = "Create a new volunteer",
+            description = "Creates a new volunteer profile and returns it with its generated id.")
+    @ApiResponse(responseCode = "201", description = "The volunteer was created")
     @ApiResponse(
             responseCode = "400",
             description = "The request body is invalid",
@@ -113,25 +101,26 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "409",
-            description = "The email address is already in use by another trainee",
+            description = "The email address is already in use by another volunteer",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public TraineeResponse createTrainee(
+    public VolunteerResponse createVolunteer(
             @AuthenticationPrincipal
             AuthenticatedUser currentUser,
             @Valid @RequestBody
-            TraineeRequest request) {
-        return traineeService.createTrainee(currentUser, request);
+            VolunteerRequest request
+    ) {
+        return volunteerService.createVolunteer(currentUser, request);
     }
 
     @PatchMapping("/{id}")
-    @Operation(summary = "Update an existing trainee",
-            description = "Updates the trainee with the given id. Send only the fields you want to change.")
+    @Operation(summary = "Update an existing volunteer",
+            description = "Updates the volunteer with the given id. Send only the fields you want to change.")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "The fields to change. Every field is optional here, including the ones the schema marks as required.",
-            content = @Content(schema = @Schema(implementation = TraineeRequest.class))
+            content = @Content(schema = @Schema(implementation = VolunteerRequest.class))
     )
-    @ApiResponse(responseCode = "200", description = "The updated trainee")
+    @ApiResponse(responseCode = "200", description = "The updated volunteer")
     @ApiResponse(
             responseCode = "400",
             description = "The request body is invalid, or carries no fields at all",
@@ -139,47 +128,49 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found",
+            description = "The volunteer id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     @ApiResponse(
             responseCode = "409",
-            description = "The email address is already in use by another trainee",
+            description = "The email address is already in use by another volunteer",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public TraineeResponse updateTrainee(
+    public VolunteerResponse updateVolunteer(
             @AuthenticationPrincipal
             AuthenticatedUser currentUser,
-            @Parameter(description = "ID of the trainee to update", example = "TRAINEEID")
+            @Parameter(description = "ID of the volunteer to update", example = "Vq7mKp2XaB")
             @PathVariable
             String id,
             @RequestBody
-            ObjectNode patch) {
-        return traineeService.updateTrainee(currentUser, id, patch);
+            ObjectNode patch
+    ) {
+        return volunteerService.updateVolunteer(currentUser, id, patch);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete an existing trainee",
-            description = "Permanently deletes the trainee profile from the system.")
-    @ApiResponse(responseCode = "204", description = "The trainee has been successfully deleted")
+    @Operation(summary = "Delete an existing volunteer",
+            description = "Permanently deletes the volunteer profile and its picture.")
+    @ApiResponse(responseCode = "204", description = "The volunteer has been successfully deleted")
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found",
+            description = "The volunteer id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public void deleteTrainee(
+    public void deleteVolunteer(
             @AuthenticationPrincipal
             AuthenticatedUser currentUser,
-            @Parameter(description = "ID of the trainee to delete", example = "TRAINEEID")
+            @Parameter(description = "ID of the volunteer to delete", example = "Vq7mKp2XaB")
             @PathVariable
-            String id) {
-        traineeService.deleteTrainee(currentUser, id);
+            String id
+    ) {
+        volunteerService.deleteVolunteer(currentUser, id);
     }
 
     // Profile picture methods:
-    @GetMapping("/{traineeId}/picture/{pictureId}")
-    @Operation(summary = "Get trainee picture", description = "Returns the profile picture of a trainee.")
+    @GetMapping("/{volunteerId}/picture/{pictureId}")
+    @Operation(summary = "Get volunteer picture", description = "Returns the profile picture of a volunteer.")
     @ApiResponse(
             responseCode = "200",
             description = "The picture file",
@@ -187,24 +178,24 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found, or the picture id is not the trainee's current picture",
+            description = "The volunteer id was not found, or the picture id is not the volunteer's current picture",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public ResponseEntity<InputStreamResource> getPicture(
-            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @Parameter(description = "ID of the volunteer", example = "Vq7mKp2XaB")
             @PathVariable
-            String traineeId,
+            String volunteerId,
 
             @Parameter(description = "ID of the picture", example = "PICTUREID")
             @PathVariable
             String pictureId
     ) {
-        return PictureResponses.of(traineeService.getPicture(traineeId, pictureId));
+        return PictureResponses.of(volunteerService.getPicture(volunteerId, pictureId));
     }
 
-    @GetMapping("/{traineeId}/picture/{pictureId}/thumbnail")
-    @Operation(summary = "Get trainee picture thumbnail",
-            description = "Returns a smaller version of the profile picture of a trainee.")
+    @GetMapping("/{volunteerId}/picture/{pictureId}/thumbnail")
+    @Operation(summary = "Get volunteer picture thumbnail",
+            description = "Returns a smaller version of the profile picture of a volunteer.")
     @ApiResponse(
             responseCode = "200",
             description = "The thumbnail file",
@@ -212,24 +203,24 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found, or the picture id is not the trainee's current picture",
+            description = "The volunteer id was not found, or the picture id is not the volunteer's current picture",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public ResponseEntity<InputStreamResource> getThumbnail(
-            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @Parameter(description = "ID of the volunteer", example = "Vq7mKp2XaB")
             @PathVariable
-            String traineeId,
+            String volunteerId,
 
             @Parameter(description = "ID of the picture", example = "PICTUREID")
             @PathVariable
             String pictureId
     ) {
-        return PictureResponses.of(traineeService.getThumbnail(traineeId, pictureId));
+        return PictureResponses.of(volunteerService.getThumbnail(volunteerId, pictureId));
     }
 
     @PutMapping(path = "/{id}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Set trainee picture",
-            description = "Uploads a JPEG, PNG, GIF, BMP, TIFF or WebP image as the profile picture of a trainee, replacing the current one.")
+    @Operation(summary = "Set volunteer picture",
+            description = "Uploads a JPEG, PNG, GIF, BMP, TIFF or WebP image as the profile picture of a volunteer, replacing the current one.")
     @ApiResponse(responseCode = "200", description = "The URLs of the new picture and its thumbnail")
     @ApiResponse(
             responseCode = "400",
@@ -238,7 +229,7 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found",
+            description = "The volunteer id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     @ApiResponse(
@@ -246,8 +237,8 @@ public class TraineeController {
             description = "The picture is too large",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
-    public TraineePictureResponse setPicture(
-            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+    public VolunteerPictureResponse setPicture(
+            @Parameter(description = "ID of the volunteer", example = "Vq7mKp2XaB")
             @PathVariable
             String id,
 
@@ -255,28 +246,28 @@ public class TraineeController {
             @RequestParam("picture")
             MultipartFile file
     ) {
-        return traineeService.setPicture(id, file);
+        return volunteerService.setPicture(id, file);
     }
 
-    @DeleteMapping("/{traineeId}/picture/{pictureId}")
+    @DeleteMapping("/{volunteerId}/picture/{pictureId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete trainee picture",
-            description = "Deletes the profile picture of a trainee, together with its thumbnail.")
+    @Operation(summary = "Delete volunteer picture",
+            description = "Deletes the profile picture of a volunteer, together with its thumbnail.")
     @ApiResponse(responseCode = "204", description = "The profile picture has been successfully deleted")
     @ApiResponse(
             responseCode = "404",
-            description = "The trainee id was not found, or the picture id is not the trainee's current picture",
+            description = "The volunteer id was not found, or the picture id is not the volunteer's current picture",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public void deletePicture(
-            @Parameter(description = "ID of the trainee", example = "TRAINEEID")
+            @Parameter(description = "ID of the volunteer", example = "Vq7mKp2XaB")
             @PathVariable
-            String traineeId,
+            String volunteerId,
 
             @Parameter(description = "ID of the picture", example = "PICTUREID")
             @PathVariable
             String pictureId
     ) {
-        traineeService.deletePicture(traineeId, pictureId);
+        volunteerService.deletePicture(volunteerId, pictureId);
     }
 }

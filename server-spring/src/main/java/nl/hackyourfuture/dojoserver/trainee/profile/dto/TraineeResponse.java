@@ -1,11 +1,11 @@
 package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.Background;
 import nl.hackyourfuture.dojoserver.trainee.profile.EducationLevel;
 import nl.hackyourfuture.dojoserver.trainee.profile.EnglishLevel;
 import nl.hackyourfuture.dojoserver.trainee.profile.FinancialSupport;
-import nl.hackyourfuture.dojoserver.trainee.profile.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.QuitReason;
@@ -220,7 +220,7 @@ public record TraineeResponse(
         String esfId,
 
         @Schema(
-                description = "The trainee Email. Unique across all trainees.",
+                description = "The trainee's email address. Unique across all trainees.",
                 example = "john.doe@example.com",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )

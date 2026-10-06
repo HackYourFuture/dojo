@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
 
 @Schema(description = "A search result.")
 public record SearchResult(
@@ -68,6 +69,17 @@ public record SearchResult(
                 cohort == null ? "No cohort assigned" : "Cohort " + cohort,
                 trainee.getThumbnailUrl(),
                 trainee.getProfilePath(),
+                score);
+    }
+
+    public static SearchResult from(Volunteer volunteer, double score) {
+        return new SearchResult(
+                SearchResultType.VOLUNTEER,
+                volunteer.getId(),
+                volunteer.getDisplayName(),
+                "Volunteer",
+                volunteer.getThumbnailUrl(),
+                volunteer.getProfilePath(),
                 score);
     }
 

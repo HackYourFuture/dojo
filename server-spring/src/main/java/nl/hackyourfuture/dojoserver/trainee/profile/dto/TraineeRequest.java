@@ -9,16 +9,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
+import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.Background;
 import nl.hackyourfuture.dojoserver.trainee.profile.EducationLevel;
 import nl.hackyourfuture.dojoserver.trainee.profile.EnglishLevel;
 import nl.hackyourfuture.dojoserver.trainee.profile.FinancialSupport;
-import nl.hackyourfuture.dojoserver.trainee.profile.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.QuitReason;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public record TraineeRequest(
 
         @Min(0)
         @Max(80)
-        @Schema(description = "How many hours a week the trainee does paid work while enrolled. 0 - means not working ",
+        @Schema(description = "How many hours a week the trainee does paid work while enrolled. 0 means not working.",
                 example = "16")
         Integer weeklyWorkHours,
 
@@ -115,7 +116,7 @@ public record TraineeRequest(
         @NotBlank
         @Size(min = 3, max = 100)
         @Email
-        @Schema(description = "The trainee Email. Must be unique across all trainees.",
+        @Schema(description = "The trainee's email address. Must be unique across all trainees.",
                 example = "john.doe@example.com")
         String email,
 
@@ -132,6 +133,7 @@ public record TraineeRequest(
         String githubHandle,
 
         @Size(min = 5, max = 200)
+        @URL
         @Schema(description = "The URL to the trainee's LinkedIn profile.",
                 example = "https://linkedin.com/in/john-doe")
         String linkedinUrl,

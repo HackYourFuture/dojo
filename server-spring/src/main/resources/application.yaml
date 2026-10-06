@@ -9,6 +9,11 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  jackson:
+    datatype:
+      enum:
+        # Only the documented string values are valid, not indexes such as "status": 1.
+        fail-on-numbers-for-enums: true
   data:
     web:
       pageable:

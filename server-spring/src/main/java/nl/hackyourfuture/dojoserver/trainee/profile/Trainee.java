@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.hackyourfuture.dojoserver.picture.PictureOwner;
 import nl.hackyourfuture.dojoserver.shared.StringUtils;
+import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
