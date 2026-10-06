@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.trainee.profile;
+package nl.hackyourfuture.dojoserver.volunteer;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -22,99 +22,43 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Builder
 @Entity
-@Table(name = "trainees")
+@Table(name = "volunteers")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 @DynamicUpdate // for PATCH
 @Setter
-public class Trainee implements PictureOwner {
+public class Volunteer implements PictureOwner {
     @Id
     @EqualsAndHashCode.Include
     @Setter(AccessLevel.NONE)
     private String id;
 
-    // Personal
     private String pictureId;
     private String firstName;
     private String lastName;
-    private String preferredName;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private String pronouns;
-    private LocalDate dateOfBirth;
-    private String location;
-
-    @Enumerated(EnumType.STRING)
-    private EnglishLevel englishLevel;
-
-    private Boolean professionalDutch;
-    private String countryOfOrigin;
-
-    @Enumerated(EnumType.STRING)
-    private Background background;
-
-    private LocalDate nlArrivalDate;
-    private LocalDate firstPermitIssueDate;
-
-    @Enumerated(EnumType.STRING)
-    private FinancialSupport financialSupport;
-
-    @Enumerated(EnumType.STRING)
-    private EducationLevel educationLevel;
-
-    private String educationBackground;
-    private Integer weeklyWorkHours;
-    private String dietaryPreference;
-    private String healthCondition;
-    private String comments;
-    private String esfId;
-
-    // Contact
+    private String companyName;
+    private String jobRole;
     private String email;
-    private String slackId;
     private String phone;
     private String githubHandle;
+    private String slackId;
     private String linkedinUrl;
-    private String emergencyContactName;
-    private String emergencyContactRelationship;
-    private String emergencyContactPhone;
-
-    // Education
-    private Integer startCohort;
-    private Integer currentCohort;
 
     @Enumerated(EnumType.STRING)
-    private Track track;
+    private VolunteerStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private LearningStatus learningStatus;
-
-    private LocalDate startDate;
-    private LocalDate graduationDate;
-    private LocalDate quitDate;
-
-    @Enumerated(EnumType.STRING)
-    private QuitReason quitReason;
-
-    private String mentorTech;
-    private String mentorHr;
-    private String mentorEnglish;
-
-    // Placement
-    @Enumerated(EnumType.STRING)
-    private JobPath jobPath;
-
-    private LocalDate jobSupportEndDate;
-    private Boolean hasCar;
+    private String notes;
 
     // Managed by Spring Data JPA's AuditingEntityListener. Do not set these manually.
     @CreatedDate
@@ -126,24 +70,19 @@ public class Trainee implements PictureOwner {
     private Instant updatedAt;
 
     // Helper methods
-    // The name the trainee goes by: the preferred name if set, otherwise the first name.
-    public String getCalledName() {
-        return preferredName != null && !preferredName.isBlank() ? preferredName : firstName;
-    }
-
     public String getDisplayName() {
-        return String.format("%s %s", getCalledName(), lastName).strip();
+        return String.format("%s %s", firstName, lastName).strip();
     }
 
     public String getProfilePath() {
-        return String.format("/trainee/%s_%s", StringUtils.slug(getDisplayName()), id);
+        return String.format("/volunteer/%s_%s", StringUtils.slug(getDisplayName()), id);
     }
 
     public String getPictureUrl() {
         if (getPictureId() == null) {
             return null;
         }
-        return "/api/trainees/" + getId() + "/picture/" + getPictureId();
+        return "/api/volunteers/" + getId() + "/picture/" + getPictureId();
     }
 
     public String getThumbnailUrl() {
@@ -155,6 +94,6 @@ public class Trainee implements PictureOwner {
 
     @Override
     public String getPictureStoragePrefix() {
-        return "images/trainees/" + getId() + "/";
+        return "images/volunteers/" + getId() + "/";
     }
 }

@@ -1,11 +1,11 @@
 package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.Background;
 import nl.hackyourfuture.dojoserver.trainee.profile.EducationLevel;
 import nl.hackyourfuture.dojoserver.trainee.profile.EnglishLevel;
 import nl.hackyourfuture.dojoserver.trainee.profile.FinancialSupport;
-import nl.hackyourfuture.dojoserver.trainee.profile.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.QuitReason;

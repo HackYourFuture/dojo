@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SearchResultType {
     TRAINEE("trainee"),
+    VOLUNTEER("volunteer"),
     ORGANISATION("organisation"),
     CONTACT_PERSON("contact-person");
 

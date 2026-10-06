@@ -7,6 +7,7 @@ import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.trainee.assessment.Assessment;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.EmploymentHistory;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -45,14 +46,6 @@ public class SlackNotificationSender {
             return;
         }
 
-        var rows = new StringBuilder();
-        changes.forEach(change -> rows.append("| %s | %s | %s |\n".formatted(
-                humanize(change.field()),
-                value(change.from()),
-                value(change.to())
-        ))
-        );
-
         var message = """
                 ### :pencil2: Trainee updated
                 Trainee: %s
@@ -60,7 +53,7 @@ public class SlackNotificationSender {
 
                 | Field | From | To |
                 | --- | --- | --- |
-                %s---""".formatted(traineeLink(trainee), reporter, rows);
+                %s---""".formatted(traineeLink(trainee), reporter, changeRows(changes));
         slackClient.sendNotification(message);
     }
 
@@ -120,6 +113,49 @@ public class SlackNotificationSender {
         slackClient.sendNotification(message);
     }
 
+    public void volunteerCreated(String reporter, Volunteer volunteer) {
+        var message = """
+                ### :raised_hands: New volunteer
+                Volunteer: %s
+                By: %s
+
+                | Status | Company |
+                | --- | --- |
+                | %s | %s |
+                ---""".formatted(
+                volunteerLink(volunteer),
+                reporter,
+                value(volunteer.getStatus()),
+                cell(volunteer.getCompanyName()));
+        slackClient.sendNotification(message);
+    }
+
+    public void volunteerUpdated(String reporter, Volunteer volunteer, List<FieldChange> changes) {
+        if (changes.isEmpty()) {
+            return;
+        }
+
+        var message = """
+                ### :pencil2: Volunteer updated
+                Volunteer: %s
+                By: %s
+
+                | Field | From | To |
+                | --- | --- | --- |
+                %s---""".formatted(volunteerLink(volunteer), reporter, changeRows(changes));
+        slackClient.sendNotification(message);
+    }
+
+    public void volunteerDeleted(String reporter, Volunteer volunteer) {
+        // No link: the profile it would point at is gone.
+        var message = """
+                ### :wastebasket: Volunteer deleted
+                Volunteer: %s
+                By: %s
+                ---""".formatted(volunteer.getDisplayName(), reporter);
+        slackClient.sendNotification(message);
+    }
+
     public void organisationCreated(String reporter, Organisation organisation) {
         var message = """
                 ### :office: New organisation
@@ -167,6 +203,21 @@ public class SlackNotificationSender {
 
     private String organisationLink(Organisation organisation) {
         return link(organisation.getName(), organisation.getProfilePath());
+    }
+
+    private String volunteerLink(Volunteer volunteer) {
+        return link(volunteer.getDisplayName(), volunteer.getProfilePath());
+    }
+
+    // One table row per changed field.
+    private static String changeRows(List<FieldChange> changes) {
+        var rows = new StringBuilder();
+        changes.forEach(change -> rows.append("| %s | %s | %s |\n".formatted(
+                humanize(change.field()),
+                value(change.from()),
+                value(change.to())
+        )));
+        return rows.toString();
     }
 
     private String link(String name, String path) {

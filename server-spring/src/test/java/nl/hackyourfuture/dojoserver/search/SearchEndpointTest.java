@@ -13,6 +13,9 @@ import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
+import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerRepository;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +31,7 @@ import java.util.Locale;
 
 /**
  * Search over MockMvc, against the local development database, so transactional. Every query includes a random last
- * name that only the seeded trainees share, so real trainees never show up in the results.
+ * name that only the seeded records share, so real records never show up in the results.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,6 +44,8 @@ class SearchEndpointTest {
     private MockMvcTester mvc;
     @Autowired
     private TraineeRepository traineeRepository;
+    @Autowired
+    private VolunteerRepository volunteerRepository;
     @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
@@ -92,6 +97,26 @@ class SearchEndpointTest {
         assertThat(result).bodyJson().extractingPath("$[0].path").isEqualTo(organisation.getProfilePath());
         assertThat(result).bodyJson().extractingPath("$[3].path").isEqualTo(organisation.getProfilePath());
         assertThat(result).bodyJson().extractingPath("$[3].subtitle").isEqualTo(organisation.getName());
+    }
+
+    @Test
+    void findsVolunteersAlongsideTrainees() {
+        Volunteer volunteer = volunteerRepository.save(Volunteer.builder()
+                .id(RandomUtils.generateRandomId())
+                .firstName("Vera")
+                .lastName(lastName)
+                .email(RandomUtils.generateRandomId() + "@example.org")
+                .status(VolunteerStatus.ACTIVE)
+                .build());
+
+        MvcTestResult result = search(lastName);
+
+        // All three match on the last name, so the trainees come first.
+        assertThat(result).bodyJson().extractingPath("$[*].type").asArray()
+                .containsExactly("trainee", "trainee", "volunteer");
+        assertThat(result).bodyJson().extractingPath("$[2].id").isEqualTo(volunteer.getId());
+        assertThat(result).bodyJson().extractingPath("$[2].subtitle").isEqualTo("Volunteer");
+        assertThat(result).bodyJson().extractingPath("$[2].path").isEqualTo(volunteer.getProfilePath());
     }
 
     @Test

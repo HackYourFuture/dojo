@@ -28,13 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
-import java.lang.reflect.RecordComponent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -203,7 +200,7 @@ public class TraineeService {
         trainee.setJobSupportEndDate(merged.jobSupportEndDate());
         trainee.setHasCar(merged.hasCar());
 
-        slackNotificationSender.traineeUpdated(currentUser.name(), trainee, changes(current, merged));
+        slackNotificationSender.traineeUpdated(currentUser.name(), trainee, FieldChange.between(current, merged));
         return TraineeResponse.from(trainee);
     }
 
@@ -244,25 +241,5 @@ public class TraineeService {
 
     private Trainee findTrainee(String id) {
         return traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
-    }
-
-    /**
-     * The fields the patch actually changed, for the notification. Read off the record components so a
-     * field added to `TraineeRequest` is covered without touching this.
-     */
-    private static List<FieldChange> changes(TraineeRequest current, TraineeRequest merged) {
-        return Arrays.stream(TraineeRequest.class.getRecordComponents())
-                .filter(component -> !Objects.equals(read(component, current), read(component, merged)))
-                .map(component -> new FieldChange(component.getName(), read(component, current),
-                        read(component, merged)))
-                .toList();
-    }
-
-    private static Object read(RecordComponent component, TraineeRequest request) {
-        try {
-            return component.getAccessor().invoke(request);
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("Cannot read " + component.getName(), e);
-        }
     }
 }
