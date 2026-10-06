@@ -45,6 +45,9 @@ public class Interaction {
     @Setter(AccessLevel.NONE)
     private String organisationId;
 
+    @Setter(AccessLevel.NONE)
+    private String volunteerId;
+
     private Instant date;
 
     @Enumerated(EnumType.STRING)

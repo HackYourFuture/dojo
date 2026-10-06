@@ -156,6 +156,20 @@ public class SlackNotificationSender {
         slackClient.sendNotification(message);
     }
 
+    public void volunteerInteractionCreated(String reporter, Volunteer volunteer, Interaction interaction) {
+        var message = """
+                ### :speech_balloon: Interaction logged
+                Volunteer: %s
+                By: %s
+
+                | Type | Title |
+                | --- | --- |
+                | %s | %s |
+                ---""".formatted(volunteerLink(volunteer), reporter,
+                value(interaction.getType()), cell(interaction.getTitle()));
+        slackClient.sendNotification(message);
+    }
+
     public void organisationCreated(String reporter, Organisation organisation) {
         var message = """
                 ### :office: New organisation
