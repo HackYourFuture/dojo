@@ -11,8 +11,7 @@ import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { SvgIcon } from '@mui/material';
 import UsersIcon from '@mui/icons-material/ManageAccounts';
 import UsersOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
-import VolunteerIcon from '@mui/icons-material/VolunteerActivism';
-import VolunteerOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 export const SIDEBAR_WIDTH = 240;
 
@@ -44,7 +43,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     activeIcon: SchoolIcon,
     relatedPaths: ['/trainee'],
   },
-  { name: 'Volunteers', path: '/volunteers', icon: VolunteerOutlinedIcon, activeIcon: VolunteerIcon },
+  {
+    name: 'Volunteers',
+    path: '/volunteers',
+    icon: Diversity3Icon,
+    activeIcon: Diversity3Icon,
+    relatedPaths: ['/volunteer'],
+  },
   {
     name: 'Organisations',
     path: '/organisations',

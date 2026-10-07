@@ -8,11 +8,13 @@ import { cropPicture } from '../utils/pictureHelper';
 import { organisationKeys } from '../../organisations/data/keys';
 import { searchKeys } from '../../search/data/keys';
 import { traineeKeys } from '../../trainee-profile/data/keys';
+import { volunteerKeys } from '../../volunteers/data/keys';
 
 // Where each kind of profile is cached.
 const PROFILE_KEYS: Record<ProfileType, (profileId: string) => QueryKey> = {
   trainee: traineeKeys.details,
   organisation: organisationKeys.details,
+  volunteer: volunteerKeys.details,
 };
 
 const updatePictureQueries = (
@@ -31,7 +33,7 @@ const updatePictureQueries = (
   queryClient.resetQueries({ queryKey: searchKeys.all() });
 };
 
-/** Hook to crop a new picture for a trainee or an organisation and upload it. */
+/** Hook to crop a new picture for a profile and upload it. */
 export const useUploadPicture = (profileType: ProfileType, profileId: string) => {
   const queryClient = useQueryClient();
 
@@ -43,7 +45,7 @@ export const useUploadPicture = (profileType: ProfileType, profileId: string) =>
   });
 };
 
-/** Hook to delete the picture of a trainee or an organisation. */
+/** Hook to delete the picture of a profile. */
 export const useDeletePicture = (profileType: ProfileType, profileId: string) => {
   const queryClient = useQueryClient();
 

@@ -10,6 +10,8 @@ type DropdownSelectProps = {
   options: SelectOption[];
   disabled?: boolean;
   error?: string;
+  // Adds an empty option, which clears the field.
+  nullable?: boolean;
   onChange: (event: SelectChangeEvent<string>) => void;
   width?: string | number;
 };
@@ -23,6 +25,7 @@ export const DropdownSelect = ({
   options,
   disabled = false,
   error,
+  nullable = false,
   onChange,
   width = '25ch',
 }: DropdownSelectProps) => {
@@ -41,6 +44,7 @@ export const DropdownSelect = ({
         error={!!error}
         onChange={onChange}
       >
+        {nullable && <MenuItem value="">-</MenuItem>}
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}

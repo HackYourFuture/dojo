@@ -30,7 +30,7 @@ export enum InteractionType {
   Other = 'other',
 }
 
-// The types each profile offers when adding or editing an interaction. The server accepts every type on both.
+// The types each profile offers when adding or editing an interaction. The server accepts every type on every profile.
 export const INTERACTION_TYPES: Record<ProfileType, InteractionType[]> = {
   trainee: [
     InteractionType.Call,
@@ -49,6 +49,14 @@ export const INTERACTION_TYPES: Record<ProfileType, InteractionType[]> = {
     InteractionType.Chat,
     InteractionType.Email,
     InteractionType.Meeting,
+    InteractionType.Feedback,
+    InteractionType.InPerson,
+    InteractionType.Other,
+  ],
+  volunteer: [
+    InteractionType.Call,
+    InteractionType.Chat,
+    InteractionType.Email,
     InteractionType.Feedback,
     InteractionType.InPerson,
     InteractionType.Other,
