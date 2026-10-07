@@ -20,3 +20,7 @@ export const createTrainee = async (newTrainee: NewTrainee) => {
   const { data } = await axios.post<TraineeResponse>('/api/trainees', traineeRequest);
   return mapTraineeToDomain(data);
 };
+
+export const deleteTrainee = async (traineeId: string) => {
+  await axios.delete(`/api/trainees/${traineeId}`);
+};

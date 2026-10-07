@@ -8,8 +8,10 @@ import {
 
 import InteractionsInfo from '../../interactions/InteractionsInfo';
 import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
+import { OrganisationActions } from './OrganisationActions';
 import OrganisationHeader from './OrganisationHeader';
 import OrganisationInfo from './OrganisationInfo';
+import { ProfileButtons } from '../../../components/profile/ProfileButtons';
 import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../hooks/useProfileSave';
@@ -69,15 +71,17 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
     // The tabs have no padding of their own, so everything lines up with the header.
     <Box sx={{ paddingX: 8, bgcolor: 'background.default' }}>
       <Stack spacing={1} useFlexGap sx={{ paddingTop: 3 }}>
-        <OrganisationHeader organisation={organisation} />
-        <ProfileTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          isEditMode={isEditMode}
-          isSaving={isSaveLoading}
-          onClickEditButton={onClickEditButton}
-          onCancel={onCancelEdit}
-        >
+        <OrganisationHeader organisation={organisation}>
+          <ProfileButtons
+            activeTab={activeTab}
+            isEditMode={isEditMode}
+            isSaving={isSaveLoading}
+            onClickEditButton={onClickEditButton}
+            onCancel={onCancelEdit}
+            actions={<OrganisationActions organisationId={organisation.id} name={organisation.name} />}
+          />
+        </OrganisationHeader>
+        <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab}>
           <Tab label="Overview" value="overview" />
           <Tab
             label={<InteractionsTabLabel profileType="organisation" profileId={organisation.id} />}

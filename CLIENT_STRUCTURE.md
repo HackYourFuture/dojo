@@ -66,7 +66,8 @@ Authentication-related logic:
 
 ```
 components/profile/
-├── ProfileTabBar.tsx         # The tabs, with the Edit, or Save and Cancel, buttons at the end
+├── ProfileTabBar.tsx         # The tabs
+├── ProfileButtons.tsx        # The Edit, or Cancel and Save, and Actions buttons at the top right of the header
 ├── ProfileSection.tsx        # Section title, and FieldRow for a line of fields
 ├── ProfileValue.tsx          # A field's label and value, shown until the profile is edited
 ├── fieldStyles.ts            # The field width, the label above every field, and the input style that keeps it there
@@ -75,7 +76,9 @@ components/profile/
 ├── ProfileSelect.tsx         # Dropdown, with an empty option for a nullable field
 ├── ProfileNotes.tsx          # The Markdown notes section
 ├── ContactFields.tsx         # The email, phone, Slack, GitHub and LinkedIn fields of a contact tab
-└── SocialLinks.tsx           # The website, Slack, GitHub and LinkedIn buttons of a profile header
+├── SocialLinks.tsx           # The website, Slack, GitHub and LinkedIn buttons of a profile header
+├── ProfileActionsButton.tsx  # The Actions button, with a menu of the given actions
+└── DeleteProfileDialog.tsx   # Asks to type the profile's name before deleting it
 ```
 
 ### `/src/data`
@@ -164,6 +167,7 @@ trainee-profile/
 │   └── selectOptions.ts          # The options of the trainee dropdowns, on the profile and in the create dialog
 ├── profile/                      # Main profile layout
 │   ├── ProfileHeader.tsx
+│   ├── TraineeActions.tsx        # The Actions button, with the dialog to delete the trainee
 │   └── components/
 │       ├── TraineeProfile.tsx    # Header, tab bar and the page padding
 │       ├── ProfileDateField.tsx  # MUI date picker, can be cleared

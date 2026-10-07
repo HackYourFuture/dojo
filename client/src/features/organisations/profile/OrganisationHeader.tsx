@@ -4,6 +4,7 @@ import { EditableProfilePicture } from '../../profile-picture/components/Editabl
 import { Organisation } from '../Organisation';
 import { OrganisationLogo } from '../../../components/OrganisationLogo';
 import { OrganisationStatusChip } from '../components/OrganisationStatusChip';
+import { ReactNode } from 'react';
 import { SocialLinks } from '../../../components/profile/SocialLinks';
 
 // About as tall as the three rows of text next to the logo.
@@ -11,10 +12,12 @@ const LOGO_SIZE = 96;
 
 interface OrganisationHeaderProps {
   organisation: Organisation;
+  // The Edit and Actions buttons, at the top right.
+  children: ReactNode;
 }
 
 /** The organisation's logo, name, status, location and links above the profile tabs, as they are saved. */
-const OrganisationHeader = ({ organisation }: OrganisationHeaderProps) => {
+const OrganisationHeader = ({ organisation, children }: OrganisationHeaderProps) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
       <EditableProfilePicture
@@ -41,6 +44,8 @@ const OrganisationHeader = ({ organisation }: OrganisationHeaderProps) => {
         </Box>
         <SocialLinks websiteUrl={organisation.websiteUrl} linkedinUrl={organisation.linkedinUrl} />
       </Stack>
+
+      <Box sx={{ marginLeft: 'auto', alignSelf: 'flex-start', flexShrink: 0 }}>{children}</Box>
     </Box>
   );
 };

@@ -3,6 +3,7 @@ import { Box, Button, Container, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { AddOrganisationDialog } from './components/AddOrganisationDialog';
 import { ListLoader } from '../../components/ListLoader';
+import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
 import { OrganisationsTable } from './components/OrganisationsTable';
 import { useGetOrganisations } from './data/organisation-queries';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -36,6 +37,7 @@ const OrganisationsOverviewPage = () => {
         <ListLoader query={organisationsQuery} />
       </Box>
 
+      <SuccessMessageSnackbar />
       <AddOrganisationDialog isOpen={isAddDialogOpen} handleClose={() => setIsAddDialogOpen(false)} />
     </Container>
   );
