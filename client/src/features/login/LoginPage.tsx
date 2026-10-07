@@ -2,13 +2,19 @@ import { Box, Button } from '@mui/material';
 
 import { ErrorBox } from '../../components';
 import HYFLogo from '../../assets/hyf-logo-red.png';
+import { Navigate } from 'react-router';
 import { useAuth } from '../../auth/hooks/useAuth';
 
 /**
  * Component for displaying the login page elements.
  */
 const LoginPage = () => {
-  const { login, errorMessage } = useAuth();
+  const { user, login, errorMessage } = useAuth();
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <Box
       sx={{

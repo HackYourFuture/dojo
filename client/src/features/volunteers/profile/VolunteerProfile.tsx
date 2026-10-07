@@ -13,6 +13,7 @@ import VolunteerInfo from './VolunteerInfo';
 import { createFieldChangeHandlers } from '../../../components/profile/fieldChangeHandlers';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../hooks/useProfileSave';
+import { useProfileTab } from '../../../hooks/useProfileTab';
 import { useState } from 'react';
 import { useUpdateVolunteer } from '../data/mutations';
 
@@ -22,13 +23,16 @@ const getChangedFields = (original: Volunteer, edited: Volunteer): VolunteerChan
   return Object.fromEntries(changedFields.map((field) => [field, edited[field]]));
 };
 
+// The open tab is in the URL, and Slack links to the interactions tab by name.
+const TABS = ['overview', 'contact', 'interactions'];
+
 interface VolunteerProfileProps {
   volunteer: Volunteer;
 }
 
 /** The volunteer profile: the header, the tabs and the content of the active tab. */
 const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useProfileTab(volunteer.profilePath, TABS);
   const [isEditMode, setIsEditMode] = useState(false);
   // A copy of the volunteer with the changes made while editing.
   const [editedVolunteer, setEditedVolunteer] = useState<Volunteer>(volunteer);

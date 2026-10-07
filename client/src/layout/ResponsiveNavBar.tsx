@@ -35,7 +35,7 @@ export const ResponsiveNavBar = ({ onMenuClick }: ResponsiveNavBarProps) => {
             </IconButton>
           )}
           <Box component="div" sx={{ mr: 2 }}>
-            <Link to="/home">
+            <Link to="/">
               <img src={HYFLogo} height="40" alt="HYF navbar logo" className="hyf-navbar-logo-img" />
             </Link>
           </Box>

@@ -12,9 +12,12 @@ import { ProfileTabBar } from '../../../../components/profile/ProfileTabBar';
 import { TraineeActions } from '../TraineeActions';
 import { usePageTitle } from '../../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../../hooks/useProfileSave';
-import { useState } from 'react';
+import { useProfileTab } from '../../../../hooks/useProfileTab';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';
 import { useUpdateTrainee } from '../../data/mutations';
+
+// The open tab is in the URL, and Slack links to the interactions, employment and education tabs by name.
+const TABS = ['personal', 'contact', 'education', 'employment', 'interactions'];
 
 interface TraineeProfileProps {
   id: string;
@@ -22,9 +25,9 @@ interface TraineeProfileProps {
 
 /** The trainee profile: the header, the tabs and the content of the active tab. */
 const TraineeProfile = ({ id }: TraineeProfileProps) => {
-  const [activeTab, setActiveTab] = useState('personal');
-  const { isPending: isSaveLoading, mutate: updateTrainee } = useUpdateTrainee(id);
   const { trainee, isEditMode, setIsEditMode, getTraineeInfoChanges } = useTraineeProfileContext();
+  const [activeTab, setActiveTab] = useProfileTab(trainee.profilePath, TABS);
+  const { isPending: isSaveLoading, mutate: updateTrainee } = useUpdateTrainee(id);
   const { saveChanges, saveResultSnackbar } = useProfileSave('Trainee', updateTrainee);
   usePageTitle(trainee.displayName);
 
