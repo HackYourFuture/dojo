@@ -1,6 +1,7 @@
 import { JobPath, Trainee, TraineeInfoType } from '../../../data/types/Trainee';
 
 import { ChangeEvent } from 'react';
+import { formatTextToFriendly } from '../../../data/text';
 
 /**
  * Creates the change handler of the date, number and dropdown fields, which report their value instead of an event.
@@ -33,18 +34,6 @@ export const createTextChangeHandler = (
   const handleValueChange = createValueChangeHandler(setTrainee, propName);
   return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     handleValueChange(event.target.name, event.target.value);
-};
-
-/**
- * formats the text to a UI friendly format
- * for example: "in-progress" becomes "In progress"
- * @param value
- * @returns
- */
-// TODO: rename this function
-export const formatTextToFriendly = (value: string): string => {
-  // replace '-' with ' ' in the type string and capitilzie first letter
-  return value.replace(/-/g, ' ').replace(/^\w/, (char) => char.toUpperCase());
 };
 
 export const formatJobPathToLabel = (jobPath: JobPath): string => {

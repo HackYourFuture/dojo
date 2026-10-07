@@ -7,6 +7,5 @@ export const useGetContactPersons = (organisationId: string) => {
   return useQuery({
     queryKey: contactPersonKeys.list(organisationId),
     queryFn: () => getContactPersons(organisationId),
-    refetchOnWindowFocus: false,
   });
 };

@@ -1,3 +1,4 @@
+import { PROFILE_QUERY_OPTIONS } from '../../../data/tanstack/tanstackClient';
 import { getTrainee } from '../api/api';
 import { traineeKeys } from './keys';
 import { useQuery } from '@tanstack/react-query';
@@ -11,10 +12,6 @@ export const useGetTrainee = (traineeId: string) => {
     queryKey: traineeKeys.details(traineeId),
     queryFn: () => getTrainee(traineeId),
     enabled: !!traineeId,
-    //Added because it keeps rendering
-    refetchOnMount: false, // Prevent refetching on component mount
-    refetchOnWindowFocus: false, // Prevent refetching on window focus
-    // The edit form diffs against this data, so a refetch mid-edit would save a colleague's newer values back.
-    refetchOnReconnect: false,
+    ...PROFILE_QUERY_OPTIONS,
   });
 };

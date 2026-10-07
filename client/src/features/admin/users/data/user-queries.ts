@@ -8,6 +8,5 @@ export const useGetUsers = ({ enabled = true } = {}) => {
     queryKey: userKeys.list(),
     queryFn: getUsers,
     enabled,
-    refetchOnWindowFocus: false,
   });
 };

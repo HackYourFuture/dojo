@@ -1,6 +1,6 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { formatDate } from '../features/trainee-profile/utils/dateHelper';
+import { formatDate } from '../data/dates';
 
 interface FormDateFieldProps {
   label: string;

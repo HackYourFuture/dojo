@@ -3,17 +3,16 @@ import {
   educationLevelOptions,
   englishLevelOptions,
   financialSupportOptions,
-  genderOptions,
-  pronounOptions,
   yesNoOptions,
 } from '../utils/selectOptions';
 import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
-import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../profile/components/ProfileSection';
+import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../components/profile/ProfileSection';
+import { genderOptions, pronounOptions } from '../../../data/types/Person';
 
 import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
-import { ProfileSelect } from '../profile/components/ProfileSelect';
-import { ProfileTextField } from '../profile/components/ProfileTextField';
+import { ProfileSelect } from '../../../components/profile/ProfileSelect';
+import { ProfileTextField } from '../../../components/profile/ProfileTextField';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 

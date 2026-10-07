@@ -1,20 +1,6 @@
+import { Gender } from './Person';
+
 // enums
-export enum Gender {
-  Man = 'man',
-  Woman = 'woman',
-  NonBinary = 'non-binary',
-  Other = 'other',
-}
-
-// The pronouns offered in the profile. The API stores pronouns as free text.
-export enum Pronouns {
-  HeHim = 'He/him',
-  SheHer = 'She/her',
-  TheyThem = 'They/them',
-  HeThey = 'He/they',
-  SheThey = 'She/they',
-}
-
 export enum EnglishLevel {
   NeedsWork = 'needs-work',
   Good = 'good',

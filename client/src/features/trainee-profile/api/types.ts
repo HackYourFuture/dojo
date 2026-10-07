@@ -3,12 +3,13 @@ import {
   EducationLevel,
   EnglishLevel,
   FinancialSupport,
-  Gender,
   JobPath,
   LearningStatus,
   QuitReason,
   Track,
 } from '../../../data/types/Trainee';
+
+import { Gender } from '../../../data/types/Person';
 
 export interface TraineeResponse {
   id: string;

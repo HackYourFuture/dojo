@@ -1,4 +1,6 @@
-import { EducationLevel, Gender, LearningStatus, Track } from '../../../data/types/Trainee';
+import { EducationLevel, LearningStatus, Track } from '../../../data/types/Trainee';
+
+import { Gender } from '../../../data/types/Person';
 
 export interface DashboardResponse {
   overview: {

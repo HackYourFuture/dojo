@@ -22,10 +22,6 @@ interface UsersTableProps {
   onClickEdit: (id: string) => void;
 }
 
-const headerStyle = {
-  fontWeight: 'bold',
-};
-
 /** The users in a table, with a "..." menu on every row to edit or delete the user. */
 export const UsersTable = ({ users, onClickEdit }: UsersTableProps) => {
   const { mutate: deleteUser, isPending: isDeleteLoading } = useDeleteUser();
@@ -79,11 +75,11 @@ export const UsersTable = ({ users, onClickEdit }: UsersTableProps) => {
         <Table size="small" aria-label="users table">
           <TableHead>
             <TableRow>
-              <TableCell sx={headerStyle} width={50}></TableCell>
-              <TableCell sx={headerStyle}>ID</TableCell>
-              <TableCell sx={headerStyle}>Name</TableCell>
-              <TableCell sx={headerStyle}>Email</TableCell>
-              <TableCell sx={headerStyle}>Active</TableCell>
+              <TableCell width={50}></TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Active</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>

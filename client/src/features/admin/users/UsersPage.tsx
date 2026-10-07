@@ -1,21 +1,20 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { ErrorBox, Loader } from '../../../components';
 import { useAddUser, useEditUser } from './data/mutations';
-import { useEffect, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import { User } from './models/user';
 import { UserDetailsDialog } from './components/UserDetailsDialog';
 import { UsersTable } from './components/UsersTable';
 import { useGetUsers } from './data/user-queries';
+import { usePageTitle } from '../../../hooks/usePageTitle';
+import { useState } from 'react';
 
 /**
  * Component for displaying the users admin page, where users who can sign in to Dojo are added, edited and deleted.
  */
 const UsersPage = () => {
-  useEffect(() => {
-    document.title = 'Users | Dojo';
-  }, []);
+  usePageTitle('Users');
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [dialogError, setDialogError] = useState<string>('');

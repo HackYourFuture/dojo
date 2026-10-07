@@ -1,5 +1,5 @@
 import { OrganisationStatus } from '../Organisation';
-import { SelectOption } from '../../trainee-profile/utils/selectOptions';
+import { SelectOption } from '../../../data/types/SelectOption';
 
 export const organisationStatusLabels: Record<OrganisationStatus, string> = {
   [OrganisationStatus.Active]: 'Active',

@@ -3,34 +3,18 @@ import {
   EducationLevel,
   EnglishLevel,
   FinancialSupport,
-  Gender,
   JobPath,
   LearningStatus,
-  Pronouns,
   QuitReason,
   Track,
 } from '../../../data/types/Trainee';
-import { formatJobPathToLabel, formatTextToFriendly } from './formHelper';
 import { getTrackLabel, learningStatusToLabel } from '../../../data/labels/traineeLabels';
 
-// The options of every dropdown on the trainee profile and in the create dialog.
+import { SelectOption } from '../../../data/types/SelectOption';
+import { formatJobPathToLabel } from './formHelper';
+import { formatTextToFriendly } from '../../../data/text';
 
-export type SelectOption = {
-  label: string; // Shown to the user
-  value: string;
-};
-
-export const genderOptions: SelectOption[] = [
-  { label: 'Man', value: Gender.Man },
-  { label: 'Woman', value: Gender.Woman },
-  { label: 'Non-binary', value: Gender.NonBinary },
-  { label: 'Other', value: Gender.Other },
-];
-
-export const pronounOptions: SelectOption[] = Object.values(Pronouns).map((pronouns) => ({
-  label: pronouns,
-  value: pronouns,
-}));
+// The options of the trainee dropdowns, on the profile and in the create dialog.
 
 export const backgroundOptions: SelectOption[] = [
   { label: 'EU citizen', value: Background.EUCitizen },

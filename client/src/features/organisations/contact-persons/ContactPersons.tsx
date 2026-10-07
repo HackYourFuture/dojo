@@ -6,7 +6,7 @@ import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 import { ContactPerson } from './ContactPerson';
 import { ContactPersonDialog } from './components/ContactPersonDialog';
 import { ContactPersonsList } from './components/ContactPersonsList';
-import { ProfileSection } from '../../trainee-profile/profile/components/ProfileSection';
+import { ProfileSection } from '../../../components/profile/ProfileSection';
 import { useGetContactPersons } from './data/contact-person-queries';
 import { useState } from 'react';
 

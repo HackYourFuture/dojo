@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
-import { SelectOption } from '../../utils/selectOptions';
+import { SelectOption } from '../data/types/SelectOption';
 
 type DropdownSelectProps = {
   id: string;
@@ -14,9 +14,7 @@ type DropdownSelectProps = {
   width?: string | number;
 };
 
-/**
- * An outlined dropdown with an error message below it, used by the dialogs that add a trainee or an organisation.
- */
+/** An outlined dropdown with an error message below it, used by the dialogs that add a profile. */
 export const DropdownSelect = ({
   id,
   name,

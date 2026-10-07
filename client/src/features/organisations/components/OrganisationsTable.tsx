@@ -13,6 +13,7 @@ import {
   TableRow,
   Tooltip,
 } from '@mui/material';
+import { LinkTableRow, RowLinksCell } from '../../../components/LinkTableRow';
 
 import LanguageIcon from '@mui/icons-material/Language';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -20,7 +21,6 @@ import { OrganisationLogo } from '../../../components/OrganisationLogo';
 import { OrganisationStatusChip } from './OrganisationStatusChip';
 import { OrganisationSummary } from '../Organisation';
 import { partnershipTypeLabels } from '../utils/partnershipTypes';
-import { useNavigate } from 'react-router';
 
 const RESPONSIBLE_AVATAR_SIZE = 28;
 
@@ -28,39 +28,25 @@ interface OrganisationsTableProps {
   organisations: OrganisationSummary[];
 }
 
-const headerStyle = {
-  fontWeight: 'bold',
-};
-
 /** The organisations in a table, where a row opens the profile of its organisation. */
 export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) => {
-  const navigate = useNavigate();
-
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label="organisations table">
         <TableHead>
           <TableRow>
-            <TableCell sx={headerStyle} width={50}></TableCell>
-            <TableCell sx={headerStyle}>Name</TableCell>
-            <TableCell sx={headerStyle} width={150}>
-              Status
-            </TableCell>
-            <TableCell sx={headerStyle}>Partnership</TableCell>
-            <TableCell sx={headerStyle}>Responsible</TableCell>
-            <TableCell sx={headerStyle}>Location</TableCell>
+            <TableCell width={50}></TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell width={150}>Status</TableCell>
+            <TableCell>Partnership</TableCell>
+            <TableCell>Responsible</TableCell>
+            <TableCell>Location</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {organisations.map((organisation) => (
-            <TableRow
-              key={organisation.id}
-              hover
-              // A link as the row would put an <a> in the <tbody>, so the row navigates on click instead.
-              onClick={() => navigate(organisation.profilePath)}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
-            >
+            <LinkTableRow key={organisation.id} to={organisation.profilePath}>
               <TableCell>
                 <OrganisationLogo src={organisation.thumbnailUrl} name={organisation.name} size={40} />
               </TableCell>
@@ -99,8 +85,7 @@ export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) =
                 </AvatarGroup>
               </TableCell>
               <TableCell>{organisation.location}</TableCell>
-              {/* The links open the organisation's own sites, so clicking here does not open the profile. */}
-              <TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'end' }} onClick={(e) => e.stopPropagation()}>
+              <RowLinksCell>
                 {organisation.websiteUrl && (
                   <IconButton aria-label="Website" href={organisation.websiteUrl} target="_blank" rel="noopener">
                     <LanguageIcon sx={{ color: 'action.active' }} />
@@ -111,8 +96,8 @@ export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) =
                     <LinkedInIcon sx={{ color: 'action.active' }} />
                   </IconButton>
                 )}
-              </TableCell>
-            </TableRow>
+              </RowLinksCell>
+            </LinkTableRow>
           ))}
         </TableBody>
       </Table>

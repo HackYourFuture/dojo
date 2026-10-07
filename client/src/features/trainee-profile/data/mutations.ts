@@ -24,5 +24,7 @@ export const useUpdateTrainee = (traineeId: string) => {
 export const useCreateTrainee = () => {
   return useMutation({
     mutationFn: (newTrainee: NewTrainee) => createTrainee(newTrainee),
+    // A failed request may still have created it, and a retry would then fail on the taken email.
+    retry: false,
   });
 };

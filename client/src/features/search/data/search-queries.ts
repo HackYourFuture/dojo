@@ -12,6 +12,5 @@ export const useGetSearchResults = (query: string) => {
     queryFn: () => getSearchResults(query),
     enabled: query.length > 1, // Query runs only if search string has more than 1 character
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
   });
 };

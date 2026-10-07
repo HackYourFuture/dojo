@@ -5,10 +5,10 @@ import { AvatarWithTooltip } from './AvatarWithTooltip';
 import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 import { Interaction } from '../Interaction';
 import { ListItemActions } from '../../../components/ListItemActions';
-import MarkdownText from '../../trainee-profile/components/MarkdownText';
+import MarkdownText from '../../../components/MarkdownText';
 import { ProfileType } from '../../../data/types/ProfileType';
-import { formatDateForDisplay, formatDateTimeForDisplay } from '../../trainee-profile/utils/dateHelper';
-import { formatTextToFriendly } from '../../trainee-profile/utils/formHelper';
+import { formatDateForDisplay, formatDateTimeForDisplay } from '../../../data/dates';
+import { formatTextToFriendly } from '../../../data/text';
 import { useAuth } from '../../../auth/hooks/useAuth';
 import { useDeleteInteraction } from '../data/mutations';
 

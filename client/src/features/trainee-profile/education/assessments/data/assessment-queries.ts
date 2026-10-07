@@ -16,7 +16,6 @@ export const useGetAssessments = (traineeId: string) => {
       return { averageScore, assessments: orderAssessmentsByDateDesc(assessments) };
     },
     enabled: !!traineeId,
-    refetchOnWindowFocus: false,
   });
 };
 

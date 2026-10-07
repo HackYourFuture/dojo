@@ -1,6 +1,8 @@
 import { CreateTraineeRequest, TraineeResponse, UpdateTraineeRequest } from './types';
 import { NewTrainee, Track, Trainee, TraineeChanges } from '../../../data/types/Trainee';
 
+import { blankFieldsToNull } from '../../../data/text';
+
 export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
   return {
     id: trainee.id,
@@ -70,14 +72,7 @@ export const mapDomainToUpdateTraineeRequest = (changes: TraineeChanges): Update
     ...changes.employmentInfo,
   };
 
-  // The API rejects empty text for most fields, so a cleared field is sent as null.
-  for (const field of Object.keys(request) as (keyof UpdateTraineeRequest)[]) {
-    const value = request[field];
-    if (typeof value === 'string' && value.trim() === '') {
-      request[field] = null;
-    }
-  }
-  return request;
+  return blankFieldsToNull(request);
 };
 
 export const mapDomainToCreateTraineeRequest = (newTrainee: NewTrainee): CreateTraineeRequest => {

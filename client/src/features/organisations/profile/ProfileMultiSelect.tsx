@@ -1,7 +1,7 @@
 import { Autocomplete, SxProps, TextField, Theme } from '@mui/material';
 
-import { ProfileValue } from './ProfileValue';
-import { profileInputStyle } from './fieldStyles';
+import { ProfileValue } from '../../../components/profile/ProfileValue';
+import { profileInputStyle } from '../../../components/profile/fieldStyles';
 
 interface ProfileMultiSelectProps<T extends string> {
   name: string;

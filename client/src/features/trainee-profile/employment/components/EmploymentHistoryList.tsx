@@ -3,10 +3,10 @@ import { EmploymentHistory, EmploymentType } from '../models/employment-history'
 
 import CheckIcon from '@mui/icons-material/Check';
 import { ListItemActions } from '../../../../components/ListItemActions';
-import MarkdownText from '../../components/MarkdownText';
+import MarkdownText from '../../../../components/MarkdownText';
 import React from 'react';
-import { formatDateForDisplay } from '../../utils/dateHelper';
-import { formatTextToFriendly } from '../../utils/formHelper';
+import { formatDateForDisplay } from '../../../../data/dates';
+import { formatTextToFriendly } from '../../../../data/text';
 
 const feeFormat = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 

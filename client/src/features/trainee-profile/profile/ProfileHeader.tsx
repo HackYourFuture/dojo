@@ -1,44 +1,18 @@
-import { Avatar, Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Stack, Typography } from '@mui/material';
 
 import { EditableProfilePicture } from '../../profile-picture/components/EditableProfilePicture';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import { LearningStatus } from '../../../data/types/Trainee';
-import LinkedInLogo from '../../../assets/LinkedIn_logo.png';
-import { ReactNode } from 'react';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
-import { getSlackUserUrl } from '../../../data/links';
-import slackLogo from '../../../assets/slack.png';
+import { SocialLinks } from '../../../components/profile/SocialLinks';
 import { useGetTrainee } from '../data/trainee-queries';
 
 // About as tall as the three rows of text next to the picture.
 const PICTURE_SIZE = 96;
-const SOCIAL_ICON_SIZE = 20;
 
 interface ProfileHeaderProps {
   traineeId: string;
 }
-
-interface SocialLinkProps {
-  title: string;
-  href: string;
-  icon: ReactNode;
-  isExternal?: boolean;
-}
-
-const SocialLink = ({ title, href, icon, isExternal = false }: SocialLinkProps) => (
-  <Tooltip title={title}>
-    <IconButton
-      component="a"
-      size="small"
-      href={href}
-      aria-label={title}
-      {...(isExternal && { target: '_blank', rel: 'noopener' })}
-    >
-      {icon}
-    </IconButton>
-  </Tooltip>
-);
 
 /**
  * Component for showing the trainee's picture, name, cohort, status and social links above the profile tabs.
@@ -86,48 +60,7 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
             Cohort {data?.educationInfo?.currentCohort ?? 'not assigned'}
           </Typography>
         </Box>
-        {(slackId || githubHandle || linkedIn) && (
-          // Pulled left by the button padding, so the logos line up with the text above.
-          <Stack direction="row" spacing={0.5} sx={{ ml: '-5px' }}>
-            {slackId && (
-              <SocialLink
-                title="Slack"
-                href={getSlackUserUrl(slackId)}
-                icon={
-                  <Box
-                    component="img"
-                    src={slackLogo}
-                    alt=""
-                    sx={{ width: SOCIAL_ICON_SIZE, height: SOCIAL_ICON_SIZE, borderRadius: '50%' }}
-                  />
-                }
-              />
-            )}
-            {githubHandle && (
-              <SocialLink
-                title="GitHub"
-                href={`https://github.com/${githubHandle}`}
-                icon={<GitHubIcon sx={{ color: 'action.active', fontSize: SOCIAL_ICON_SIZE }} />}
-                isExternal
-              />
-            )}
-            {linkedIn && (
-              <SocialLink
-                title="LinkedIn"
-                href={linkedIn}
-                icon={
-                  <Box
-                    component="img"
-                    src={LinkedInLogo}
-                    alt=""
-                    sx={{ width: SOCIAL_ICON_SIZE, height: SOCIAL_ICON_SIZE }}
-                  />
-                }
-                isExternal
-              />
-            )}
-          </Stack>
-        )}
+        <SocialLinks slackId={slackId} githubHandle={githubHandle} linkedinUrl={linkedIn} />
       </Stack>
     </Box>
   );

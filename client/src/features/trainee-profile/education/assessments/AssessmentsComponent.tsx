@@ -6,7 +6,7 @@ import { Assessment } from './models/assessment';
 import { AssessmentDetailsModal } from './components/AssessmentDetailsModal';
 import { AssessmentsList } from './components/AssessmentsList';
 import { ConfirmationDialog } from '../../../../components/ConfirmationDialog';
-import { ProfileSection } from '../../profile/components/ProfileSection';
+import { ProfileSection } from '../../../../components/profile/ProfileSection';
 import { useGetAssessments } from './data/assessment-queries';
 import { useState } from 'react';
 import { useTraineeProfileContext } from '../../context/useTraineeProfileContext';

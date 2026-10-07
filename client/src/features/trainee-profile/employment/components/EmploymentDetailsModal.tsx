@@ -20,7 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import { FormDateField } from '../../../../components/FormDateField';
-import { today } from '../../utils/dateHelper';
+import { today } from '../../../../data/dates';
 
 interface EmploymentDetailsModalProps {
   isOpen: boolean;

@@ -18,7 +18,7 @@ import {
 import { Assessment, AssessmentResult, AssessmentType } from '../models/assessment';
 
 import { FormDateField } from '../../../../../components/FormDateField';
-import { today } from '../../../utils/dateHelper';
+import { today } from '../../../../../data/dates';
 import { useState } from 'react';
 
 type AssessmentDetailsModalProps = {
