@@ -100,11 +100,11 @@ features/
 ├── interactions/            # Interactions tab of the trainee and organisation profiles
 ├── login/                   # Login feature
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
-├── profile-picture/         # Picture of the trainee and organisation profiles
+├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
 ├── trainee-profile/         # Trainee profile feature (see detailed structure below)
 ├── trainees/                # Trainees list, grouped by cohort (see below)
-└── volunteers/              # Volunteers page, a placeholder for now
+└── volunteers/              # Volunteers list, the dialog to add one, and the volunteer profile
 ```
 
 ### `/src/layout`
@@ -179,7 +179,7 @@ trainee-profile/
 └── create/                       # Dialog to add a trainee
 ```
 
-**Profile tabs:** the profile (`TraineeProfile`, `OrganisationProfile`) owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s from `components/profile/`; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileSelect` and the fields a single profile adds (like `ProfileDateField` for trainees and `ProfileUserPicker` for organisations), so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
+**Profile tabs:** the profile (`TraineeProfile`, `OrganisationProfile`, `VolunteerProfile`) owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s from `components/profile/`; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileSelect` and the fields a single profile adds (like `ProfileDateField` for trainees and `ProfileUserPicker` for organisations), so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 

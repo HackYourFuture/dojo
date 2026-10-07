@@ -11,7 +11,8 @@ import SearchPage from '../features/search/SearchPage';
 import TraineePage from '../features/trainee-profile/TraineePage';
 import TraineesPage from '../features/trainees/TraineesPage';
 import UsersPage from '../features/admin/users/UsersPage';
-import VolunteersPage from '../features/volunteers/VolunteersPage';
+import VolunteerProfilePage from '../features/volunteers/VolunteerProfilePage';
+import VolunteersOverviewPage from '../features/volunteers/VolunteersOverviewPage';
 
 export const router = createBrowserRouter([
   {
@@ -45,7 +46,7 @@ export const router = createBrowserRouter([
             path: '/volunteers',
             element: (
               <ProtectedRoute>
-                <VolunteersPage />
+                <VolunteersOverviewPage />
               </ProtectedRoute>
             ),
           },
@@ -94,6 +95,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <OrganisationProfilePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/volunteer/:volunteerInfo',
+            element: (
+              <ProtectedRoute>
+                <VolunteerProfilePage />
               </ProtectedRoute>
             ),
           },

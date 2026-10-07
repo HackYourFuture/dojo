@@ -1,6 +1,7 @@
 // The kinds of records the search finds.
 export enum SearchResultType {
   Trainee = 'trainee',
+  Volunteer = 'volunteer',
   Organisation = 'organisation',
   ContactPerson = 'contact-person',
 }

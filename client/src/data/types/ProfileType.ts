@@ -1,5 +1,9 @@
 // The kinds of profile, like the server's ProfileType.
-export type ProfileType = 'trainee' | 'organisation';
+export type ProfileType = 'trainee' | 'organisation' | 'volunteer';
 
 // The path of each kind of profile in the API.
-export const PROFILE_PATHS: Record<ProfileType, string> = { trainee: 'trainees', organisation: 'organisations' };
+export const PROFILE_PATHS: Record<ProfileType, string> = {
+  trainee: 'trainees',
+  organisation: 'organisations',
+  volunteer: 'volunteers',
+};

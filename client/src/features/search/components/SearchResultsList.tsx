@@ -13,7 +13,7 @@ interface SearchResultsListProps {
   query: string;
 }
 
-/** The search results for the query, each a link that opens its trainee or organisation. */
+/** The search results for the query, each a link that opens its profile. */
 const SearchResultsList = ({ query }: SearchResultsListProps) => {
   const { isLoading, data, error } = useGetSearchResults(query);
 
