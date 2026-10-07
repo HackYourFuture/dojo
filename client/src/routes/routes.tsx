@@ -24,10 +24,6 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to="/home" replace />,
-          },
-          {
-            path: '/home',
             element: (
               <ProtectedRoute>
                 <SearchPage />
@@ -75,15 +71,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: '/search',
-            element: (
-              <ProtectedRoute>
-                <SearchPage />
-              </ProtectedRoute>
-            ),
-          },
-          {
-            path: '/trainee/:traineeInfo',
+            path: '/trainee/:traineeInfo/:tab?',
             element: (
               <ProtectedRoute>
                 <TraineePage />
@@ -91,7 +79,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: '/organisation/:organisationInfo',
+            path: '/organisation/:organisationInfo/:tab?',
             element: (
               <ProtectedRoute>
                 <OrganisationProfilePage />
@@ -99,7 +87,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: '/volunteer/:volunteerInfo',
+            path: '/volunteer/:volunteerInfo/:tab?',
             element: (
               <ProtectedRoute>
                 <VolunteerProfilePage />
@@ -110,10 +98,10 @@ export const router = createBrowserRouter([
             path: '/login',
             element: <LoginPage />,
           },
-          // We can replace with 404 page if you want, or just redirect to home page.
+          // Unknown pages, and the old /home and /search, go to the home page.
           {
             path: '*',
-            element: <Navigate to="/home" replace />,
+            element: <Navigate to="/" replace />,
           },
         ],
       },

@@ -15,6 +15,7 @@ import { ProfileButtons } from '../../../components/profile/ProfileButtons';
 import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../hooks/useProfileSave';
+import { useProfileTab } from '../../../hooks/useProfileTab';
 import { useState } from 'react';
 import { useUpdateOrganisation } from '../data/mutations';
 
@@ -35,13 +36,16 @@ const getChangedFields = (original: Organisation, edited: Organisation): Organis
   return Object.fromEntries(changedFields.map((field) => [field, edited[field]]));
 };
 
+// The open tab is in the URL, and Slack links to the interactions tab by name.
+const TABS = ['overview', 'interactions'];
+
 interface OrganisationProfileProps {
   organisation: Organisation;
 }
 
 /** The organisation profile: the header, the tabs and the content of the active tab. */
 const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useProfileTab(organisation.profilePath, TABS);
   const [isEditMode, setIsEditMode] = useState(false);
   // A copy of the organisation with the changes made while editing.
   const [editedOrganisation, setEditedOrganisation] = useState<Organisation>(organisation);

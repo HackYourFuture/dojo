@@ -35,7 +35,7 @@ export interface SidebarGroupItem {
 export type SidebarItem = SidebarLinkItem | SidebarGroupItem;
 
 export const SIDEBAR_ITEMS: SidebarItem[] = [
-  { name: 'Home', path: '/home', icon: HomeOutlinedIcon, activeIcon: HomeIcon, relatedPaths: ['/search'] },
+  { name: 'Home', path: '/', icon: HomeOutlinedIcon, activeIcon: HomeIcon },
   {
     name: 'Trainees',
     path: '/trainees',

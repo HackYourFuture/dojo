@@ -76,7 +76,7 @@ public class SlackNotificationSender {
                 | Type | Title |
                 | --- | --- |
                 | %s | %s |
-                ---""".formatted(traineeLink(trainee), reporter,
+                ---""".formatted(traineeLink(trainee, "interactions"), reporter,
                 value(interaction.getType()), cell(interaction.getTitle()));
         slackClient.sendNotification(message);
     }
@@ -90,7 +90,7 @@ public class SlackNotificationSender {
                 | Company | Role |
                 | --- | --- |
                 | %s | %s |
-                ---""".formatted(traineeLink(trainee), reporter,
+                ---""".formatted(traineeLink(trainee, "employment"), reporter,
                 cell(employment.getCompanyName()), cell(employment.getRole()));
         slackClient.sendNotification(message);
     }
@@ -105,7 +105,7 @@ public class SlackNotificationSender {
                 | --- | --- | --- |
                 | %s | %s | %s |
                 ---""".formatted(
-                traineeLink(trainee),
+                traineeLink(trainee, "education"),
                 reporter,
                 value(assessment.getType()),
                 value(assessment.getResult()),
@@ -165,7 +165,7 @@ public class SlackNotificationSender {
                 | Type | Title |
                 | --- | --- |
                 | %s | %s |
-                ---""".formatted(volunteerLink(volunteer), reporter,
+                ---""".formatted(volunteerLink(volunteer, "interactions"), reporter,
                 value(interaction.getType()), cell(interaction.getTitle()));
         slackClient.sendNotification(message);
     }
@@ -206,7 +206,7 @@ public class SlackNotificationSender {
                 | Type | Title |
                 | --- | --- |
                 | %s | %s |
-                ---""".formatted(organisationLink(organisation), reporter,
+                ---""".formatted(organisationLink(organisation, "interactions"), reporter,
                 value(interaction.getType()), cell(interaction.getTitle()));
         slackClient.sendNotification(message);
     }
@@ -215,12 +215,25 @@ public class SlackNotificationSender {
         return link(trainee.getDisplayName(), trainee.getProfilePath());
     }
 
+    // Links straight to one tab of the profile, as in /trainee/john-doe_c9JoIbbD/interactions.
+    private String traineeLink(Trainee trainee, String tab) {
+        return link(trainee.getDisplayName(), trainee.getProfilePath() + "/" + tab);
+    }
+
     private String volunteerLink(Volunteer volunteer) {
         return link(volunteer.getDisplayName(), volunteer.getProfilePath());
     }
 
+    private String volunteerLink(Volunteer volunteer, String tab) {
+        return link(volunteer.getDisplayName(), volunteer.getProfilePath() + "/" + tab);
+    }
+
     private String organisationLink(Organisation organisation) {
         return link(organisation.getName(), organisation.getProfilePath());
+    }
+
+    private String organisationLink(Organisation organisation, String tab) {
+        return link(organisation.getName(), organisation.getProfilePath() + "/" + tab);
     }
 
     private String link(String name, String path) {

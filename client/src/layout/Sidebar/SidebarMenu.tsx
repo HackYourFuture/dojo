@@ -43,8 +43,9 @@ const buttonStyle = {
   '&.Mui-selected, &.Mui-selected .MuiListItemIcon-root': { color: 'primary.main' },
 } as const;
 
+// The home page is the root, which every page starts with, so it only matches itself.
 const isLinkActive = (item: SidebarLinkItem, pathname: string) =>
-  [item.path, ...(item.relatedPaths ?? [])].some((path) => matchPath({ path, end: false }, pathname));
+  [item.path, ...(item.relatedPaths ?? [])].some((path) => matchPath({ path, end: path === '/' }, pathname));
 
 const SidebarLink = ({ item, isNested = false, onClick }: SidebarLinkProps) => {
   const { pathname } = useLocation();

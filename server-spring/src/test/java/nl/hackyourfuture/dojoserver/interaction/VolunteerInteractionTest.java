@@ -102,6 +102,7 @@ class VolunteerInteractionTest {
                     assertThat(stored.getOrganisationId()).isNull();
                 });
         verify(slackClient).sendNotification(contains("Volunteer: [Jane Roe]"));
+        verify(slackClient).sendNotification(contains(jane.getProfilePath() + "/interactions)"));
     }
 
     @Test

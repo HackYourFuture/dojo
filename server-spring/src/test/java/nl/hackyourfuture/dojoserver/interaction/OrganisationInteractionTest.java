@@ -95,6 +95,7 @@ class OrganisationInteractionTest {
                 .singleElement()
                 .satisfies(stored -> assertThat(stored.getTraineeId()).isNull());
         verify(slackClient).sendNotification(contains("Organisation: [Acme]"));
+        verify(slackClient).sendNotification(contains(acme.getProfilePath() + "/interactions)"));
     }
 
     @ParameterizedTest
