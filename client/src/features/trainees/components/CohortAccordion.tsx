@@ -2,25 +2,20 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import { Cohort } from '../models/trainee-summary';
-import EmailIcon from '@mui/icons-material/EmailOutlined';
+import { ContactLinkButtons } from '../../../components/ContactLinkButtons';
+import { LinkTableRow, RowLinksCell } from '../../../components/LinkTableRow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import IconButton from '@mui/material/IconButton';
 import { LearningStatus } from '../../../data/types/Trainee';
 import { getTrackLabel } from '../../../data/labels/traineeLabels';
-import { Link } from 'react-router';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
 import Table from '@mui/material/Table';
-import { getSlackUserUrl } from '../../../data/links';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { TraineeAvatar } from './TraineeAvatar';
+import { PersonAvatar } from '../../../components/PersonAvatar';
 import { memo } from 'react';
-import slackLogo from '../../../assets/slack.png';
 
 export interface CohortAccordionProps {
   cohortInfo: Cohort;
@@ -35,9 +30,6 @@ export interface CohortAccordionProps {
 const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
   const expandFlag = cohortInfo.cohort !== null ? true : false;
 
-  const headerStyle = {
-    fontWeight: 'bold',
-  };
   return (
     <>
       <Accordion defaultExpanded={expandFlag}>
@@ -47,37 +39,25 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
         <AccordionDetails>
           <Table size="small" aria-label="trainees table">
             <TableHead>
-              <TableRow sx={headerStyle}>
-                <TableCell sx={headerStyle} width={50}></TableCell>
-                <TableCell sx={headerStyle} width={200}>
-                  Name
-                </TableCell>
-                <TableCell sx={headerStyle} width={200}>
-                  Status
-                </TableCell>
-                <TableCell sx={headerStyle} width={200}>
-                  Track
-                </TableCell>
-                <TableCell sx={headerStyle}>Location</TableCell>
-                <TableCell sx={headerStyle} width={100}>
-                  Avg Score
-                </TableCell>
+              <TableRow>
+                <TableCell width={50}></TableCell>
+                <TableCell width={200}>Name</TableCell>
+                <TableCell width={200}>Status</TableCell>
+                <TableCell width={200}>Track</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell width={100}>Avg Score</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
               {cohortInfo.trainees.map((trainee) => (
-                <TableRow
-                  key={trainee.id}
-                  hover
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer', textDecoration: 'none' }}
-                  component={Link}
-                  to={trainee.profilePath}
-                >
-                  <TableCell component="th" scope="row">
-                    <TraineeAvatar src={trainee.thumbnailUrl} name={trainee.displayName} size={40} />
+                <LinkTableRow key={trainee.id} to={trainee.profilePath}>
+                  <TableCell>
+                    <PersonAvatar src={trainee.thumbnailUrl} name={trainee.displayName} size={40} />
                   </TableCell>
-                  <TableCell>{trainee.displayName}</TableCell>
+                  <TableCell component="th" scope="row">
+                    {trainee.displayName}
+                  </TableCell>
                   <TableCell sx={{ whiteSpace: 'nowrap', minWidth: '240px' }}>
                     {trainee.learningStatus === LearningStatus.Graduated ? (
                       <SidebarJobPath jobPath={trainee.jobPath}></SidebarJobPath>
@@ -90,35 +70,10 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                   <TableCell sx={{ color: getScoreColor(trainee.averageAssessmentScore) }}>
                     {trainee.averageAssessmentScore !== null ? trainee.averageAssessmentScore.toFixed(1) : '-'}
                   </TableCell>
-                  <TableCell sx={{ whiteSpace: 'nowrap', textAlign: 'end' }} onClick={(e) => e.stopPropagation()}>
-                    <div>
-                      {trainee.slackId && (
-                        <IconButton aria-label="Slack Id" href={getSlackUserUrl(trainee.slackId)}>
-                          <img src={slackLogo} alt="Slack" width="27" height="27" style={{ borderRadius: '50%' }} />
-                        </IconButton>
-                      )}
-                      {trainee.email && (
-                        <IconButton aria-label="email" href={`mailto:${trainee.email}`}>
-                          <EmailIcon sx={{ color: 'action.active' }} />
-                        </IconButton>
-                      )}
-                      {trainee.githubHandle && (
-                        <IconButton
-                          aria-label="GitHub handel"
-                          href={`https://github.com/${trainee.githubHandle}`}
-                          target="_blank"
-                        >
-                          <GitHubIcon sx={{ color: 'action.active' }} />
-                        </IconButton>
-                      )}
-                      {trainee.linkedinUrl && (
-                        <IconButton aria-label="LinkedIn URL" href={trainee.linkedinUrl} target="_blank">
-                          <LinkedInIcon sx={{ color: 'action.active' }} />
-                        </IconButton>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
+                  <RowLinksCell>
+                    <ContactLinkButtons contact={trainee} />
+                  </RowLinksCell>
+                </LinkTableRow>
               ))}
             </TableBody>
           </Table>

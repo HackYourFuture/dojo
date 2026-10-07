@@ -1,4 +1,4 @@
-import { Avatar, CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { SearchResult, SearchResultType } from '../models/search-result';
 
 import Alert from '@mui/material/Alert';
@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import { ErrorBox } from '../../../components/ErrorBox';
 import { Link } from 'react-router';
 import { OrganisationLogo } from '../../../components/OrganisationLogo';
+import { PersonAvatar } from '../../../components/PersonAvatar';
 import { useGetSearchResults } from '../data/search-queries';
 
 interface SearchResultsListProps {
@@ -58,11 +59,7 @@ const SearchResultsList = ({ query }: SearchResultsListProps) => {
                       {result.type === SearchResultType.Organisation ? (
                         <OrganisationLogo src={result.thumbnailUrl} name={result.title} size={32} />
                       ) : (
-                        <Avatar
-                          src={result.thumbnailUrl ?? ''}
-                          sx={{ width: 32, height: 32 }}
-                          variant="rounded"
-                        ></Avatar>
+                        <PersonAvatar src={result.thumbnailUrl} name={result.title} size={32} />
                       )}
                     </ListItemIcon>
                     <ListItemText primary={result.title}></ListItemText>

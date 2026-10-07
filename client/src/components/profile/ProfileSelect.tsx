@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material';
 import { ProfileTextField } from './ProfileTextField';
 import { ProfileValue } from './ProfileValue';
-import { SelectOption } from '../../utils/selectOptions';
+import { SelectOption } from '../../data/types/SelectOption';
 
 // A boolean matches the values of yesNoOptions.
 type ProfileSelectValue = string | boolean | null;

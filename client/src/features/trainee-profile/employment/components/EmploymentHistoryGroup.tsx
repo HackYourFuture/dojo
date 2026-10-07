@@ -1,6 +1,6 @@
 import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { ProfileSection } from '../../profile/components/ProfileSection';
+import { ProfileSection } from '../../../../components/profile/ProfileSection';
 import { useGetEmploymentHistory } from '../data/employment-queries';
 import { useState } from 'react';
 import { EmploymentHistory } from '../models/employment-history';

@@ -62,6 +62,22 @@ Authentication-related logic:
 - Component is generic and has no feature-specific dependencies
 - Component represents a common UI pattern
 
+`components/profile/` holds the pieces the profiles share:
+
+```
+components/profile/
+├── ProfileTabBar.tsx         # The tabs, with the Edit, or Save and Cancel, buttons at the end
+├── ProfileSection.tsx        # Section title, and FieldRow for a line of fields
+├── ProfileValue.tsx          # A field's label and value, shown until the profile is edited
+├── fieldStyles.ts            # The field width, the label above every field, and the input style that keeps it there
+├── fieldChangeHandlers.ts    # The change handlers of a tab's fields, which set the field named after the input
+├── ProfileTextField.tsx      # Text field, shown as a ProfileValue until the profile is edited
+├── ProfileSelect.tsx         # Dropdown, with an empty option for a nullable field
+├── ProfileNotes.tsx          # The Markdown notes section
+├── ContactFields.tsx         # The email, phone, Slack, GitHub and LinkedIn fields of a contact tab
+└── SocialLinks.tsx           # The website, Slack, GitHub and LinkedIn buttons of a profile header
+```
+
 ### `/src/data`
 
 Global data management:
@@ -70,7 +86,7 @@ Global data management:
 - Global query hooks (if not feature-specific)
 - API client configuration
 - Data type definitions used across multiple features
-- Helpers used across multiple features, like `links.ts` for links into other apps (Slack)
+- Helpers used across multiple features, like `links.ts` for links into other apps (Slack), `text.ts` and `dates.ts`
 
 ### `/src/features`
 
@@ -78,12 +94,17 @@ Global data management:
 
 ```
 features/
+├── admin/                   # Admin pages, like the users
+├── dark-mode/               # Dark mode switch
 ├── dashboard/               # Dashboard feature
 ├── interactions/            # Interactions tab of the trainee and organisation profiles
 ├── login/                   # Login feature
+├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
 ├── profile-picture/         # Picture of the trainee and organisation profiles
 ├── search/                  # Search feature
-└── trainee-profile/         # Trainee profile feature (see detailed structure below)
+├── trainee-profile/         # Trainee profile feature (see detailed structure below)
+├── trainees/                # Trainees list, grouped by cohort (see below)
+└── volunteers/              # Volunteers page, a placeholder for now
 ```
 
 ### `/src/layout`
@@ -135,31 +156,18 @@ trainee-profile/
 ├── TraineePage.tsx               # Main entry point
 ├── api/                          # API calls, response types and mappers
 ├── data/                         # React Query keys, queries and mutations
-├── components/                   # Shared UI components for trainee profile
-│   └── MarkdownText.tsx
 ├── context/                      # State management for trainee profile
 │   ├── useTraineeProfileContext.tsx
 │   └── useTraineeProfileProvider.tsx
 ├── utils/                        # Helper functions
-│   ├── dateHelper.ts
-│   ├── formHelper.ts             # Change handlers for the profile fields
-│   └── selectOptions.ts          # The options of every dropdown in the profile and the create dialog
+│   ├── formHelper.ts             # Change handlers for the trainee's sections, and the job path label
+│   └── selectOptions.ts          # The options of the trainee dropdowns, on the profile and in the create dialog
 ├── profile/                      # Main profile layout
 │   ├── ProfileHeader.tsx
 │   └── components/
 │       ├── TraineeProfile.tsx    # Header, tab bar and the page padding
-│       ├── ProfileNav.tsx
-│       ├── EditSaveButton.tsx
-│       ├── ProfileSection.tsx    # Section title, and FieldRow for a line of fields
-│       ├── ProfileValue.tsx      # A field's label and value, shown until the profile is edited
-│       ├── fieldStyles.ts        # The field width, the label above every field, and the input style that keeps it there
-│       ├── ProfileTextField.tsx  # Text field, shown as a ProfileValue until the profile is edited
 │       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
-│       ├── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
-│       ├── ProfileSelect.tsx     # Dropdown, with an empty option for a nullable field
-│       ├── ProfileMultiSelect.tsx # Autocomplete for several values, shown as their labels until the profile is edited
-│       ├── ProfileUserPicker.tsx # Autocomplete for users, with their avatars, picked from the active users
-│       └── DropdownSelect.tsx    # The dropdowns of the dialogs that add a trainee or an organisation
+│       └── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
 ├── personal-info/                # Personal information tab
 │   └── PersonalInfo.tsx
 ├── contact/                      # Contact information tab
@@ -171,7 +179,7 @@ trainee-profile/
 └── create/                       # Dialog to add a trainee
 ```
 
-**Profile tabs:** `TraineeProfile` owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileDateField`, `ProfileNumberField`, `ProfileSelect`, `ProfileMultiSelect` and `ProfileUserPicker`, so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
+**Profile tabs:** the profile (`TraineeProfile`, `OrganisationProfile`) owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s from `components/profile/`; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileSelect` and the fields a single profile adds (like `ProfileDateField` for trainees and `ProfileUserPicker` for organisations), so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 
@@ -180,8 +188,8 @@ trainees/
 ├── TraineesPage.tsx              # Main page component, lists the trainees grouped by cohort
 ├── api/                          # API calls, response types and mappers
 ├── components/                   # Trainees-specific components
-│   ├── CohortAccordion.tsx
-│   └── TraineeAvatar.tsx
+│   ├── ActionsCard.tsx
+│   └── CohortAccordion.tsx
 ├── data/                         # React Query keys and hooks
 │   ├── keys.ts
 │   └── trainees-queries.ts
@@ -189,7 +197,7 @@ trainees/
     └── trainee-summary.ts
 ```
 
-**Note:** The trainee-profile feature no longer has a root-level type file. Trainee types have been moved to `/src/data/types/Trainee.ts` as they are used across multiple features.
+**Note:** The trainee-profile feature no longer has a root-level type file. Trainee types have been moved to `/src/data/types/Trainee.ts` as they are used across multiple features. Gender and pronouns are in `/src/data/types/Person.ts`, and the `SelectOption` type of the option lists of `DropdownSelect` and `ProfileSelect` is in `/src/data/types/SelectOption.ts`.
 
 ## Maintenance Guidelines
 
@@ -213,7 +221,7 @@ trainees/
 
 **Utilities:**
 
-- Shared across features → Create `/src/utils` if needed
+- Shared across features → `/src/data`, like `text.ts` and `dates.ts` (hooks go in `/src/hooks`)
 - Feature-specific → `/src/features/[feature-name]/utils`
 
 ## Code Organization Principles

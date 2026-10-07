@@ -1,6 +1,8 @@
 import { DashboardData, LabelCount } from '../models/dashboard';
 import { DashboardResponse } from './types';
-import { SelectOption, educationLevelOptions, genderOptions } from '../../trainee-profile/utils/selectOptions';
+import { SelectOption } from '../../../data/types/SelectOption';
+import { educationLevelOptions } from '../../trainee-profile/utils/selectOptions';
+import { genderOptions } from '../../../data/types/Person';
 import { getTrackLabel } from '../../../data/labels/traineeLabels';
 
 const MAX_COUNTRY_ROWS = 10;

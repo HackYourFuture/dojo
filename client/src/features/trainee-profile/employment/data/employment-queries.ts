@@ -16,7 +16,6 @@ export const useGetEmploymentHistory = (traineeId: string) => {
       return orderEmploymentHistoryByDateDesc(data);
     },
     enabled: !!traineeId,
-    refetchOnWindowFocus: false,
   });
 };
 

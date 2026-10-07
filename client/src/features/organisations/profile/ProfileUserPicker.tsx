@@ -1,8 +1,8 @@
 import { Autocomplete, Avatar, Box, Chip, SxProps, TextField, Theme } from '@mui/material';
 
-import { ProfileValue } from './ProfileValue';
-import { profileInputStyle } from './fieldStyles';
-import { useGetUsers } from '../../../admin/users/data/user-queries';
+import { ProfileValue } from '../../../components/profile/ProfileValue';
+import { profileInputStyle } from '../../../components/profile/fieldStyles';
+import { useGetUsers } from '../../admin/users/data/user-queries';
 
 // A user as the picker shows it, like a responsible of an organisation.
 interface PickerUser {

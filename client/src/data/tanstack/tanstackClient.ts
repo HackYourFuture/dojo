@@ -76,7 +76,11 @@ export const queryClient = new QueryClient({
   queryCache,
   mutationCache,
   defaultOptions: {
-    queries: { retry: shouldRetry },
+    // Switching back to the tab does not reload what is on screen.
+    queries: { retry: shouldRetry, refetchOnWindowFocus: false },
     mutations: { retry: shouldRetry },
   },
 });
+
+// Profile edit forms diff against the loaded profile, so a refetch mid-edit would undo a colleague's newer values.
+export const PROFILE_QUERY_OPTIONS = { refetchOnMount: false, refetchOnWindowFocus: false, refetchOnReconnect: false };

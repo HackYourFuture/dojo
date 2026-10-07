@@ -1,6 +1,6 @@
 import { NumberField } from '../../../../components/NumberField';
-import { ProfileValue } from './ProfileValue';
-import { profileInputStyle } from './fieldStyles';
+import { ProfileValue } from '../../../../components/profile/ProfileValue';
+import { profileInputStyle } from '../../../../components/profile/fieldStyles';
 
 interface ProfileNumberFieldProps {
   name: string;

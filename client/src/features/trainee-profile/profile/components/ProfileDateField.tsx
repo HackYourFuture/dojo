@@ -1,8 +1,8 @@
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { ProfileValue } from './ProfileValue';
+import { ProfileValue } from '../../../../components/profile/ProfileValue';
 import dayjs from 'dayjs';
-import { formatDateForDisplay } from '../../utils/dateHelper';
-import { profileInputStyle } from './fieldStyles';
+import { formatDateForDisplay } from '../../../../data/dates';
+import { profileInputStyle } from '../../../../components/profile/fieldStyles';
 
 interface ProfileDateFieldProps {
   name: string;

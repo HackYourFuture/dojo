@@ -1,7 +1,7 @@
 import { AssessmentRequest, AssessmentResponse, AssessmentsResponse } from './types';
 
 import { Assessment, TraineeAssessments } from '../models/assessment';
-import { toISODateString } from '../../../utils/dateHelper';
+import { toISODateString } from '../../../../../data/dates';
 
 export const mapAssessmentToDomain = (assessment: AssessmentResponse): Assessment => {
   return {

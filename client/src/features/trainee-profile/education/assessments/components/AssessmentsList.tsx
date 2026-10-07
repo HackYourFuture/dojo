@@ -17,10 +17,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { ListItemActions } from '../../../../../components/ListItemActions';
-import MarkdownText from '../../../components/MarkdownText';
+import MarkdownText from '../../../../../components/MarkdownText';
 import WarningIcon from '@mui/icons-material/Warning';
-import { formatDateForDisplay } from '../../../utils/dateHelper';
-import { formatTextToFriendly } from '../../../utils/formHelper';
+import { formatDateForDisplay } from '../../../../../data/dates';
+import { formatTextToFriendly } from '../../../../../data/text';
 
 const resultChips: Record<AssessmentResult, { color: ChipProps['color']; icon: ReactElement }> = {
   [AssessmentResult.Passed]: { color: 'success', icon: <CheckCircleIcon /> },
@@ -35,7 +35,7 @@ const COLUMN_COUNT = 5;
 const COLLAPSED_COMMENTS_HEIGHT = 100;
 
 // The header stays on top while the rows scroll, so it needs the background of the rows behind it.
-const headerStyle = { fontWeight: 'bold', bgcolor: 'background.paper' };
+const headerStyle = { bgcolor: 'background.paper' };
 
 /** The comments of an assessment, cut off with a "Show more" link when they are long. */
 const AssessmentComments = ({ comments }: { comments: string }) => {

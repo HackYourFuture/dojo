@@ -4,7 +4,7 @@ import { ContactPerson } from '../ContactPerson';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { ListItemActions } from '../../../../components/ListItemActions';
-import MarkdownText from '../../../trainee-profile/components/MarkdownText';
+import MarkdownText from '../../../../components/MarkdownText';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { ReactNode } from 'react';
 

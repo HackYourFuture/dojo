@@ -1,7 +1,7 @@
 import { EmploymentHistoryRequest, EmploymentHistoryResponse } from './types';
 
 import { EmploymentHistory } from '../models/employment-history';
-import { toISODateString } from '../../utils/dateHelper';
+import { toISODateString } from '../../../../data/dates';
 
 export const mapEmploymentHistoryToDomain = (employment: EmploymentHistoryResponse): EmploymentHistory => {
   return {

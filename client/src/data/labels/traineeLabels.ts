@@ -1,5 +1,5 @@
 import { LearningStatus, Track } from '../types/Trainee';
-import { formatTextToFriendly } from '../../features/trainee-profile/utils/formHelper';
+import { formatTextToFriendly } from '../text';
 
 export const getTrackLabel = (track: Track): string => {
   switch (track) {

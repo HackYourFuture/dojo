@@ -6,6 +6,8 @@ import {
 } from './types';
 import { NewOrganisation, Organisation, OrganisationChanges, OrganisationSummary } from '../Organisation';
 
+import { blankFieldsToNull } from '../../../data/text';
+
 export const mapOrganisationSummaryToDomain = (organisation: OrganisationSummaryResponse): OrganisationSummary => {
   return {
     id: organisation.id,
@@ -33,9 +35,6 @@ export const mapOrganisationToDomain = (organisation: OrganisationResponse): Org
   };
 };
 
-// The API rejects empty text for most fields, so an empty field is sent as null.
-export const isBlank = (value: unknown) => typeof value === 'string' && value.trim() === '';
-
 export const mapDomainToUpdateOrganisationRequest = (changes: OrganisationChanges): UpdateOrganisationRequest => {
   // The API takes the ids of the responsibles, and ignores a responsibles field.
   const { responsibles, ...fields } = changes;
@@ -44,20 +43,9 @@ export const mapDomainToUpdateOrganisationRequest = (changes: OrganisationChange
     request.responsibleIds = responsibles.map((responsible) => responsible.id);
   }
 
-  for (const field of Object.keys(request) as (keyof UpdateOrganisationRequest)[]) {
-    if (isBlank(request[field])) {
-      request[field] = null;
-    }
-  }
-  return request;
+  return blankFieldsToNull(request);
 };
 
 export const mapDomainToCreateOrganisationRequest = (newOrganisation: NewOrganisation): CreateOrganisationRequest => {
-  return {
-    name: newOrganisation.name,
-    status: newOrganisation.status,
-    location: isBlank(newOrganisation.location) ? null : newOrganisation.location,
-    websiteUrl: isBlank(newOrganisation.websiteUrl) ? null : newOrganisation.websiteUrl,
-    linkedinUrl: isBlank(newOrganisation.linkedinUrl) ? null : newOrganisation.linkedinUrl,
-  };
+  return blankFieldsToNull<CreateOrganisationRequest>(newOrganisation);
 };

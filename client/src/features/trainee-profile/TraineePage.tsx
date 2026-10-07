@@ -6,13 +6,11 @@ import { TraineeProfileProvider } from './context/useTraineeProfileProvider';
 import { useParams } from 'react-router';
 import { useGetTrainee } from './data/trainee-queries';
 
-/**
- * Component for displaying the trainee profile page sidebar and tabs.
- */
+/** The profile page of a trainee. */
 const TraineePage = () => {
+  // The name and the id of the trainee, joined by an underscore. A bare id works too.
   const { traineeInfo } = useParams();
-  const trainee = traineeInfo?.split('_');
-  const traineeId = trainee ? trainee[1] : '';
+  const traineeId = traineeInfo?.split('_').pop() ?? '';
   const { isLoading, data, isError, error, isFetching } = useGetTrainee(traineeId);
 
   // Show spinner only for the first load

@@ -73,4 +73,8 @@ export const theme = createTheme({
       textTransform: 'none',
     },
   },
+  components: {
+    // Every table has bold column titles.
+    MuiTableCell: { styleOverrides: { head: { fontWeight: 'bold' } } },
+  },
 });

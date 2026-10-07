@@ -1,9 +1,9 @@
-import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
+import { FieldRow, ProfileSection } from '../../../components/profile/ProfileSection';
 import { jobPathOptions, yesNoOptions } from '../utils/selectOptions';
 
 import { EmploymentHistoryGroup } from './components/EmploymentHistoryGroup';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
-import { ProfileSelect } from '../profile/components/ProfileSelect';
+import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { Stack } from '@mui/material';
 import { createValueChangeHandler } from '../utils/formHelper';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';

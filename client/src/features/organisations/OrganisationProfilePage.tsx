@@ -7,9 +7,9 @@ import { useParams } from 'react-router';
 
 /** The profile page of an organisation. */
 const OrganisationProfilePage = () => {
-  // The name and the id of the organisation, joined by an underscore.
+  // The name and the id of the organisation, joined by an underscore. A bare id works too.
   const { organisationInfo } = useParams();
-  const organisationId = organisationInfo?.split('_')[1] ?? '';
+  const organisationId = organisationInfo?.split('_').pop() ?? '';
   const { isLoading, data, isError, error, isFetching } = useGetOrganisation(organisationId);
 
   // Show spinner only for the first load

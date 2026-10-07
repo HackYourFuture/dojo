@@ -1,18 +1,19 @@
-import { Box, Snackbar, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Stack, Tab } from '@mui/material';
 import {
   EDITABLE_ORGANISATION_FIELDS,
   EditableOrganisationField,
   Organisation,
   OrganisationChanges,
 } from '../Organisation';
-import { useEffect, useState } from 'react';
 
-import { EditSaveButton } from '../../trainee-profile/profile/components/EditSaveButton';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
 import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
-import MuiAlert from '@mui/material/Alert';
 import OrganisationHeader from './OrganisationHeader';
 import OrganisationInfo from './OrganisationInfo';
+import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
+import { usePageTitle } from '../../../hooks/usePageTitle';
+import { useProfileSave } from '../../../hooks/useProfileSave';
+import { useState } from 'react';
 import { useUpdateOrganisation } from '../data/mutations';
 
 // Lists are compared by their items, and responsibles by id, as the edited ones come from the users list.
@@ -44,36 +45,8 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
   const [editedOrganisation, setEditedOrganisation] = useState<Organisation>(organisation);
   const { isPending: isSaveLoading, mutate: updateOrganisation } = useUpdateOrganisation(organisation.id);
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
-  useEffect(() => {
-    document.title = `${organisation.name} | Dojo`;
-  }, [organisation.name]);
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  // Saves the changes and shows the result in a snackbar.
-  const saveOrganisation = (changes: OrganisationChanges) => {
-    updateOrganisation(changes, {
-      onSuccess: () => {
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Organisation data saved successfully');
-        setSnackbarOpen(true);
-        setIsEditMode(false);
-      },
-      onError: (error) => {
-        console.error('There was a problem saving organisation data:', error.message);
-        // The server validates the whole organisation, so its message names the field that blocks the save.
-        setSnackbarSeverity('error');
-        setSnackbarMessage(`Error saving organisation data: ${error.message}`);
-        setSnackbarOpen(true);
-      },
-    });
-  };
+  const { saveChanges, saveResultSnackbar } = useProfileSave('Organisation', updateOrganisation);
+  usePageTitle(organisation.name);
 
   // Starts editing, or saves the changes while editing.
   const onClickEditButton = () => {
@@ -84,13 +57,7 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
       return;
     }
 
-    const changes = getChangedFields(organisation, editedOrganisation);
-    // Nothing to save, and the API rejects an update without fields.
-    if (Object.keys(changes).length === 0) {
-      setIsEditMode(false);
-      return;
-    }
-    saveOrganisation(changes);
+    saveChanges(getChangedFields(organisation, editedOrganisation), () => setIsEditMode(false));
   };
 
   // Stops editing and drops the changes.
@@ -98,63 +65,27 @@ const OrganisationProfile = ({ organisation }: OrganisationProfileProps) => {
     setIsEditMode(false);
   };
 
-  // Interactions are edited one by one, so their tab only needs Save and Cancel while the profile is being edited.
-  const showsEditButtons = activeTab !== 'interactions' || isEditMode;
-
   return (
     // The tabs have no padding of their own, so everything lines up with the header.
     <Box sx={{ paddingX: 8, bgcolor: 'background.default' }}>
       <Stack spacing={1} useFlexGap sx={{ paddingTop: 3 }}>
         <OrganisationHeader organisation={organisation} />
-        {/* Keeps its height when the edit buttons are hidden. */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 2,
-            minHeight: 56,
-            borderBottom: 1,
-            borderColor: 'divider',
-          }}
+        <ProfileTabBar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          isEditMode={isEditMode}
+          isSaving={isSaveLoading}
+          onClickEditButton={onClickEditButton}
+          onCancel={onCancelEdit}
         >
-          {/* Sits on the bottom border of the tab bar, so the active tab line covers it. */}
-          <Box sx={{ display: 'flex', alignSelf: 'flex-end', minWidth: 0 }}>
-            <Tabs
-              value={activeTab}
-              onChange={(_, value) => setActiveTab(value)}
-              aria-label="Profile sections"
-              variant="scrollable"
-              scrollButtons="auto"
-            >
-              <Tab label="Overview" value="overview" />
-              <Tab
-                label={<InteractionsTabLabel profileType="organisation" profileId={organisation.id} />}
-                value="interactions"
-              />
-            </Tabs>
-          </Box>
-          {showsEditButtons && (
-            <EditSaveButton
-              isEditMode={isEditMode}
-              isLoading={isSaveLoading}
-              onCancel={onCancelEdit}
-              onClickEditButton={onClickEditButton}
-            />
-          )}
-        </Box>
+          <Tab label="Overview" value="overview" />
+          <Tab
+            label={<InteractionsTabLabel profileType="organisation" profileId={organisation.id} />}
+            value="interactions"
+          />
+        </ProfileTabBar>
       </Stack>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <MuiAlert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={snackbarSeverity}>
-          {snackbarMessage}
-        </MuiAlert>
-      </Snackbar>
+      {saveResultSnackbar}
 
       <Box sx={{ paddingY: 3 }}>
         {activeTab === 'overview' && (

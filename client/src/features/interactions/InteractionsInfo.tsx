@@ -5,7 +5,7 @@ import { useAddInteraction, useEditInteraction } from './data/mutations';
 import AddIcon from '@mui/icons-material/Add';
 import { InteractionDetailsModal } from './components/InteractionDetailsModal';
 import InteractionsList from './components/InteractionsList';
-import { ProfileSection } from '../trainee-profile/profile/components/ProfileSection';
+import { ProfileSection } from '../../components/profile/ProfileSection';
 import { ProfileType } from '../../data/types/ProfileType';
 import { useGetInteractions } from './data/interaction-queries';
 import { useState } from 'react';

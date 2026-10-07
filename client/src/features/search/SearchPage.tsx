@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-
 import { Box } from '@mui/material';
 import HYFLogo from '../../assets/hyf-logo-red.png';
 import SearchBar from './components/SearchBar';
 import SearchResultsList from './components/SearchResultsList';
+import { usePageTitle } from '../../hooks/usePageTitle';
+import { useState } from 'react';
 
 /**
  * Component for displaying the home page / search page elements.
@@ -11,9 +11,7 @@ import SearchResultsList from './components/SearchResultsList';
 const SearchPage = () => {
   const [searchString, setSearchString] = useState('');
 
-  useEffect(() => {
-    document.title = 'Home | Dojo';
-  }, []);
+  usePageTitle('Home');
 
   return (
     <Box

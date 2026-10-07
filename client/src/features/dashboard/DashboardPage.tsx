@@ -1,7 +1,7 @@
 import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import { ErrorBox, Loader } from '../../components';
 import { NumberField } from '../../components/NumberField';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DashboardCard } from './components/DashboardCard';
 import { DashboardSection } from './components/DashboardSection';
 import { DistributionBarChart } from './components/DistributionBarChart';
@@ -11,11 +11,10 @@ import { LearningStatusChart } from './components/LearningStatusChart';
 import { SplitBar } from './components/SplitBar';
 import { StatCard } from './components/StatCard';
 import { useGetDashboard } from './data/dashboard-queries';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 const DashboardPage = () => {
-  useEffect(() => {
-    document.title = 'Dashboard | Dojo';
-  }, []);
+  usePageTitle('Dashboard');
 
   // An empty field means no bound.
   const [startCohort, setStartCohort] = useState<number | null>(null);

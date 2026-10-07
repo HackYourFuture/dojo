@@ -1,4 +1,4 @@
-import { FieldRow, ProfileSection } from '../profile/components/ProfileSection';
+import { FieldRow, ProfileSection } from '../../../components/profile/ProfileSection';
 import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
 import { learningStatusOptions, quitReasonOptions, trackOptions } from '../utils/selectOptions';
 
@@ -6,8 +6,8 @@ import { AssessmentsComponent } from './assessments/AssessmentsComponent';
 import { LearningStatus } from '../../../data/types/Trainee';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
-import { ProfileSelect } from '../profile/components/ProfileSelect';
-import { ProfileTextField } from '../profile/components/ProfileTextField';
+import { ProfileSelect } from '../../../components/profile/ProfileSelect';
+import { ProfileTextField } from '../../../components/profile/ProfileTextField';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 

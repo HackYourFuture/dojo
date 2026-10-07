@@ -47,6 +47,5 @@ export const useGetTraineesByCohort = () => {
     initialPageParam: 0,
     getNextPageParam,
     select: selectCohorts,
-    refetchOnWindowFocus: false, // Prevent refetching on window focus
   });
 };
