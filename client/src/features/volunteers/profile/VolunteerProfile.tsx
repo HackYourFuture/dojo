@@ -2,6 +2,8 @@ import { Box, Stack, Tab } from '@mui/material';
 import { EDITABLE_VOLUNTEER_FIELDS, Volunteer, VolunteerChanges } from '../Volunteer';
 
 import { ContactFields } from '../../../components/profile/ContactFields';
+import InteractionsInfo from '../../interactions/InteractionsInfo';
+import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
 import { ProfileSection } from '../../../components/profile/ProfileSection';
 import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
 import VolunteerHeader from './VolunteerHeader';
@@ -68,12 +70,11 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
         >
           <Tab label="Overview" value="overview" />
           <Tab label="Contact" value="contact" />
-          <Tab label="Interactions" value="interactions" />
+          <Tab label={<InteractionsTabLabel profileType="volunteer" profileId={volunteer.id} />} value="interactions" />
         </ProfileTabBar>
       </Stack>
       {saveResultSnackbar}
 
-      {/* The interactions tab stays empty until volunteer interactions are built. */}
       <Box sx={{ paddingY: 3 }}>
         {activeTab === 'overview' && (
           <VolunteerInfo
@@ -91,6 +92,7 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
             />
           </ProfileSection>
         )}
+        {activeTab === 'interactions' && <InteractionsInfo profileType="volunteer" profileId={volunteer.id} />}
       </Box>
     </Box>
   );

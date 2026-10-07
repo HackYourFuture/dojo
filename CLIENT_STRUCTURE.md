@@ -97,7 +97,7 @@ features/
 ├── admin/                   # Admin pages, like the users
 ├── dark-mode/               # Dark mode switch
 ├── dashboard/               # Dashboard feature
-├── interactions/            # Interactions tab of the trainee and organisation profiles
+├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
 ├── login/                   # Login feature
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles

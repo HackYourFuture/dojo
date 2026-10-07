@@ -15,7 +15,7 @@ interface InteractionsInfoProps {
   profileId: string;
 }
 
-/** The interactions tab of a trainee or an organisation profile. */
+/** The interactions tab of a profile. */
 const InteractionsInfo = ({ profileType, profileId }: InteractionsInfoProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalError, setModalError] = useState<string>('');
