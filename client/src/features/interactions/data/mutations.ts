@@ -11,7 +11,7 @@ const invalidateInteractionsQuery = (queryClient: QueryClient, profileType: Prof
   return queryClient.invalidateQueries({ queryKey: interactionKeys.list(profileType, profileId) });
 };
 
-/** Hook to add an interaction to a trainee or an organisation. */
+/** Hook to add an interaction to a profile. */
 export const useAddInteraction = (profileType: ProfileType, profileId: string) => {
   const queryClient = useQueryClient();
 
@@ -23,7 +23,7 @@ export const useAddInteraction = (profileType: ProfileType, profileId: string) =
   });
 };
 
-/** Hook to edit an existing interaction of a trainee or an organisation. */
+/** Hook to edit an existing interaction of a profile. */
 export const useEditInteraction = (profileType: ProfileType, profileId: string) => {
   const queryClient = useQueryClient();
 
@@ -33,7 +33,7 @@ export const useEditInteraction = (profileType: ProfileType, profileId: string) 
   });
 };
 
-/** Hook to delete an interaction from a trainee or an organisation. */
+/** Hook to delete an interaction from a profile. */
 export const useDeleteInteraction = (profileType: ProfileType, profileId: string) => {
   const queryClient = useQueryClient();
 
