@@ -1,6 +1,7 @@
 import { Avatar, Box, Stack, Typography } from '@mui/material';
 
 import { EditableProfilePicture } from '../../profile-picture/components/EditableProfilePicture';
+import { ReactNode } from 'react';
 import { SocialLinks } from '../../../components/profile/SocialLinks';
 import { Volunteer } from '../Volunteer';
 import { VolunteerStatusChip } from '../components/VolunteerStatusChip';
@@ -10,10 +11,12 @@ const PICTURE_SIZE = 96;
 
 interface VolunteerHeaderProps {
   volunteer: Volunteer;
+  // The Edit and Actions buttons, at the top right.
+  children: ReactNode;
 }
 
 /** The volunteer's picture, name, status, work and social links above the profile tabs, as they are saved. */
-const VolunteerHeader = ({ volunteer }: VolunteerHeaderProps) => {
+const VolunteerHeader = ({ volunteer, children }: VolunteerHeaderProps) => {
   const { pronouns, slackId, githubHandle, linkedinUrl } = volunteer;
   // Like "Senior Developer at Acme B.V.", or just the one that is filled in.
   const work = [volunteer.jobRole, volunteer.companyName].filter(Boolean).join(' at ');
@@ -51,6 +54,8 @@ const VolunteerHeader = ({ volunteer }: VolunteerHeaderProps) => {
         </Box>
         <SocialLinks slackId={slackId} githubHandle={githubHandle} linkedinUrl={linkedinUrl} />
       </Stack>
+
+      <Box sx={{ marginLeft: 'auto', alignSelf: 'flex-start', flexShrink: 0 }}>{children}</Box>
     </Box>
   );
 };

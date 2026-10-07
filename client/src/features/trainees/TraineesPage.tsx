@@ -4,6 +4,7 @@ import CohortAccordion from './components/CohortAccordion';
 import Container from '@mui/material/Container';
 import { ListLoader } from '../../components/ListLoader';
 import Stack from '@mui/material/Stack';
+import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
 import Typography from '@mui/material/Typography';
 import { useGetTraineesByCohort } from './data/trainees-queries';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -32,6 +33,7 @@ const TraineesPage = () => {
 
         <ListLoader query={cohortsQuery} />
       </Box>
+      <SuccessMessageSnackbar />
     </Container>
   );
 };

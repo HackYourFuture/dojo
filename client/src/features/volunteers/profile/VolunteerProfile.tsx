@@ -4,8 +4,10 @@ import { EDITABLE_VOLUNTEER_FIELDS, Volunteer, VolunteerChanges } from '../Volun
 import { ContactFields } from '../../../components/profile/ContactFields';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
 import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
+import { ProfileButtons } from '../../../components/profile/ProfileButtons';
 import { ProfileSection } from '../../../components/profile/ProfileSection';
 import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
+import { VolunteerActions } from './VolunteerActions';
 import VolunteerHeader from './VolunteerHeader';
 import VolunteerInfo from './VolunteerInfo';
 import { createFieldChangeHandlers } from '../../../components/profile/fieldChangeHandlers';
@@ -59,15 +61,17 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
     // The tabs have no padding of their own, so everything lines up with the header.
     <Box sx={{ paddingX: 8, bgcolor: 'background.default' }}>
       <Stack spacing={1} useFlexGap sx={{ paddingTop: 3 }}>
-        <VolunteerHeader volunteer={volunteer} />
-        <ProfileTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          isEditMode={isEditMode}
-          isSaving={isSaveLoading}
-          onClickEditButton={onClickEditButton}
-          onCancel={onCancelEdit}
-        >
+        <VolunteerHeader volunteer={volunteer}>
+          <ProfileButtons
+            activeTab={activeTab}
+            isEditMode={isEditMode}
+            isSaving={isSaveLoading}
+            onClickEditButton={onClickEditButton}
+            onCancel={onCancelEdit}
+            actions={<VolunteerActions volunteerId={volunteer.id} name={volunteer.displayName} />}
+          />
+        </VolunteerHeader>
+        <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab}>
           <Tab label="Overview" value="overview" />
           <Tab label="Contact" value="contact" />
           <Tab label={<InteractionsTabLabel profileType="volunteer" profileId={volunteer.id} />} value="interactions" />

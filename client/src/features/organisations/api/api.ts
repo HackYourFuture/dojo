@@ -34,3 +34,7 @@ export const createOrganisation = async (newOrganisation: NewOrganisation) => {
   const { data } = await axios.post<OrganisationResponse>('/api/organisations', organisationRequest);
   return mapOrganisationToDomain(data);
 };
+
+export const deleteOrganisation = async (organisationId: string) => {
+  await axios.delete(`/api/organisations/${organisationId}`);
+};

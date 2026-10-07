@@ -34,3 +34,7 @@ export const createVolunteer = async (newVolunteer: NewVolunteer) => {
   const { data } = await axios.post<VolunteerResponse>('/api/volunteers', volunteerRequest);
   return mapVolunteerToDomain(data);
 };
+
+export const deleteVolunteer = async (volunteerId: string) => {
+  await axios.delete(`/api/volunteers/${volunteerId}`);
+};

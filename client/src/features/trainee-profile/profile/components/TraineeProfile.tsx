@@ -6,8 +6,10 @@ import EmploymentInfo from '../../employment/EmploymentInfo';
 import InteractionsInfo from '../../../interactions/InteractionsInfo';
 import { InteractionsTabLabel } from '../../../interactions/components/InteractionsTabLabel';
 import PersonalInfo from '../../personal-info/PersonalInfo';
+import { ProfileButtons } from '../../../../components/profile/ProfileButtons';
 import ProfileHeader from '../ProfileHeader';
 import { ProfileTabBar } from '../../../../components/profile/ProfileTabBar';
+import { TraineeActions } from '../TraineeActions';
 import { usePageTitle } from '../../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../../hooks/useProfileSave';
 import { useState } from 'react';
@@ -44,15 +46,17 @@ const TraineeProfile = ({ id }: TraineeProfileProps) => {
     // The tabs have no padding of their own, so everything lines up with the header.
     <Box sx={{ paddingX: 8, bgcolor: 'background.default' }}>
       <Stack spacing={1} useFlexGap sx={{ paddingTop: 3 }}>
-        <ProfileHeader traineeId={id} />
-        <ProfileTabBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          isEditMode={isEditMode}
-          isSaving={isSaveLoading}
-          onClickEditButton={onClickEditButton}
-          onCancel={onCancelEdit}
-        >
+        <ProfileHeader traineeId={id}>
+          <ProfileButtons
+            activeTab={activeTab}
+            isEditMode={isEditMode}
+            isSaving={isSaveLoading}
+            onClickEditButton={onClickEditButton}
+            onCancel={onCancelEdit}
+            actions={<TraineeActions traineeId={id} name={trainee.displayName} />}
+          />
+        </ProfileHeader>
+        <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab}>
           <Tab label="Personal" value="personal" />
           <Tab label="Contact" value="contact" />
           <Tab label="Education" value="education" />

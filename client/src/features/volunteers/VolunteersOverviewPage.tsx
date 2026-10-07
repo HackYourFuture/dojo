@@ -3,6 +3,7 @@ import { Box, Button, Container, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { AddVolunteerDialog } from './components/AddVolunteerDialog';
 import { ListLoader } from '../../components/ListLoader';
+import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
 import { VolunteersTable } from './components/VolunteersTable';
 import { useGetVolunteers } from './data/volunteer-queries';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -36,6 +37,7 @@ const VolunteersOverviewPage = () => {
         <ListLoader query={volunteersQuery} />
       </Box>
 
+      <SuccessMessageSnackbar />
       <AddVolunteerDialog isOpen={isAddDialogOpen} handleClose={() => setIsAddDialogOpen(false)} />
     </Container>
   );

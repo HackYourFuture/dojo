@@ -2,6 +2,7 @@ import { Avatar, Box, Stack, Typography } from '@mui/material';
 
 import { EditableProfilePicture } from '../../profile-picture/components/EditableProfilePicture';
 import { LearningStatus } from '../../../data/types/Trainee';
+import { ReactNode } from 'react';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
 import { SocialLinks } from '../../../components/profile/SocialLinks';
@@ -12,6 +13,8 @@ const PICTURE_SIZE = 96;
 
 interface ProfileHeaderProps {
   traineeId: string;
+  // The Edit and Actions buttons, at the top right.
+  children: ReactNode;
 }
 
 /**
@@ -19,7 +22,7 @@ interface ProfileHeaderProps {
  *
  * @param {string} traineeId trainee id.
  */
-const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
+const ProfileHeader = ({ traineeId, children }: ProfileHeaderProps) => {
   const { data } = useGetTrainee(traineeId);
 
   const pronouns = data?.personalInfo?.pronouns;
@@ -62,6 +65,8 @@ const ProfileHeader = ({ traineeId }: ProfileHeaderProps) => {
         </Box>
         <SocialLinks slackId={slackId} githubHandle={githubHandle} linkedinUrl={linkedIn} />
       </Stack>
+
+      <Box sx={{ marginLeft: 'auto', alignSelf: 'flex-start', flexShrink: 0 }}>{children}</Box>
     </Box>
   );
 };
