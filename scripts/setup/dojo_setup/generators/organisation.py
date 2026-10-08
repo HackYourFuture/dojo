@@ -44,7 +44,7 @@ def generate_organisation(staff_ids: list[str]) -> GeneratedOrganisation:
             "name": name,
             "websiteUrl": f"https://{domain}" if chance(0.9) else None,
             "linkedinUrl": f"https://www.linkedin.com/company/{slug}" if chance(0.7) else None,
-            "location": fake.random_element(CITIES),
+            "location": fake.random_element(CITIES)["name"],
             "status": weighted(STATUSES),
             "partnershipTypes": fake.random_sample(PARTNERSHIP_TYPES, length=fake.random_int(0, 3)),
             "responsibleIds": fake.random_sample(staff_ids, length=fake.random_int(0, min(2, len(staff_ids)))),

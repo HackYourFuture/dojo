@@ -20,6 +20,7 @@ from dojo_setup.config import (
     Config,
     load_config,
 )
+from dojo_setup.data import CITIES, COUNTRIES
 from dojo_setup.errors import SetupCancelled
 from dojo_setup.generators import generate_organisation, generate_trainee, generate_volunteer
 from dojo_setup.uploader import UploadReport, upload_organisation, upload_trainee, upload_volunteer
@@ -76,6 +77,11 @@ def prepare_database(config: Config) -> None:
             output.success("Created the test user's API token")
         else:
             output.skipped("Test user's API token already exists")
+
+        # Replaced on every run, so the tables always match the JSON files
+        database.replace_countries(connection, COUNTRIES)
+        database.replace_cities(connection, CITIES)
+        output.success(f"Loaded {len(COUNTRIES)} countries and {len(CITIES)} cities")
 
         existing_trainees = database.count_trainees(connection)
         existing_volunteers = database.count_volunteers(connection)
