@@ -1,4 +1,4 @@
-"""Direct database access, used only to create the test user and its API token."""
+"""Direct database access, used to create the test user and its API token and to load the countries and cities."""
 
 import hashlib
 import secrets
@@ -6,11 +6,13 @@ import string
 from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime
+from typing import Any
 
 import psycopg
 
 from dojo_setup.config import TEST_USER_API_TOKEN, TEST_USER_EMAIL, TEST_USER_NAME, Config
 from dojo_setup.errors import SetupError
+from dojo_setup.generators.transliteration import to_slug
 
 TOKEN_EXPIRY = datetime(3000, 1, 1)
 
@@ -70,6 +72,40 @@ def ensure_api_token(connection: psycopg.Connection, user_id: str) -> bool:
         (_random_id(), token_hash, user_id, TOKEN_EXPIRY),
     )
     return True
+
+
+def replace_countries(connection: psycopg.Connection, countries: list[dict[str, str]]) -> None:
+    connection.execute("DELETE FROM countries")
+    connection.cursor().executemany(
+        "INSERT INTO countries (id, name, flag, code) VALUES (%s, %s, %s, %s)",
+        [(country["id"], country["name"], country["flag"], country["code"]) for country in countries],
+    )
+
+
+def replace_cities(connection: psycopg.Connection, cities: list[dict[str, Any]]) -> None:
+    """The JSON has no ids, so a city's id is its unique name as a slug, e.g. hengelo-gelderland."""
+    connection.execute("DELETE FROM cities")
+    connection.cursor().executemany(
+        """
+        INSERT INTO cities (id, name, alternative_names, population, province, region, latitude, longitude,
+                            distance_amsterdam)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """,
+        [
+            (
+                to_slug(city["name"]),
+                city["name"],
+                city["alternativeNames"],
+                city["population"],
+                city["province"],
+                city["region"],
+                city["coordinates"]["lat"],
+                city["coordinates"]["lon"],
+                city["distanceAmsterdam"],
+            )
+            for city in cities
+        ],
+    )
 
 
 def count_trainees(connection: psycopg.Connection) -> int:

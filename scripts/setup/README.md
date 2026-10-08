@@ -7,6 +7,7 @@ Fills a local Dojo environment with dummy data for development and testing:
 - Trainees with profile pictures, assessments, interactions and employment history
 - Volunteers with profile pictures and interactions
 - Partner organisations with logos, partnership types, responsibles, contact persons and interactions
+- The countries and Dutch cities from `dojo_setup/geo-data`, which are real data, not dummy data
 
 The data is generated from a fixed seed, so every run produces exactly the same data. Names come
 from Arabic, Turkish, Ukrainian, Spanish, Russian, English and Dutch backgrounds, all in Latin
@@ -36,8 +37,9 @@ python main.py
 The script walks through eight steps:
 
 1. **Configuration**: reads `.env` and asks you to confirm the settings.
-2. **Database**: creates the test user and its API token if they don't exist yet. If the database
-   already has trainees, volunteers or organisations, asks whether to continue.
+2. **Database**: creates the test user and its API token if they don't exist yet, and replaces the
+   countries and cities with the ones in `dojo_setup/geo-data`. If the database already has trainees,
+   volunteers or organisations, asks whether to continue.
 3. **Dojo API**: checks that the server is reachable and accepts the token.
 4. **Options**: asks how many trainees (500 by default), volunteers (300 by default) and
    organisations (200 by default) to generate. Enter 0 to skip any of them.
@@ -61,13 +63,14 @@ main.py                  Entry point, runs the steps in order
 dojo_setup/
 ├── steps.py             The eight setup steps
 ├── config.py            Settings from .env and constants (seed, reference date, test user)
-├── database.py          Creates the test user and API token
+├── database.py          Creates the test user and API token, loads the countries and cities
 ├── api.py               Dojo REST API client
 ├── uploader.py          Sends a generated trainee, volunteer or organisation and its records to the API
 ├── output.py            Terminal output
 ├── errors.py            Errors that stop the setup
 ├── generators/          Seeded data generators, one per entity
-└── data/                Static lists the generators pick from (cities, interactions, ...)
+├── data/                Static lists the generators pick from (names, interactions, ...)
+└── geo-data/            Countries and Dutch cities, loaded into the database and used by the generators
 ```
 
 To keep runs reproducible, generators take every random value from the shared `fake` instance in

@@ -225,3 +225,28 @@ create table interactions
 create index interactions_trainee_idx on interactions (trainee_id);
 create index interactions_organisation_idx on interactions (organisation_id);
 create index interactions_volunteer_idx on interactions (volunteer_id);
+
+-- Countries
+create table countries
+(
+    id   text not null
+        constraint countries_pk primary key,
+    name text not null,
+    flag text not null,
+    code text not null
+);
+
+-- Dutch cities
+create table cities
+(
+    id                 text             not null
+        constraint cities_pk primary key,
+    name               text             not null,
+    alternative_names  text[]           not null,
+    population         int              not null,
+    province           text             not null,
+    region             text             not null,
+    latitude           double precision not null,
+    longitude          double precision not null,
+    distance_amsterdam int
+);
