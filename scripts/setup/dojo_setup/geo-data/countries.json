@@ -2,1506 +2,2337 @@
   {
     "id": "AF",
     "name": "Afghanistan",
+    "alternativeNames": [],
+    "population": 37172386,
     "flag": "🇦🇫",
     "code": "AF"
   },
   {
     "id": "AX",
     "name": "Åland Islands",
+    "alternativeNames": [
+      "Åland"
+    ],
+    "population": 26711,
     "flag": "🇦🇽",
     "code": "AX"
   },
   {
     "id": "AL",
     "name": "Albania",
+    "alternativeNames": [
+      "Albanië"
+    ],
+    "population": 2866376,
     "flag": "🇦🇱",
     "code": "AL"
   },
   {
     "id": "DZ",
     "name": "Algeria",
+    "alternativeNames": [
+      "Algerije"
+    ],
+    "population": 42228429,
     "flag": "🇩🇿",
     "code": "DZ"
   },
   {
     "id": "AS",
     "name": "American Samoa",
+    "alternativeNames": [
+      "Amerikaans-Samoa"
+    ],
+    "population": 55465,
     "flag": "🇦🇸",
     "code": "AS"
   },
   {
     "id": "AD",
     "name": "Andorra",
+    "alternativeNames": [],
+    "population": 77006,
     "flag": "🇦🇩",
     "code": "AD"
   },
   {
     "id": "AO",
     "name": "Angola",
+    "alternativeNames": [],
+    "population": 30809762,
     "flag": "🇦🇴",
     "code": "AO"
   },
   {
     "id": "AI",
     "name": "Anguilla",
+    "alternativeNames": [],
+    "population": 13254,
     "flag": "🇦🇮",
     "code": "AI"
   },
   {
     "id": "AQ",
     "name": "Antarctica",
+    "alternativeNames": [],
+    "population": 0,
     "flag": "🇦🇶",
     "code": "AQ"
   },
   {
     "id": "AG",
     "name": "Antigua and Barbuda",
+    "alternativeNames": [
+      "Antigua & Barbuda",
+      "Antigua en Barbuda"
+    ],
+    "population": 96286,
     "flag": "🇦🇬",
     "code": "AG"
   },
   {
     "id": "AR",
     "name": "Argentina",
+    "alternativeNames": [
+      "Argentinië"
+    ],
+    "population": 44494502,
     "flag": "🇦🇷",
     "code": "AR"
   },
   {
     "id": "AM",
     "name": "Armenia",
+    "alternativeNames": [
+      "Armenië"
+    ],
+    "population": 3090500,
     "flag": "🇦🇲",
     "code": "AM"
   },
   {
     "id": "AW",
     "name": "Aruba",
+    "alternativeNames": [],
+    "population": 105845,
     "flag": "🇦🇼",
     "code": "AW"
   },
   {
     "id": "AU",
     "name": "Australia",
+    "alternativeNames": [
+      "Australië"
+    ],
+    "population": 24992369,
     "flag": "🇦🇺",
     "code": "AU"
   },
   {
     "id": "AT",
     "name": "Austria",
+    "alternativeNames": [
+      "Oostenrijk"
+    ],
+    "population": 8847037,
     "flag": "🇦🇹",
     "code": "AT"
   },
   {
     "id": "AZ",
     "name": "Azerbaijan",
+    "alternativeNames": [
+      "Azerbeidzjan"
+    ],
+    "population": 10224900,
     "flag": "🇦🇿",
     "code": "AZ"
   },
   {
     "id": "BS",
     "name": "Bahamas",
+    "alternativeNames": [],
+    "population": 385640,
     "flag": "🇧🇸",
     "code": "BS"
   },
   {
     "id": "BH",
     "name": "Bahrain",
+    "alternativeNames": [
+      "Bahrein"
+    ],
+    "population": 1569439,
     "flag": "🇧🇭",
     "code": "BH"
   },
   {
     "id": "BD",
     "name": "Bangladesh",
+    "alternativeNames": [],
+    "population": 161356039,
     "flag": "🇧🇩",
     "code": "BD"
   },
   {
     "id": "BB",
     "name": "Barbados",
+    "alternativeNames": [],
+    "population": 286641,
     "flag": "🇧🇧",
     "code": "BB"
   },
   {
     "id": "BY",
     "name": "Belarus",
+    "alternativeNames": [],
+    "population": 9485386,
     "flag": "🇧🇾",
     "code": "BY"
   },
   {
     "id": "BE",
     "name": "Belgium",
+    "alternativeNames": [
+      "België"
+    ],
+    "population": 11422068,
     "flag": "🇧🇪",
     "code": "BE"
   },
   {
     "id": "BZ",
     "name": "Belize",
+    "alternativeNames": [],
+    "population": 383071,
     "flag": "🇧🇿",
     "code": "BZ"
   },
   {
     "id": "BJ",
     "name": "Benin",
+    "alternativeNames": [],
+    "population": 11485048,
     "flag": "🇧🇯",
     "code": "BJ"
   },
   {
     "id": "BM",
     "name": "Bermuda",
+    "alternativeNames": [],
+    "population": 63968,
     "flag": "🇧🇲",
     "code": "BM"
   },
   {
     "id": "BT",
     "name": "Bhutan",
+    "alternativeNames": [],
+    "population": 754394,
     "flag": "🇧🇹",
     "code": "BT"
   },
   {
     "id": "BO",
     "name": "Bolivia",
+    "alternativeNames": [],
+    "population": 11353142,
     "flag": "🇧🇴",
     "code": "BO"
   },
   {
     "id": "BA",
     "name": "Bosnia and Herzegovina",
+    "alternativeNames": [
+      "Bosnia & Herzegovina",
+      "Bosnia",
+      "Bosnië en Herzegovina"
+    ],
+    "population": 3323929,
     "flag": "🇧🇦",
     "code": "BA"
   },
   {
     "id": "BW",
     "name": "Botswana",
+    "alternativeNames": [],
+    "population": 2254126,
     "flag": "🇧🇼",
     "code": "BW"
   },
   {
     "id": "BV",
     "name": "Bouvet Island",
+    "alternativeNames": [
+      "Bouveteiland"
+    ],
+    "population": 0,
     "flag": "🇧🇻",
     "code": "BV"
   },
   {
     "id": "BR",
     "name": "Brazil",
+    "alternativeNames": [
+      "Brazilië"
+    ],
+    "population": 209469333,
     "flag": "🇧🇷",
     "code": "BR"
   },
   {
     "id": "IO",
     "name": "British Indian Ocean Territory",
+    "alternativeNames": [
+      "Brits Indische Oceaanterritorium"
+    ],
+    "population": 4000,
     "flag": "🇮🇴",
     "code": "IO"
   },
   {
     "id": "VG",
     "name": "British Virgin Islands",
+    "alternativeNames": [
+      "Britse Maagdeneilanden"
+    ],
+    "population": 29802,
     "flag": "🇻🇬",
     "code": "VG"
   },
   {
     "id": "BN",
     "name": "Brunei",
+    "alternativeNames": [],
+    "population": 428962,
     "flag": "🇧🇳",
     "code": "BN"
   },
   {
     "id": "BG",
     "name": "Bulgaria",
+    "alternativeNames": [
+      "Bulgarije"
+    ],
+    "population": 7000039,
     "flag": "🇧🇬",
     "code": "BG"
   },
   {
     "id": "BF",
     "name": "Burkina Faso",
+    "alternativeNames": [],
+    "population": 19751535,
     "flag": "🇧🇫",
     "code": "BF"
   },
   {
     "id": "BI",
     "name": "Burundi",
+    "alternativeNames": [],
+    "population": 11175378,
     "flag": "🇧🇮",
     "code": "BI"
   },
   {
     "id": "KH",
     "name": "Cambodia",
+    "alternativeNames": [
+      "Cambodja"
+    ],
+    "population": 16249798,
     "flag": "🇰🇭",
     "code": "KH"
   },
   {
     "id": "CM",
     "name": "Cameroon",
+    "alternativeNames": [
+      "Kameroen"
+    ],
+    "population": 25216237,
     "flag": "🇨🇲",
     "code": "CM"
   },
   {
     "id": "CA",
     "name": "Canada",
+    "alternativeNames": [],
+    "population": 37058856,
     "flag": "🇨🇦",
     "code": "CA"
   },
   {
     "id": "CV",
     "name": "Cape Verde",
+    "alternativeNames": [
+      "Cabo Verde",
+      "Kaapverdië"
+    ],
+    "population": 543767,
     "flag": "🇨🇻",
     "code": "CV"
   },
   {
     "id": "BQ",
     "name": "Caribbean Netherlands",
+    "alternativeNames": [
+      "Caribisch Nederland"
+    ],
+    "population": 18012,
     "flag": "🇧🇶",
     "code": "BQ"
   },
   {
     "id": "KY",
     "name": "Cayman Islands",
+    "alternativeNames": [
+      "Kaaimaneilanden"
+    ],
+    "population": 64174,
     "flag": "🇰🇾",
     "code": "KY"
   },
   {
     "id": "CF",
     "name": "Central African Republic",
+    "alternativeNames": [
+      "Centraal-Afrikaanse Republiek"
+    ],
+    "population": 4666377,
     "flag": "🇨🇫",
     "code": "CF"
   },
   {
     "id": "TD",
     "name": "Chad",
+    "alternativeNames": [
+      "Tsjaad"
+    ],
+    "population": 15477751,
     "flag": "🇹🇩",
     "code": "TD"
   },
   {
     "id": "CL",
     "name": "Chile",
+    "alternativeNames": [
+      "Chili"
+    ],
+    "population": 18729160,
     "flag": "🇨🇱",
     "code": "CL"
   },
   {
     "id": "CN",
     "name": "China",
+    "alternativeNames": [],
+    "population": 1411778724,
     "flag": "🇨🇳",
     "code": "CN"
   },
   {
     "id": "CX",
     "name": "Christmas Island",
+    "alternativeNames": [
+      "Christmaseiland"
+    ],
+    "population": 1500,
     "flag": "🇨🇽",
     "code": "CX"
   },
   {
     "id": "CC",
     "name": "Cocos (Keeling) Islands",
+    "alternativeNames": [
+      "Cocos Islands",
+      "Cocoseilanden"
+    ],
+    "population": 628,
     "flag": "🇨🇨",
     "code": "CC"
   },
   {
     "id": "CO",
     "name": "Colombia",
+    "alternativeNames": [],
+    "population": 49648685,
     "flag": "🇨🇴",
     "code": "CO"
   },
   {
     "id": "KM",
     "name": "Comoros",
+    "alternativeNames": [
+      "Comoren"
+    ],
+    "population": 832322,
     "flag": "🇰🇲",
     "code": "KM"
   },
   {
     "id": "CK",
     "name": "Cook Islands",
+    "alternativeNames": [
+      "Cookeilanden"
+    ],
+    "population": 21388,
     "flag": "🇨🇰",
     "code": "CK"
   },
   {
     "id": "CR",
     "name": "Costa Rica",
+    "alternativeNames": [],
+    "population": 4999441,
     "flag": "🇨🇷",
     "code": "CR"
   },
   {
     "id": "HR",
     "name": "Croatia",
+    "alternativeNames": [
+      "Kroatië"
+    ],
+    "population": 3871833,
     "flag": "🇭🇷",
     "code": "HR"
   },
   {
     "id": "CU",
     "name": "Cuba",
+    "alternativeNames": [],
+    "population": 11338138,
     "flag": "🇨🇺",
     "code": "CU"
   },
   {
     "id": "CW",
     "name": "Curaçao",
+    "alternativeNames": [],
+    "population": 159849,
     "flag": "🇨🇼",
     "code": "CW"
   },
   {
     "id": "CY",
     "name": "Cyprus",
+    "alternativeNames": [],
+    "population": 1189265,
     "flag": "🇨🇾",
     "code": "CY"
   },
   {
     "id": "CZ",
     "name": "Czechia",
+    "alternativeNames": [
+      "Czech Republic",
+      "Tsjechië",
+      "Tsjechische Republiek"
+    ],
+    "population": 10625695,
     "flag": "🇨🇿",
     "code": "CZ"
   },
   {
     "id": "DK",
     "name": "Denmark",
+    "alternativeNames": [
+      "Denemarken"
+    ],
+    "population": 5797446,
     "flag": "🇩🇰",
     "code": "DK"
   },
   {
     "id": "DJ",
     "name": "Djibouti",
+    "alternativeNames": [],
+    "population": 958920,
     "flag": "🇩🇯",
     "code": "DJ"
   },
   {
     "id": "DM",
     "name": "Dominica",
+    "alternativeNames": [],
+    "population": 71625,
     "flag": "🇩🇲",
     "code": "DM"
   },
   {
     "id": "DO",
     "name": "Dominican Republic",
+    "alternativeNames": [
+      "Dominicaanse Republiek"
+    ],
+    "population": 10627165,
     "flag": "🇩🇴",
     "code": "DO"
   },
   {
     "id": "CD",
     "name": "DR Congo",
+    "alternativeNames": [
+      "Congo - Kinshasa",
+      "Congo (DRC)"
+    ],
+    "population": 84068091,
     "flag": "🇨🇩",
     "code": "CD"
   },
   {
     "id": "EC",
     "name": "Ecuador",
+    "alternativeNames": [],
+    "population": 17084357,
     "flag": "🇪🇨",
     "code": "EC"
   },
   {
     "id": "EG",
     "name": "Egypt",
+    "alternativeNames": [
+      "Egypte"
+    ],
+    "population": 98423595,
     "flag": "🇪🇬",
     "code": "EG"
   },
   {
     "id": "SV",
     "name": "El Salvador",
+    "alternativeNames": [],
+    "population": 6420744,
     "flag": "🇸🇻",
     "code": "SV"
   },
   {
     "id": "GQ",
     "name": "Equatorial Guinea",
+    "alternativeNames": [
+      "Equatoriaal-Guinea"
+    ],
+    "population": 1308974,
     "flag": "🇬🇶",
     "code": "GQ"
   },
   {
     "id": "ER",
     "name": "Eritrea",
+    "alternativeNames": [],
+    "population": 6209262,
     "flag": "🇪🇷",
     "code": "ER"
   },
   {
     "id": "EE",
     "name": "Estonia",
+    "alternativeNames": [
+      "Estland"
+    ],
+    "population": 1320884,
     "flag": "🇪🇪",
     "code": "EE"
   },
   {
     "id": "SZ",
     "name": "Eswatini",
+    "alternativeNames": [
+      "Swaziland"
+    ],
+    "population": 1136191,
     "flag": "🇸🇿",
     "code": "SZ"
   },
   {
     "id": "ET",
     "name": "Ethiopia",
+    "alternativeNames": [
+      "Ethiopië"
+    ],
+    "population": 109224559,
     "flag": "🇪🇹",
     "code": "ET"
   },
   {
     "id": "FK",
     "name": "Falkland Islands",
+    "alternativeNames": [
+      "Falkland Islands (Islas Malvinas)",
+      "Falklandeilanden",
+      "Falklandeilanden (Islas Malvinas)"
+    ],
+    "population": 2638,
     "flag": "🇫🇰",
     "code": "FK"
   },
   {
     "id": "FO",
     "name": "Faroe Islands",
+    "alternativeNames": [
+      "Faeröer"
+    ],
+    "population": 48497,
     "flag": "🇫🇴",
     "code": "FO"
   },
   {
     "id": "FJ",
     "name": "Fiji",
+    "alternativeNames": [],
+    "population": 883483,
     "flag": "🇫🇯",
     "code": "FJ"
   },
   {
     "id": "FI",
     "name": "Finland",
+    "alternativeNames": [],
+    "population": 5518050,
     "flag": "🇫🇮",
     "code": "FI"
   },
   {
     "id": "FR",
     "name": "France",
+    "alternativeNames": [
+      "Frankrijk"
+    ],
+    "population": 66987244,
     "flag": "🇫🇷",
     "code": "FR"
   },
   {
     "id": "GF",
     "name": "French Guiana",
+    "alternativeNames": [
+      "Frans-Guyana"
+    ],
+    "population": 195506,
     "flag": "🇬🇫",
     "code": "GF"
   },
   {
     "id": "PF",
     "name": "French Polynesia",
+    "alternativeNames": [
+      "Frans-Polynesië"
+    ],
+    "population": 277679,
     "flag": "🇵🇫",
     "code": "PF"
   },
   {
     "id": "TF",
     "name": "French Southern and Antarctic Lands",
+    "alternativeNames": [
+      "French Southern Territories",
+      "Franse Gebieden in de zuidelijke Indische Oceaan"
+    ],
+    "population": 140,
     "flag": "🇹🇫",
     "code": "TF"
   },
   {
     "id": "GA",
     "name": "Gabon",
+    "alternativeNames": [],
+    "population": 2119275,
     "flag": "🇬🇦",
     "code": "GA"
   },
   {
     "id": "GM",
     "name": "Gambia",
+    "alternativeNames": [],
+    "population": 2280102,
     "flag": "🇬🇲",
     "code": "GM"
   },
   {
     "id": "GE",
     "name": "Georgia",
+    "alternativeNames": [
+      "Georgië"
+    ],
+    "population": 3704500,
     "flag": "🇬🇪",
     "code": "GE"
   },
   {
     "id": "DE",
     "name": "Germany",
+    "alternativeNames": [
+      "Duitsland"
+    ],
+    "population": 82927922,
     "flag": "🇩🇪",
     "code": "DE"
   },
   {
     "id": "GH",
     "name": "Ghana",
+    "alternativeNames": [],
+    "population": 29767108,
     "flag": "🇬🇭",
     "code": "GH"
   },
   {
     "id": "GI",
     "name": "Gibraltar",
+    "alternativeNames": [],
+    "population": 33718,
     "flag": "🇬🇮",
     "code": "GI"
   },
   {
     "id": "GR",
     "name": "Greece",
+    "alternativeNames": [
+      "Griekenland"
+    ],
+    "population": 10727668,
     "flag": "🇬🇷",
     "code": "GR"
   },
   {
     "id": "GL",
     "name": "Greenland",
+    "alternativeNames": [
+      "Groenland"
+    ],
+    "population": 56025,
     "flag": "🇬🇱",
     "code": "GL"
   },
   {
     "id": "GD",
     "name": "Grenada",
+    "alternativeNames": [],
+    "population": 111454,
     "flag": "🇬🇩",
     "code": "GD"
   },
   {
     "id": "GP",
     "name": "Guadeloupe",
+    "alternativeNames": [],
+    "population": 443000,
     "flag": "🇬🇵",
     "code": "GP"
   },
   {
     "id": "GU",
     "name": "Guam",
+    "alternativeNames": [],
+    "population": 165768,
     "flag": "🇬🇺",
     "code": "GU"
   },
   {
     "id": "GT",
     "name": "Guatemala",
+    "alternativeNames": [],
+    "population": 17247807,
     "flag": "🇬🇹",
     "code": "GT"
   },
   {
     "id": "GG",
     "name": "Guernsey",
+    "alternativeNames": [],
+    "population": 65228,
     "flag": "🇬🇬",
     "code": "GG"
   },
   {
     "id": "GN",
     "name": "Guinea",
+    "alternativeNames": [
+      "Guinee"
+    ],
+    "population": 12414318,
     "flag": "🇬🇳",
     "code": "GN"
   },
   {
     "id": "GW",
     "name": "Guinea-Bissau",
+    "alternativeNames": [
+      "Guinee-Bissau"
+    ],
+    "population": 1874309,
     "flag": "🇬🇼",
     "code": "GW"
   },
   {
     "id": "GY",
     "name": "Guyana",
+    "alternativeNames": [],
+    "population": 779004,
     "flag": "🇬🇾",
     "code": "GY"
   },
   {
     "id": "HT",
     "name": "Haiti",
+    "alternativeNames": [],
+    "population": 11123176,
     "flag": "🇭🇹",
     "code": "HT"
   },
   {
     "id": "HM",
     "name": "Heard Island and McDonald Islands",
+    "alternativeNames": [
+      "Heard & McDonald Islands",
+      "Heard en McDonaldeilanden"
+    ],
+    "population": 0,
     "flag": "🇭🇲",
     "code": "HM"
   },
   {
     "id": "HN",
     "name": "Honduras",
+    "alternativeNames": [],
+    "population": 9587522,
     "flag": "🇭🇳",
     "code": "HN"
   },
   {
     "id": "HK",
     "name": "Hong Kong",
+    "alternativeNames": [
+      "Hong Kong SAR China",
+      "Hongkong SAR van China",
+      "Hongkong"
+    ],
+    "population": 7396076,
     "flag": "🇭🇰",
     "code": "HK"
   },
   {
     "id": "HU",
     "name": "Hungary",
+    "alternativeNames": [
+      "Hongarije"
+    ],
+    "population": 9768785,
     "flag": "🇭🇺",
     "code": "HU"
   },
   {
     "id": "IS",
     "name": "Iceland",
+    "alternativeNames": [
+      "IJsland"
+    ],
+    "population": 353574,
     "flag": "🇮🇸",
     "code": "IS"
   },
   {
     "id": "IN",
     "name": "India",
+    "alternativeNames": [],
+    "population": 1352617328,
     "flag": "🇮🇳",
     "code": "IN"
   },
   {
     "id": "ID",
     "name": "Indonesia",
+    "alternativeNames": [
+      "Indonesië"
+    ],
+    "population": 267663435,
     "flag": "🇮🇩",
     "code": "ID"
   },
   {
     "id": "IR",
     "name": "Iran",
+    "alternativeNames": [],
+    "population": 81800269,
     "flag": "🇮🇷",
     "code": "IR"
   },
   {
     "id": "IQ",
     "name": "Iraq",
+    "alternativeNames": [
+      "Irak"
+    ],
+    "population": 38433600,
     "flag": "🇮🇶",
     "code": "IQ"
   },
   {
     "id": "IE",
     "name": "Ireland",
+    "alternativeNames": [
+      "Ierland"
+    ],
+    "population": 4853506,
     "flag": "🇮🇪",
     "code": "IE"
   },
   {
     "id": "IM",
     "name": "Isle of Man",
+    "alternativeNames": [],
+    "population": 84077,
     "flag": "🇮🇲",
     "code": "IM"
   },
   {
     "id": "IL",
     "name": "Israel",
+    "alternativeNames": [],
+    "population": 8883800,
     "flag": "🇮🇱",
     "code": "IL"
   },
   {
     "id": "IT",
     "name": "Italy",
+    "alternativeNames": [
+      "Italië"
+    ],
+    "population": 60431283,
     "flag": "🇮🇹",
     "code": "IT"
   },
   {
     "id": "CI",
     "name": "Ivory Coast",
+    "alternativeNames": [
+      "Côte d'Ivoire",
+      "Ivoorkust"
+    ],
+    "population": 25069229,
     "flag": "🇨🇮",
     "code": "CI"
   },
   {
     "id": "JM",
     "name": "Jamaica",
+    "alternativeNames": [],
+    "population": 2934855,
     "flag": "🇯🇲",
     "code": "JM"
   },
   {
     "id": "JP",
     "name": "Japan",
+    "alternativeNames": [],
+    "population": 126529100,
     "flag": "🇯🇵",
     "code": "JP"
   },
   {
     "id": "JE",
     "name": "Jersey",
+    "alternativeNames": [],
+    "population": 90812,
     "flag": "🇯🇪",
     "code": "JE"
   },
   {
     "id": "JO",
     "name": "Jordan",
+    "alternativeNames": [
+      "Jordanië"
+    ],
+    "population": 9956011,
     "flag": "🇯🇴",
     "code": "JO"
   },
   {
     "id": "KZ",
     "name": "Kazakhstan",
+    "alternativeNames": [
+      "Kazachstan"
+    ],
+    "population": 18276499,
     "flag": "🇰🇿",
     "code": "KZ"
   },
   {
     "id": "KE",
     "name": "Kenya",
+    "alternativeNames": [
+      "Kenia"
+    ],
+    "population": 51393010,
     "flag": "🇰🇪",
     "code": "KE"
   },
   {
     "id": "KI",
     "name": "Kiribati",
+    "alternativeNames": [],
+    "population": 115847,
     "flag": "🇰🇮",
     "code": "KI"
   },
   {
     "id": "XK",
     "name": "Kosovo",
+    "alternativeNames": [],
+    "population": 1845300,
     "flag": "🇽🇰",
     "code": "XK"
   },
   {
     "id": "KW",
     "name": "Kuwait",
+    "alternativeNames": [
+      "Koeweit"
+    ],
+    "population": 4137309,
     "flag": "🇰🇼",
     "code": "KW"
   },
   {
     "id": "KG",
     "name": "Kyrgyzstan",
+    "alternativeNames": [
+      "Kirgizië"
+    ],
+    "population": 6315800,
     "flag": "🇰🇬",
     "code": "KG"
   },
   {
     "id": "LA",
     "name": "Laos",
+    "alternativeNames": [],
+    "population": 7061507,
     "flag": "🇱🇦",
     "code": "LA"
   },
   {
     "id": "LV",
     "name": "Latvia",
+    "alternativeNames": [
+      "Letland"
+    ],
+    "population": 1926542,
     "flag": "🇱🇻",
     "code": "LV"
   },
   {
     "id": "LB",
     "name": "Lebanon",
+    "alternativeNames": [
+      "Libanon"
+    ],
+    "population": 6848925,
     "flag": "🇱🇧",
     "code": "LB"
   },
   {
     "id": "LS",
     "name": "Lesotho",
+    "alternativeNames": [],
+    "population": 2108132,
     "flag": "🇱🇸",
     "code": "LS"
   },
   {
     "id": "LR",
     "name": "Liberia",
+    "alternativeNames": [],
+    "population": 4818977,
     "flag": "🇱🇷",
     "code": "LR"
   },
   {
     "id": "LY",
     "name": "Libya",
+    "alternativeNames": [
+      "Libië"
+    ],
+    "population": 6678567,
     "flag": "🇱🇾",
     "code": "LY"
   },
   {
     "id": "LI",
     "name": "Liechtenstein",
+    "alternativeNames": [],
+    "population": 37910,
     "flag": "🇱🇮",
     "code": "LI"
   },
   {
     "id": "LT",
     "name": "Lithuania",
+    "alternativeNames": [
+      "Litouwen"
+    ],
+    "population": 2789533,
     "flag": "🇱🇹",
     "code": "LT"
   },
   {
     "id": "LU",
     "name": "Luxembourg",
+    "alternativeNames": [
+      "Luxemburg"
+    ],
+    "population": 607728,
     "flag": "🇱🇺",
     "code": "LU"
   },
   {
     "id": "MO",
     "name": "Macau",
+    "alternativeNames": [
+      "Macao SAR China",
+      "Macao",
+      "Macau SAR van China"
+    ],
+    "population": 631636,
     "flag": "🇲🇴",
     "code": "MO"
   },
   {
     "id": "MG",
     "name": "Madagascar",
+    "alternativeNames": [
+      "Madagaskar"
+    ],
+    "population": 26262368,
     "flag": "🇲🇬",
     "code": "MG"
   },
   {
     "id": "MW",
     "name": "Malawi",
+    "alternativeNames": [],
+    "population": 17563749,
     "flag": "🇲🇼",
     "code": "MW"
   },
   {
     "id": "MY",
     "name": "Malaysia",
+    "alternativeNames": [
+      "Maleisië"
+    ],
+    "population": 31528585,
     "flag": "🇲🇾",
     "code": "MY"
   },
   {
     "id": "MV",
     "name": "Maldives",
+    "alternativeNames": [
+      "Maldiven"
+    ],
+    "population": 515696,
     "flag": "🇲🇻",
     "code": "MV"
   },
   {
     "id": "ML",
     "name": "Mali",
+    "alternativeNames": [],
+    "population": 19077690,
     "flag": "🇲🇱",
     "code": "ML"
   },
   {
     "id": "MT",
     "name": "Malta",
+    "alternativeNames": [],
+    "population": 483530,
     "flag": "🇲🇹",
     "code": "MT"
   },
   {
     "id": "MH",
     "name": "Marshall Islands",
+    "alternativeNames": [
+      "Marshalleilanden"
+    ],
+    "population": 58413,
     "flag": "🇲🇭",
     "code": "MH"
   },
   {
     "id": "MQ",
     "name": "Martinique",
+    "alternativeNames": [],
+    "population": 432900,
     "flag": "🇲🇶",
     "code": "MQ"
   },
   {
     "id": "MR",
     "name": "Mauritania",
+    "alternativeNames": [
+      "Mauritanië"
+    ],
+    "population": 4403319,
     "flag": "🇲🇷",
     "code": "MR"
   },
   {
     "id": "MU",
     "name": "Mauritius",
+    "alternativeNames": [],
+    "population": 1265303,
     "flag": "🇲🇺",
     "code": "MU"
   },
   {
     "id": "YT",
     "name": "Mayotte",
+    "alternativeNames": [],
+    "population": 279471,
     "flag": "🇾🇹",
     "code": "YT"
   },
   {
     "id": "MX",
     "name": "Mexico",
+    "alternativeNames": [],
+    "population": 126190788,
     "flag": "🇲🇽",
     "code": "MX"
   },
   {
     "id": "FM",
     "name": "Micronesia",
+    "alternativeNames": [],
+    "population": 112640,
     "flag": "🇫🇲",
     "code": "FM"
   },
   {
     "id": "MD",
     "name": "Moldova",
+    "alternativeNames": [
+      "Moldavië"
+    ],
+    "population": 3545883,
     "flag": "🇲🇩",
     "code": "MD"
   },
   {
     "id": "MC",
     "name": "Monaco",
+    "alternativeNames": [],
+    "population": 38682,
     "flag": "🇲🇨",
     "code": "MC"
   },
   {
     "id": "MN",
     "name": "Mongolia",
+    "alternativeNames": [
+      "Mongolië"
+    ],
+    "population": 3170208,
     "flag": "🇲🇳",
     "code": "MN"
   },
   {
     "id": "ME",
     "name": "Montenegro",
+    "alternativeNames": [],
+    "population": 622345,
     "flag": "🇲🇪",
     "code": "ME"
   },
   {
     "id": "MS",
     "name": "Montserrat",
+    "alternativeNames": [],
+    "population": 9341,
     "flag": "🇲🇸",
     "code": "MS"
   },
   {
     "id": "MA",
     "name": "Morocco",
+    "alternativeNames": [
+      "Marokko"
+    ],
+    "population": 36029138,
     "flag": "🇲🇦",
     "code": "MA"
   },
   {
     "id": "MZ",
     "name": "Mozambique",
+    "alternativeNames": [],
+    "population": 29495962,
     "flag": "🇲🇿",
     "code": "MZ"
   },
   {
     "id": "MM",
     "name": "Myanmar",
+    "alternativeNames": [
+      "Myanmar (Burma)",
+      "Myanmar (Birma)"
+    ],
+    "population": 53708395,
     "flag": "🇲🇲",
     "code": "MM"
   },
   {
     "id": "NA",
     "name": "Namibia",
+    "alternativeNames": [
+      "Namibië"
+    ],
+    "population": 2448255,
     "flag": "🇳🇦",
     "code": "NA"
   },
   {
     "id": "NR",
     "name": "Nauru",
+    "alternativeNames": [],
+    "population": 12704,
     "flag": "🇳🇷",
     "code": "NR"
   },
   {
     "id": "NP",
     "name": "Nepal",
+    "alternativeNames": [],
+    "population": 28087871,
     "flag": "🇳🇵",
     "code": "NP"
   },
   {
     "id": "NL",
     "name": "Netherlands",
+    "alternativeNames": [
+      "Nederland",
+      "Holland",
+      "The Netherlands"
+    ],
+    "population": 17231017,
     "flag": "🇳🇱",
     "code": "NL"
   },
   {
     "id": "NC",
     "name": "New Caledonia",
+    "alternativeNames": [
+      "Nieuw-Caledonië"
+    ],
+    "population": 284060,
     "flag": "🇳🇨",
     "code": "NC"
   },
   {
     "id": "NZ",
     "name": "New Zealand",
+    "alternativeNames": [
+      "Aotearoa New Zealand",
+      "Nieuw-Zeeland",
+      "Aotearoa Nieuw-Zeeland"
+    ],
+    "population": 4885500,
     "flag": "🇳🇿",
     "code": "NZ"
   },
   {
     "id": "NI",
     "name": "Nicaragua",
+    "alternativeNames": [],
+    "population": 6465513,
     "flag": "🇳🇮",
     "code": "NI"
   },
   {
     "id": "NE",
     "name": "Niger",
+    "alternativeNames": [],
+    "population": 22442948,
     "flag": "🇳🇪",
     "code": "NE"
   },
   {
     "id": "NG",
     "name": "Nigeria",
+    "alternativeNames": [],
+    "population": 195874740,
     "flag": "🇳🇬",
     "code": "NG"
   },
   {
     "id": "NU",
     "name": "Niue",
+    "alternativeNames": [],
+    "population": 2166,
     "flag": "🇳🇺",
     "code": "NU"
   },
   {
     "id": "NF",
     "name": "Norfolk Island",
+    "alternativeNames": [
+      "Norfolk"
+    ],
+    "population": 1828,
     "flag": "🇳🇫",
     "code": "NF"
   },
   {
     "id": "KP",
     "name": "North Korea",
+    "alternativeNames": [
+      "Noord-Korea"
+    ],
+    "population": 25549819,
     "flag": "🇰🇵",
     "code": "KP"
   },
   {
     "id": "MK",
     "name": "North Macedonia",
+    "alternativeNames": [
+      "Noord-Macedonië"
+    ],
+    "population": 2082958,
     "flag": "🇲🇰",
     "code": "MK"
   },
   {
     "id": "MP",
     "name": "Northern Mariana Islands",
+    "alternativeNames": [
+      "Noordelijke Marianen"
+    ],
+    "population": 56882,
     "flag": "🇲🇵",
     "code": "MP"
   },
   {
     "id": "NO",
     "name": "Norway",
+    "alternativeNames": [
+      "Noorwegen"
+    ],
+    "population": 5314336,
     "flag": "🇳🇴",
     "code": "NO"
   },
   {
     "id": "OM",
     "name": "Oman",
+    "alternativeNames": [],
+    "population": 4829483,
     "flag": "🇴🇲",
     "code": "OM"
   },
   {
     "id": "PK",
     "name": "Pakistan",
+    "alternativeNames": [],
+    "population": 212215030,
     "flag": "🇵🇰",
     "code": "PK"
   },
   {
     "id": "PW",
     "name": "Palau",
+    "alternativeNames": [],
+    "population": 17907,
     "flag": "🇵🇼",
     "code": "PW"
   },
   {
     "id": "PS",
     "name": "Palestine",
+    "alternativeNames": [
+      "Palestinian Territories",
+      "Palestijnse gebieden",
+      "Palestina"
+    ],
+    "population": 4569087,
     "flag": "🇵🇸",
     "code": "PS"
   },
   {
     "id": "PA",
     "name": "Panama",
+    "alternativeNames": [],
+    "population": 4176873,
     "flag": "🇵🇦",
     "code": "PA"
   },
   {
     "id": "PG",
     "name": "Papua New Guinea",
+    "alternativeNames": [
+      "Papoea-Nieuw-Guinea"
+    ],
+    "population": 8606316,
     "flag": "🇵🇬",
     "code": "PG"
   },
   {
     "id": "PY",
     "name": "Paraguay",
+    "alternativeNames": [],
+    "population": 6956071,
     "flag": "🇵🇾",
     "code": "PY"
   },
   {
     "id": "PE",
     "name": "Peru",
+    "alternativeNames": [],
+    "population": 31989256,
     "flag": "🇵🇪",
     "code": "PE"
   },
   {
     "id": "PH",
     "name": "Philippines",
+    "alternativeNames": [
+      "Filipijnen"
+    ],
+    "population": 106651922,
     "flag": "🇵🇭",
     "code": "PH"
   },
   {
     "id": "PN",
     "name": "Pitcairn Islands",
+    "alternativeNames": [
+      "Pitcairn",
+      "Pitcairneilanden"
+    ],
+    "population": 46,
     "flag": "🇵🇳",
     "code": "PN"
   },
   {
     "id": "PL",
     "name": "Poland",
+    "alternativeNames": [
+      "Polen"
+    ],
+    "population": 37978548,
     "flag": "🇵🇱",
     "code": "PL"
   },
   {
     "id": "PT",
     "name": "Portugal",
+    "alternativeNames": [],
+    "population": 10281762,
     "flag": "🇵🇹",
     "code": "PT"
   },
   {
     "id": "PR",
     "name": "Puerto Rico",
+    "alternativeNames": [],
+    "population": 3195153,
     "flag": "🇵🇷",
     "code": "PR"
   },
   {
     "id": "QA",
     "name": "Qatar",
+    "alternativeNames": [],
+    "population": 2781677,
     "flag": "🇶🇦",
     "code": "QA"
   },
   {
     "id": "CG",
     "name": "Republic of the Congo",
+    "alternativeNames": [
+      "Congo - Brazzaville",
+      "Congo (Republic)",
+      "Congo (Republiek)"
+    ],
+    "population": 5244363,
     "flag": "🇨🇬",
     "code": "CG"
   },
   {
     "id": "RE",
     "name": "Réunion",
+    "alternativeNames": [],
+    "population": 776948,
     "flag": "🇷🇪",
     "code": "RE"
   },
   {
     "id": "RO",
     "name": "Romania",
+    "alternativeNames": [
+      "Roemenië"
+    ],
+    "population": 19473936,
     "flag": "🇷🇴",
     "code": "RO"
   },
   {
     "id": "RU",
     "name": "Russia",
+    "alternativeNames": [
+      "Rusland"
+    ],
+    "population": 144478050,
     "flag": "🇷🇺",
     "code": "RU"
   },
   {
     "id": "RW",
     "name": "Rwanda",
+    "alternativeNames": [],
+    "population": 12301939,
     "flag": "🇷🇼",
     "code": "RW"
   },
   {
     "id": "BL",
     "name": "Saint Barthélemy",
+    "alternativeNames": [
+      "St. Barthélemy"
+    ],
+    "population": 8450,
     "flag": "🇧🇱",
     "code": "BL"
   },
   {
     "id": "SH",
     "name": "Saint Helena, Ascension and Tristan da Cunha",
+    "alternativeNames": [
+      "St. Helena",
+      "Sint-Helena"
+    ],
+    "population": 7460,
     "flag": "🇸🇭",
     "code": "SH"
   },
   {
     "id": "KN",
     "name": "Saint Kitts and Nevis",
+    "alternativeNames": [
+      "St. Kitts & Nevis",
+      "Saint Kitts en Nevis"
+    ],
+    "population": 52441,
     "flag": "🇰🇳",
     "code": "KN"
   },
   {
     "id": "LC",
     "name": "Saint Lucia",
+    "alternativeNames": [
+      "St. Lucia"
+    ],
+    "population": 181889,
     "flag": "🇱🇨",
     "code": "LC"
   },
   {
     "id": "MF",
     "name": "Saint Martin",
+    "alternativeNames": [
+      "St. Martin"
+    ],
+    "population": 37264,
     "flag": "🇲🇫",
     "code": "MF"
   },
   {
     "id": "PM",
     "name": "Saint Pierre and Miquelon",
+    "alternativeNames": [
+      "St. Pierre & Miquelon",
+      "Saint-Pierre en Miquelon"
+    ],
+    "population": 7012,
     "flag": "🇵🇲",
     "code": "PM"
   },
   {
     "id": "VC",
     "name": "Saint Vincent and the Grenadines",
+    "alternativeNames": [
+      "St. Vincent & Grenadines",
+      "Saint Vincent en de Grenadines"
+    ],
+    "population": 110211,
     "flag": "🇻🇨",
     "code": "VC"
   },
   {
     "id": "WS",
     "name": "Samoa",
+    "alternativeNames": [],
+    "population": 196130,
     "flag": "🇼🇸",
     "code": "WS"
   },
   {
     "id": "SM",
     "name": "San Marino",
+    "alternativeNames": [],
+    "population": 33785,
     "flag": "🇸🇲",
     "code": "SM"
   },
   {
     "id": "ST",
     "name": "São Tomé and Príncipe",
+    "alternativeNames": [
+      "São Tomé & Príncipe",
+      "Sao Tomé en Principe"
+    ],
+    "population": 197700,
     "flag": "🇸🇹",
     "code": "ST"
   },
   {
     "id": "SA",
     "name": "Saudi Arabia",
+    "alternativeNames": [
+      "Saoedi-Arabië"
+    ],
+    "population": 33699947,
     "flag": "🇸🇦",
     "code": "SA"
   },
   {
     "id": "SN",
     "name": "Senegal",
+    "alternativeNames": [],
+    "population": 15854360,
     "flag": "🇸🇳",
     "code": "SN"
   },
   {
     "id": "RS",
     "name": "Serbia",
+    "alternativeNames": [
+      "Servië"
+    ],
+    "population": 6982084,
     "flag": "🇷🇸",
     "code": "RS"
   },
   {
     "id": "SC",
     "name": "Seychelles",
+    "alternativeNames": [
+      "Seychellen"
+    ],
+    "population": 96762,
     "flag": "🇸🇨",
     "code": "SC"
   },
   {
     "id": "SL",
     "name": "Sierra Leone",
+    "alternativeNames": [],
+    "population": 7650154,
     "flag": "🇸🇱",
     "code": "SL"
   },
   {
     "id": "SG",
     "name": "Singapore",
+    "alternativeNames": [],
+    "population": 5638676,
     "flag": "🇸🇬",
     "code": "SG"
   },
   {
     "id": "SX",
     "name": "Sint Maarten",
+    "alternativeNames": [],
+    "population": 40654,
     "flag": "🇸🇽",
     "code": "SX"
   },
   {
     "id": "SK",
     "name": "Slovakia",
+    "alternativeNames": [
+      "Slowakije"
+    ],
+    "population": 5447011,
     "flag": "🇸🇰",
     "code": "SK"
   },
   {
     "id": "SI",
     "name": "Slovenia",
+    "alternativeNames": [
+      "Slovenië"
+    ],
+    "population": 2067372,
     "flag": "🇸🇮",
     "code": "SI"
   },
   {
     "id": "SB",
     "name": "Solomon Islands",
+    "alternativeNames": [
+      "Salomonseilanden"
+    ],
+    "population": 652858,
     "flag": "🇸🇧",
     "code": "SB"
   },
   {
     "id": "SO",
     "name": "Somalia",
+    "alternativeNames": [
+      "Somalië"
+    ],
+    "population": 15008154,
     "flag": "🇸🇴",
     "code": "SO"
   },
   {
     "id": "ZA",
     "name": "South Africa",
+    "alternativeNames": [
+      "Zuid-Afrika"
+    ],
+    "population": 57779622,
     "flag": "🇿🇦",
     "code": "ZA"
   },
   {
     "id": "GS",
     "name": "South Georgia",
+    "alternativeNames": [
+      "South Georgia & South Sandwich Islands",
+      "Zuid-Georgia en Zuidelijke Sandwicheilanden"
+    ],
+    "population": 30,
     "flag": "🇬🇸",
     "code": "GS"
   },
   {
     "id": "KR",
     "name": "South Korea",
+    "alternativeNames": [
+      "Zuid-Korea"
+    ],
+    "population": 51635256,
     "flag": "🇰🇷",
     "code": "KR"
   },
   {
     "id": "SS",
     "name": "South Sudan",
+    "alternativeNames": [
+      "Zuid-Soedan"
+    ],
+    "population": 8260490,
     "flag": "🇸🇸",
     "code": "SS"
   },
   {
     "id": "ES",
     "name": "Spain",
+    "alternativeNames": [
+      "Spanje"
+    ],
+    "population": 46723749,
     "flag": "🇪🇸",
     "code": "ES"
   },
   {
     "id": "LK",
     "name": "Sri Lanka",
+    "alternativeNames": [],
+    "population": 21670000,
     "flag": "🇱🇰",
     "code": "LK"
   },
   {
     "id": "SD",
     "name": "Sudan",
+    "alternativeNames": [
+      "Soedan"
+    ],
+    "population": 41801533,
     "flag": "🇸🇩",
     "code": "SD"
   },
   {
     "id": "SR",
     "name": "Suriname",
+    "alternativeNames": [],
+    "population": 575991,
     "flag": "🇸🇷",
     "code": "SR"
   },
   {
     "id": "SJ",
     "name": "Svalbard and Jan Mayen",
+    "alternativeNames": [
+      "Svalbard & Jan Mayen",
+      "Spitsbergen en Jan Mayen"
+    ],
+    "population": 2550,
     "flag": "🇸🇯",
     "code": "SJ"
   },
   {
     "id": "SE",
     "name": "Sweden",
+    "alternativeNames": [
+      "Zweden"
+    ],
+    "population": 10183175,
     "flag": "🇸🇪",
     "code": "SE"
   },
   {
     "id": "CH",
     "name": "Switzerland",
+    "alternativeNames": [
+      "Zwitserland"
+    ],
+    "population": 8516543,
     "flag": "🇨🇭",
     "code": "CH"
   },
   {
     "id": "SY",
     "name": "Syria",
+    "alternativeNames": [
+      "Syrië"
+    ],
+    "population": 16906283,
     "flag": "🇸🇾",
     "code": "SY"
   },
   {
     "id": "TW",
     "name": "Taiwan",
+    "alternativeNames": [],
+    "population": 23451837,
     "flag": "🇹🇼",
     "code": "TW"
   },
   {
     "id": "TJ",
     "name": "Tajikistan",
+    "alternativeNames": [
+      "Tadzjikistan"
+    ],
+    "population": 9100837,
     "flag": "🇹🇯",
     "code": "TJ"
   },
   {
     "id": "TZ",
     "name": "Tanzania",
+    "alternativeNames": [],
+    "population": 56318348,
     "flag": "🇹🇿",
     "code": "TZ"
   },
   {
     "id": "TH",
     "name": "Thailand",
+    "alternativeNames": [],
+    "population": 69428524,
     "flag": "🇹🇭",
     "code": "TH"
   },
   {
     "id": "XT",
     "name": "Tibet",
+    "alternativeNames": [],
+    "population": 3648100,
     "flag": "🏔️",
     "code": "XT"
   },
   {
     "id": "TL",
     "name": "Timor-Leste",
+    "alternativeNames": [
+      "East Timor",
+      "Oost-Timor",
+      "Democratische Republiek Oost-Timor"
+    ],
+    "population": 1267972,
     "flag": "🇹🇱",
     "code": "TL"
   },
   {
     "id": "TG",
     "name": "Togo",
+    "alternativeNames": [],
+    "population": 7889094,
     "flag": "🇹🇬",
     "code": "TG"
   },
   {
     "id": "TK",
     "name": "Tokelau",
+    "alternativeNames": [],
+    "population": 1466,
     "flag": "🇹🇰",
     "code": "TK"
   },
   {
     "id": "TO",
     "name": "Tonga",
+    "alternativeNames": [],
+    "population": 103197,
     "flag": "🇹🇴",
     "code": "TO"
   },
   {
     "id": "TT",
     "name": "Trinidad and Tobago",
+    "alternativeNames": [
+      "Trinidad & Tobago",
+      "Trinidad en Tobago"
+    ],
+    "population": 1389858,
     "flag": "🇹🇹",
     "code": "TT"
   },
   {
     "id": "TN",
     "name": "Tunisia",
+    "alternativeNames": [
+      "Tunesië"
+    ],
+    "population": 11565204,
     "flag": "🇹🇳",
     "code": "TN"
   },
   {
     "id": "TR",
     "name": "Turkey",
+    "alternativeNames": [
+      "Türkiye",
+      "Turkije"
+    ],
+    "population": 82319724,
     "flag": "🇹🇷",
     "code": "TR"
   },
   {
     "id": "TM",
     "name": "Turkmenistan",
+    "alternativeNames": [],
+    "population": 5850908,
     "flag": "🇹🇲",
     "code": "TM"
   },
   {
     "id": "TC",
     "name": "Turks and Caicos Islands",
+    "alternativeNames": [
+      "Turks & Caicos Islands",
+      "Turks- en Caicoseilanden"
+    ],
+    "population": 37665,
     "flag": "🇹🇨",
     "code": "TC"
   },
   {
     "id": "TV",
     "name": "Tuvalu",
+    "alternativeNames": [],
+    "population": 11508,
     "flag": "🇹🇻",
     "code": "TV"
   },
   {
     "id": "UG",
     "name": "Uganda",
+    "alternativeNames": [
+      "Oeganda"
+    ],
+    "population": 42723139,
     "flag": "🇺🇬",
     "code": "UG"
   },
   {
     "id": "UA",
     "name": "Ukraine",
+    "alternativeNames": [
+      "Oekraïne"
+    ],
+    "population": 40000000,
     "flag": "🇺🇦",
     "code": "UA"
   },
   {
     "id": "AE",
     "name": "United Arab Emirates",
+    "alternativeNames": [
+      "Verenigde Arabische Emiraten"
+    ],
+    "population": 9630959,
     "flag": "🇦🇪",
     "code": "AE"
   },
   {
     "id": "GB",
     "name": "United Kingdom",
+    "alternativeNames": [
+      "UK",
+      "Verenigd Koninkrijk",
+      "VK"
+    ],
+    "population": 66488991,
     "flag": "🇬🇧",
     "code": "GB"
   },
   {
     "id": "US",
     "name": "United States",
+    "alternativeNames": [
+      "US",
+      "USA",
+      "Verenigde Staten",
+      "VS"
+    ],
+    "population": 327167434,
     "flag": "🇺🇸",
     "code": "US"
   },
   {
     "id": "UM",
     "name": "United States Minor Outlying Islands",
+    "alternativeNames": [
+      "U.S. Outlying Islands",
+      "Kleine afgelegen eilanden van de Verenigde Staten"
+    ],
+    "population": 0,
     "flag": "🇺🇲",
     "code": "UM"
   },
   {
     "id": "VI",
     "name": "United States Virgin Islands",
+    "alternativeNames": [
+      "U.S. Virgin Islands",
+      "Amerikaanse Maagdeneilanden"
+    ],
+    "population": 106977,
     "flag": "🇻🇮",
     "code": "VI"
   },
   {
     "id": "UY",
     "name": "Uruguay",
+    "alternativeNames": [],
+    "population": 3449299,
     "flag": "🇺🇾",
     "code": "UY"
   },
   {
     "id": "UZ",
     "name": "Uzbekistan",
+    "alternativeNames": [
+      "Oezbekistan"
+    ],
+    "population": 32955400,
     "flag": "🇺🇿",
     "code": "UZ"
   },
   {
     "id": "VU",
     "name": "Vanuatu",
+    "alternativeNames": [],
+    "population": 292680,
     "flag": "🇻🇺",
     "code": "VU"
   },
   {
     "id": "VA",
     "name": "Vatican City",
+    "alternativeNames": [
+      "Vaticaanstad"
+    ],
+    "population": 921,
     "flag": "🇻🇦",
     "code": "VA"
   },
   {
     "id": "VE",
     "name": "Venezuela",
+    "alternativeNames": [],
+    "population": 28870195,
     "flag": "🇻🇪",
     "code": "VE"
   },
   {
     "id": "VN",
     "name": "Vietnam",
+    "alternativeNames": [],
+    "population": 95540395,
     "flag": "🇻🇳",
     "code": "VN"
   },
   {
     "id": "WF",
     "name": "Wallis and Futuna",
+    "alternativeNames": [
+      "Wallis & Futuna",
+      "Wallis en Futuna"
+    ],
+    "population": 16025,
     "flag": "🇼🇫",
     "code": "WF"
   },
   {
     "id": "EH",
     "name": "Western Sahara",
+    "alternativeNames": [
+      "Westelijke Sahara"
+    ],
+    "population": 273008,
     "flag": "🇪🇭",
     "code": "EH"
   },
   {
     "id": "YE",
     "name": "Yemen",
+    "alternativeNames": [
+      "Jemen"
+    ],
+    "population": 28498687,
     "flag": "🇾🇪",
     "code": "YE"
   },
   {
     "id": "ZM",
     "name": "Zambia",
+    "alternativeNames": [],
+    "population": 17351822,
     "flag": "🇿🇲",
     "code": "ZM"
   },
   {
     "id": "ZW",
     "name": "Zimbabwe",
+    "alternativeNames": [],
+    "population": 16868409,
     "flag": "🇿🇼",
     "code": "ZW"
   }

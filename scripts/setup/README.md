@@ -9,6 +9,13 @@ Fills a local Dojo environment with dummy data for development and testing:
 - Partner organisations with logos, partnership types, responsibles, contact persons and interactions
 - The countries and Dutch cities from `dojo_setup/geo-data`, which are real data, not dummy data
 
+The Dutch cities are the official places of residence (CBS woonplaatsen). Their names and
+coordinates come from [GeoNames](https://www.geonames.org) and their regions and most populations
+from [CBS](https://www.cbs.nl), both CC BY 4.0. The driving distances come from OSRM on
+[OpenStreetMap](https://www.openstreetmap.org/copyright) data (© OpenStreetMap contributors, ODbL).
+Country populations come from GeoNames and their English and Dutch names from the Unicode
+[CLDR](https://cldr.unicode.org).
+
 The data is generated from a fixed seed, so every run produces exactly the same data. Names come
 from Arabic, Turkish, Ukrainian, Spanish, Russian, English and Dutch backgrounds, all in Latin
 letters, to test special characters like ş, ğ, ı, é, ñ and ï, as well as hyphens and apostrophes.

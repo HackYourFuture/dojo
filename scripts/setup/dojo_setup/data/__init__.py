@@ -15,7 +15,7 @@ def _load(file_name: str, directory: Path = _DATA_DIR) -> Any:
 
 ARABIC_NAMES: dict[str, list[str]] = _load("arabic_names.json")
 CITIES: list[dict[str, Any]] = _load("nl-cities.json", _GEO_DATA_DIR)
-COUNTRIES: list[dict[str, str]] = _load("countries.json", _GEO_DATA_DIR)
+COUNTRIES: list[dict[str, Any]] = _load("countries.json", _GEO_DATA_DIR)
 EDUCATION_BACKGROUNDS: list[str] = _load("education_backgrounds.json")
 NICKNAMES: list[str] = _load("nicknames.json")
 ORGANISATION_INTERACTIONS: list[dict[str, str]] = _load("organisation_interactions.json")
