@@ -32,6 +32,7 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 | `interaction/`     | one record type shared by several profile types |
 | `picture/`         | files that belong to a record                   |
 | `search/`          | ranking in Java                                 |
+| `geo/`             | read-only reference data with a search          |
 
 ## Entities
 
@@ -142,7 +143,9 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 - **Search** (`search/`): ranking runs in Java over every trainee, volunteer, organisation and
   contact person, because names match by close spelling. Each type ranks on its own, then a stable
   sort by score merges them, so equal scores list trainees first, then volunteers, organisations
-  and contact persons. `SearchRankingTest` pins the order.
+  and contact persons. `SearchRankingTest` pins the order. The scoring lives in
+  `shared/SearchMatcher` so other features can rank with it: `SearchMatcher.rank` takes the items,
+  their fields and a tie order.
 
 ## Configuration
 

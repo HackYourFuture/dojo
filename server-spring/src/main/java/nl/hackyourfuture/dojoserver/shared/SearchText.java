@@ -1,18 +1,16 @@
-package nl.hackyourfuture.dojoserver.search;
-
-import nl.hackyourfuture.dojoserver.shared.StringUtils;
+package nl.hackyourfuture.dojoserver.shared;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 // Turns text into search words: lower case, no accents or apostrophes, split on anything but letters, digits and @._+
-final class SearchText {
+public final class SearchText {
     private SearchText() {
         /* This utility class should not be instantiated */
     }
 
-    static List<String> words(String text) {
+    public static List<String> words(String text) {
         if (text == null) {
             return List.of();
         }
