@@ -229,11 +229,13 @@ create index interactions_volunteer_idx on interactions (volunteer_id);
 -- Countries
 create table countries
 (
-    id   text not null
+    id                text   not null
         constraint countries_pk primary key,
-    name text not null,
-    flag text not null,
-    code text not null
+    name              text   not null,
+    alternative_names text[] not null,
+    population        int    not null,
+    flag              text   not null,
+    code              text   not null
 );
 
 -- Dutch cities

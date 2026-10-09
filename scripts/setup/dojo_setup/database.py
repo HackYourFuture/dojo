@@ -74,11 +74,24 @@ def ensure_api_token(connection: psycopg.Connection, user_id: str) -> bool:
     return True
 
 
-def replace_countries(connection: psycopg.Connection, countries: list[dict[str, str]]) -> None:
+def replace_countries(connection: psycopg.Connection, countries: list[dict[str, Any]]) -> None:
     connection.execute("DELETE FROM countries")
     connection.cursor().executemany(
-        "INSERT INTO countries (id, name, flag, code) VALUES (%s, %s, %s, %s)",
-        [(country["id"], country["name"], country["flag"], country["code"]) for country in countries],
+        """
+        INSERT INTO countries (id, name, alternative_names, population, flag, code)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """,
+        [
+            (
+                country["id"],
+                country["name"],
+                country["alternativeNames"],
+                country["population"],
+                country["flag"],
+                country["code"],
+            )
+            for country in countries
+        ],
     )
 
 
