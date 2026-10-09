@@ -25,9 +25,10 @@ public class StringUtils {
                 .collect(Collectors.joining("-"));
     }
 
-    // The fewest single-character insertions, deletions and substitutions that turn one string into the other.
-    // https://en.wikipedia.org/wiki/Levenshtein_distance
-    public static int levenshtein(String a, String b) {
+    // The fewest single-character insertions, deletions, substitutions and swaps of two neighbouring characters that
+    // turn one string into the other. https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+    public static int editDistance(String a, String b) {
+        int[] beforePrevious = new int[b.length() + 1];
         int[] previous = new int[b.length() + 1];
         int[] current = new int[b.length() + 1];
         for (int j = 0; j <= b.length(); j++) {
@@ -38,10 +39,15 @@ public class StringUtils {
             for (int j = 1; j <= b.length(); j++) {
                 int substitution = previous[j - 1] + (a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1);
                 current[j] = Math.min(substitution, Math.min(previous[j], current[j - 1]) + 1);
+                // A swap, such as "teil" for "tiel", is one edit rather than two.
+                if (i > 1 && j > 1 && a.charAt(i - 1) == b.charAt(j - 2) && a.charAt(i - 2) == b.charAt(j - 1)) {
+                    current[j] = Math.min(current[j], beforePrevious[j - 2] + 1);
+                }
             }
-            int[] swap = previous;
+            int[] oldest = beforePrevious;
+            beforePrevious = previous;
             previous = current;
-            current = swap;
+            current = oldest;
         }
         return previous[b.length()];
     }

@@ -37,9 +37,9 @@ class StringUtilsTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"kitten, sitting, 3", "'', abc, 3", "abc, '', 3", "john, john, 0", "jhon, john, 2",
-            "yusuf, youssef, 3"})
+    @CsvSource({"kitten, sitting, 3", "'', abc, 3", "abc, '', 3", "john, john, 0", "jhon, john, 1",
+            "yusuf, youssef, 3", "sapin, spain, 1", "ab, ba, 1"})
     void countsEdits(String a, String b, int edits) {
-        assertThat(StringUtils.levenshtein(a, b)).isEqualTo(edits);
+        assertThat(StringUtils.editDistance(a, b)).isEqualTo(edits);
     }
 }

@@ -5,8 +5,9 @@ import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPersonRepository;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationRepository;
-import nl.hackyourfuture.dojoserver.search.SearchMatcher.Field;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResult;
+import nl.hackyourfuture.dojoserver.shared.SearchMatcher;
+import nl.hackyourfuture.dojoserver.shared.SearchMatcher.Field;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
@@ -65,63 +66,40 @@ public class SearchService {
 
     // The matching trainees, best first. Equal scores go by newest cohort, then name; the id keeps the order stable.
     static List<SearchResult> rankTrainees(List<Trainee> trainees, List<String> tokens) {
-        record Hit(Trainee trainee, double score) {
-        }
-        return trainees.stream()
-                .map(trainee -> new Hit(trainee, SearchMatcher.score(tokens, traineeFields(trainee))))
-                .filter(hit -> hit.score() > 0)
-                .sorted(Comparator.comparingDouble(Hit::score).reversed()
-                        .thenComparing(hit -> hit.trainee().getCurrentCohort(),
-                                Comparator.nullsLast(Comparator.reverseOrder()))
-                        .thenComparing(hit -> hit.trainee().getDisplayName())
-                        .thenComparing(hit -> hit.trainee().getId()))
-                .map(hit -> SearchResult.from(hit.trainee(), hit.score()))
+        Comparator<Trainee> ties = Comparator
+                .comparing(Trainee::getCurrentCohort, Comparator.nullsLast(Comparator.reverseOrder()))
+                .thenComparing(Trainee::getDisplayName)
+                .thenComparing(Trainee::getId);
+        return SearchMatcher.rank(trainees, tokens, SearchService::traineeFields, ties).stream()
+                .map(hit -> SearchResult.from(hit.item(), hit.score()))
                 .toList();
     }
 
     // The matching volunteers, best first. Equal scores go by name; the id keeps the order stable.
     static List<SearchResult> rankVolunteers(List<Volunteer> volunteers, List<String> tokens) {
-        record Hit(Volunteer volunteer, double score) {
-        }
-        return volunteers.stream()
-                .map(volunteer -> new Hit(volunteer, SearchMatcher.score(tokens, volunteerFields(volunteer))))
-                .filter(hit -> hit.score() > 0)
-                .sorted(Comparator.comparingDouble(Hit::score).reversed()
-                        .thenComparing(hit -> hit.volunteer().getDisplayName())
-                        .thenComparing(hit -> hit.volunteer().getId()))
-                .map(hit -> SearchResult.from(hit.volunteer(), hit.score()))
+        Comparator<Volunteer> ties = Comparator.comparing(Volunteer::getDisplayName).thenComparing(Volunteer::getId);
+        return SearchMatcher.rank(volunteers, tokens, SearchService::volunteerFields, ties).stream()
+                .map(hit -> SearchResult.from(hit.item(), hit.score()))
                 .toList();
     }
 
     // The matching organisations, best first. Equal scores go by name; the id keeps the order stable.
     static List<SearchResult> rankOrganisations(List<Organisation> organisations, List<String> tokens) {
-        record Hit(Organisation organisation, double score) {
-        }
-        return organisations.stream()
-                .map(organisation -> new Hit(organisation,
-                        SearchMatcher.score(tokens, organisationFields(organisation))))
-                .filter(hit -> hit.score() > 0)
-                .sorted(Comparator.comparingDouble(Hit::score).reversed()
-                        .thenComparing(hit -> hit.organisation().getName())
-                        .thenComparing(hit -> hit.organisation().getId()))
-                .map(hit -> SearchResult.from(hit.organisation(), hit.score()))
+        Comparator<Organisation> ties = Comparator.comparing(Organisation::getName)
+                .thenComparing(Organisation::getId);
+        return SearchMatcher.rank(organisations, tokens, SearchService::organisationFields, ties).stream()
+                .map(hit -> SearchResult.from(hit.item(), hit.score()))
                 .toList();
     }
 
     // The matching contact persons, best first. Equal scores go by name; the id keeps the order stable.
     static List<SearchResult> rankContactPersons(List<ContactPerson> contactPersons,
             Map<String, Organisation> organisationsById, List<String> tokens) {
-        record Hit(ContactPerson contactPerson, double score) {
-        }
-        return contactPersons.stream()
-                .map(contactPerson -> new Hit(contactPerson,
-                        SearchMatcher.score(tokens, contactPersonFields(contactPerson))))
-                .filter(hit -> hit.score() > 0)
-                .sorted(Comparator.comparingDouble(Hit::score).reversed()
-                        .thenComparing(hit -> hit.contactPerson().getName())
-                        .thenComparing(hit -> hit.contactPerson().getId()))
-                .map(hit -> SearchResult.from(hit.contactPerson(),
-                        organisationsById.get(hit.contactPerson().getOrganisationId()), hit.score()))
+        Comparator<ContactPerson> ties = Comparator.comparing(ContactPerson::getName)
+                .thenComparing(ContactPerson::getId);
+        return SearchMatcher.rank(contactPersons, tokens, SearchService::contactPersonFields, ties).stream()
+                .map(hit -> SearchResult.from(hit.item(), organisationsById.get(hit.item().getOrganisationId()),
+                        hit.score()))
                 .toList();
     }
 
