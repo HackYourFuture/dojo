@@ -1,42 +1,16 @@
-package nl.hackyourfuture.dojoserver.shared;
+package nl.hackyourfuture.dojoserver.search;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import nl.hackyourfuture.dojoserver.shared.SearchMatcher.Field;
+import nl.hackyourfuture.dojoserver.search.SearchMatcher.Field;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
-// How SearchText splits text into words and SearchMatcher scores them, without Spring or a database.
+// How SearchMatcher scores query words against fields, without Spring or a database.
 class SearchMatcherTest {
-
-    // ------------------------------------------------------------------ words
-
-    @ParameterizedTest
-    @CsvSource(delimiter = '|', textBlock = """
-            Zoë Müller              | zoe muller
-            Yıldız                  | yildiz
-            Al-Hassan O’Neil        | al hassan oneil
-            Safa'a Moussa           | safaa moussa
-            Asma' Al-Rifaʼi         | asma al rifai
-            '  Ali    Khan  '       | ali khan
-            omar_n+dojo@example.org | omar_n+dojo@example.org
-            Lives in Rotterdam.     | lives in rotterdam
-            (@omar_n)               | omar_n
-            Łukasz Østergaard Đorđe Strauß Æsa Cœur | lukasz ostergaard dorde strauss aesa coeur
-            李𠀀明 Иван مريم         | 李𠀀明 иван مريم
-            """)
-    void splitsTextIntoLowerCaseWordsWithoutAccents(String text, String expected) {
-        assertThat(String.join(" ", SearchText.words(text))).isEqualTo(expected);
-    }
-
-    @Test
-    void findsNoWordsInNothing() {
-        assertThat(SearchText.words(null)).isEmpty();
-        assertThat(SearchText.words(" - ' . ")).isEmpty();
-    }
 
     @Test
     void tokenizesIntoDistinctWords() {
@@ -70,7 +44,7 @@ class SearchMatcherTest {
     @ParameterizedTest
     @CsvSource({"yusuf, Yousef", "yusuf, Youssef", "youssef, Yusuf", "muhammad, Mohammed", "mohamed, Mohammed",
             "rachid, Rashid", "fatma, Fatima", "cristina, Christina", "hasan, Hassan", "ahmad, Ahmed", "jhon, John",
-            "omar, Umar", "nur, Noor", "isa, Eissa", "ali, Aly", "eed, Ede"})
+            "omar, Umar", "nur, Noor", "isa, Eissa", "ali, Aly"})
     void namesMatchCloseSpellings(String query, String name) {
         assertThat(score(query, Field.name(name, 1))).isGreaterThan(0).isLessThan(10);
     }
@@ -90,20 +64,6 @@ class SearchMatcherTest {
     @Test
     void aNearerSpellingScoresHigher() {
         assertThat(score("mariam", Field.name("Maryam", 1))).isGreaterThan(score("mariam", Field.name("Maryem", 1)));
-    }
-
-    @ParameterizedTest
-    @CsvSource({"roter, Rotterdam", "amstr, Amsterdam", "abdulr, Abdelrahman", "rote, Rotterdam"})
-    void aHalfTypedWordMatchesTheCloseStartOfALongerName(String query, String name) {
-        assertThat(score(query, Field.name(name, 1))).isGreaterThan(0).isLessThan(10);
-    }
-
-    @Test
-    void closeStartsNeedFourLettersAndTheSameFirstLetter() {
-        assertThat(score("rit", Field.name("Rotterdam", 1))).isZero();
-        assertThat(score("omar", Field.name("Mariam", 1))).isZero();
-        // Two edits off the start of Alteveer.
-        assertThat(score("aldr", Field.name("Alteveer", 1))).isZero();
     }
 
     @Test

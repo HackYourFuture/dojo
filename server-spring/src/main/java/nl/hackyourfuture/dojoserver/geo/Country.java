@@ -21,7 +21,7 @@ import java.util.List;
 @Entity
 @Table(name = "countries")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Country {
+public class Country implements Place {
     @Id
     @EqualsAndHashCode.Include
     private String id;

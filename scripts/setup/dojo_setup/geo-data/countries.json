@@ -1860,7 +1860,9 @@
   {
     "id": "SX",
     "name": "Sint Maarten",
-    "alternativeNames": [],
+    "alternativeNames": [
+      "St. Maarten"
+    ],
     "population": 40654,
     "flag": "🇸🇽",
     "code": "SX"
@@ -2227,7 +2229,7 @@
     "id": "UM",
     "name": "United States Minor Outlying Islands",
     "alternativeNames": [
-      "U.S. Outlying Islands",
+      "US Outlying Islands",
       "Kleine afgelegen eilanden van de Verenigde Staten"
     ],
     "population": 0,
@@ -2238,7 +2240,7 @@
     "id": "VI",
     "name": "United States Virgin Islands",
     "alternativeNames": [
-      "U.S. Virgin Islands",
+      "US Virgin Islands",
       "Amerikaanse Maagdeneilanden"
     ],
     "population": 106977,

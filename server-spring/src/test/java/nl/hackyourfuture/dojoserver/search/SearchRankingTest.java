@@ -6,7 +6,6 @@ import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResult;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResultType;
-import nl.hackyourfuture.dojoserver.shared.SearchMatcher;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
 import org.junit.jupiter.api.Test;

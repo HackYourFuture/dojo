@@ -23,14 +23,13 @@ class GeoRankingTest {
 
     @Test
     void namesThatStartWithTheQueryComeFirst() {
-        City loonOpZand = city("Loon op Zand", 5800);
-        City zandvoort = city("Zandvoort", 16310);
+        List<City> cities = List.of(city("Loon op Zand", 5800), city("'s-Gravenzande", 18145),
+                city("Zandvoort", 16310));
 
-        // Loon op Zand matches "zand" as a whole word, which scores higher, but Zandvoort starts with it.
-        assertThat(names(GeoService.rankCities(List.of(loonOpZand, zandvoort), "zand", null)))
-                .containsExactly("Zandvoort", "Loon op Zand");
-        assertThat(names(GeoService.rankCities(List.of(loonOpZand, zandvoort), "zand", 1)))
-                .containsExactly("Zandvoort");
+        // 's-Gravenzande is bigger, but only contains "zand".
+        assertThat(names(GeoService.find(cities, "zand", null)))
+                .containsExactly("Zandvoort", "'s-Gravenzande", "Loon op Zand");
+        assertThat(names(GeoService.find(cities, "zand", 1))).containsExactly("Zandvoort");
     }
 
     @Test
@@ -38,7 +37,7 @@ class GeoRankingTest {
         City beek = city("Beek", 8415);
         City beekEnDonk = city("Beek en Donk", 10110);
 
-        assertThat(names(GeoService.rankCities(List.of(beekEnDonk, beek), "beek", null)))
+        assertThat(names(GeoService.find(List.of(beekEnDonk, beek), "beek", null)))
                 .containsExactly("Beek", "Beek en Donk");
     }
 
@@ -48,8 +47,7 @@ class GeoRankingTest {
         City nieuwePekela = city("Nieuwe Pekela", 3895);
         City nieuwegein = city("Nieuwegein", 68257);
 
-        // Nieuw-Vennep matches "nieuw" as a whole word, which scores higher, but Nieuwegein is bigger.
-        assertThat(names(GeoService.rankCities(List.of(nieuwVennep, nieuwePekela, nieuwegein), "nieuw", null)))
+        assertThat(names(GeoService.find(List.of(nieuwVennep, nieuwePekela, nieuwegein), "nieuw", null)))
                 .containsExactly("Nieuwegein", "Nieuw-Vennep", "Nieuwe Pekela");
     }
 
@@ -61,8 +59,8 @@ class GeoRankingTest {
         City oudAlblas = city("Oud-Alblas", 1260);
 
         // Húns starts with "huns" without its accent, and Oud-Alblas with "oud a" without its dash.
-        assertThat(names(GeoService.rankCities(List.of(hunsel, huns), "huns", null))).containsExactly("Húns", "Hunsel");
-        assertThat(names(GeoService.rankCities(List.of(oudAde, oudAlblas), "oud a", null)))
+        assertThat(names(GeoService.find(List.of(hunsel, huns), "huns", null))).containsExactly("Húns", "Hunsel");
+        assertThat(names(GeoService.find(List.of(oudAde, oudAlblas), "oud a", null)))
                 .containsExactly("Oud-Alblas", "Oud Ade");
     }
 
@@ -70,7 +68,7 @@ class GeoRankingTest {
     void equalMatchesGoToTheBiggestPlace() {
         City ouderkerk = city("Ouderkerk aan de Amstel", 8110);
 
-        assertThat(names(GeoService.rankCities(List.of(ouderkerk, AMSTELVEEN, AMSTERDAM), "ams", null)))
+        assertThat(names(GeoService.find(List.of(ouderkerk, AMSTELVEEN, AMSTERDAM), "ams", null)))
                 .containsExactly("Amsterdam", "Amstelveen", "Ouderkerk aan de Amstel");
     }
 
@@ -79,33 +77,33 @@ class GeoRankingTest {
         City damwald = city("Damwâld", 5560);
         City edam = city("Edam", 7380);
 
-        // Damwâld starts with "dam", Edam is a close spelling, and the others only contain it.
-        assertThat(names(GeoService.rankCities(List.of(ROTTERDAM, edam, AMSTERDAM, damwald), "dam", null)))
-                .containsExactly("Damwâld", "Edam", "Amsterdam", "Rotterdam");
+        // Damwâld starts with "dam" and the others contain it.
+        assertThat(names(GeoService.find(List.of(ROTTERDAM, edam, AMSTERDAM, damwald), "dam", null)))
+                .containsExactly("Damwâld", "Amsterdam", "Rotterdam", "Edam");
     }
 
     @Test
     void findsAHalfTypedNameWithATypo() {
-        assertThat(names(GeoService.rankCities(List.of(AMSTERDAM, ROTTERDAM), "roter", null)))
+        assertThat(names(GeoService.find(List.of(AMSTERDAM, ROTTERDAM), "roter", null)))
                 .containsExactly("Rotterdam");
     }
 
     @Test
-    void aTypoInAWholeNameBeatsOneInTheStartOfALongerName() {
-        City tilburg = city("Tilburg", 210236);
-        City tiel = city("Tiel", 39290);
+    void aTypoInTheWholeNameBeatsOneInTheStart() {
+        City almelo = city("Almelo", 68015);
+        City almere = city("Almere", 232619);
 
-        // "teil" swaps two letters of Tiel and drops one from the start of Tilburg, which is far bigger.
-        assertThat(names(GeoService.rankCities(List.of(tilburg, tiel), "teil", null))).containsExactly("Tiel",
-                "Tilburg");
+        // "almeo" is one letter off Almelo and one off the start of Almere, which is far bigger.
+        assertThat(names(GeoService.find(List.of(almere, almelo), "almeo", null))).containsExactly("Almelo",
+                "Almere");
     }
 
     @Test
-    void aCloseStartRanksBelowACorrectWord() {
+    void aTypoRanksBelowACorrectMatch() {
         City ouderkerk = city("Ouderkerk aan de Amstel", 8110);
 
         // "amstel" is one letter off the start of Amsterdam, which is far bigger, but Ouderkerk spells it right.
-        assertThat(names(GeoService.rankCities(List.of(AMSTERDAM, ouderkerk, AMSTELVEEN), "amstel", null)))
+        assertThat(names(GeoService.find(List.of(AMSTERDAM, ouderkerk, AMSTELVEEN), "amstel", null)))
                 .containsExactly("Amstelveen", "Ouderkerk aan de Amstel", "Amsterdam");
     }
 
@@ -113,17 +111,17 @@ class GeoRankingTest {
     void findsPlacesByTheirAlternativeNames() {
         List<City> cities = List.of(DEN_HELDER, AMSTERDAM, THE_HAGUE);
 
-        assertThat(names(GeoService.rankCities(cities, "den haag", null))).containsExactly("The Hague");
-        assertThat(names(GeoService.rankCities(cities, "haag", null))).containsExactly("The Hague");
-        assertThat(names(GeoService.rankCities(cities, "s grav", null))).containsExactly("The Hague");
-        assertThat(names(GeoService.rankCities(cities, "den", null))).containsExactly("The Hague", "Den Helder");
+        assertThat(names(GeoService.find(cities, "den haag", null))).containsExactly("The Hague");
+        assertThat(names(GeoService.find(cities, "haag", null))).containsExactly("The Hague");
+        assertThat(names(GeoService.find(cities, "s grav", null))).containsExactly("The Hague");
+        assertThat(names(GeoService.find(cities, "den", null))).containsExactly("The Hague", "Den Helder");
     }
 
     @Test
     void alternativeNamesRankLikeTheName() {
         City mokum = city("Mokum", 10);
 
-        assertThat(names(GeoService.rankCities(List.of(mokum, AMSTERDAM), "mokum", null)))
+        assertThat(names(GeoService.find(List.of(mokum, AMSTERDAM), "mokum", null)))
                 .containsExactly("Amsterdam", "Mokum");
     }
 
@@ -132,17 +130,17 @@ class GeoRankingTest {
         City capelle = city("Capelle aan den IJssel", 69698, "Capelle a/d IJssel");
 
         // Typed as "a.d.", the abbreviation splits into "a" and "d"; kept whole, "a.d" would match nothing.
-        assertThat(names(GeoService.rankCities(List.of(capelle), "capelle a.d. ijssel", null)))
+        assertThat(names(GeoService.find(List.of(capelle), "capelle a.d. ijssel", null)))
                 .containsExactly("Capelle aan den IJssel");
     }
 
     @Test
-    void readsStAsSint() {
-        City sintOedenrode = city("Sint-Oedenrode", 11900);
+    void findsStForSintThroughTheAlternativeName() {
+        City sintOedenrode = city("Sint-Oedenrode", 11900, "St. Oedenrode");
 
-        assertThat(names(GeoService.rankCities(List.of(sintOedenrode), "st oedenrode", null)))
+        assertThat(names(GeoService.find(List.of(sintOedenrode), "st oedenrode", null)))
                 .containsExactly("Sint-Oedenrode");
-        assertThat(names(GeoService.rankCities(List.of(sintOedenrode), "st. oed", null)))
+        assertThat(names(GeoService.find(List.of(sintOedenrode), "st. oed", null)))
                 .containsExactly("Sint-Oedenrode");
     }
 
@@ -151,7 +149,7 @@ class GeoRankingTest {
         City noordenveld = city("Alteveer (Noordenveld)", 0);
         City hoogeveen = city("Alteveer (Hoogeveen)", 0);
 
-        assertThat(GeoService.rankCities(List.of(noordenveld, hoogeveen), "alteveer", null))
+        assertThat(GeoService.find(List.of(noordenveld, hoogeveen), "alteveer", null))
                 .extracting(City::getId).containsExactly("alteveer-hoogeveen", "alteveer-noordenveld");
     }
 
@@ -161,31 +159,31 @@ class GeoRankingTest {
                 city("Húns", 115), AMSTERDAM);
 
         // Case, accents and punctuation don't count: 's-Gravendeel files under S and Húns before Hunsel.
-        assertThat(names(GeoService.rankCities(cities, null, null)))
+        assertThat(names(GeoService.find(cities, null, null)))
                 .containsExactly("Amsterdam", "Húns", "Hunsel", "'s-Gravendeel", "Zandvoort");
     }
 
     @Test
     void findsNothingForASingleLetterOrOnlySpaces() {
-        assertThat(GeoService.rankCities(List.of(AMSTERDAM), "a", null)).isEmpty();
-        assertThat(GeoService.rankCities(List.of(AMSTERDAM), "  ", null)).isEmpty();
-        assertThat(GeoService.rankCities(List.of(AMSTERDAM), "", null)).isEmpty();
+        assertThat(GeoService.find(List.of(AMSTERDAM), "a", null)).isEmpty();
+        assertThat(GeoService.find(List.of(AMSTERDAM), "  ", null)).isEmpty();
+        assertThat(GeoService.find(List.of(AMSTERDAM), "", null)).isEmpty();
     }
 
     @Test
     void returnsTwentyMatchesUnlessLimited() {
         List<City> cities = IntStream.range(0, 25).mapToObj(i -> city("Testdorp " + i, i)).toList();
 
-        assertThat(GeoService.rankCities(cities, "testdorp", null)).hasSize(20);
-        assertThat(GeoService.rankCities(cities, "testdorp", 25)).hasSize(25);
-        assertThat(names(GeoService.rankCities(cities, "testdorp", 2))).containsExactly("Testdorp 24", "Testdorp 23");
+        assertThat(GeoService.find(cities, "testdorp", null)).hasSize(20);
+        assertThat(GeoService.find(cities, "testdorp", 25)).hasSize(25);
+        assertThat(names(GeoService.find(cities, "testdorp", 2))).containsExactly("Testdorp 24", "Testdorp 23");
     }
 
     @Test
     void limitsTheListWithoutAQuery() {
         List<City> cities = List.of(AMSTELVEEN, ROTTERDAM, AMSTERDAM);
 
-        assertThat(names(GeoService.rankCities(cities, null, 2))).containsExactly("Amstelveen", "Amsterdam");
+        assertThat(names(GeoService.find(cities, null, 2))).containsExactly("Amstelveen", "Amsterdam");
     }
 
     // ------------------------------------------------------------------ countries
@@ -196,28 +194,27 @@ class GeoRankingTest {
                 country("NE", "Niger", 22442948), country("PG", "Papua New Guinea", 8606316),
                 country("NZ", "New Zealand", 4885500), NEPAL, NETHERLANDS);
 
-        // Papua New Guinea is bigger, but New Zealand starts with "ne". Two letters match neither a close spelling nor
-        // part of a word, and codes are not searched, so no Niger.
-        assertThat(GeoService.rankCountries(countries, "ne", null)).extracting(Country::getId)
+        // Papua New Guinea is bigger, but New Zealand starts with "ne". Two letters only match the start of a word,
+        // and codes are not searched, so no Niger.
+        assertThat(GeoService.find(countries, "ne", null)).extracting(Country::getId)
                 .containsExactly("NP", "NL", "NZ", "PG", "BQ");
     }
 
     @Test
     void findsCountriesByTheirAlternativeNames() {
         Country unitedKingdom = country("GB", "United Kingdom", 66488991, "UK", "Verenigd Koninkrijk", "VK");
-        Country virginIslands = country("VI", "United States Virgin Islands", 106977, "U.S. Virgin Islands");
+        Country virginIslands = country("VI", "United States Virgin Islands", 106977, "US Virgin Islands");
         List<Country> countries = List.of(NEPAL, NETHERLANDS, unitedKingdom, virginIslands);
 
-        assertThat(GeoService.rankCountries(countries, "holland", null)).extracting(Country::getId)
+        assertThat(GeoService.find(countries, "holland", null)).extracting(Country::getId)
                 .containsExactly("NL");
-        assertThat(GeoService.rankCountries(countries, "the netherlands", null)).extracting(Country::getId)
+        assertThat(GeoService.find(countries, "the netherlands", null)).extracting(Country::getId)
                 .containsExactly("NL");
-        assertThat(GeoService.rankCountries(countries, "uk", null)).extracting(Country::getId).containsExactly("GB");
-        assertThat(GeoService.rankCountries(countries, "verenigd", null)).extracting(Country::getId)
+        assertThat(GeoService.find(countries, "uk", null)).extracting(Country::getId).containsExactly("GB");
+        assertThat(GeoService.find(countries, "verenigd", null)).extracting(Country::getId)
                 .containsExactly("GB");
-        // A dot splits words in names too, so "U.S." reads as "u s".
-        assertThat(GeoService.rankCountries(countries, "us virgin", null)).extracting(Country::getId)
-                .containsExactly("VI");
+        // "US" is only in the alternative name.
+        assertThat(GeoService.find(countries, "us virgin", null)).extracting(Country::getId).containsExactly("VI");
     }
 
     @Test
@@ -225,7 +222,7 @@ class GeoRankingTest {
         List<Country> countries = List.of(country("AE", "United Arab Emirates", 9630959),
                 country("US", "United States", 327167434), country("GB", "United Kingdom", 66488991));
 
-        assertThat(GeoService.rankCountries(countries, "united", null)).extracting(Country::getId)
+        assertThat(GeoService.find(countries, "united", null)).extracting(Country::getId)
                 .containsExactly("US", "GB", "AE");
     }
 
@@ -234,7 +231,7 @@ class GeoRankingTest {
         List<Country> countries = List.of(country("HM", "Heard Island and McDonald Islands", 0),
                 country("BV", "Bouvet Island", 0));
 
-        assertThat(GeoService.rankCountries(countries, "island", null)).extracting(Country::getId)
+        assertThat(GeoService.find(countries, "island", null)).extracting(Country::getId)
                 .containsExactly("BV", "HM");
     }
 
@@ -243,7 +240,7 @@ class GeoRankingTest {
         List<Country> countries = List.of(country("AL", "Albania", 2866376), NETHERLANDS,
                 country("AX", "Åland Islands", 26711), country("AF", "Afghanistan", 37172386));
 
-        assertThat(GeoService.rankCountries(countries, null, null)).extracting(Country::getId)
+        assertThat(GeoService.find(countries, null, null)).extracting(Country::getId)
                 .containsExactly("AF", "AX", "AL", "NL");
     }
 

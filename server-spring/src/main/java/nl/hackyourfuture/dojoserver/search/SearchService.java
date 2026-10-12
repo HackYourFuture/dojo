@@ -5,9 +5,9 @@ import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPersonRepository;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationRepository;
+import nl.hackyourfuture.dojoserver.search.SearchMatcher.Field;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResult;
-import nl.hackyourfuture.dojoserver.shared.SearchMatcher;
-import nl.hackyourfuture.dojoserver.shared.SearchMatcher.Field;
+import nl.hackyourfuture.dojoserver.shared.StringUtils;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
@@ -123,7 +123,7 @@ public class SearchService {
                 Field.text(volunteer.getEmail(), 2),
                 Field.text(volunteer.getGithubHandle(), 1),
                 Field.text(volunteer.getCompanyName(), 1),
-                Field.text(withoutDots(volunteer.getCompanyName()), 1),
+                Field.text(StringUtils.withoutDots(volunteer.getCompanyName()), 1),
                 Field.text(volunteer.getJobRole(), 1),
                 Field.text(volunteer.getNotes(), 0.001));
     }
@@ -132,7 +132,7 @@ public class SearchService {
         String name = organisation.getName();
         return List.of(
                 Field.name(name, 5),
-                Field.name(withoutDots(name), 5),
+                Field.name(StringUtils.withoutDots(name), 5),
                 Field.text(organisation.getWebsiteUrl(), 3),
                 Field.text(organisation.getNotes(), 0.001));
     }
@@ -144,10 +144,5 @@ public class SearchService {
                 Field.text(contactPerson.getEmail(), 2),
                 Field.text(contactPerson.getJobTitle(), 1),
                 Field.text(contactPerson.getNotes(), 0.001));
-    }
-
-    // Search keeps dots and underscores inside words, so without them "coolblue bv" finds "Coolblue B.V.".
-    private static String withoutDots(String name) {
-        return name == null ? null : name.replace('.', ' ').replace('_', ' ');
     }
 }

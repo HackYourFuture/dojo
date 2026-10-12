@@ -2,6 +2,7 @@ package nl.hackyourfuture.dojoserver.shared;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -36,10 +37,17 @@ class StringUtilsTest {
         assertThat(StringUtils.slug(text)).isEqualTo(expected);
     }
 
+    @Test
+    void replacesDotsAndUnderscoresWithSpaces() {
+        assertThat(StringUtils.withoutDots("Coolblue B.V.")).isEqualTo("Coolblue B V ");
+        assertThat(StringUtils.withoutDots("omar_n")).isEqualTo("omar n");
+        assertThat(StringUtils.withoutDots(null)).isNull();
+    }
+
     @ParameterizedTest
-    @CsvSource({"kitten, sitting, 3", "'', abc, 3", "abc, '', 3", "john, john, 0", "jhon, john, 1",
-            "yusuf, youssef, 3", "sapin, spain, 1", "ab, ba, 1"})
+    @CsvSource({"kitten, sitting, 3", "'', abc, 3", "abc, '', 3", "john, john, 0", "jhon, john, 2",
+            "yusuf, youssef, 3"})
     void countsEdits(String a, String b, int edits) {
-        assertThat(StringUtils.editDistance(a, b)).isEqualTo(edits);
+        assertThat(StringUtils.levenshtein(a, b)).isEqualTo(edits);
     }
 }

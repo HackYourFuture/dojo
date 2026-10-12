@@ -26,6 +26,11 @@ public final class SearchText {
                 .toList();
     }
 
+    // The words joined by single spaces: "'s-Gravendeel" is "s gravendeel" and "Åland Islands" is "aland islands".
+    public static String plain(String text) {
+        return String.join(" ", words(text));
+    }
+
     // Letters that have no accent to strip, spelled the way staff type them.
     private static String fold(String text) {
         return text.replace("ı", "i").replace("ł", "l").replace("ø", "o").replace("đ", "d")

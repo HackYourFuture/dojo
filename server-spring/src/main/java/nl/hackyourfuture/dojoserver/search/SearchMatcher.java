@@ -1,4 +1,9 @@
-package nl.hackyourfuture.dojoserver.shared;
+package nl.hackyourfuture.dojoserver.search;
+
+import nl.hackyourfuture.dojoserver.shared.Hit;
+import nl.hackyourfuture.dojoserver.shared.SearchText;
+import nl.hackyourfuture.dojoserver.shared.StringUtils;
+import nl.hackyourfuture.dojoserver.shared.TextMatcher;
 
 import java.util.Comparator;
 import java.util.List;
@@ -10,17 +15,16 @@ import java.util.stream.Stream;
  * once, at its best match: the kind of match times the field's weight. Kinds of match are ten times apart, so a better
  * kind beats a better field while the heaviest weight stays under ten times the lightest.
  */
-public final class SearchMatcher {
+final class SearchMatcher {
     private static final double WHOLE_WORD = 1000;
     private static final double WORD_START = 100;
+    // Above part of a word, unlike in TextMatcher: names are often transliterated, so "yusuf" lists Youssef before
+    // Abdulyusufi.
     private static final double CLOSE_SPELLING = 10;
     private static final double INSIDE_WORD = 1;
 
     private static final int MIN_QUERY_LENGTH = 2;
     private static final int MIN_CLOSE_SPELLING_LENGTH = 3;
-    private static final int MIN_CLOSE_START_LENGTH = 4;
-    // A typo in a whole word beats one in the start of a longer word: "teil" is Tiel before Tilburg.
-    private static final double CLOSE_START_WEIGHT = 0.9;
     private static final int MIN_INSIDE_WORD_LENGTH = 3;
 
     private SearchMatcher() {
@@ -28,22 +32,18 @@ public final class SearchMatcher {
     }
 
     // A field's search words and weight. Names also match close spellings and parts of longer words.
-    public record Field(List<String> words, double weight, boolean isName) {
-        public static Field name(String value, double weight) {
+    record Field(List<String> words, double weight, boolean isName) {
+        static Field name(String value, double weight) {
             return new Field(wordsOf(value), weight, true);
         }
 
-        public static Field text(String value, double weight) {
+        static Field text(String value, double weight) {
             return new Field(wordsOf(value), weight, false);
         }
     }
 
-    // A matching item and its score.
-    public record Hit<T>(T item, double score) {
-    }
-
     // The distinct words of a query, or none when it has fewer than two letters or digits.
-    public static List<String> tokenize(String query) {
+    static List<String> tokenize(String query) {
         List<String> words = SearchText.words(query);
         if (words.stream().mapToInt(String::length).sum() < MIN_QUERY_LENGTH) {
             return List.of();
@@ -56,13 +56,9 @@ public final class SearchMatcher {
     }
 
     // The items that match every token, best first. Equal scores go by ties; the sort is stable.
-    public static <T> List<Hit<T>> rank(List<T> items, List<String> tokens, Function<? super T, List<Field>> fields,
+    static <T> List<Hit<T>> rank(List<T> items, List<String> tokens, Function<? super T, List<Field>> fields,
             Comparator<? super T> ties) {
-        return items.stream()
-                .map(item -> new Hit<>(item, score(tokens, fields.apply(item))))
-                .filter(hit -> hit.score() > 0)
-                .sorted(Comparator.<Hit<T>>comparingDouble(Hit::score).reversed().thenComparing(Hit::item, ties))
-                .toList();
+        return Hit.rank(items, item -> score(tokens, fields.apply(item)), ties);
     }
 
     // The value's words, plus the whole value without spaces so that "abdulrahman" matches "Abdul Rahman".
@@ -120,34 +116,19 @@ public final class SearchMatcher {
         return 0;
     }
 
-    // How close the nearest word, or the start of a longer word, is spelled, from 0 to 1.
+    // How close the nearest word is spelled, from 0 to 1, within the typos TextMatcher allows.
     private static double closeness(String token, List<String> words) {
         if (token.length() < MIN_CLOSE_SPELLING_LENGTH) {
             return 0;
         }
         double best = 0;
         for (String word : words) {
-            best = Math.max(best, closeness(token, word, editBudget(token, word)));
-            // One edit off the start of a longer word with the same first letter: a half-typed "roter" finds
-            // "Rotterdam", but "omar" not "Mariam".
-            if (token.length() >= MIN_CLOSE_START_LENGTH && word.charAt(0) == token.charAt(0)) {
-                for (int end = token.length() - 1; end <= token.length() + 1 && end < word.length(); end++) {
-                    best = Math.max(best, CLOSE_START_WEIGHT * closeness(token, word.substring(0, end), 1));
-                }
+            int length = Math.max(token.length(), word.length());
+            int typos = StringUtils.levenshtein(token, word);
+            if (typos <= TextMatcher.maxTypos(token, word)) {
+                best = Math.max(best, 1 - (double) typos / length);
             }
         }
         return best;
-    }
-
-    // One edit per three letters of the longer word, rounded up and at most three: loose enough for transliterations
-    // such as Yusuf and Youssef, which are three edits apart.
-    private static int editBudget(String token, String word) {
-        return Math.min((Math.max(token.length(), word.length()) + 2) / 3, 3);
-    }
-
-    private static double closeness(String token, String word, int maxEdits) {
-        int length = Math.max(token.length(), word.length());
-        int edits = StringUtils.editDistance(token, word);
-        return edits <= maxEdits ? 1 - (double) edits / length : 0;
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "cities")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class City {
+public class City implements Place {
     @Id
     @EqualsAndHashCode.Include
     private String id;
