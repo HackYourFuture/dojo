@@ -8,7 +8,7 @@ import java.util.List;
 @Schema(description = "A country")
 public record CountryResponse(
         @Schema(
-                description = "ISO 3166-1 alpha-2 code, or a user-assigned code such as XK for Kosovo",
+                description = "ISO 3166-1 alpha-2 code",
                 example = "NL",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
@@ -22,7 +22,7 @@ public record CountryResponse(
         String name,
 
         @Schema(
-                description = "Other names the country is known by, in English or Dutch. Often empty",
+                description = "Other names the country is known by, in English or Dutch",
                 example = "[\"Nederland\", \"Holland\", \"The Netherlands\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )

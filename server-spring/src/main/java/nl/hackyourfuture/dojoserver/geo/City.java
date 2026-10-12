@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-// A Dutch place of residence. Reference data loaded by scripts/setup, so read-only and without audit fields.
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -22,7 +21,6 @@ import java.util.List;
 @Table(name = "cities")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class City {
-    // The unique name as a slug, e.g. hengelo-gelderland.
     @Id
     @EqualsAndHashCode.Include
     private String id;

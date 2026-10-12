@@ -22,17 +22,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/geo")
 @RequiredArgsConstructor
-@Tag(name = "Geo", description = "Countries and Dutch cities, for picking a place")
+@Tag(name = "Geo", description = "City and country information")
 public class GeoController {
     private final GeoService geoService;
 
     @GetMapping("/cities")
-    @Operation(summary = "List cities",
-            description = "Without a query, returns every Dutch city, town and village by name. With a " +
-                    "query, returns up to 20 places where every word matches the name or an alternative name: an " +
-                    "exact name first, then names that start with the query, both biggest first, then the other " +
-                    "matches, best first. A query shorter than two characters returns nothing. A limit changes how " +
-                    "many are returned.")
+    @Operation(summary = "List cities", description = "Returns a list of cities in The Netherlands.")
     @ApiResponse(responseCode = "200", description = "The cities")
     @ApiResponse(
             responseCode = "400",
@@ -45,8 +40,7 @@ public class GeoController {
             @Size(max = 100)
             String q,
 
-            @Parameter(description = "The most results to return. Without it, a query returns 20 and no " +
-                    "query returns everything", example = "10")
+            @Parameter(description = "The most results to return.", example = "10")
             @RequestParam(required = false)
             @Min(1)
             Integer limit
@@ -56,10 +50,7 @@ public class GeoController {
 
     @GetMapping("/countries")
     @Operation(summary = "List countries",
-            description = "Without a query, returns every country by name. With a query, returns up to 20 " +
-                    "countries where every word matches the name or an alternative name: an exact name first, then " +
-                    "names that start with the query, both biggest first, then the other matches, best first. A " +
-                    "query shorter than two characters returns nothing. A limit changes how many are returned.")
+            description = "Returns a list of countries.")
     @ApiResponse(responseCode = "200", description = "The countries")
     @ApiResponse(
             responseCode = "400",
@@ -72,8 +63,7 @@ public class GeoController {
             @Size(max = 100)
             String q,
 
-            @Parameter(description = "The most results to return. Without it, a query returns 20 and no " +
-                    "query returns everything", example = "10")
+            @Parameter(description = "The most results to return.", example = "10")
             @RequestParam(required = false)
             @Min(1)
             Integer limit

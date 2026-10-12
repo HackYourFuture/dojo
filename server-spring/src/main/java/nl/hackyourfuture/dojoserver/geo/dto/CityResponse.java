@@ -8,24 +8,22 @@ import java.util.List;
 @Schema(description = "A Dutch city, town or village")
 public record CityResponse(
         @Schema(
-                description = "The unique name as a slug",
+                description = "The unique ID",
                 example = "hengelo-gelderland",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         String id,
 
         @Schema(
-                description = "The unique name. When places share a name, the biggest keeps it and the others get " +
-                        "their province in brackets, or their municipality when they are in the same province",
-                example = "Hengelo (Gelderland)",
+                description = "The name of the place.",
+                example = "Amsterdam",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         String name,
 
         @Schema(
-                description = "Other names the place is known by: Dutch or English names, the official name, old " +
-                        "spellings and nicknames. Usually empty",
-                example = "[\"Hengelo (Gld)\"]",
+                description = "Other names the place is known by",
+                example = "[\"Den Haag\", \"'s-Gravenhage\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         List<String> alternativeNames,
