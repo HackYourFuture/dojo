@@ -7,7 +7,7 @@ import java.util.function.ToDoubleFunction;
 // An item that matches a search, and its score.
 public record Hit<T>(T item, double score) {
 
-    // The items that score above 0, best first. Equal scores go by ties.
+    // The items that score above 0, best first. Equal scores go by ties; the sort is stable.
     public static <T> List<Hit<T>> rank(List<T> items, ToDoubleFunction<? super T> score, Comparator<? super T> ties) {
         return items.stream()
                 .map(item -> new Hit<>(item, score.applyAsDouble(item)))

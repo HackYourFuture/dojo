@@ -161,7 +161,7 @@ class GeoEndpointTest {
     }
 
     @Test
-    void returnsNothingForAQueryShorterThanTwoCharacters() {
+    void returnsNothingForAQueryWithFewerThanTwoLettersOrDigits() {
         cityRepository.save(city(word, 1));
         countryRepository.save(country(word));
         // Searched for, one letter would match both as the start of a word.

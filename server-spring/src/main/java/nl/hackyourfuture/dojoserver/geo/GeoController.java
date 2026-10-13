@@ -27,7 +27,9 @@ public class GeoController {
     private final GeoService geoService;
 
     @GetMapping("/cities")
-    @Operation(summary = "List cities", description = "Returns a list of cities in The Netherlands.")
+    @Operation(summary = "List cities",
+            description = "Returns cities in The Netherlands. With a query, up to 20 whose name or alternative name" +
+                    " matches it, best match first; without one, every city by name.")
     @ApiResponse(responseCode = "200", description = "The cities")
     @ApiResponse(
             responseCode = "400",
@@ -40,7 +42,7 @@ public class GeoController {
             @Size(max = 100)
             String q,
 
-            @Parameter(description = "The most results to return.", example = "10")
+            @Parameter(description = "The most results to return: 20 with a query, otherwise all.", example = "10")
             @RequestParam(required = false)
             @Min(1)
             Integer limit
@@ -50,7 +52,8 @@ public class GeoController {
 
     @GetMapping("/countries")
     @Operation(summary = "List countries",
-            description = "Returns a list of countries.")
+            description = "Returns countries. With a query, up to 20 whose name or alternative name matches it, best" +
+                    " match first; without one, every country by name.")
     @ApiResponse(responseCode = "200", description = "The countries")
     @ApiResponse(
             responseCode = "400",
@@ -63,7 +66,7 @@ public class GeoController {
             @Size(max = 100)
             String q,
 
-            @Parameter(description = "The most results to return.", example = "10")
+            @Parameter(description = "The most results to return: 20 with a query, otherwise all.", example = "10")
             @RequestParam(required = false)
             @Min(1)
             Integer limit

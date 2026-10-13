@@ -1,48 +1,37 @@
 package nl.hackyourfuture.dojoserver.shared;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Function;
-
-// Scores how well a query matches a text: exactly, at the start, or somewhere inside, each with or without typos.
+/**
+ * How well a query matches a text, from 1 for the same text down to 0 for no match: 1 when they are equal, 0.1 when
+ * the text starts with the query, 0.04 when a later word of it does, 0.01 when the text contains it, and under 0.001
+ * for a close spelling, by how close. Case, accents, apostrophes and dots don't count. A name also matches without
+ * its spaces, and a text over 60 characters is prose that only matches at the start of a word.
+ */
 public final class TextMatcher {
-    private static final double EXACT = 1000;
-    private static final double START = 100;
-    private static final double CONTAINS = 10;
-    // Each typo divides the score by a hundred, so every match without typos comes first.
-    private static final double TYPO = 0.01;
+    private static final double EXACT = 1;
+    private static final double START = 0.1;
+    // "berg" in "van der Berg": well above the letters inside another word.
+    private static final double WORD_START = 0.04;
+    private static final double CONTAINS = 0.01;
+    // Times how close the spelling is, under 1, so a close spelling comes after every match without typos.
+    private static final double CLOSE_SPELLING = 0.001;
 
-    private static final int MIN_QUERY_LENGTH = 2;
-    private static final int MIN_CONTAINS_LENGTH = 3;
-    private static final int MIN_TYPO_LENGTH = 3;
+    // Inside a word or with typos, two letters match too much.
+    private static final int MIN_LOOSE_LENGTH = 3;
+    // Half-typed with a typo, three letters match too much.
     private static final int MIN_TYPO_START_LENGTH = 4;
+    // Texts longer than a name are prose, where only word starts count: "ali" is not in every "specialization".
+    private static final int MAX_NAME_LENGTH = 60;
 
     private TextMatcher() {
         /* This utility class should not be instantiated */
     }
 
-    // The items that match the query in any of their texts, best first. Equal scores go by ties.
-    public static <T> List<Hit<T>> rank(List<T> items, String query, Function<? super T, List<String>> texts,
-            Comparator<? super T> ties) {
-        String cleanQuery = clean(query);
-        return Hit.rank(items, item -> texts.apply(item).stream()
-                .mapToDouble(text -> points(clean(text), cleanQuery))
-                .max()
-                .orElse(0), ties);
-    }
-
-    // From 1000 for an exact match down to 0 for none. Case, accents, apostrophes and dots don't count.
     public static double score(String text, String query) {
-        return points(clean(text), clean(query));
-    }
-
-    // "Alphen a.d. Rijn" is "alphen a d rijn" and "'s-Gravenhage" is "s gravenhage".
-    private static String clean(String text) {
-        return SearchText.plain(StringUtils.withoutDots(text));
+        return points(SearchText.plain(text), SearchText.plain(query));
     }
 
     private static double points(String text, String query) {
-        if (query.length() < MIN_QUERY_LENGTH) {
+        if (text.isEmpty() || query.isEmpty()) {
             return 0;
         }
         if (text.equals(query)) {
@@ -51,51 +40,74 @@ public final class TextMatcher {
         if (text.startsWith(query)) {
             return START;
         }
-        // A later word may start with two letters, "ne" in "Papua New Guinea"; anywhere else takes three.
-        if (text.contains(" " + query) || (query.length() >= MIN_CONTAINS_LENGTH && text.contains(query))) {
-            return CONTAINS;
+        if (text.contains(" " + query)) {
+            return WORD_START;
         }
-        return query.length() >= MIN_TYPO_LENGTH ? pointsWithTypos(text, query) : 0;
+        return text.length() > MAX_NAME_LENGTH ? 0 : pointsInName(text, query);
     }
 
-    // The same kinds of match, compared from the start of each word: from the first word it is the whole text or its
-    // start, from a later word it only contains the query.
-    private static double pointsWithTypos(String text, String query) {
-        double best = 0;
-        for (int start = 0; start < text.length(); start++) {
-            if (start > 0 && text.charAt(start - 1) != ' ') {
-                continue;
-            }
-            String rest = text.substring(start);
-            double whole = start == 0 ? EXACT : CONTAINS;
-            double part = start == 0 ? START : CONTAINS;
-            best = Math.max(best, whole * similarity(query, rest, maxTypos(query, rest)));
-            // Half-typed, with one typo and the right first letter: "roter" finds "Rotterdam", "omar" not "Mariam".
-            if (query.length() >= MIN_TYPO_START_LENGTH && rest.charAt(0) == query.charAt(0)) {
-                for (int end = query.length() - 1; end <= query.length() + 1 && end < rest.length(); end++) {
-                    best = Math.max(best, part * similarity(query, rest.substring(0, end), 1));
-                }
+    // A name also matches without its spaces, "abdulrahman" is "Abdul Rahman", inside a word, and as a close spelling.
+    private static double pointsInName(String text, String query) {
+        String joinedText = text.replace(" ", "");
+        String joinedQuery = query.replace(" ", "");
+        if (joinedText.equals(joinedQuery)) {
+            return EXACT;
+        }
+        if (joinedText.startsWith(joinedQuery)) {
+            return START;
+        }
+        if (query.length() < MIN_LOOSE_LENGTH) {
+            return 0;
+        }
+        if (text.contains(query)) {
+            return CONTAINS;
+        }
+        return CLOSE_SPELLING * closeness(text, query);
+    }
+
+    // How close the query is spelled to the whole text or to any of its words, from 0 to under 1.
+    private static double closeness(String text, String query) {
+        double best = Math.max(similarity(text, query, maxTypos(text, query)), halfTyped(text, query));
+        for (String word : text.split(" ")) {
+            // Two letters match too much: "no" is not a misspelled Nour. A word of a longer name counts half, like a
+            // half-typed start, so a typo in a whole name beats both.
+            if (word.length() >= MIN_LOOSE_LENGTH) {
+                best = Math.max(best, similarity(word, query, maxTypos(word, query)) / 2);
+                best = Math.max(best, halfTyped(word, query));
             }
         }
         return best;
     }
 
-    // One typo per three letters of the longer text, rounded up and at most three: loose enough for transliterations
-    // such as Yusuf and Youssef, which are three typos apart.
-    public static int maxTypos(String query, String text) {
-        return Math.min((Math.max(query.length(), text.length()) + 2) / 3, 3);
+    // Half-typed, with one typo and the right first letter: "roter" finds "Rotterdam", "omar" not "Mariam". The typo
+    // may make the typed part one letter shorter or longer than the text's start. Counts half, so a typo in a whole
+    // name beats one in the start of a longer name.
+    private static double halfTyped(String text, String query) {
+        double best = 0;
+        if (query.length() >= MIN_TYPO_START_LENGTH && text.charAt(0) == query.charAt(0)) {
+            for (int end = query.length() - 1; end <= query.length() + 1 && end < text.length(); end++) {
+                best = Math.max(best, similarity(text.substring(0, end), query, 1));
+            }
+        }
+        return best / 2;
     }
 
-    // 1 for the same spelling, less for every typo, and 0 past the most typos allowed.
-    private static double similarity(String query, String text, int maxTypos) {
+    // One typo per three letters of the longer text, rounded up and at most three: loose enough for transliterations
+    // such as Yusuf and Youssef, which are three typos apart.
+    private static int maxTypos(String text, String query) {
+        return Math.min((Math.max(text.length(), query.length()) + 2) / 3, 3);
+    }
+
+    // The share of the letters that are right, halved per typo, or 0 past the most typos allowed.
+    private static double similarity(String text, String query, int maxTypos) {
         // The length difference alone takes that many typos, which saves working them out.
-        if (Math.abs(query.length() - text.length()) > maxTypos) {
+        if (Math.abs(text.length() - query.length()) > maxTypos) {
             return 0;
         }
-        int typos = StringUtils.levenshtein(query, text);
+        int typos = StringUtils.levenshtein(text, query);
         if (typos > maxTypos) {
             return 0;
         }
-        return (1 - (double) typos / Math.max(query.length(), text.length())) * Math.pow(TYPO, typos);
+        return (1 - (double) typos / Math.max(text.length(), query.length())) / Math.pow(2, typos);
     }
 }

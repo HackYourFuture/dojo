@@ -143,13 +143,13 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 - **Search** (`search/`): ranking runs in Java over every trainee, volunteer, organisation and
   contact person, because names match by close spelling. Each type ranks on its own, then a stable
   sort by score merges them, so equal scores list trainees first, then volunteers, organisations
-  and contact persons. `SearchRankingTest` pins the order. `SearchMatcher` scores the weighted
-  fields of a record and ranks a close spelling above part of a word, because names are often
-  transliterated. It shares `Hit.rank` and the typo allowance with `TextMatcher`.
-- **Text search** (`shared/TextMatcher`): the generic scorer for new searches, used by `geo/`.
-  `TextMatcher.score(text, query)` ranks an exact match over a start over a match inside the text,
-  and every match without typos over every match with them. `TextMatcher.rank` takes the items,
-  their texts and a tie order, and returns `Hit`s.
+  and contact persons. `shared/TextMatcher.score(text, query)` is pure string matching, from 1
+  for the same text down to 0: exact, start, a later word's start, contains, and a close spelling
+  under all of them by how close it is; a text over 60 characters is prose that only matches at a
+  word's start. `SearchService` lists each record's weighted fields and adds up every query word's
+  best field, with the whole query in one field counting for all its words; `shared/Hit.rank`
+  sorts. `TextMatcherTest` pins the matching, `SearchRankingTest` the weights and the order.
+  `geo/` ranks a place by its best name.
 
 ## Configuration
 

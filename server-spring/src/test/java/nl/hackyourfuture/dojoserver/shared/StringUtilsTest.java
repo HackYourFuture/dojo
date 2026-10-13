@@ -2,7 +2,6 @@ package nl.hackyourfuture.dojoserver.shared;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -35,13 +34,6 @@ class StringUtilsTest {
             """)
     void slugsKeepLettersAndDigitsJoinedByOneDash(String text, String expected) {
         assertThat(StringUtils.slug(text)).isEqualTo(expected);
-    }
-
-    @Test
-    void replacesDotsAndUnderscoresWithSpaces() {
-        assertThat(StringUtils.withoutDots("Coolblue B.V.")).isEqualTo("Coolblue B V ");
-        assertThat(StringUtils.withoutDots("omar_n")).isEqualTo("omar n");
-        assertThat(StringUtils.withoutDots(null)).isNull();
     }
 
     @ParameterizedTest

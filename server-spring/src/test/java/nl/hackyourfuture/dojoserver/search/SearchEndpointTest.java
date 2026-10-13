@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 /**
  * Search over MockMvc, against the local development database, so transactional. Every query includes a random last
@@ -74,7 +75,7 @@ class SearchEndpointTest {
         assertThat(result).bodyJson().extractingPath("$[0].subtitle").isEqualTo("Cohort 52");
         assertThat(result).bodyJson().extractingPath("$[0].path")
                 .isEqualTo("/trainee/mariam-" + lastName.toLowerCase(Locale.ROOT) + "_" + mariam.getId());
-        assertThat(result).bodyJson().extractingPath("$[0].score").isEqualTo(8000.0);
+        assertThat(result).bodyJson().extractingPath("$[0].score").isEqualTo(10.0);
     }
 
     @Test
@@ -92,11 +93,13 @@ class SearchEndpointTest {
 
         MvcTestResult result = search(lastName);
 
+        // The trainees' last name and a word of the contact's name are the word; the organisation's name starts with
+        // it.
         assertThat(result).bodyJson().extractingPath("$[*].type").asArray()
-                .containsExactly("organisation", "trainee", "trainee", "contact-person");
-        assertThat(result).bodyJson().extractingPath("$[0].path").isEqualTo(organisation.getProfilePath());
+                .containsExactly("trainee", "trainee", "contact-person", "organisation");
+        assertThat(result).bodyJson().extractingPath("$[2].path").isEqualTo(organisation.getProfilePath());
+        assertThat(result).bodyJson().extractingPath("$[2].subtitle").isEqualTo(organisation.getName());
         assertThat(result).bodyJson().extractingPath("$[3].path").isEqualTo(organisation.getProfilePath());
-        assertThat(result).bodyJson().extractingPath("$[3].subtitle").isEqualTo(organisation.getName());
     }
 
     @Test
@@ -120,7 +123,14 @@ class SearchEndpointTest {
     }
 
     @Test
-    void returnsNothingForAQueryShorterThanTwoCharacters() {
+    void returnsAtMostTwentyRecords() {
+        IntStream.range(0, 19).forEach(i -> traineeRepository.save(trainee("Trainee" + i, 50)));
+
+        assertThat(search(lastName)).bodyJson().extractingPath("$[*].id").asArray().hasSize(20);
+    }
+
+    @Test
+    void returnsNothingForAQueryWithFewerThanTwoLettersOrDigits() {
         assertThat(search("m")).hasStatusOk().bodyJson().isEqualTo("[]");
     }
 

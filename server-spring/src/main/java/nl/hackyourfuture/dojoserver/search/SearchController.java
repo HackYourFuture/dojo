@@ -26,8 +26,8 @@ public class SearchController {
 
     @GetMapping
     @Operation(summary = "Search",
-            description = "Returns up to 20 records that match every word of the query, best match first" +
-                    ". A query shorter than two characters returns nothing.")
+            description = "Returns up to 20 records that match every word of the query, best match first." +
+                    " A query with fewer than two letters or digits returns nothing.")
     @ApiResponse(responseCode = "200", description = "The matching records, best match first")
     @ApiResponse(
             responseCode = "400",

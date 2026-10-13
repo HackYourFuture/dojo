@@ -26,9 +26,9 @@ class GeoRankingTest {
         List<City> cities = List.of(city("Loon op Zand", 5800), city("'s-Gravenzande", 18145),
                 city("Zandvoort", 16310));
 
-        // 's-Gravenzande is bigger, but only contains "zand".
+        // Loon op Zand has "zand" as a later word and 's-Gravenzande, though bigger, only inside a word.
         assertThat(names(GeoService.find(cities, "zand", null)))
-                .containsExactly("Zandvoort", "'s-Gravenzande", "Loon op Zand");
+                .containsExactly("Zandvoort", "Loon op Zand", "'s-Gravenzande");
         assertThat(names(GeoService.find(cities, "zand", 1))).containsExactly("Zandvoort");
     }
 
@@ -84,8 +84,14 @@ class GeoRankingTest {
 
     @Test
     void findsAHalfTypedNameWithATypo() {
+        City nieuwVennep = city("Nieuw-Vennep", 30665);
+        City nieuwegein = city("Nieuwegein", 68257);
+
         assertThat(names(GeoService.find(List.of(AMSTERDAM, ROTTERDAM), "roter", null)))
                 .containsExactly("Rotterdam");
+        // A word of a longer name ties the half-typed start, so the biggest place comes first.
+        assertThat(names(GeoService.find(List.of(nieuwVennep, nieuwegein), "niuw", null)))
+                .containsExactly("Nieuwegein", "Nieuw-Vennep");
     }
 
     @Test

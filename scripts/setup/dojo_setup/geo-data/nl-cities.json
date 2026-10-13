@@ -1,6 +1,6 @@
 [
-{"name": "Amsterdam", "alternativeNames": ["Mokum"], "population": 922557, "province": "North Holland", "region": "Groot Amsterdam", "coordinates": {"lat": 52.37403, "lon": 4.88969}, "distanceAmsterdam": 0},
-{"name": "Rotterdam", "alternativeNames": [], "population": 612249, "province": "South Holland", "region": "Rijnmond", "coordinates": {"lat": 51.9225, "lon": 4.47917}, "distanceAmsterdam": 74},
+{"name": "Amsterdam", "alternativeNames": ["Mokum", "A'dam"], "population": 922557, "province": "North Holland", "region": "Groot Amsterdam", "coordinates": {"lat": 52.37403, "lon": 4.88969}, "distanceAmsterdam": 0},
+{"name": "Rotterdam", "alternativeNames": ["R'dam"], "population": 612249, "province": "South Holland", "region": "Rijnmond", "coordinates": {"lat": 51.9225, "lon": 4.47917}, "distanceAmsterdam": 74},
 {"name": "The Hague", "alternativeNames": ["'s-Gravenhage", "Den Haag", "Hague"], "population": 569468, "province": "South Holland", "region": "Haaglanden", "coordinates": {"lat": 52.07667, "lon": 4.29861}, "distanceAmsterdam": 61},
 {"name": "Utrecht", "alternativeNames": [], "population": 348850, "province": "Utrecht", "region": "Midden-Utrecht", "coordinates": {"lat": 52.09083, "lon": 5.12222}, "distanceAmsterdam": 45},
 {"name": "Eindhoven", "alternativeNames": [], "population": 249783, "province": "North Brabant", "region": "Zuidoost-Brabant", "coordinates": {"lat": 51.44083, "lon": 5.47778}, "distanceAmsterdam": 123},

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
+import nl.hackyourfuture.dojoserver.search.SearchService.Field;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResult;
 import nl.hackyourfuture.dojoserver.search.dto.SearchResultType;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
@@ -15,7 +16,7 @@ import java.util.List;
 // How SearchService ranks and merges the four record types, without Spring or a database.
 class SearchRankingTest {
 
-    // ------------------------------------------------------------------ trainee ranking
+    // ------------------------------------------------------------------ trainees
 
     @Test
     void ranksByTheNameTheTraineeGoesByThenFirstNameThenLastName() {
@@ -34,8 +35,7 @@ class SearchRankingTest {
         assertThat(results).extracting(SearchResult::id).containsExactly(noPreferredName.getId(),
                 preferredName.getId(), legalFirstName.getId(), lastName.getId(), startOfName.getId(),
                 closeSpelling.getId(), inTheNotes.getId());
-        assertThat(scores(results)).containsExactly(5000.0, 5000.0, 4000.0, 3000.0, 500.0,
-                41.667, 1.0);
+        assertThat(scores(results)).startsWith(5.0, 5.0, 4.0, 3.0, 0.5).endsWith(0.00004);
     }
 
     @Test
@@ -48,7 +48,7 @@ class SearchRankingTest {
 
         assertThat(results).extracting(SearchResult::id).containsExactly(mariamHaddad.getId(), hanaMariam.getId(),
                 mariamaHussein.getId());
-        assertThat(scores(results)).containsExactly(5300.0, 3500.0, 800.0);
+        assertThat(scores(results)).containsExactly(5.3, 3.5, 0.8);
     }
 
     @Test
@@ -60,7 +60,7 @@ class SearchRankingTest {
         List<SearchResult> results = rank("omarn", omar, owner);
 
         assertThat(results).extracting(SearchResult::id).containsExactly(owner.getId(), omar.getId());
-        assertThat(scores(results)).containsExactly(1000.0, 40.0);
+        assertThat(scores(results)).containsExactly(1.0, 0.002);
     }
 
     @Test
@@ -72,9 +72,11 @@ class SearchRankingTest {
         List<SearchResult> results = rank("Omar.Nasser@example.org", owner, otherOmar);
 
         assertThat(results).extracting(SearchResult::id).containsExactly(owner.getId());
-        assertThat(scores(results)).containsExactly(2000.0);
+        assertThat(scores(results)).containsExactly(2.0);
         assertThat(rank("someone@else.org", owner, otherOmar)).isEmpty();
-        assertThat(rank("omar.naser@example.org", owner, otherOmar)).isEmpty();
+        // An address is one word, so a misspelled one is a close spelling of the owner's.
+        assertThat(rank("omar.naser@example.org", owner, otherOmar)).extracting(SearchResult::id)
+                .containsExactly(owner.getId());
     }
 
     @Test
@@ -92,8 +94,17 @@ class SearchRankingTest {
         Trainee safaa = trainee(null, "Safa'a", "Moussa", 50);
 
         assertThat(rank("mo a", safaa)).isEmpty();
-        assertThat(scores(rank("safaa", safaa))).containsExactly(5000.0);
-        assertThat(scores(rank("safa'a", safaa))).containsExactly(5000.0);
+        assertThat(scores(rank("safaa", safaa))).containsExactly(5.0);
+        assertThat(scores(rank("safa'a", safaa))).containsExactly(5.0);
+    }
+
+    @Test
+    void findsACompoundNameWithOrWithoutItsSpace() {
+        Trainee compound = trainee(null, "Abdulrahman", "Saleh", 50);
+        Trainee split = trainee(null, "Abdul", "Rahman", 50);
+
+        assertThat(scores(rank("abdulrahman", compound, split))).containsExactly(5.0, 5.0);
+        assertThat(scores(rank("abdul rahman", compound, split))).containsExactly(10.0, 10.0);
     }
 
     @Test
@@ -122,11 +133,11 @@ class SearchRankingTest {
             assertThat(result.subtitle()).isEqualTo("Volunteer");
             assertThat(result.thumbnailUrl()).isEqualTo("/api/volunteers/jane/picture/IMGface/thumbnail");
             assertThat(result.path()).isEqualTo("/volunteer/jane-roe_jane");
-            assertThat(result.score()).isEqualTo(5000.0);
+            assertThat(result.score()).isEqualTo(5.0);
         });
-        assertThat(scores(rank("adyen", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1000.0);
+        assertThat(scores(rank("adyen", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1.0);
         assertThat(scores(rank("recruiter", List.of(), List.of(jane), List.of(), List.of())))
-                .containsExactly(1000.0);
+                .containsExactly(1.0);
     }
 
     @Test
@@ -135,19 +146,8 @@ class SearchRankingTest {
                 .githubHandle("jroe").build();
 
         assertThat(scores(rank("jroe@example.org", List.of(), List.of(jane), List.of(), List.of())))
-                .containsExactly(2000.0);
-        assertThat(scores(rank("jroe", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1000.0);
-    }
-
-    @Test
-    void findsADottedCompanyNameWithOrWithoutTheDots() {
-        Volunteer jane = Volunteer.builder().id("jane").firstName("Jane").lastName("Roe").companyName("Coolblue B.V.")
-                .build();
-
-        assertThat(scores(rank("coolblue bv", List.of(), List.of(jane), List.of(), List.of())))
-                .containsExactly(2000.0);
-        assertThat(scores(rank("coolblue b.v.", List.of(), List.of(jane), List.of(), List.of())))
-                .containsExactly(2000.0);
+                .containsExactly(2.0);
+        assertThat(scores(rank("jroe", List.of(), List.of(jane), List.of(), List.of()))).containsExactly(1.0);
     }
 
     @Test
@@ -175,8 +175,19 @@ class SearchRankingTest {
             assertThat(result.subtitle()).isEqualTo("Organisation");
             assertThat(result.thumbnailUrl()).isEqualTo("/api/organisations/adyen/picture/IMGlogo/thumbnail");
             assertThat(result.path()).isEqualTo("/organisation/adyen_adyen");
-            assertThat(result.score()).isEqualTo(40.0);
         });
+        assertThat(scores(results)).containsExactly(0.002);
+    }
+
+    @Test
+    void findsAnOrganisationByItsWebsite() {
+        Organisation adyen = Organisation.builder().id("adyen").name("Adyen").websiteUrl("https://www.adyen.com/")
+                .build();
+
+        assertThat(scores(rank("https://www.adyen.com", List.of(), List.of(), List.of(adyen), List.of())))
+                .containsExactly(12.0);
+        assertThat(rank("adyen.com", List.of(), List.of(), List.of(adyen), List.of())).extracting(SearchResult::id)
+                .containsExactly("adyen");
     }
 
     @Test
@@ -186,13 +197,15 @@ class SearchRankingTest {
         List<Organisation> organisations = List.of(coolblue, booking);
 
         assertThat(scores(rank("coolblue bv", List.of(), List.of(), organisations, List.of())))
-                .containsExactly(10000.0);
+                .containsExactly(10.0);
         assertThat(scores(rank("coolblue b.v.", List.of(), List.of(), organisations, List.of())))
-                .containsExactly(10000.0);
+                .containsExactly(15.0);
         assertThat(scores(rank("booking com", List.of(), List.of(), organisations, List.of())))
-                .containsExactly(10000.0);
-        assertThat(scores(rank("booking.com", List.of(), List.of(), organisations, List.of()))).containsExactly(5000.0);
-        assertThat(scores(rank("booking", List.of(), List.of(), organisations, List.of()))).containsExactly(5000.0);
+                .containsExactly(10.0);
+        assertThat(scores(rank("booking.com", List.of(), List.of(), organisations, List.of())))
+                .containsExactly(10.0);
+        // The name starts with "booking", a word of it is not a match of its own.
+        assertThat(scores(rank("booking", List.of(), List.of(), organisations, List.of()))).containsExactly(0.5);
     }
 
     @Test
@@ -211,33 +224,44 @@ class SearchRankingTest {
     }
 
     @Test
+    void findsAContactPersonByNameAndOrganisation() {
+        Organisation acme = Organisation.builder().id("acme").name("Acme").build();
+        ContactPerson jane = ContactPerson.builder().id("jane").organisationId("acme").name("Jane Roe").build();
+        ContactPerson john = ContactPerson.builder().id("john").organisationId("acme").name("John Roe").build();
+
+        assertThat(rank("jane acme", List.of(), List.of(), List.of(acme), List.of(john, jane)))
+                .extracting(SearchResult::id).containsExactly("jane");
+    }
+
+    @Test
     void findsAContactPersonByJobTitleAndEmail() {
         Organisation acme = Organisation.builder().id("acme").name("Acme").build();
         ContactPerson jane = ContactPerson.builder().id("jane").organisationId("acme").name("Jane Roe")
                 .email("jane@acme.example").jobTitle("Recruiter").build();
 
         assertThat(scores(rank("recruiter", List.of(), List.of(), List.of(acme), List.of(jane))))
-                .containsExactly(1000.0);
+                .containsExactly(1.0);
         assertThat(scores(rank("jane@acme.example", List.of(), List.of(), List.of(acme), List.of(jane))))
-                .containsExactly(2000.0);
+                .containsExactly(2.0);
     }
 
     // ------------------------------------------------------------------ merging
 
     @Test
     void equalScoresPutTraineesBeforeVolunteersBeforeOrganisationsBeforeContactPersons() {
-        // Named Haddad, the first of each ties the organisation; with Haddad as last name, the second ties the contact.
+        // Named Haddad, the first of each ties the organisation; with Haddad as last name, the second ties the contact,
+        // whose name weighs 3.
         Trainee firstName = trainee(null, "Haddad", "Aziz", 50);
         Trainee lastName = trainee(null, "Omar", "Haddad", 50);
         Volunteer volunteerFirstName = Volunteer.builder().id("v-first").firstName("Haddad").lastName("Aziz").build();
         Volunteer volunteerLastName = Volunteer.builder().id("v-last").firstName("Omar").lastName("Haddad").build();
         Organisation organisation = Organisation.builder().id("haddad").name("Haddad").build();
         ContactPerson contactPerson = ContactPerson.builder().id("contact").organisationId("haddad")
-                .name("Sami Haddad").build();
+                .name("Haddad").build();
         // A mention in the notes ties an organisation with a contact person.
         Organisation notedOrganisation = Organisation.builder().id("noted").name("Acme").notes("Founded by Haddad")
                 .build();
-        ContactPerson notedContact = ContactPerson.builder().id("noted-contact").organisationId("haddad")
+        ContactPerson notedContact = ContactPerson.builder().id("noted-contact").organisationId("noted")
                 .name("Jane Roe").notes("Colleague of Haddad").build();
 
         List<SearchResult> results = rank("haddad", List.of(lastName, firstName),
@@ -248,23 +272,83 @@ class SearchRankingTest {
                 SearchResultType.VOLUNTEER, SearchResultType.ORGANISATION, SearchResultType.TRAINEE,
                 SearchResultType.VOLUNTEER, SearchResultType.CONTACT_PERSON, SearchResultType.ORGANISATION,
                 SearchResultType.CONTACT_PERSON);
-        assertThat(scores(results)).containsExactly(5000.0, 5000.0, 5000.0, 3000.0, 3000.0, 3000.0, 1.0, 1.0);
+        assertThat(scores(results)).containsExactly(5.0, 5.0, 5.0, 3.0, 3.0, 3.0, 0.00004, 0.00004);
+    }
+
+    // ------------------------------------------------------------------ scoring fields
+
+    @Test
+    void aBetterKindOfMatchBeatsABetterField() {
+        assertThat(score("omar", new Field("Omar", 1))).isEqualTo(1);
+        assertThat(score("omar", new Field("Omari", 5))).isEqualTo(0.5);
+        // A later word's start in a name beats a start in a weight-1 field.
+        assertThat(score("berg", new Field("Jan van der Berg", 5)))
+                .isGreaterThan(score("berg", new Field("Bergen Consulting", 1)));
+    }
+
+    @Test
+    void anAddressIsMatchedAsTyped() {
+        assertThat(score("@adyen.com", new Field("jane@adyen.com", 2))).isEqualTo(0.02);
+    }
+
+    @Test
+    void everyWordMustMatchSomeFieldInAnyOrder() {
+        assertThat(score("mariam haddad", new Field("Mariam", 5))).isZero();
+        assertThat(score("mariam haddad", new Field("Mariam", 5), new Field("Haddad", 3))).isEqualTo(8);
+        assertThat(score("haddad mariam", new Field("Mariam", 5), new Field("Haddad", 3))).isEqualTo(8);
+        assertThat(score("mariam h", new Field("Mariam", 5), new Field("Haddad", 3))).isEqualTo(5.3);
+        assertThat(score("mariam hadad", new Field("Mariam", 5), new Field("Haddad", 3))).isBetween(5.0, 5.003);
+    }
+
+    @Test
+    void theWholeQueryInOneFieldCountsForEveryWord() {
+        assertThat(score("abdul rahman", new Field("Abdulrahman", 5))).isEqualTo(10);
+        assertThat(score("op zand", new Field("Loon op Zand", 1))).isEqualTo(0.08);
+        // A start without the space is just a start: "sam i" is Sam Ibrahim before Samira.
+        assertThat(score("sam i", new Field("Sam", 5), new Field("Ibrahim", 3))).isEqualTo(5.3);
+        assertThat(score("sam i", new Field("Samira", 5))).isEqualTo(1);
+    }
+
+    @Test
+    void aTypoCostsMoreThanTheNameWeightsDiffer() {
+        // One typo in a last name beats two in a first name.
+        assertThat(score("hadad", new Field("Haddad", 3))).isGreaterThan(score("hadad", new Field("Fahad", 5)));
+    }
+
+    @Test
+    void aNoteRanksBelowANameWithTypos() {
+        double note = score("yusuf", new Field("Referred by Yusuf.", 0.001));
+        double transliteratedName = score("yusuf", new Field("Youssef", 3));
+        double partOfName = score("rahman", new Field("Abdulrahman", 3));
+
+        assertThat(note).isEqualTo(0.00004);
+        assertThat(transliteratedName).isGreaterThan(note);
+        assertThat(partOfName).isEqualTo(0.03);
+    }
+
+    @Test
+    void emptyFieldsNeverMatch() {
+        assertThat(score("mariam", new Field(null, 5), new Field("", 1))).isZero();
     }
 
     // ------------------------------------------------------------------ helpers
 
+    private static double score(String query, Field... fields) {
+        return Math.round(SearchService.score(List.of(fields), query) * 1e6) / 1e6;
+    }
+
     private static List<SearchResult> rank(String query, List<Trainee> trainees, List<Volunteer> volunteers,
             List<Organisation> organisations, List<ContactPerson> contactPersons) {
-        return SearchService.rank(trainees, volunteers, organisations, contactPersons, SearchMatcher.tokenize(query));
+        return SearchService.rank(trainees, volunteers, organisations, contactPersons, query);
     }
 
     private static List<SearchResult> rank(String query, Trainee... trainees) {
-        return SearchService.rankTrainees(List.of(trainees), SearchMatcher.tokenize(query));
+        return SearchService.rankTrainees(List.of(trainees), query);
     }
 
-    // Close spellings score fractions, so compare to three decimals.
+    // Close spellings and notes score tiny fractions, so compare to six decimals.
     private static List<Double> scores(List<SearchResult> results) {
-        return results.stream().map(result -> Math.round(result.score() * 1000) / 1000.0).toList();
+        return results.stream().map(result -> Math.round(result.score() * 1e6) / 1e6).toList();
     }
 
     private static Trainee trainee(String preferredName, String firstName, String lastName, Integer cohort) {

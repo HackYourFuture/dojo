@@ -57,10 +57,18 @@ public class GeoService {
                     .limit(limit != null ? limit : places.size())
                     .toList();
         }
-        return TextMatcher.rank(places, query, Place::names, BIGGEST_FIRST)
+        if (SearchText.isTooShort(query)) {
+            return List.of();
+        }
+        return Hit.rank(places, place -> score(place, query), BIGGEST_FIRST)
                 .stream()
                 .map(Hit::item)
                 .limit(limit != null ? limit : DEFAULT_LIMIT)
                 .toList();
+    }
+
+    // The best match among the name and the alternative names, which count the same.
+    private static double score(Place place, String query) {
+        return place.names().stream().mapToDouble(name -> TextMatcher.score(name, query)).max().orElse(0);
     }
 }

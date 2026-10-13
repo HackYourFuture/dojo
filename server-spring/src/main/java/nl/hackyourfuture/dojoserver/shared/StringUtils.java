@@ -16,11 +16,6 @@ public class StringUtils {
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
     }
 
-    // Dots and underscores as spaces, so "Coolblue B.V." reads as "Coolblue B V" and "a.d." as "a d".
-    public static String withoutDots(String text) {
-        return text == null ? null : text.replace('.', ' ').replace('_', ' ');
-    }
-
     // The text as a client route segment: its words of letters and digits, lower case and joined by dashes.
     // "Booking.com B.V." is "booking-com-b-v". It never holds an underscore, which routes put before the id.
     public static String slug(String text) {
