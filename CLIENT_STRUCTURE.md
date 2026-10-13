@@ -100,6 +100,7 @@ features/
 ├── admin/                   # Admin pages, like the users
 ├── dark-mode/               # Dark mode switch
 ├── dashboard/               # Dashboard feature
+├── geo/                     # City and country autocompletes, searched on the API
 ├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
 ├── login/                   # Login feature
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile

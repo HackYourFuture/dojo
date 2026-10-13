@@ -2,7 +2,7 @@ import { Box, InputAdornment, SxProps, TextField, Theme } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import SearchIcon from '@mui/icons-material/Search';
-import { useDebounce } from '../hooks/useDebounce';
+import { useDebounce } from '../../../hooks/useDebounce';
 
 /**
  * Component for gathering the search value from the user.
