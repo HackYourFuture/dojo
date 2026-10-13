@@ -1,5 +1,6 @@
-import { City } from '../models/city';
 import { CityResponse, CountryResponse } from './types';
+
+import { City } from '../models/city';
 import { Country } from '../models/country';
 
 export const mapCityToDomain = (city: CityResponse): City => {

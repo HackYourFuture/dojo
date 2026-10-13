@@ -3,6 +3,7 @@ import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../c
 import { Organisation, PartnershipType, Responsible } from '../Organisation';
 
 import { ContactPersons } from '../contact-persons/ContactPersons';
+import { ProfileCityField } from '../../geo/components/ProfileCityField';
 import { ProfileMultiSelect } from './ProfileMultiSelect';
 import { ProfileNotes } from '../../../components/profile/ProfileNotes';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
@@ -59,13 +60,13 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
             isEditing={isEditing}
             onChange={handleValueChange}
           />
-          <ProfileTextField
+          <ProfileCityField
             name="location"
             label="Location"
             placeholder="Amsterdam"
             value={organisation.location}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
         </FieldRow>
         <FieldRow>

@@ -8,7 +8,7 @@ import { useState } from 'react';
 interface CountryAutocompleteProps {
   id?: string;
   label: string;
-  value: Country | null;
+  value: Pick<Country, 'name'> | null;
   onChange: (country: Country | null) => void;
   placeholder?: string;
   error?: boolean;
@@ -30,27 +30,28 @@ export const CountryAutocomplete = ({
   const [text, setText] = useState('');
   const query = useDebounce(text, 250);
   const { data: countries = [], isFetching } = useSearchCountries(query);
-
-  // MUI warns when the value is not one of the options, as when searching for another country.
-  const options = value && !countries.some((country) => country.id === value.id) ? [value, ...countries] : countries;
+  const isTooShort = text.length < MIN_GEO_QUERY_LENGTH;
 
   return (
     <Autocomplete
       id={id}
       size="small"
-      options={options}
-      value={value}
+      forcePopupIcon={false}
+      options={countries}
+      // MUI types the value as an option, but only reads its name.
+      value={value as Country | null}
       inputValue={text}
       onInputChange={(_, newText) => setText(newText)}
       onChange={(_, country) => onChange(country)}
-      // The API already filters, also on other names like Nederland, and spelling mistakes.
+      // The API already matched them, also on other names like Nederland, which MUI's filter would drop.
       filterOptions={(results) => results}
-      filterSelectedOptions
-      loading={isFetching || (text !== query && text.length >= MIN_GEO_QUERY_LENGTH)}
-      noOptionsText={text.length < MIN_GEO_QUERY_LENGTH ? 'Type at least 2 letters' : 'No countries found'}
+      // Also until the typing pauses, so 'No countries found' doesn't show before the search.
+      loading={isFetching || (text !== query && !isTooShort)}
+      noOptionsText={isTooShort ? `Type at least ${MIN_GEO_QUERY_LENGTH} letters` : 'No countries found'}
       getOptionLabel={(country) => country.name}
       getOptionKey={(country) => country.id}
-      isOptionEqualToValue={(option, country) => option.id === country.id}
+      // The names are unique, so a value with only a name matches its option.
+      isOptionEqualToValue={(option, country) => option.name === country.name}
       renderOption={({ key, ...optionProps }, country) => (
         <li key={key} {...optionProps}>
           <Box component="span" aria-hidden sx={{ marginRight: 1.5, fontSize: '1.25rem' }}>
@@ -60,8 +61,17 @@ export const CountryAutocomplete = ({
         </li>
       )}
       sx={sx}
+      // Wider than the field when needed, so long names don't wrap.
+      slotProps={{ popper: { placement: 'bottom-start', style: { minWidth: 'max-content' } } }}
       renderInput={(params) => (
-        <TextField {...params} label={label} placeholder={placeholder} error={error} helperText={helperText} />
+        <TextField
+          {...params}
+          label={label}
+          placeholder={placeholder}
+          error={error}
+          helperText={helperText}
+          slotProps={{ ...params.slotProps, inputLabel: { ...params.slotProps.inputLabel, shrink: true } }}
+        />
       )}
     />
   );

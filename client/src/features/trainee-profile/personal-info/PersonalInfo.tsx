@@ -9,6 +9,8 @@ import { createTextChangeHandler, createValueChangeHandler } from '../utils/form
 import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../components/profile/ProfileSection';
 import { genderOptions, pronounOptions } from '../../../data/types/Person';
 
+import { ProfileCityField } from '../../geo/components/ProfileCityField';
+import { ProfileCountryField } from '../../geo/components/ProfileCountryField';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
@@ -88,13 +90,13 @@ const PersonalInfo = () => {
           />
         </FieldRow>
         <FieldRow>
-          <ProfileTextField
+          <ProfileCityField
             name="location"
             label="Location"
             placeholder="Amsterdam"
             value={editedFields.location}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
           <ProfileTextField
             name="esfId"
@@ -117,13 +119,13 @@ const PersonalInfo = () => {
             isEditing={isEditing}
             onChange={handleValueChange}
           />
-          <ProfileTextField
+          <ProfileCountryField
             name="countryOfOrigin"
             label="Country of origin"
             placeholder="Netherlands"
             value={editedFields.countryOfOrigin}
             isEditing={isEditing}
-            onChange={handleTextChange}
+            onChange={handleValueChange}
           />
           <ProfileDateField
             name="nlArrivalDate"

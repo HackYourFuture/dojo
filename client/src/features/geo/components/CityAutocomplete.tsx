@@ -8,7 +8,7 @@ import { useState } from 'react';
 interface CityAutocompleteProps {
   id?: string;
   label: string;
-  value: City | null;
+  value: Pick<City, 'name'> | null;
   onChange: (city: City | null) => void;
   placeholder?: string;
   error?: boolean;
@@ -30,38 +30,51 @@ export const CityAutocomplete = ({
   const [text, setText] = useState('');
   const query = useDebounce(text, 250);
   const { data: cities = [], isFetching } = useSearchCities(query);
-
-  // MUI warns when the value is not one of the options, as when searching for another city.
-  const options = value && !cities.some((city) => city.id === value.id) ? [value, ...cities] : cities;
+  const isTooShort = text.length < MIN_GEO_QUERY_LENGTH;
 
   return (
     <Autocomplete
       id={id}
       size="small"
-      options={options}
-      value={value}
+      forcePopupIcon={false}
+      options={cities}
+      // MUI types the value as an option, but only reads its name.
+      value={value as City | null}
       inputValue={text}
       onInputChange={(_, newText) => setText(newText)}
       onChange={(_, city) => onChange(city)}
-      // The API already filters, also on other names like Den Haag, and spelling mistakes.
+      // The API already matched them, also on other names like Den Haag, which MUI's filter would drop.
       filterOptions={(results) => results}
-      filterSelectedOptions
-      loading={isFetching || (text !== query && text.length >= MIN_GEO_QUERY_LENGTH)}
-      noOptionsText={text.length < MIN_GEO_QUERY_LENGTH ? 'Type at least 2 letters' : 'No cities found'}
+      // Also until the typing pauses, so 'No cities found' doesn't show before the search.
+      loading={isFetching || (text !== query && !isTooShort)}
+      noOptionsText={isTooShort ? `Type at least ${MIN_GEO_QUERY_LENGTH} letters` : 'No cities found'}
       getOptionLabel={(city) => city.name}
       getOptionKey={(city) => city.id}
-      isOptionEqualToValue={(option, city) => option.id === city.id}
+      // The names are unique, so a value with only a name matches its option.
+      isOptionEqualToValue={(option, city) => option.name === city.name}
       renderOption={({ key, ...optionProps }, city) => (
         <li key={key} {...optionProps}>
           {city.name}
-          <Box component="span" sx={{ marginLeft: 1, color: 'text.secondary', fontSize: '0.875rem' }}>
+          <Box
+            component="span"
+            sx={{ marginLeft: 'auto', paddingLeft: 3, color: 'text.secondary', fontSize: '0.875rem' }}
+          >
             {city.province}
           </Box>
         </li>
       )}
       sx={sx}
+      // Wider than the field when needed, so long names don't wrap.
+      slotProps={{ popper: { placement: 'bottom-start', style: { minWidth: 'max-content' } } }}
       renderInput={(params) => (
-        <TextField {...params} label={label} placeholder={placeholder} error={error} helperText={helperText} />
+        <TextField
+          {...params}
+          label={label}
+          placeholder={placeholder}
+          error={error}
+          helperText={helperText}
+          slotProps={{ ...params.slotProps, inputLabel: { ...params.slotProps.inputLabel, shrink: true } }}
+        />
       )}
     />
   );

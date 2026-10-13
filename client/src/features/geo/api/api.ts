@@ -1,5 +1,6 @@
 import { CityResponse, CountryResponse } from './types';
 import { mapCityToDomain, mapCountryToDomain } from './mapper';
+
 import axios from 'axios';
 
 export const getCities = async (query: string) => {

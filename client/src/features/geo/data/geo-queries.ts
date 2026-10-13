@@ -1,4 +1,5 @@
 import { getCities, getCountries } from '../api/api';
+
 import { geoKeys } from './keys';
 import { useQuery } from '@tanstack/react-query';
 
