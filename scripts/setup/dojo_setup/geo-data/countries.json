@@ -575,7 +575,9 @@
     "name": "DR Congo",
     "alternativeNames": [
       "Congo - Kinshasa",
-      "Congo (DRC)"
+      "Congo (DRC)",
+      "Democratic Republic of the Congo",
+      "Democratische Republiek Congo"
     ],
     "population": 84068091,
     "flag": "🇨🇩",
@@ -745,7 +747,9 @@
   {
     "id": "GM",
     "name": "Gambia",
-    "alternativeNames": [],
+    "alternativeNames": [
+      "The Gambia"
+    ],
     "population": 2280102,
     "flag": "🇬🇲",
     "code": "GM"
@@ -905,8 +909,6 @@
     "id": "HK",
     "name": "Hong Kong",
     "alternativeNames": [
-      "Hong Kong SAR China",
-      "Hongkong SAR van China",
       "Hongkong"
     ],
     "population": 7396076,
@@ -1192,9 +1194,7 @@
     "id": "MO",
     "name": "Macau",
     "alternativeNames": [
-      "Macao SAR China",
-      "Macao",
-      "Macau SAR van China"
+      "Macao"
     ],
     "population": 631636,
     "flag": "🇲🇴",
@@ -1860,7 +1860,9 @@
   {
     "id": "SX",
     "name": "Sint Maarten",
-    "alternativeNames": [],
+    "alternativeNames": [
+      "St. Maarten"
+    ],
     "population": 40654,
     "flag": "🇸🇽",
     "code": "SX"
@@ -2017,7 +2019,8 @@
     "id": "SY",
     "name": "Syria",
     "alternativeNames": [
-      "Syrië"
+      "Syrië",
+      "Syrian Arab Republic"
     ],
     "population": 16906283,
     "flag": "🇸🇾",
@@ -2196,7 +2199,11 @@
     "alternativeNames": [
       "UK",
       "Verenigd Koninkrijk",
-      "VK"
+      "VK",
+      "Great Britain",
+      "Groot-Brittannië",
+      "England",
+      "Engeland"
     ],
     "population": 66488991,
     "flag": "🇬🇧",
@@ -2209,7 +2216,10 @@
       "US",
       "USA",
       "Verenigde Staten",
-      "VS"
+      "VS",
+      "America",
+      "Amerika",
+      "United States of America"
     ],
     "population": 327167434,
     "flag": "🇺🇸",
@@ -2219,7 +2229,7 @@
     "id": "UM",
     "name": "United States Minor Outlying Islands",
     "alternativeNames": [
-      "U.S. Outlying Islands",
+      "US Outlying Islands",
       "Kleine afgelegen eilanden van de Verenigde Staten"
     ],
     "population": 0,
@@ -2230,7 +2240,7 @@
     "id": "VI",
     "name": "United States Virgin Islands",
     "alternativeNames": [
-      "U.S. Virgin Islands",
+      "US Virgin Islands",
       "Amerikaanse Maagdeneilanden"
     ],
     "population": 106977,

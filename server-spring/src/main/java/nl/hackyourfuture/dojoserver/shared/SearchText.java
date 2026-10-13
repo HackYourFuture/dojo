@@ -1,18 +1,18 @@
-package nl.hackyourfuture.dojoserver.search;
-
-import nl.hackyourfuture.dojoserver.shared.StringUtils;
+package nl.hackyourfuture.dojoserver.shared;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
-// Turns text into search words: lower case, no accents or apostrophes, split on anything but letters, digits and @._+
-final class SearchText {
+// Turns text into search words: lower case, no accents or apostrophes, split on anything but letters, digits and @_+,
+// and on dots outside an email address.
+public final class SearchText {
     private SearchText() {
         /* This utility class should not be instantiated */
     }
 
-    static List<String> words(String text) {
+    public static List<String> words(String text) {
         if (text == null) {
             return List.of();
         }
@@ -23,9 +23,22 @@ final class SearchText {
             separated.appendCodePoint(Character.isLetterOrDigit(c) || isEmailCharacter(c) ? c : ' ');
         }
         return Arrays.stream(separated.toString().split(" "))
+                // A dot splits, so "Coolblue B.V." is "coolblue b v", except in an email address, which stays whole.
+                .flatMap(word -> word.indexOf('@') >= 0 ? Stream.of(word)
+                        : Arrays.stream(word.replace('.', ' ').split(" ")))
                 .map(SearchText::trimEmailCharacters)
                 .filter(word -> !word.isEmpty())
                 .toList();
+    }
+
+    // The words joined by single spaces: "'s-Gravendeel" is "s gravendeel" and "Åland Islands" is "aland islands".
+    public static String plain(String text) {
+        return String.join(" ", words(text));
+    }
+
+    // Fewer than two letters or digits in all, which would match too much to search for.
+    public static boolean isTooShort(String text) {
+        return words(text).stream().mapToInt(String::length).sum() < 2;
     }
 
     // Letters that have no accent to strip, spelled the way staff type them.
@@ -42,7 +55,8 @@ final class SearchText {
         };
     }
 
-    // Kept so an email address stays one word, but trimmed off the ends of words: "Rotterdam." is "rotterdam".
+    // Kept so an address or a handle stays one word, but trimmed off the ends: "(@omar_n)" is "omar_n" and
+    // "omar@example.org." loses its dot.
     private static boolean isEmailCharacter(int c) {
         return switch (c) {
             case '@', '.', '_', '+' -> true;

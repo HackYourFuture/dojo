@@ -32,6 +32,7 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 | `interaction/`     | one record type shared by several profile types |
 | `picture/`         | files that belong to a record                   |
 | `search/`          | ranking in Java                                 |
+| `geo/`             | read-only reference data with a search          |
 
 ## Entities
 
@@ -142,7 +143,13 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 - **Search** (`search/`): ranking runs in Java over every trainee, volunteer, organisation and
   contact person, because names match by close spelling. Each type ranks on its own, then a stable
   sort by score merges them, so equal scores list trainees first, then volunteers, organisations
-  and contact persons. `SearchRankingTest` pins the order.
+  and contact persons. `shared/TextMatcher.score(text, query)` is pure string matching, from 1
+  for the same text down to 0: exact, start, a later word's start, contains, and a close spelling
+  under all of them by how close it is; a text over 60 characters is prose that only matches at a
+  word's start. `SearchService` lists each record's weighted fields and adds up every query word's
+  best field, with the whole query in one field counting for all its words; `shared/Hit.rank`
+  sorts. `TextMatcherTest` pins the matching, `SearchRankingTest` the weights and the order.
+  `geo/` ranks a place by its best name.
 
 ## Configuration
 

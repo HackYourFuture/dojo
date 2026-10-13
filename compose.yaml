@@ -1,0 +1,96 @@
+# Runs the whole Dojo stack locally: `docker compose up --build`, then open http://localhost:8888.
+# Signing in needs real Google OAuth credentials in GOOGLE_OAUTH_CLIENTID and GOOGLE_OAUTH_CLIENTSECRET (shell or .env).
+
+services:
+  db:
+    image: postgres:18.4-alpine
+    environment:
+      POSTGRES_DB: dojo
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d dojo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  storage:
+    image: rustfs/rustfs:1.0.1
+    environment:
+      RUSTFS_ACCESS_KEY: dojo_key
+      RUSTFS_SECRET_KEY: dojo_secret
+      RUSTFS_CONSOLE_ENABLE: "true"
+      # Log to stdout instead of /logs
+      RUSTFS_OBS_LOG_DIRECTORY: ""
+    ports:
+      - "9001:9001" # Web console
+    volumes:
+      - storage-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:9000/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # Creates the pictures bucket once storage is up, then exits
+  storage-init:
+    image: amazon/aws-cli:latest
+    environment:
+      AWS_ACCESS_KEY_ID: dojo_key
+      AWS_SECRET_ACCESS_KEY: dojo_secret
+      AWS_DEFAULT_REGION: ams3
+    entrypoint: ["sh", "-c"]
+    command:
+      - aws --endpoint-url http://storage:9000 s3api head-bucket --bucket dojo-dev 2>/dev/null
+        || aws --endpoint-url http://storage:9000 s3api create-bucket --bucket dojo-dev
+    depends_on:
+      storage:
+        condition: service_healthy
+
+  dojo-server:
+    build: ./server-spring
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: dojo
+      DB_USER: admin
+      DB_PASSWORD: password
+      DOJO_BASE_URL: http://localhost:8888
+      AUTH_ALLOWED_ORIGINS: http://localhost:8888
+      GOOGLE_OAUTH_CLIENTID: ${GOOGLE_OAUTH_CLIENTID:-not-configured}
+      GOOGLE_OAUTH_CLIENTSECRET: ${GOOGLE_OAUTH_CLIENTSECRET:-not-configured}
+      GOOGLE_ALLOWED_DOMAIN: ${GOOGLE_ALLOWED_DOMAIN:-}
+      COOKIE_SECURE: "false"
+      API_DOCS_ENABLED: "true"
+      STORAGE_ENDPOINT: http://storage:9000
+      STORAGE_REGION: ams3
+      STORAGE_BUCKET: dojo-dev
+      STORAGE_ACCESS_KEY_ID: dojo_key
+      STORAGE_ACCESS_KEY_SECRET: dojo_secret
+      # The prod profile hardcodes this to false, an env var still overrides it
+      DOJO_FILESTORAGE_FORCEBASEPATHSTYLE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+      storage-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    environment:
+      BACKEND_URL: http://dojo-server:7777
+      VITE_GOOGLE_CLIENTID: ${GOOGLE_OAUTH_CLIENTID:-not-configured}
+    ports:
+      - "8888:80"
+    depends_on:
+      - dojo-server
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  storage-data:

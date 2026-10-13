@@ -13,8 +13,8 @@ The Dutch cities are the official places of residence (CBS woonplaatsen). Their 
 coordinates come from [GeoNames](https://www.geonames.org) and their regions and most populations
 from [CBS](https://www.cbs.nl), both CC BY 4.0. The driving distances come from OSRM on
 [OpenStreetMap](https://www.openstreetmap.org/copyright) data (© OpenStreetMap contributors, ODbL).
-Country populations come from GeoNames and their English and Dutch names from the Unicode
-[CLDR](https://cldr.unicode.org).
+The countries' populations come from GeoNames and their
+alternative English and Dutch names from the Unicode [CLDR](https://cldr.unicode.org).
 
 The data is generated from a fixed seed, so every run produces exactly the same data. Names come
 from Arabic, Turkish, Ukrainian, Spanish, Russian, English and Dutch backgrounds, all in Latin
