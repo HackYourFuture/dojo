@@ -3,7 +3,12 @@ package nl.hackyourfuture.dojoserver.volunteer.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerAssignment;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerExpertise;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerType;
+
+import java.util.List;
 
 @Schema(description = "A volunteer profile as returned by the API")
 public record VolunteerResponse(
@@ -137,6 +142,27 @@ public record VolunteerResponse(
         VolunteerStatus status,
 
         @Schema(
+                description = "The kind of volunteering the volunteer does",
+                example = "[\"tech\"]",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        List<VolunteerType> volunteerTypes,
+
+        @Schema(
+                description = "What the volunteer can help with: tracks, project management, English or HR mentoring",
+                example = "[\"core-program\", \"backend\"]",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        List<VolunteerExpertise> expertise,
+
+        @Schema(
+                description = "The assignments the volunteer prefers to take on",
+                example = "[\"assignment-review\", \"teaching\"]",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        List<VolunteerAssignment> rolePreferences,
+
+        @Schema(
                 description = "Free-form notes about the volunteer",
                 example = "Mentors on Tuesday evenings.",
                 requiredMode = Schema.RequiredMode.REQUIRED,
@@ -163,6 +189,9 @@ public record VolunteerResponse(
                 volunteer.getSlackId(),
                 volunteer.getLinkedinUrl(),
                 volunteer.getStatus(),
+                volunteer.getVolunteerTypes().stream().sorted().toList(),
+                volunteer.getExpertise().stream().sorted().toList(),
+                volunteer.getRolePreferences().stream().sorted().toList(),
                 volunteer.getNotes());
     }
 }

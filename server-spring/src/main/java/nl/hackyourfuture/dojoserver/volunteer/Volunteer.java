@@ -22,6 +22,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -57,6 +59,19 @@ public class Volunteer implements PictureOwner {
 
     @Enumerated(EnumType.STRING)
     private VolunteerStatus status;
+
+    // Stored as Postgres arrays.
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<VolunteerType> volunteerTypes = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<VolunteerExpertise> expertise = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<VolunteerAssignment> rolePreferences = new HashSet<>();
 
     private String notes;
 
