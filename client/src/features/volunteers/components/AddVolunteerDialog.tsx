@@ -1,6 +1,9 @@
+import { Autocomplete, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 import { Gender, genderOptions } from '../../../data/types/Person';
-import { SelectChangeEvent, Stack, TextField } from '@mui/material';
+import { VolunteerAssignment, volunteerAssignmentLabels } from '../VolunteerAssignment';
+import { VolunteerExpertise, volunteerExpertiseLabels } from '../VolunteerExpertise';
+import { VolunteerType, volunteerTypeLabels } from '../VolunteerType';
 import { emailValidationError, nameValidationError } from '../../../data/text';
 
 import { DropdownSelect } from '../../../components/DropdownSelect';
@@ -21,6 +24,9 @@ const INITIAL_STATE: NewVolunteer = {
   lastName: '',
   gender: null,
   email: '',
+  volunteerTypes: [],
+  expertise: [],
+  rolePreferences: [],
 };
 
 // The errors of the fields that fail, or null when the form can be sent.
@@ -151,6 +157,42 @@ export const AddVolunteerDialog = ({ isOpen, handleClose }: AddVolunteerDialogPr
           sx={{ flex: 1 }}
         />
       </Stack>
+      <Autocomplete
+        multiple
+        filterSelectedOptions
+        disableCloseOnSelect
+        id="volunteerTypes"
+        options={Object.values(VolunteerType)}
+        value={formState.volunteerTypes}
+        getOptionLabel={(type) => volunteerTypeLabels[type]}
+        disabled={isPending}
+        onChange={(_, volunteerTypes) => setFormState((prevState) => ({ ...prevState, volunteerTypes }))}
+        renderInput={(params) => <TextField {...params} label="Volunteer types" />}
+      />
+      <Autocomplete
+        multiple
+        filterSelectedOptions
+        disableCloseOnSelect
+        id="expertise"
+        options={Object.values(VolunteerExpertise)}
+        value={formState.expertise}
+        getOptionLabel={(expertise) => volunteerExpertiseLabels[expertise]}
+        disabled={isPending}
+        onChange={(_, expertise) => setFormState((prevState) => ({ ...prevState, expertise }))}
+        renderInput={(params) => <TextField {...params} label="Expertise" />}
+      />
+      <Autocomplete
+        multiple
+        filterSelectedOptions
+        disableCloseOnSelect
+        id="rolePreferences"
+        options={Object.values(VolunteerAssignment)}
+        value={formState.rolePreferences}
+        getOptionLabel={(assignment) => volunteerAssignmentLabels[assignment]}
+        disabled={isPending}
+        onChange={(_, rolePreferences) => setFormState((prevState) => ({ ...prevState, rolePreferences }))}
+        renderInput={(params) => <TextField {...params} label="Role preferences" />}
+      />
     </FormDialog>
   );
 };

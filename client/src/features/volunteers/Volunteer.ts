@@ -1,5 +1,8 @@
 import { Gender } from '../../data/types/Person';
+import { VolunteerAssignment } from './VolunteerAssignment';
+import { VolunteerExpertise } from './VolunteerExpertise';
 import { VolunteerStatus } from './VolunteerStatus';
+import { VolunteerType } from './VolunteerType';
 
 export interface VolunteerSummary {
   readonly id: string;
@@ -13,6 +16,9 @@ export interface VolunteerSummary {
   githubHandle: string | null;
   slackId: string | null;
   linkedinUrl: string | null;
+  volunteerTypes: VolunteerType[];
+  expertise: VolunteerExpertise[];
+  rolePreferences: VolunteerAssignment[];
 }
 
 export interface Volunteer extends VolunteerSummary {
@@ -32,6 +38,9 @@ export const EDITABLE_VOLUNTEER_FIELDS = [
   'status',
   'gender',
   'pronouns',
+  'volunteerTypes',
+  'expertise',
+  'rolePreferences',
   'companyName',
   'jobRole',
   'email',
@@ -52,4 +61,7 @@ export interface NewVolunteer {
   lastName: string;
   gender: Gender | null;
   email: string;
+  volunteerTypes: VolunteerType[];
+  expertise: VolunteerExpertise[];
+  rolePreferences: VolunteerAssignment[];
 }

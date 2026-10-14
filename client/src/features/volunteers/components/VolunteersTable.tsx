@@ -1,10 +1,12 @@
+import { Box, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { LinkTableRow, RowLinksCell } from '../../../components/LinkTableRow';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 import { ContactLinkButtons } from '../../../components/ContactLinkButtons';
 import { PersonAvatar } from '../../../components/PersonAvatar';
 import { VolunteerStatusChip } from './VolunteerStatusChip';
 import { VolunteerSummary } from '../Volunteer';
+import { volunteerExpertiseLabels } from '../VolunteerExpertise';
+import { volunteerTypeLabels } from '../VolunteerType';
 
 interface VolunteersTableProps {
   volunteers: VolunteerSummary[];
@@ -20,8 +22,8 @@ export const VolunteersTable = ({ volunteers }: VolunteersTableProps) => {
             <TableCell width={50}></TableCell>
             <TableCell>Name</TableCell>
             <TableCell width={150}>Status</TableCell>
-            <TableCell>Company</TableCell>
-            <TableCell>Job role</TableCell>
+            <TableCell>Type</TableCell>
+            <TableCell>Expertise</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -37,8 +39,15 @@ export const VolunteersTable = ({ volunteers }: VolunteersTableProps) => {
               <TableCell>
                 <VolunteerStatusChip status={volunteer.status} />
               </TableCell>
-              <TableCell>{volunteer.companyName}</TableCell>
-              <TableCell>{volunteer.jobRole}</TableCell>
+              <TableCell>{volunteer.volunteerTypes.map((type) => volunteerTypeLabels[type]).join(', ')}</TableCell>
+              <TableCell>
+                {/* Wraps past about four chips, and earlier when the window is narrow. */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, maxWidth: 420 }}>
+                  {volunteer.expertise.map((expertise) => (
+                    <Chip key={expertise} label={volunteerExpertiseLabels[expertise]} size="small" variant="outlined" />
+                  ))}
+                </Box>
+              </TableCell>
               <RowLinksCell>
                 <ContactLinkButtons contact={volunteer} />
               </RowLinksCell>

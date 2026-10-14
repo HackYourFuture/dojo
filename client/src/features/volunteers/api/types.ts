@@ -1,6 +1,9 @@
 import { EditableVolunteerField } from '../Volunteer';
 import { Gender } from '../../../data/types/Person';
+import { VolunteerAssignment } from '../VolunteerAssignment';
+import { VolunteerExpertise } from '../VolunteerExpertise';
 import { VolunteerStatus } from '../VolunteerStatus';
+import { VolunteerType } from '../VolunteerType';
 
 export interface VolunteerSummaryResponse {
   id: string;
@@ -14,6 +17,9 @@ export interface VolunteerSummaryResponse {
   githubHandle: string | null;
   slackId: string | null;
   linkedinUrl: string | null;
+  volunteerTypes: VolunteerType[];
+  expertise: VolunteerExpertise[];
+  rolePreferences: VolunteerAssignment[];
 }
 
 export interface VolunteerResponse extends VolunteerSummaryResponse {
@@ -31,4 +37,7 @@ export type UpdateVolunteerRequest = {
   [Field in EditableVolunteerField]?: VolunteerResponse[Field] | null;
 };
 
-export type CreateVolunteerRequest = Pick<VolunteerResponse, 'firstName' | 'lastName' | 'gender' | 'email' | 'status'>;
+export type CreateVolunteerRequest = Pick<
+  VolunteerResponse,
+  'firstName' | 'lastName' | 'gender' | 'email' | 'status' | 'volunteerTypes' | 'expertise' | 'rolePreferences'
+>;

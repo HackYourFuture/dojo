@@ -1,8 +1,12 @@
 import { Dispatch, SetStateAction } from 'react';
 import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../components/profile/ProfileSection';
+import { VolunteerAssignment, volunteerAssignmentLabels } from '../VolunteerAssignment';
+import { VolunteerExpertise, volunteerExpertiseLabels } from '../VolunteerExpertise';
 import { VolunteerStatus, volunteerStatusLabels } from '../VolunteerStatus';
+import { VolunteerType, volunteerTypeLabels } from '../VolunteerType';
 import { genderOptions, pronounOptions } from '../../../data/types/Person';
 
+import { ProfileMultiSelect } from '../../../components/profile/ProfileMultiSelect';
 import { ProfileNotes } from '../../../components/profile/ProfileNotes';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { ProfileTextField } from '../../../components/profile/ProfileTextField';
@@ -25,7 +29,7 @@ interface VolunteerInfoProps {
   isEditing: boolean;
 }
 
-/** The overview tab: the volunteer's details, work and notes, edited with the profile. */
+/** The overview tab: the volunteer's details, volunteering, work and notes, edited with the profile. */
 const VolunteerInfo = ({ volunteer, setVolunteer, isEditing }: VolunteerInfoProps) => {
   const { handleValueChange, handleTextChange } = createFieldChangeHandlers(setVolunteer);
 
@@ -76,6 +80,43 @@ const VolunteerInfo = ({ volunteer, setVolunteer, isEditing }: VolunteerInfoProp
             nullable
             isEditing={isEditing}
             onChange={handleValueChange}
+          />
+        </FieldRow>
+      </ProfileSection>
+
+      <ProfileSection title="Volunteering">
+        <FieldRow>
+          <ProfileMultiSelect
+            name="volunteerTypes"
+            label="Volunteer types"
+            options={Object.values(VolunteerType)}
+            value={volunteer.volunteerTypes}
+            getOptionLabel={(type) => volunteerTypeLabels[type]}
+            isEditing={isEditing}
+            onChange={handleValueChange}
+            sx={doubleFieldStyle}
+          />
+        </FieldRow>
+        <FieldRow>
+          <ProfileMultiSelect
+            name="expertise"
+            label="Expertise"
+            options={Object.values(VolunteerExpertise)}
+            value={volunteer.expertise}
+            getOptionLabel={(expertise) => volunteerExpertiseLabels[expertise]}
+            isEditing={isEditing}
+            onChange={handleValueChange}
+            sx={doubleFieldStyle}
+          />
+          <ProfileMultiSelect
+            name="rolePreferences"
+            label="Role preferences"
+            options={Object.values(VolunteerAssignment)}
+            value={volunteer.rolePreferences}
+            getOptionLabel={(assignment) => volunteerAssignmentLabels[assignment]}
+            isEditing={isEditing}
+            onChange={handleValueChange}
+            sx={doubleFieldStyle}
           />
         </FieldRow>
       </ProfileSection>

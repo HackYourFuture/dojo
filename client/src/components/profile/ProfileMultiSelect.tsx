@@ -1,7 +1,8 @@
 import { Autocomplete, SxProps, TextField, Theme } from '@mui/material';
+import { SyntheticEvent } from 'react';
 
-import { ProfileValue } from '../../../components/profile/ProfileValue';
-import { profileInputStyle } from '../../../components/profile/fieldStyles';
+import { ProfileValue } from './ProfileValue';
+import { profileInputStyle } from './fieldStyles';
 
 interface ProfileMultiSelectProps<T extends string> {
   name: string;
@@ -10,7 +11,7 @@ interface ProfileMultiSelectProps<T extends string> {
   value: T[];
   getOptionLabel: (option: T) => string;
   isEditing: boolean;
-  onChange: (value: T[]) => void;
+  onChange: (name: string, value: T[]) => void;
   sx?: SxProps<Theme>;
 }
 
@@ -29,6 +30,14 @@ export const ProfileMultiSelect = <T extends string>({
     return <ProfileValue label={label} value={value.map(getOptionLabel).join(', ')} sx={sx} />;
   }
 
+  // Reported in the order of the options, which is the order the server keeps them in.
+  const handleChange = (_: SyntheticEvent, selected: T[]) => {
+    onChange(
+      name,
+      options.filter((option) => selected.includes(option))
+    );
+  };
+
   return (
     <Autocomplete
       id={name}
@@ -39,7 +48,7 @@ export const ProfileMultiSelect = <T extends string>({
       options={options}
       value={value}
       getOptionLabel={getOptionLabel}
-      onChange={(_, selected) => onChange(selected)}
+      onChange={handleChange}
       sx={[profileInputStyle, ...(Array.isArray(sx) ? sx : [sx])]}
       renderInput={(params) => (
         // Keeps the label props of the Autocomplete, which link the label to the input.
