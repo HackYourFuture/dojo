@@ -140,24 +140,27 @@ create index assessments_trainee_idx on assessments (trainee_id);
 -- Volunteers
 create table volunteers
 (
-    id            text        not null
+    id               text        not null
         constraint volunteers_pk primary key,
-    picture_id    text,
-    first_name    text        not null,
-    last_name     text        not null,
-    gender        text,
-    pronouns      text,
-    company_name  text,
-    job_role      text,
-    email         text        not null,
-    phone         text,
-    github_handle text,
-    slack_id      text,
-    linkedin_url  text,
-    status        text        not null,
-    notes         text,
-    created_at    timestamptz not null,
-    updated_at    timestamptz not null
+    picture_id       text,
+    first_name       text        not null,
+    last_name        text        not null,
+    gender           text,
+    pronouns         text,
+    company_name     text,
+    job_role         text,
+    email            text        not null,
+    phone            text,
+    github_handle    text,
+    slack_id         text,
+    linkedin_url     text,
+    status           text        not null,
+    volunteer_types  text[]      not null,
+    expertise        text[]      not null,
+    role_preferences text[]      not null,
+    notes            text,
+    created_at       timestamptz not null,
+    updated_at       timestamptz not null
 );
 
 create unique index volunteers_email_upper_unique on volunteers (upper(email));

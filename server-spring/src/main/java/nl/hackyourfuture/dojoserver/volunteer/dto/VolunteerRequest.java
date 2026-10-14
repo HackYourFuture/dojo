@@ -7,10 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerAssignment;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerExpertise;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerType;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.Locale;
+import java.util.Set;
 
 @Schema(description = "The details of a volunteer profile, as sent to create or update one")
 public record VolunteerRequest(
@@ -68,6 +72,17 @@ public record VolunteerRequest(
         @Schema(description = "Where the volunteer stands with HackYourFuture.", example = "active")
         VolunteerStatus status,
 
+        @Schema(description = "The kind of volunteering the volunteer does.", example = "[\"tech\"]")
+        Set<VolunteerType> volunteerTypes,
+
+        @Schema(description = "What the volunteer can help with: tracks, project management, English or HR mentoring.",
+                example = "[\"core-program\", \"backend\"]")
+        Set<VolunteerExpertise> expertise,
+
+        @Schema(description = "The assignments the volunteer prefers to take on.",
+                example = "[\"assignment-review\", \"teaching\"]")
+        Set<VolunteerAssignment> rolePreferences,
+
         @Size(max = 5000)
         @Schema(description = "Free-form notes about the volunteer.")
         String notes
@@ -85,6 +100,9 @@ public record VolunteerRequest(
         slackId = slackId == null ? null : slackId.strip();
         linkedinUrl = linkedinUrl == null ? null : linkedinUrl.strip();
         notes = notes == null ? null : notes.strip();
+        volunteerTypes = volunteerTypes == null ? Set.of() : volunteerTypes;
+        expertise = expertise == null ? Set.of() : expertise;
+        rolePreferences = rolePreferences == null ? Set.of() : rolePreferences;
     }
 
     public static VolunteerRequest from(Volunteer volunteer) {
@@ -101,6 +119,9 @@ public record VolunteerRequest(
                 volunteer.getSlackId(),
                 volunteer.getLinkedinUrl(),
                 volunteer.getStatus(),
+                volunteer.getVolunteerTypes(),
+                volunteer.getExpertise(),
+                volunteer.getRolePreferences(),
                 volunteer.getNotes());
     }
 }

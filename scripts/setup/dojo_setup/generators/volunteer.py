@@ -12,6 +12,29 @@ from dojo_setup.generators.randomness import chance, fake, weighted
 # Mostly Dutch, with international colleagues and graduates who came back to mentor
 NAME_ORIGINS = {"dutch": 45, "english": 15, "arabic": 10, "turkish": 10, "spanish": 10, "ukrainian": 5, "russian": 5}
 STATUSES = {"active": 50, "paused": 5, "stopped": 45}
+VOLUNTEER_TYPES = ["tech", "personal-development"]
+EXPERTISE = [
+    "core-program",
+    "frontend",
+    "backend",
+    "data",
+    "tester",
+    "cloud",
+    "project-management",
+    "english-mentor",
+    "hr-mentor",
+]
+ROLE_PREFERENCES = [
+    "assignment-review",
+    "tech-interview",
+    "teaching",
+    "project-mentor",
+    "tech-mentorship",
+    "english-mentorship",
+    "hr-mentorship",
+    "content-creation",
+    "workshop-host",
+]
 JOB_ROLES = [
     "Software Engineer",
     "Senior Software Engineer",
@@ -71,6 +94,9 @@ def generate_volunteer() -> GeneratedVolunteer:
             "slackId": "USLACKBOT" if chance(0.8) else None,
             "linkedinUrl": "https://www.linkedin.com/school/hackyourfuture/" if chance(0.7) else None,
             "status": weighted(STATUSES),
+            "volunteerTypes": fake.random_sample(VOLUNTEER_TYPES, length=fake.random_int(1, 2)),
+            "expertise": fake.random_sample(EXPERTISE, length=fake.random_int(0, 3)),
+            "rolePreferences": fake.random_sample(ROLE_PREFERENCES, length=fake.random_int(0, 3)),
             "notes": "🤖 Auto generated dummy data for testing",
         },
         portrait_url=generate_portrait_url(gender),

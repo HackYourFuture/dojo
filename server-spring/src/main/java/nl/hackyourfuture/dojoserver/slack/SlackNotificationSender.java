@@ -13,8 +13,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -261,6 +263,8 @@ public class SlackNotificationSender {
             case Enum<?> constant -> humanize(constant);
             case Boolean flag -> flag ? "Yes" : "No";
             case LocalDate date -> DATE.format(date);
+            case Collection<?> items -> items.isEmpty() ? "—"
+                    : items.stream().map(SlackNotificationSender::value).sorted().collect(Collectors.joining(", "));
             default -> cell(String.valueOf(object));
         };
     }

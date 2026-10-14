@@ -31,6 +31,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -106,6 +107,10 @@ class VolunteerEndpointTest {
             assertThat(created.linkedinUrl()).isEqualTo("https://linkedin.com/in/jane-roe");
             assertThat(created.status()).isEqualTo(VolunteerStatus.ACTIVE);
             assertThat(created.notes()).isEqualTo("Mentors.");
+            // The lists were left out, so they are empty.
+            assertThat(created.volunteerTypes()).isEmpty();
+            assertThat(created.expertise()).isEmpty();
+            assertThat(created.rolePreferences()).isEmpty();
             assertThat(created.displayName()).isEqualTo("Jane Roe");
             assertThat(created.pictureUrl()).isNull();
             assertThat(created.thumbnailUrl()).isNull();
@@ -234,10 +239,13 @@ class VolunteerEndpointTest {
 
     @Test
     void aPatchThatChangesNothingPostsNothing() {
-        Volunteer volunteer = volunteerRepository.save(volunteer("Jane", "Roe"));
+        Volunteer volunteer = volunteer("Jane", "Roe");
+        volunteer.setVolunteerTypes(EnumSet.of(VolunteerType.TECH));
+        volunteerRepository.save(volunteer);
 
+        // The same values again, the list included.
         assertThat(patch(volunteer.getId(), """
-                {"status": "active"}
+                {"status": "active", "volunteerTypes": ["tech"]}
                 """)).hasStatusOk();
 
         verifyNoInteractions(slackClient);
@@ -287,6 +295,80 @@ class VolunteerEndpointTest {
         assertThat(own).bodyJson().extractingPath("$.email").isEqualTo(ownEmail);
     }
 
+    // ------------------------------------------------------------------ volunteer types, expertise and role
+    // preferences
+
+    @Test
+    void createStoresTheListsEachOnceInDeclarationOrder() {
+        MvcTestResult result = post("""
+                {"firstName": "Jane", "lastName": "Roe", "email": "%s@example.org", "status": "active",
+                 "volunteerTypes": ["personal-development", "tech", "tech"], "expertise": ["hr-mentor", "core-program"],
+                 "rolePreferences": ["teaching", "assignment-review", "teaching"]}
+                """.formatted(RandomUtils.generateRandomId()));
+
+        assertThat(result).hasStatus(201);
+        assertThat(result).bodyJson().extractingPath("$.volunteerTypes").asArray()
+                .containsExactly("tech", "personal-development");
+        assertThat(result).bodyJson().extractingPath("$.expertise").asArray()
+                .containsExactly("core-program", "hr-mentor");
+        assertThat(result).bodyJson().extractingPath("$.rolePreferences").asArray()
+                .containsExactly("assignment-review", "teaching");
+    }
+
+    @Test
+    void invalidValuesInTheListsAreRejected() {
+        Volunteer volunteer = volunteerRepository.save(volunteer("Jane", "Roe"));
+
+        assertThat(post(bodyWith("volunteerTypes", List.of("catering")))).hasStatus(400);
+        assertThat(post(bodyWith("expertise", List.of("catering")))).hasStatus(400);
+        assertThat(post(bodyWith("rolePreferences", List.of("catering")))).hasStatus(400);
+        // A bare value instead of an array.
+        assertThat(post(bodyWith("volunteerTypes", "tech"))).hasStatus(400);
+        assertThat(patch(volunteer.getId(), """
+                {"volunteerTypes": [null]}
+                """)).hasStatus(400);
+        assertThat(patch(volunteer.getId(), """
+                {"expertise": "core-program"}
+                """)).hasStatus(400);
+        assertThat(patch(volunteer.getId(), """
+                {"rolePreferences": ["catering"]}
+                """)).hasStatus(400);
+    }
+
+    @Test
+    void patchReplacesTheListsAndNullOrAnEmptyListClearsThem() {
+        Volunteer volunteer = volunteer("Jane", "Roe");
+        volunteer.setVolunteerTypes(EnumSet.of(VolunteerType.TECH));
+        volunteer.setExpertise(EnumSet.of(VolunteerExpertise.CORE_PROGRAM));
+        volunteer.setRolePreferences(EnumSet.of(VolunteerAssignment.TEACHING));
+        volunteerRepository.save(volunteer);
+
+        MvcTestResult replaced = patch(volunteer.getId(), """
+                {"volunteerTypes": ["personal-development"], "rolePreferences": ["hr-mentorship", "teaching"]}
+                """);
+
+        assertThat(replaced).hasStatusOk();
+        assertThat(replaced).bodyJson().extractingPath("$.volunteerTypes").asArray()
+                .containsExactly("personal-development");
+        // Left out, so kept.
+        assertThat(replaced).bodyJson().extractingPath("$.expertise").asArray().containsExactly("core-program");
+        assertThat(replaced).bodyJson().extractingPath("$.rolePreferences").asArray()
+                .containsExactly("teaching", "hr-mentorship");
+        verify(slackClient).sendNotification(contains("| Volunteer types | Tech | Personal development |"));
+        verify(slackClient).sendNotification(contains("| Role preferences | Teaching | Hr mentorship, Teaching |"));
+
+        MvcTestResult cleared = patch(volunteer.getId(), """
+                {"volunteerTypes": [], "expertise": null, "rolePreferences": null}
+                """);
+
+        assertThat(cleared).hasStatusOk();
+        assertThat(cleared).bodyJson().extractingPath("$.volunteerTypes").asArray().isEmpty();
+        assertThat(cleared).bodyJson().extractingPath("$.expertise").asArray().isEmpty();
+        assertThat(cleared).bodyJson().extractingPath("$.rolePreferences").asArray().isEmpty();
+        verify(slackClient).sendNotification(contains("| Volunteer types | Personal development | — |"));
+        verify(slackClient).sendNotification(contains("| Expertise | Core program | — |"));
+    }
+
     // ------------------------------------------------------------------ delete
 
     @Test
@@ -327,6 +409,9 @@ class VolunteerEndpointTest {
         volunteer.setGithubHandle("janeroe");
         volunteer.setSlackId("U068AQ9G99F");
         volunteer.setLinkedinUrl("https://linkedin.com/in/jane-roe");
+        volunteer.setVolunteerTypes(EnumSet.of(VolunteerType.TECH));
+        volunteer.setExpertise(EnumSet.of(VolunteerExpertise.CORE_PROGRAM, VolunteerExpertise.HR_MENTOR));
+        volunteer.setRolePreferences(EnumSet.of(VolunteerAssignment.TEACHING));
         volunteer.setNotes("Hires interns.");
         volunteerRepository.save(volunteer);
 
@@ -346,6 +431,9 @@ class VolunteerEndpointTest {
                 .containsEntry("githubHandle", "janeroe")
                 .containsEntry("slackId", "U068AQ9G99F")
                 .containsEntry("linkedinUrl", "https://linkedin.com/in/jane-roe")
+                .containsEntry("volunteerTypes", List.of("tech"))
+                .containsEntry("expertise", List.of("core-program", "hr-mentor"))
+                .containsEntry("rolePreferences", List.of("teaching"))
                 .doesNotContainKeys("notes", "pictureUrl");
     }
 

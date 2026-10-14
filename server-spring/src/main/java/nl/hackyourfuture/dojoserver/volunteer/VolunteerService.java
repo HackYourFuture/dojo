@@ -68,6 +68,9 @@ public class VolunteerService {
                 .slackId(request.slackId())
                 .linkedinUrl(request.linkedinUrl())
                 .status(request.status())
+                .volunteerTypes(request.volunteerTypes())
+                .expertise(request.expertise())
+                .rolePreferences(request.rolePreferences())
                 .notes(request.notes())
                 .build();
 
@@ -108,6 +111,9 @@ public class VolunteerService {
         volunteer.setSlackId(merged.slackId());
         volunteer.setLinkedinUrl(merged.linkedinUrl());
         volunteer.setStatus(merged.status());
+        volunteer.setVolunteerTypes(merged.volunteerTypes());
+        volunteer.setExpertise(merged.expertise());
+        volunteer.setRolePreferences(merged.rolePreferences());
         volunteer.setNotes(merged.notes());
 
         slackNotificationSender.volunteerUpdated(currentUser.name(), volunteer, FieldChange.between(current, merged));
