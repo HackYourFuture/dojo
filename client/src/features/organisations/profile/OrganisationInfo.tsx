@@ -4,7 +4,7 @@ import { Organisation, PartnershipType, Responsible } from '../Organisation';
 
 import { ContactPersons } from '../contact-persons/ContactPersons';
 import { ProfileCityField } from '../../geo/components/ProfileCityField';
-import { ProfileMultiSelect } from './ProfileMultiSelect';
+import { ProfileMultiSelect } from '../../../components/profile/ProfileMultiSelect';
 import { ProfileNotes } from '../../../components/profile/ProfileNotes';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { ProfileTextField } from '../../../components/profile/ProfileTextField';
@@ -26,14 +26,6 @@ interface OrganisationInfoProps {
 /** The overview tab: the details and notes, edited with the profile, and the contacts, managed on their own. */
 const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: OrganisationInfoProps) => {
   const { handleValueChange, handleTextChange } = createFieldChangeHandlers(setOrganisation);
-
-  // Kept in the order the server sorts them, so picking them in another order is not a change.
-  const handlePartnershipTypesChange = (partnershipTypes: PartnershipType[]) => {
-    setOrganisation((prevOrganisation) => ({
-      ...prevOrganisation,
-      partnershipTypes: Object.values(PartnershipType).filter((type) => partnershipTypes.includes(type)),
-    }));
-  };
 
   const handleResponsiblesChange = (responsibles: Responsible[]) => {
     setOrganisation((prevOrganisation) => ({ ...prevOrganisation, responsibles }));
@@ -77,7 +69,7 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
             value={organisation.partnershipTypes}
             getOptionLabel={(type) => partnershipTypeLabels[type]}
             isEditing={isEditing}
-            onChange={handlePartnershipTypesChange}
+            onChange={handleValueChange}
             sx={doubleFieldStyle}
           />
           <ProfileUserPicker

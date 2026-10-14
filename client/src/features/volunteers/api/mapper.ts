@@ -17,6 +17,9 @@ export const mapVolunteerSummaryToDomain = (volunteer: VolunteerSummaryResponse)
     githubHandle: volunteer.githubHandle,
     slackId: volunteer.slackId,
     linkedinUrl: volunteer.linkedinUrl,
+    volunteerTypes: volunteer.volunteerTypes,
+    expertise: volunteer.expertise,
+    rolePreferences: volunteer.rolePreferences,
   };
 };
 
@@ -43,6 +46,9 @@ export const mapDomainToCreateVolunteerRequest = (newVolunteer: NewVolunteer): C
     lastName: newVolunteer.lastName,
     gender: newVolunteer.gender,
     email: newVolunteer.email,
+    volunteerTypes: newVolunteer.volunteerTypes,
+    expertise: newVolunteer.expertise,
+    rolePreferences: newVolunteer.rolePreferences,
     // A new volunteer starts as active.
     status: VolunteerStatus.Active,
   };

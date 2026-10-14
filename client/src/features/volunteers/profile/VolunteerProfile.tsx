@@ -1,5 +1,5 @@
 import { Box, Stack, Tab } from '@mui/material';
-import { EDITABLE_VOLUNTEER_FIELDS, Volunteer, VolunteerChanges } from '../Volunteer';
+import { EDITABLE_VOLUNTEER_FIELDS, EditableVolunteerField, Volunteer, VolunteerChanges } from '../Volunteer';
 
 import { ContactFields } from '../../../components/profile/ContactFields';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
@@ -17,9 +17,17 @@ import { useProfileTab } from '../../../hooks/useProfileTab';
 import { useState } from 'react';
 import { useUpdateVolunteer } from '../data/mutations';
 
+// Lists are compared by their items, which are in the order the server keeps them in.
+const comparableValue = (volunteer: Volunteer, field: EditableVolunteerField) => {
+  const value = volunteer[field];
+  return Array.isArray(value) ? value.join() : value;
+};
+
 // The fields that were changed while editing, with their new values.
 const getChangedFields = (original: Volunteer, edited: Volunteer): VolunteerChanges => {
-  const changedFields = EDITABLE_VOLUNTEER_FIELDS.filter((field) => original[field] !== edited[field]);
+  const changedFields = EDITABLE_VOLUNTEER_FIELDS.filter(
+    (field) => comparableValue(original, field) !== comparableValue(edited, field)
+  );
   return Object.fromEntries(changedFields.map((field) => [field, edited[field]]));
 };
 
