@@ -1,4 +1,4 @@
-// The assignments a volunteer can take on, in the server's order. A volunteer's role preferences are a list of these.
+// The types of assignment a volunteer can take on, in the server's order: their role preferences, and each assignment's type.
 export enum VolunteerAssignmentType {
   AssignmentReview = 'assignment-review',
   TechInterview = 'tech-interview',

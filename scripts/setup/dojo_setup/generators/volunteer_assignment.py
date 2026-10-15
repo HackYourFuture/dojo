@@ -24,13 +24,15 @@ NOTES = [
 ]
 
 
-def generate_volunteer_assignment(role_preferences: list[str]) -> dict[str, Any]:
+def generate_volunteer_assignment(volunteer: dict[str, Any]) -> dict[str, Any]:
     start_date = date_before(3 * YEAR)
+    # Only an active volunteer can still be on an assignment
+    is_ongoing = volunteer["status"] == "active" and chance(0.3)
     return {
-        # Mostly what the volunteer prefers to do
-        "type": fake.random_element(role_preferences or ASSIGNMENT_TYPES),
-        "estimatedHours": fake.random_int(2, 80) if chance(0.7) else None,
+        # One of the volunteer's role preferences, or any type when they have none
+        "type": fake.random_element(volunteer["rolePreferences"] or ASSIGNMENT_TYPES),
+        "estimatedHours": fake.random_int(1, 10) if chance(0.7) else None,
         "startDate": start_date,
-        "endDate": None if chance(0.3) else date_after(YEAR // 2, start_date),
+        "endDate": None if is_ongoing else date_after(YEAR // 2, start_date),
         "notes": fake.random_element(NOTES) if chance(0.6) else None,
     }

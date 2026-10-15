@@ -144,7 +144,9 @@ class VolunteerAssignmentTest {
         String unknown = RandomUtils.generateRandomId();
 
         assertThat(list(unknown)).hasStatus(404);
-        assertThat(post(unknown, bodyWith("notes", null))).hasStatus(404);
+        assertThat(post(unknown, """
+                {"type": "teaching", "startDate": "2026-03-01"}
+                """)).hasStatus(404);
     }
 
     @Test
