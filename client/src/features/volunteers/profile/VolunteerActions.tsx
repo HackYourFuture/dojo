@@ -37,7 +37,7 @@ export const VolunteerActions = ({ volunteerId, name }: VolunteerActionsProps) =
         isOpen={isDeleteDialogOpen}
         profileType="volunteer"
         name={name}
-        relatedData="interactions and profile picture"
+        relatedData="assignments, interactions and profile picture"
         isDeleting={isDeleting}
         error={error?.message}
         onConfirm={handleDelete}

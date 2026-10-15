@@ -93,5 +93,5 @@ def generate_volunteer() -> GeneratedVolunteer:
         profile=profile,
         portrait_url=generate_portrait_url(gender),
         interactions=[generate_volunteer_interaction() for _ in range(fake.random_int(0, 10))],
-        assignments=[generate_volunteer_assignment(profile["rolePreferences"]) for _ in range(fake.random_int(0, 4))],
+        assignments=[generate_volunteer_assignment(profile) for _ in range(fake.random_int(0, 4))],
     )
