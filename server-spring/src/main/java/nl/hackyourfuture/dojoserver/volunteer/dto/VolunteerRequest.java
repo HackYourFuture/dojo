@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
-import nl.hackyourfuture.dojoserver.volunteer.VolunteerAssignment;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerAssignmentType;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerExpertise;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerType;
@@ -81,7 +81,7 @@ public record VolunteerRequest(
 
         @Schema(description = "The assignments the volunteer prefers to take on.",
                 example = "[\"assignment-review\", \"teaching\"]")
-        Set<VolunteerAssignment> rolePreferences,
+        Set<VolunteerAssignmentType> rolePreferences,
 
         @Size(max = 5000)
         @Schema(description = "Free-form notes about the volunteer.")

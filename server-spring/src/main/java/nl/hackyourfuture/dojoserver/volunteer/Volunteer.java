@@ -71,7 +71,7 @@ public class Volunteer implements PictureOwner {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Set<VolunteerAssignment> rolePreferences = new HashSet<>();
+    private Set<VolunteerAssignmentType> rolePreferences = new HashSet<>();
 
     private String notes;
 

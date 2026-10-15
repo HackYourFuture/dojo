@@ -1,4 +1,4 @@
-"""Generates a complete volunteer: the profile, portrait and interactions."""
+"""Generates a complete volunteer: the profile, portrait, interactions and assignments."""
 
 from dataclasses import dataclass
 from typing import Any
@@ -8,6 +8,7 @@ from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.portrait import generate_portrait_url
 from dojo_setup.generators.profile import GENDERS, PRONOUNS, example_email
 from dojo_setup.generators.randomness import chance, fake, weighted
+from dojo_setup.generators.volunteer_assignment import ASSIGNMENT_TYPES, generate_volunteer_assignment
 
 # Mostly Dutch, with international colleagues and graduates who came back to mentor
 NAME_ORIGINS = {"dutch": 45, "english": 15, "arabic": 10, "turkish": 10, "spanish": 10, "ukrainian": 5, "russian": 5}
@@ -23,17 +24,6 @@ EXPERTISE = [
     "project-management",
     "english-mentor",
     "hr-mentor",
-]
-ROLE_PREFERENCES = [
-    "assignment-review",
-    "tech-interview",
-    "teaching",
-    "project-mentor",
-    "tech-mentorship",
-    "english-mentorship",
-    "hr-mentorship",
-    "content-creation",
-    "workshop-host",
 ]
 JOB_ROLES = [
     "Software Engineer",
@@ -70,6 +60,7 @@ class GeneratedVolunteer:
     profile: dict[str, Any]
     portrait_url: str
     interactions: list[dict[str, Any]]
+    assignments: list[dict[str, Any]]
 
     @property
     def name(self) -> str:
@@ -79,26 +70,28 @@ class GeneratedVolunteer:
 def generate_volunteer() -> GeneratedVolunteer:
     gender = weighted(GENDERS)
     first_name, last_name = generate_name(weighted(NAME_ORIGINS), gender)
+    profile = {
+        "firstName": first_name,
+        "lastName": last_name,
+        "gender": gender,
+        "pronouns": PRONOUNS[gender],
+        "companyName": fake.company() if chance(0.8) else None,
+        "jobRole": fake.random_element(JOB_ROLES) if chance(0.9) else None,
+        "email": example_email(first_name, last_name),
+        "phone": fake.numerify("+316########") if chance(0.7) else None,
+        # The same placeholders as the trainees have, so the links never lead to a real person
+        "githubHandle": "HackYourFuture" if chance(0.5) else None,
+        "slackId": "USLACKBOT" if chance(0.8) else None,
+        "linkedinUrl": "https://www.linkedin.com/school/hackyourfuture/" if chance(0.7) else None,
+        "status": weighted(STATUSES),
+        "volunteerTypes": fake.random_sample(VOLUNTEER_TYPES, length=fake.random_int(1, 2)),
+        "expertise": fake.random_sample(EXPERTISE, length=fake.random_int(0, 3)),
+        "rolePreferences": fake.random_sample(ASSIGNMENT_TYPES, length=fake.random_int(0, 3)),
+        "notes": "🤖 Auto generated dummy data for testing",
+    }
     return GeneratedVolunteer(
-        profile={
-            "firstName": first_name,
-            "lastName": last_name,
-            "gender": gender,
-            "pronouns": PRONOUNS[gender],
-            "companyName": fake.company() if chance(0.8) else None,
-            "jobRole": fake.random_element(JOB_ROLES) if chance(0.9) else None,
-            "email": example_email(first_name, last_name),
-            "phone": fake.numerify("+316########") if chance(0.7) else None,
-            # The same placeholders as the trainees have, so the links never lead to a real person
-            "githubHandle": "HackYourFuture" if chance(0.5) else None,
-            "slackId": "USLACKBOT" if chance(0.8) else None,
-            "linkedinUrl": "https://www.linkedin.com/school/hackyourfuture/" if chance(0.7) else None,
-            "status": weighted(STATUSES),
-            "volunteerTypes": fake.random_sample(VOLUNTEER_TYPES, length=fake.random_int(1, 2)),
-            "expertise": fake.random_sample(EXPERTISE, length=fake.random_int(0, 3)),
-            "rolePreferences": fake.random_sample(ROLE_PREFERENCES, length=fake.random_int(0, 3)),
-            "notes": "🤖 Auto generated dummy data for testing",
-        },
+        profile=profile,
         portrait_url=generate_portrait_url(gender),
         interactions=[generate_volunteer_interaction() for _ in range(fake.random_int(0, 10))],
+        assignments=[generate_volunteer_assignment(profile["rolePreferences"]) for _ in range(fake.random_int(0, 4))],
     )

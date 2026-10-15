@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 // The assignments a volunteer can take on.
 @RequiredArgsConstructor
-public enum VolunteerAssignment {
+public enum VolunteerAssignmentType {
     ASSIGNMENT_REVIEW("assignment-review"),
     TECH_INTERVIEW("tech-interview"),
     TEACHING("teaching"),

@@ -340,7 +340,7 @@ class VolunteerEndpointTest {
         Volunteer volunteer = volunteer("Jane", "Roe");
         volunteer.setVolunteerTypes(EnumSet.of(VolunteerType.TECH));
         volunteer.setExpertise(EnumSet.of(VolunteerExpertise.CORE_PROGRAM));
-        volunteer.setRolePreferences(EnumSet.of(VolunteerAssignment.TEACHING));
+        volunteer.setRolePreferences(EnumSet.of(VolunteerAssignmentType.TEACHING));
         volunteerRepository.save(volunteer);
 
         MvcTestResult replaced = patch(volunteer.getId(), """
@@ -411,7 +411,7 @@ class VolunteerEndpointTest {
         volunteer.setLinkedinUrl("https://linkedin.com/in/jane-roe");
         volunteer.setVolunteerTypes(EnumSet.of(VolunteerType.TECH));
         volunteer.setExpertise(EnumSet.of(VolunteerExpertise.CORE_PROGRAM, VolunteerExpertise.HR_MENTOR));
-        volunteer.setRolePreferences(EnumSet.of(VolunteerAssignment.TEACHING));
+        volunteer.setRolePreferences(EnumSet.of(VolunteerAssignmentType.TEACHING));
         volunteer.setNotes("Hires interns.");
         volunteerRepository.save(volunteer);
 

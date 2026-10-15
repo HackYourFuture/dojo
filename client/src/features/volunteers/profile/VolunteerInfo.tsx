@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../components/profile/ProfileSection';
-import { VolunteerAssignment, volunteerAssignmentLabels } from '../VolunteerAssignment';
+import { VolunteerAssignmentType, volunteerAssignmentTypeLabels } from '../VolunteerAssignmentType';
 import { VolunteerExpertise, volunteerExpertiseLabels } from '../VolunteerExpertise';
 import { VolunteerStatus, volunteerStatusLabels } from '../VolunteerStatus';
 import { VolunteerType, volunteerTypeLabels } from '../VolunteerType';
@@ -111,9 +111,9 @@ const VolunteerInfo = ({ volunteer, setVolunteer, isEditing }: VolunteerInfoProp
           <ProfileMultiSelect
             name="rolePreferences"
             label="Role preferences"
-            options={Object.values(VolunteerAssignment)}
+            options={Object.values(VolunteerAssignmentType)}
             value={volunteer.rolePreferences}
-            getOptionLabel={(assignment) => volunteerAssignmentLabels[assignment]}
+            getOptionLabel={(assignment) => volunteerAssignmentTypeLabels[assignment]}
             isEditing={isEditing}
             onChange={handleValueChange}
             sx={doubleFieldStyle}

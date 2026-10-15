@@ -1,7 +1,7 @@
 import { Autocomplete, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { ChangeEvent, useState } from 'react';
 import { Gender, genderOptions } from '../../../data/types/Person';
-import { VolunteerAssignment, volunteerAssignmentLabels } from '../VolunteerAssignment';
+import { VolunteerAssignmentType, volunteerAssignmentTypeLabels } from '../VolunteerAssignmentType';
 import { VolunteerExpertise, volunteerExpertiseLabels } from '../VolunteerExpertise';
 import { VolunteerType, volunteerTypeLabels } from '../VolunteerType';
 import { emailValidationError, nameValidationError } from '../../../data/text';
@@ -186,9 +186,9 @@ export const AddVolunteerDialog = ({ isOpen, handleClose }: AddVolunteerDialogPr
         filterSelectedOptions
         disableCloseOnSelect
         id="rolePreferences"
-        options={Object.values(VolunteerAssignment)}
+        options={Object.values(VolunteerAssignmentType)}
         value={formState.rolePreferences}
-        getOptionLabel={(assignment) => volunteerAssignmentLabels[assignment]}
+        getOptionLabel={(assignment) => volunteerAssignmentTypeLabels[assignment]}
         disabled={isPending}
         onChange={(_, rolePreferences) => setFormState((prevState) => ({ ...prevState, rolePreferences }))}
         renderInput={(params) => <TextField {...params} label="Role preferences" />}
