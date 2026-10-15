@@ -56,6 +56,9 @@ class DojoApi:
     def add_volunteer_interaction(self, volunteer_id: str, interaction: Payload) -> None:
         self._post(f"/volunteers/{volunteer_id}/interactions", interaction)
 
+    def add_volunteer_assignment(self, volunteer_id: str, assignment: Payload) -> None:
+        self._post(f"/volunteers/{volunteer_id}/assignments", assignment)
+
     def get_users(self) -> list[Payload]:
         return self._get("/admin/users")
 

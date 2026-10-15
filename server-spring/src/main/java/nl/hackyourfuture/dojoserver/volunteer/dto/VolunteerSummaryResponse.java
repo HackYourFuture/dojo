@@ -2,7 +2,7 @@ package nl.hackyourfuture.dojoserver.volunteer.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
-import nl.hackyourfuture.dojoserver.volunteer.VolunteerAssignment;
+import nl.hackyourfuture.dojoserver.volunteer.VolunteerAssignmentType;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerExpertise;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerType;
@@ -66,7 +66,7 @@ public record VolunteerSummaryResponse(
                 example = "[\"assignment-review\", \"teaching\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        List<VolunteerAssignment> rolePreferences,
+        List<VolunteerAssignmentType> rolePreferences,
 
         @Schema(
                 description = "The company the volunteer works for",

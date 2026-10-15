@@ -1,6 +1,6 @@
 import { EditableVolunteerField } from '../Volunteer';
 import { Gender } from '../../../data/types/Person';
-import { VolunteerAssignment } from '../VolunteerAssignment';
+import { VolunteerAssignmentType } from '../VolunteerAssignmentType';
 import { VolunteerExpertise } from '../VolunteerExpertise';
 import { VolunteerStatus } from '../VolunteerStatus';
 import { VolunteerType } from '../VolunteerType';
@@ -19,7 +19,7 @@ export interface VolunteerSummaryResponse {
   linkedinUrl: string | null;
   volunteerTypes: VolunteerType[];
   expertise: VolunteerExpertise[];
-  rolePreferences: VolunteerAssignment[];
+  rolePreferences: VolunteerAssignmentType[];
 }
 
 export interface VolunteerResponse extends VolunteerSummaryResponse {

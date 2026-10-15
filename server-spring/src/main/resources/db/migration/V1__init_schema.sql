@@ -165,6 +165,24 @@ create table volunteers
 
 create unique index volunteers_email_upper_unique on volunteers (upper(email));
 
+-- Volunteer assignments
+create table volunteer_assignments
+(
+    id              text        not null
+        constraint volunteer_assignments_pk primary key,
+    volunteer_id    text        not null
+        constraint volunteer_assignments_volunteer_fk references volunteers on delete cascade,
+    type            text        not null,
+    estimated_hours int,
+    start_date      date        not null,
+    end_date        date,
+    notes           text,
+    created_at      timestamptz not null,
+    updated_at      timestamptz not null
+);
+
+create index volunteer_assignments_volunteer_idx on volunteer_assignments (volunteer_id);
+
 -- Partner organisations
 create table organisations
 (

@@ -19,6 +19,7 @@ class UploadReport:
     volunteers: int = 0
     volunteer_pictures: int = 0
     volunteer_interactions: int = 0
+    volunteer_assignments: int = 0
     organisations: int = 0
     logos: int = 0
     contact_persons: int = 0
@@ -51,7 +52,7 @@ def upload_trainee(api: DojoApi, trainee: GeneratedTrainee, report: UploadReport
 
 
 def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: UploadReport) -> None:
-    """Creates the volunteer with its picture and interactions. Rejected requests are added to the report."""
+    """Creates the volunteer with its picture and records. Rejected requests are added to the report."""
     try:
         volunteer_id = api.create_volunteer(volunteer.profile)
     except ApiError as error:
@@ -67,6 +68,9 @@ def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: Upload
 
     report.volunteer_interactions += _add_all(
         api.add_volunteer_interaction, volunteer_id, volunteer.name, volunteer.interactions, report
+    )
+    report.volunteer_assignments += _add_all(
+        api.add_volunteer_assignment, volunteer_id, volunteer.name, volunteer.assignments, report
     )
 
 

@@ -2,8 +2,8 @@
 
 Fills a local Dojo environment with reproducible dummy data: a test user with an API token,
 trainees with profile pictures, assessments, interactions and employment history, volunteers with
-profile pictures and interactions, and partner organisations with logos, contact persons and
-interactions. It also loads the countries and Dutch cities from dojo_setup/geo-data.
+profile pictures, interactions and assignments, and partner organisations with logos, contact persons
+and interactions. It also loads the countries and Dutch cities from dojo_setup/geo-data.
 
 Usage: python main.py
 """

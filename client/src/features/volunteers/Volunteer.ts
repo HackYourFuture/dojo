@@ -1,5 +1,5 @@
 import { Gender } from '../../data/types/Person';
-import { VolunteerAssignment } from './VolunteerAssignment';
+import { VolunteerAssignmentType } from './VolunteerAssignmentType';
 import { VolunteerExpertise } from './VolunteerExpertise';
 import { VolunteerStatus } from './VolunteerStatus';
 import { VolunteerType } from './VolunteerType';
@@ -18,7 +18,7 @@ export interface VolunteerSummary {
   linkedinUrl: string | null;
   volunteerTypes: VolunteerType[];
   expertise: VolunteerExpertise[];
-  rolePreferences: VolunteerAssignment[];
+  rolePreferences: VolunteerAssignmentType[];
 }
 
 export interface Volunteer extends VolunteerSummary {
@@ -63,5 +63,5 @@ export interface NewVolunteer {
   email: string;
   volunteerTypes: VolunteerType[];
   expertise: VolunteerExpertise[];
-  rolePreferences: VolunteerAssignment[];
+  rolePreferences: VolunteerAssignmentType[];
 }
