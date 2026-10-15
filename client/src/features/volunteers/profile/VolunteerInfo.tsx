@@ -10,12 +10,16 @@ import { ProfileMultiSelect } from '../../../components/profile/ProfileMultiSele
 import { ProfileNotes } from '../../../components/profile/ProfileNotes';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { ProfileTextField } from '../../../components/profile/ProfileTextField';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { Volunteer } from '../Volunteer';
+import { VolunteerAssignments } from '../assignments/VolunteerAssignments';
 import { createFieldChangeHandlers } from '../../../components/profile/fieldChangeHandlers';
 
 // The rows are four fields wide, and a wide field takes two of them, so the fields line up in columns.
 const doubleFieldStyle = { width: PROFILE_DOUBLE_FIELD_WIDTH };
+
+// At least two fields wide, and no wider than the other profile lists, so it does not stretch across a wide screen.
+const assignmentsStyle = { flex: 1, minWidth: PROFILE_DOUBLE_FIELD_WIDTH, maxWidth: '70ch' };
 
 // The options of the status dropdown.
 const statusOptions = Object.values(VolunteerStatus).map((status) => ({
@@ -29,7 +33,7 @@ interface VolunteerInfoProps {
   isEditing: boolean;
 }
 
-/** The overview tab: the volunteer's details, volunteering, work and notes, edited with the profile. */
+/** The overview tab: the volunteer's details, volunteering, work and notes, edited with the profile, and the assignments. */
 const VolunteerInfo = ({ volunteer, setVolunteer, isEditing }: VolunteerInfoProps) => {
   const { handleValueChange, handleTextChange } = createFieldChangeHandlers(setVolunteer);
 
@@ -85,39 +89,43 @@ const VolunteerInfo = ({ volunteer, setVolunteer, isEditing }: VolunteerInfoProp
       </ProfileSection>
 
       <ProfileSection title="Volunteering">
+        {/* The fields take the first two columns and the assignments start at the third, or wrap below the fields. */}
         <FieldRow>
-          <ProfileMultiSelect
-            name="volunteerTypes"
-            label="Volunteer types"
-            options={Object.values(VolunteerType)}
-            value={volunteer.volunteerTypes}
-            getOptionLabel={(type) => volunteerTypeLabels[type]}
-            isEditing={isEditing}
-            onChange={handleValueChange}
-            sx={doubleFieldStyle}
-          />
-        </FieldRow>
-        <FieldRow>
-          <ProfileMultiSelect
-            name="expertise"
-            label="Expertise"
-            options={Object.values(VolunteerExpertise)}
-            value={volunteer.expertise}
-            getOptionLabel={(expertise) => volunteerExpertiseLabels[expertise]}
-            isEditing={isEditing}
-            onChange={handleValueChange}
-            sx={doubleFieldStyle}
-          />
-          <ProfileMultiSelect
-            name="rolePreferences"
-            label="Role preferences"
-            options={Object.values(VolunteerAssignmentType)}
-            value={volunteer.rolePreferences}
-            getOptionLabel={(assignment) => volunteerAssignmentTypeLabels[assignment]}
-            isEditing={isEditing}
-            onChange={handleValueChange}
-            sx={doubleFieldStyle}
-          />
+          <Stack spacing={2} useFlexGap>
+            <ProfileMultiSelect
+              name="volunteerTypes"
+              label="Volunteer types"
+              options={Object.values(VolunteerType)}
+              value={volunteer.volunteerTypes}
+              getOptionLabel={(type) => volunteerTypeLabels[type]}
+              isEditing={isEditing}
+              onChange={handleValueChange}
+              sx={doubleFieldStyle}
+            />
+            <ProfileMultiSelect
+              name="expertise"
+              label="Expertise"
+              options={Object.values(VolunteerExpertise)}
+              value={volunteer.expertise}
+              getOptionLabel={(expertise) => volunteerExpertiseLabels[expertise]}
+              isEditing={isEditing}
+              onChange={handleValueChange}
+              sx={doubleFieldStyle}
+            />
+            <ProfileMultiSelect
+              name="rolePreferences"
+              label="Role preferences"
+              options={Object.values(VolunteerAssignmentType)}
+              value={volunteer.rolePreferences}
+              getOptionLabel={(assignmentType) => volunteerAssignmentTypeLabels[assignmentType]}
+              isEditing={isEditing}
+              onChange={handleValueChange}
+              sx={doubleFieldStyle}
+            />
+          </Stack>
+          <Box sx={assignmentsStyle}>
+            <VolunteerAssignments volunteerId={volunteer.id} />
+          </Box>
         </FieldRow>
       </ProfileSection>
 

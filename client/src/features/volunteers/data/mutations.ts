@@ -25,7 +25,7 @@ export const useCreateVolunteer = () => {
   });
 };
 
-/** Hook to delete a volunteer with their interactions and picture. */
+/** Hook to delete a volunteer with their assignments, interactions and picture. */
 export const useDeleteVolunteer = (volunteerId: string) => {
   const queryClient = useQueryClient();
 

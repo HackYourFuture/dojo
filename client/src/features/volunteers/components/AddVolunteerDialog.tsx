@@ -188,7 +188,7 @@ export const AddVolunteerDialog = ({ isOpen, handleClose }: AddVolunteerDialogPr
         id="rolePreferences"
         options={Object.values(VolunteerAssignmentType)}
         value={formState.rolePreferences}
-        getOptionLabel={(assignment) => volunteerAssignmentTypeLabels[assignment]}
+        getOptionLabel={(assignmentType) => volunteerAssignmentTypeLabels[assignmentType]}
         disabled={isPending}
         onChange={(_, rolePreferences) => setFormState((prevState) => ({ ...prevState, rolePreferences }))}
         renderInput={(params) => <TextField {...params} label="Role preferences" />}

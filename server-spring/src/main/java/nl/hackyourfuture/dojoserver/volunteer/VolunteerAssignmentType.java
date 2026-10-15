@@ -3,7 +3,7 @@ package nl.hackyourfuture.dojoserver.volunteer;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.RequiredArgsConstructor;
 
-// The assignments a volunteer can take on.
+// The types of assignment a volunteer can take on: their role preferences, and the type of each assignment.
 @RequiredArgsConstructor
 public enum VolunteerAssignmentType {
     ASSIGNMENT_REVIEW("assignment-review"),

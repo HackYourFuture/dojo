@@ -1,7 +1,6 @@
 import {
   Chip,
   ChipProps,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -11,13 +10,13 @@ import {
   Typography,
 } from '@mui/material';
 import { Assessment, AssessmentResult } from '../models/assessment';
-import { Fragment, ReactElement, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, ReactElement } from 'react';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { CollapsibleMarkdownText } from '../../../../../components/CollapsibleMarkdownText';
 import ErrorIcon from '@mui/icons-material/Error';
 import { ListItemActions } from '../../../../../components/ListItemActions';
-import MarkdownText from '../../../../../components/MarkdownText';
 import WarningIcon from '@mui/icons-material/Warning';
 import { formatDateForDisplay } from '../../../../../data/dates';
 import { formatTextToFriendly } from '../../../../../data/text';
@@ -31,52 +30,8 @@ const resultChips: Record<AssessmentResult, { color: ChipProps['color']; icon: R
 
 const COLUMN_COUNT = 5;
 
-// About five lines. Comments well past it are cut off there, with a link to show the rest.
-const COLLAPSED_COMMENTS_HEIGHT = 100;
-
 // The header stays on top while the rows scroll, so it needs the background of the rows behind it.
 const headerStyle = { bgcolor: 'background.paper' };
-
-/** The comments of an assessment, cut off with a "Show more" link when they are long. */
-const AssessmentComments = ({ comments }: { comments: string }) => {
-  const commentsRef = useRef<HTMLDivElement>(null);
-  const [isLong, setIsLong] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isCollapsed = isLong && !isExpanded;
-
-  // Measured before painting, as only the browser knows how many lines the markdown wraps to.
-  useLayoutEffect(() => {
-    // The scroll height counts the cut-off part too. Half as much again, so the link never hides a line or two.
-    setIsLong(commentsRef.current!.scrollHeight > COLLAPSED_COMMENTS_HEIGHT * 1.5);
-  }, [comments]);
-
-  return (
-    <>
-      <Typography
-        ref={commentsRef}
-        variant="body2"
-        component="div"
-        sx={{
-          color: 'text.secondary',
-          // Without the margin under the last paragraph, the comments end as far from the line as the other rows.
-          '& > * > :last-child': { marginBottom: 0 },
-          ...(isCollapsed && {
-            maxHeight: COLLAPSED_COMMENTS_HEIGHT,
-            overflow: 'hidden',
-            maskImage: 'linear-gradient(to bottom, black 70%, transparent)',
-          }),
-        }}
-      >
-        <MarkdownText>{comments}</MarkdownText>
-      </Typography>
-      {isLong && (
-        <Link component="button" variant="body2" underline="hover" onClick={() => setIsExpanded(!isExpanded)}>
-          {isExpanded ? 'Show less' : 'Show more'}
-        </Link>
-      )}
-    </>
-  );
-};
 
 interface AssessmentsListProps {
   assessments: Assessment[];
@@ -140,7 +95,7 @@ export const AssessmentsList: React.FC<AssessmentsListProps> = ({ assessments, o
                 {assessment.comments && (
                   <TableRow>
                     <TableCell colSpan={COLUMN_COUNT} sx={{ paddingTop: 0 }}>
-                      <AssessmentComments comments={assessment.comments} />
+                      <CollapsibleMarkdownText>{assessment.comments}</CollapsibleMarkdownText>
                     </TableCell>
                   </TableRow>
                 )}
