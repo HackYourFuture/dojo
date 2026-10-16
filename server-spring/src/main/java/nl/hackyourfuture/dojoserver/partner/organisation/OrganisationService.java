@@ -8,6 +8,7 @@ import nl.hackyourfuture.dojoserver.admin.user.User;
 import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.geo.GeoService;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationPictureResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationRequest;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
@@ -41,6 +42,7 @@ public class OrganisationService {
     private final Validator validator;
     private final PictureService pictureService;
     private final SlackNotificationSender slackNotificationSender;
+    private final GeoService geoService;
 
     @Transactional(readOnly = true)
     public Page<OrganisationSummaryResponse> getOrganisations(Sort.Direction direction, int page, int size) {
@@ -64,7 +66,7 @@ public class OrganisationService {
                 .name(request.name())
                 .websiteUrl(request.websiteUrl())
                 .linkedinUrl(request.linkedinUrl())
-                .location(request.location())
+                .city(geoService.getCity(request.cityId()))
                 .status(request.status())
                 .notes(request.notes())
                 .partnershipTypes(request.partnershipTypes())
@@ -96,7 +98,7 @@ public class OrganisationService {
         organisation.setName(merged.name());
         organisation.setWebsiteUrl(merged.websiteUrl());
         organisation.setLinkedinUrl(merged.linkedinUrl());
-        organisation.setLocation(merged.location());
+        organisation.setCity(geoService.getCity(merged.cityId()));
         organisation.setStatus(merged.status());
         organisation.setNotes(merged.notes());
         organisation.setPartnershipTypes(merged.partnershipTypes());

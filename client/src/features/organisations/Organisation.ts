@@ -1,3 +1,5 @@
+import { City } from '../geo/models/city';
+
 // Where the partnership with the organisation stands.
 export enum OrganisationStatus {
   Active = 'active',
@@ -27,7 +29,7 @@ export interface OrganisationSummary {
   thumbnailUrl: string | null;
   websiteUrl: string | null;
   linkedinUrl: string | null;
-  location: string | null;
+  city: City | null;
   status: OrganisationStatus;
   partnershipTypes: PartnershipType[];
   // The primary responsible comes first.
@@ -43,7 +45,7 @@ export interface Organisation extends OrganisationSummary {
 export const EDITABLE_ORGANISATION_FIELDS = [
   'name',
   'status',
-  'location',
+  'city',
   'websiteUrl',
   'linkedinUrl',
   'partnershipTypes',
@@ -55,11 +57,11 @@ export type EditableOrganisationField = (typeof EDITABLE_ORGANISATION_FIELDS)[nu
 
 export type OrganisationChanges = Partial<Pick<Organisation, EditableOrganisationField>>;
 
-// The fields of the add dialog, where the optional ones are empty text until they are filled in.
+// The fields of the add dialog, where the optional text is empty until it is filled in.
 export interface NewOrganisation {
   name: string;
   status: OrganisationStatus;
-  location: string;
+  city: City | null;
   websiteUrl: string;
   linkedinUrl: string;
 }

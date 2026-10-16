@@ -7,7 +7,7 @@ from dojo_setup.config import REFERENCE_DATE
 from dojo_setup.data import CITIES, COUNTRIES, EDUCATION_BACKGROUNDS, NICKNAMES
 from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.randomness import YEAR, chance, date_after, date_before, fake, weighted
-from dojo_setup.generators.transliteration import to_ascii
+from dojo_setup.generators.transliteration import to_ascii, to_slug
 
 GENDERS = {"man": 50, "woman": 50, "non-binary": 1}
 NAME_ORIGINS = {"arabic": 30, "turkish": 20, "ukrainian": 15, "spanish": 15, "russian": 10, "english": 10}
@@ -47,7 +47,8 @@ def _personal_info(gender: str, first_name: str, last_name: str) -> dict[str, An
         "gender": gender,
         "pronouns": PRONOUNS[gender],
         "dateOfBirth": _date_of_birth(min_age=18, max_age=60),
-        "location": fake.random_element(CITIES)["name"],
+        # The database step gives a city the slug of its name as id
+        "cityId": to_slug(fake.random_element(CITIES)["name"]),
         "englishLevel": fake.random_element(ENGLISH_LEVELS),
         "professionalDutch": chance(0.05),
         "countryOfOrigin": fake.random_element(COUNTRIES)["name"],

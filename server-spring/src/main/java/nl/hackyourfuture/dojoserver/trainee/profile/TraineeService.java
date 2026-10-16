@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.geo.GeoService;
 import nl.hackyourfuture.dojoserver.picture.PictureService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
@@ -43,6 +44,7 @@ public class TraineeService {
     private final Validator validator;
     private final SlackNotificationSender slackNotificationSender;
     private final PictureService pictureService;
+    private final GeoService geoService;
 
     @Transactional(readOnly = true)
     public Page<TraineeSummaryResponse> getTrainees(Integer startCohort, Integer endCohort,
@@ -89,7 +91,7 @@ public class TraineeService {
                 .gender(request.gender())
                 .pronouns(request.pronouns())
                 .dateOfBirth(request.dateOfBirth())
-                .location(request.location())
+                .city(geoService.getCity(request.cityId()))
                 .englishLevel(request.englishLevel())
                 .professionalDutch(request.professionalDutch())
                 .countryOfOrigin(request.countryOfOrigin())
@@ -160,7 +162,7 @@ public class TraineeService {
         trainee.setGender(merged.gender());
         trainee.setPronouns(merged.pronouns());
         trainee.setDateOfBirth(merged.dateOfBirth());
-        trainee.setLocation(merged.location());
+        trainee.setCity(geoService.getCity(merged.cityId()));
         trainee.setEnglishLevel(merged.englishLevel());
         trainee.setProfessionalDutch(merged.professionalDutch());
         trainee.setCountryOfOrigin(merged.countryOfOrigin());

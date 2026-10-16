@@ -19,8 +19,11 @@ import { useProfileTab } from '../../../hooks/useProfileTab';
 import { useState } from 'react';
 import { useUpdateOrganisation } from '../data/mutations';
 
-// Lists are compared by their items, and responsibles by id, as the edited ones come from the users list.
+// Lists are compared by their items, and the city and responsibles by id, as the edited ones come from the API.
 const comparableValue = (organisation: Organisation, field: EditableOrganisationField) => {
+  if (field === 'city') {
+    return organisation.city?.id ?? null;
+  }
   if (field === 'responsibles') {
     return organisation.responsibles.map((responsible) => responsible.id).join();
   }

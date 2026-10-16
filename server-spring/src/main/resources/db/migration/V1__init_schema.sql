@@ -32,6 +32,33 @@ create table tokens
 create unique index tokens_hash_unique on tokens (token_hash);
 create index tokens_user_idx on tokens (user_id);
 
+-- Countries
+create table countries
+(
+    id                text not null
+        constraint countries_pk primary key,
+    name              text not null,
+    alternative_names text[] not null,
+    population        int  not null,
+    flag              text not null,
+    code              text not null
+);
+
+-- Dutch cities
+create table cities
+(
+    id                 text             not null
+        constraint cities_pk primary key,
+    name               text             not null,
+    alternative_names  text[]           not null,
+    population         int              not null,
+    province           text             not null,
+    region             text             not null,
+    latitude           double precision not null,
+    longitude          double precision not null,
+    distance_amsterdam int
+);
+
 -- Trainees
 create table trainees
 (
@@ -45,7 +72,8 @@ create table trainees
     gender                         text,
     pronouns                       text,
     date_of_birth                  date,
-    location                       text,
+    city_id                        text
+        constraint trainees_city_fk references cities on delete set null,
     english_level                  text,
     professional_dutch             boolean,
     country_of_origin              text,
@@ -97,6 +125,7 @@ create unique index trainees_email_upper_unique on trainees (upper(email));
 create index trainees_first_name_upper_idx on trainees (upper(first_name));
 create index trainees_last_name_upper_idx on trainees (upper(last_name));
 create index trainees_esf_id_idx on trainees (esf_id);
+create index trainees_city_idx on trainees (city_id);
 
 -- Trainee employment history
 create table employment_history
@@ -192,7 +221,8 @@ create table organisations
     name              text        not null,
     website_url       text,
     linkedin_url      text,
-    location          text,
+    city_id           text
+        constraint organisations_city_fk references cities on delete set null,
     status            text        not null,
     partnership_types text[]      not null,
     responsible_ids   text[]      not null,
@@ -200,6 +230,8 @@ create table organisations
     created_at        timestamptz not null,
     updated_at        timestamptz not null
 );
+
+create index organisations_city_idx on organisations (city_id);
 
 -- Organisation contact persons
 create table contact_persons
@@ -246,30 +278,3 @@ create table interactions
 create index interactions_trainee_idx on interactions (trainee_id);
 create index interactions_organisation_idx on interactions (organisation_id);
 create index interactions_volunteer_idx on interactions (volunteer_id);
-
--- Countries
-create table countries
-(
-    id                text   not null
-        constraint countries_pk primary key,
-    name              text   not null,
-    alternative_names text[] not null,
-    population        int    not null,
-    flag              text   not null,
-    code              text   not null
-);
-
--- Dutch cities
-create table cities
-(
-    id                 text             not null
-        constraint cities_pk primary key,
-    name               text             not null,
-    alternative_names  text[]           not null,
-    population         int              not null,
-    province           text             not null,
-    region             text             not null,
-    latitude           double precision not null,
-    longitude          double precision not null,
-    distance_amsterdam int
-);

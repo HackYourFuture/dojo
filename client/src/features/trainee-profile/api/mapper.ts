@@ -2,6 +2,7 @@ import { CreateTraineeRequest, TraineeResponse, UpdateTraineeRequest } from './t
 import { NewTrainee, Track, Trainee, TraineeChanges } from '../../../data/types/Trainee';
 
 import { blankFieldsToNull } from '../../../data/text';
+import { mapCityToDomain } from '../../geo/api/mapper';
 
 export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
   return {
@@ -17,7 +18,7 @@ export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
       gender: trainee.gender,
       pronouns: trainee.pronouns,
       dateOfBirth: trainee.dateOfBirth,
-      location: trainee.location,
+      city: trainee.city ? mapCityToDomain(trainee.city) : null,
       englishLevel: trainee.englishLevel,
       professionalDutch: trainee.professionalDutch,
       countryOfOrigin: trainee.countryOfOrigin,
@@ -65,12 +66,17 @@ export const mapTraineeToDomain = (trainee: TraineeResponse): Trainee => {
 };
 
 export const mapDomainToUpdateTraineeRequest = (changes: TraineeChanges): UpdateTraineeRequest => {
+  // The API takes the id of the city, and ignores a city field.
+  const { city, ...personalInfo } = changes.personalInfo ?? {};
   const request: UpdateTraineeRequest = {
-    ...changes.personalInfo,
+    ...personalInfo,
     ...changes.contactInfo,
     ...changes.educationInfo,
     ...changes.employmentInfo,
   };
+  if (city !== undefined) {
+    request.cityId = city?.id ?? null;
+  }
 
   return blankFieldsToNull(request);
 };

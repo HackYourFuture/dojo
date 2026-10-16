@@ -1,5 +1,7 @@
 import { JobPath, LearningStatus, Track } from '../../../data/types/Trainee';
 
+import { City } from '../../geo/models/city';
+
 export interface Cohort {
   cohort: number | null;
   trainees: TraineeSummary[];
@@ -10,7 +12,7 @@ export interface TraineeSummary {
   displayName: string;
   profilePath: string;
   thumbnailUrl: string | null;
-  location: string | null;
+  city: City | null;
   email: string;
   slackId: string | null;
   githubHandle: string | null;

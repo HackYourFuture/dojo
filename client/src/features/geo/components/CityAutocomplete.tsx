@@ -8,11 +8,12 @@ import { useState } from 'react';
 interface CityAutocompleteProps {
   id?: string;
   label: string;
-  value: Pick<City, 'name'> | null;
+  value: City | null;
   onChange: (city: City | null) => void;
   placeholder?: string;
   error?: boolean;
   helperText?: string;
+  disabled?: boolean;
   sx?: SxProps<Theme>;
 }
 
@@ -25,6 +26,7 @@ export const CityAutocomplete = ({
   placeholder,
   error,
   helperText,
+  disabled,
   sx,
 }: CityAutocompleteProps) => {
   const [text, setText] = useState('');
@@ -38,8 +40,8 @@ export const CityAutocomplete = ({
       size="small"
       forcePopupIcon={false}
       options={cities}
-      // MUI types the value as an option, but only reads its name.
-      value={value as City | null}
+      value={value}
+      disabled={disabled}
       inputValue={text}
       onInputChange={(_, newText) => setText(newText)}
       onChange={(_, city) => onChange(city)}
@@ -50,8 +52,7 @@ export const CityAutocomplete = ({
       noOptionsText={isTooShort ? `Type at least ${MIN_GEO_QUERY_LENGTH} letters` : 'No cities found'}
       getOptionLabel={(city) => city.name}
       getOptionKey={(city) => city.id}
-      // The names are unique, so a value with only a name matches its option.
-      isOptionEqualToValue={(option, city) => option.name === city.name}
+      isOptionEqualToValue={(option, city) => option.id === city.id}
       renderOption={({ key, ...optionProps }, city) => (
         <li key={key} {...optionProps}>
           {city.name}

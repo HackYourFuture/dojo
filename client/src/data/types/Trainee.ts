@@ -1,3 +1,4 @@
+import { City } from '../../features/geo/models/city';
 import { Gender } from './Person';
 
 // enums
@@ -89,7 +90,7 @@ export interface TraineePersonalInfo {
   gender: Gender | null;
   pronouns: string | null;
   dateOfBirth: string | null;
-  location: string | null;
+  city: City | null;
   englishLevel: EnglishLevel | null;
   professionalDutch: boolean | null;
   countryOfOrigin: string | null;

@@ -16,7 +16,7 @@ interface OrganisationHeaderProps {
   children: ReactNode;
 }
 
-/** The organisation's logo, name, status, location and links above the profile tabs, as they are saved. */
+/** The organisation's logo, name, status, city and links above the profile tabs, as they are saved. */
 const OrganisationHeader = ({ organisation, children }: OrganisationHeaderProps) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -36,9 +36,9 @@ const OrganisationHeader = ({ organisation, children }: OrganisationHeaderProps)
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1.5 }}>
           <OrganisationStatusChip status={organisation.status} />
-          {organisation.location && (
+          {organisation.city && (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {organisation.location}
+              {organisation.city.name}
             </Typography>
           )}
         </Box>

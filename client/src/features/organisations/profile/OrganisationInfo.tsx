@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../components/profile/ProfileSection';
 import { Organisation, PartnershipType, Responsible } from '../Organisation';
 
+import { City } from '../../geo/models/city';
 import { ContactPersons } from '../contact-persons/ContactPersons';
 import { ProfileCityField } from '../../geo/components/ProfileCityField';
 import { ProfileMultiSelect } from '../../../components/profile/ProfileMultiSelect';
@@ -26,6 +27,10 @@ interface OrganisationInfoProps {
 /** The overview tab: the details and notes, edited with the profile, and the contacts, managed on their own. */
 const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: OrganisationInfoProps) => {
   const { handleValueChange, handleTextChange } = createFieldChangeHandlers(setOrganisation);
+
+  const handleCityChange = (city: City | null) => {
+    setOrganisation((prevOrganisation) => ({ ...prevOrganisation, city }));
+  };
 
   const handleResponsiblesChange = (responsibles: Responsible[]) => {
     setOrganisation((prevOrganisation) => ({ ...prevOrganisation, responsibles }));
@@ -53,12 +58,12 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
             onChange={handleValueChange}
           />
           <ProfileCityField
-            name="location"
-            label="Location"
+            name="city"
+            label="City"
             placeholder="Amsterdam"
-            value={organisation.location}
+            value={organisation.city}
             isEditing={isEditing}
-            onChange={handleValueChange}
+            onChange={handleCityChange}
           />
         </FieldRow>
         <FieldRow>
