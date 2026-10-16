@@ -1,6 +1,7 @@
 package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.geo.dto.CityResponse;
 import nl.hackyourfuture.dojoserver.shared.model.Gender;
 import nl.hackyourfuture.dojoserver.trainee.profile.Background;
 import nl.hackyourfuture.dojoserver.trainee.profile.EducationLevel;
@@ -101,11 +102,10 @@ public record TraineeResponse(
 
         @Schema(
                 description = "The city the trainee lives in",
-                example = "Amsterdam",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String location,
+        CityResponse city,
 
         @Schema(
                 description = "How well the trainee speaks English",
@@ -403,7 +403,7 @@ public record TraineeResponse(
                 trainee.getGender(),
                 trainee.getPronouns(),
                 trainee.getDateOfBirth(),
-                trainee.getLocation(),
+                trainee.getCity() == null ? null : CityResponse.from(trainee.getCity()),
                 trainee.getEnglishLevel(),
                 trainee.getProfessionalDutch(),
                 trainee.getCountryOfOrigin(),

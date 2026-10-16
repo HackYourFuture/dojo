@@ -3,6 +3,7 @@ package nl.hackyourfuture.dojoserver.partner.organisation.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import nl.hackyourfuture.dojoserver.admin.user.User;
 import nl.hackyourfuture.dojoserver.admin.user.dto.ReporterResponse;
+import nl.hackyourfuture.dojoserver.geo.dto.CityResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.partner.organisation.OrganisationStatus;
 import nl.hackyourfuture.dojoserver.partner.organisation.PartnershipType;
@@ -60,11 +61,10 @@ public record OrganisationSummaryResponse(
 
         @Schema(
                 description = "The city the organisation is based in",
-                example = "Amsterdam",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String location,
+        CityResponse city,
 
         @Schema(
                 description = "Where the partnership with the organisation stands",
@@ -95,7 +95,7 @@ public record OrganisationSummaryResponse(
                 organisation.getThumbnailUrl(),
                 organisation.getWebsiteUrl(),
                 organisation.getLinkedinUrl(),
-                organisation.getLocation(),
+                organisation.getCity() == null ? null : CityResponse.from(organisation.getCity()),
                 organisation.getStatus(),
                 organisation.getPartnershipTypes().stream().sorted().toList(),
                 organisation.getResponsibleIds().stream()

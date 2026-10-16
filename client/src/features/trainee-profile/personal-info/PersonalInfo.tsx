@@ -9,6 +9,7 @@ import { createTextChangeHandler, createValueChangeHandler } from '../utils/form
 import { FieldRow, PROFILE_DOUBLE_FIELD_WIDTH, ProfileSection } from '../../../components/profile/ProfileSection';
 import { genderOptions, pronounOptions } from '../../../data/types/Person';
 
+import { City } from '../../geo/models/city';
 import { ProfileCityField } from '../../geo/components/ProfileCityField';
 import { ProfileCountryField } from '../../geo/components/ProfileCountryField';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
@@ -32,6 +33,10 @@ const PersonalInfo = () => {
 
   const handleTextChange = createTextChangeHandler(setTrainee, 'personalInfo');
   const handleValueChange = createValueChangeHandler(setTrainee, 'personalInfo');
+
+  const handleCityChange = (city: City | null) => {
+    setTrainee((prevTrainee) => ({ ...prevTrainee, personalInfo: { ...prevTrainee.personalInfo, city } }));
+  };
 
   return (
     <Stack spacing={4} useFlexGap>
@@ -91,12 +96,12 @@ const PersonalInfo = () => {
         </FieldRow>
         <FieldRow>
           <ProfileCityField
-            name="location"
-            label="Location"
+            name="city"
+            label="City"
             placeholder="Amsterdam"
-            value={editedFields.location}
+            value={editedFields.city}
             isEditing={isEditing}
-            onChange={handleValueChange}
+            onChange={handleCityChange}
           />
           <ProfileTextField
             name="esfId"

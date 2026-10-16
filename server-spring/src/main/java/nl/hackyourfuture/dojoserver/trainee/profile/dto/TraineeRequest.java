@@ -53,9 +53,10 @@ public record TraineeRequest(
         @Schema(description = "The date the trainee was born.", example = "1970-01-01")
         LocalDate dateOfBirth,
 
-        @Size(min = 2, max = 100)
-        @Schema(description = "The city the trainee lives in.", example = "Amsterdam")
-        String location,
+        @Size(max = 100)
+        @Schema(description = "The id of the city the trainee lives in, as listed by /api/geo/cities.",
+                example = "amsterdam")
+        String cityId,
 
         @Schema(description = "How well the trainee speaks English.", example = "good")
         EnglishLevel englishLevel,
@@ -213,7 +214,6 @@ public record TraineeRequest(
         lastName = lastName == null ? null : lastName.strip();
         preferredName = preferredName == null ? null : preferredName.strip();
         pronouns = pronouns == null ? null : pronouns.strip();
-        location = location == null ? null : location.strip();
         countryOfOrigin = countryOfOrigin == null ? null : countryOfOrigin.strip();
         educationBackground = educationBackground == null ? null : educationBackground.strip();
         dietaryPreference = dietaryPreference == null ? null : dietaryPreference.strip();
@@ -242,7 +242,7 @@ public record TraineeRequest(
                 trainee.getGender(),
                 trainee.getPronouns(),
                 trainee.getDateOfBirth(),
-                trainee.getLocation(),
+                trainee.getCityId(),
                 trainee.getEnglishLevel(),
                 trainee.getProfessionalDutch(),
                 trainee.getCountryOfOrigin(),

@@ -6,6 +6,7 @@ import nl.hackyourfuture.dojoserver.geo.dto.CountryResponse;
 import nl.hackyourfuture.dojoserver.shared.Hit;
 import nl.hackyourfuture.dojoserver.shared.SearchText;
 import nl.hackyourfuture.dojoserver.shared.TextMatcher;
+import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,15 @@ public class GeoService {
                 .stream()
                 .map(CountryResponse::from)
                 .toList();
+    }
+
+    // The city a request refers to by id, or null without one. A 400 like any other bad value in the body.
+    public City getCity(String id) {
+        if (id == null) {
+            return null;
+        }
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new DojoBadRequestException("The city with id '" + id + "' does not exist."));
     }
 
     // Without a query every place by name. With one, the best matches of any of their names, biggest first when equal.

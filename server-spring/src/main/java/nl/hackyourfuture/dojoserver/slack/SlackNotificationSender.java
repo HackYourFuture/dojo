@@ -185,7 +185,7 @@ public class SlackNotificationSender {
                 organisationLink(organisation),
                 reporter,
                 value(organisation.getStatus()),
-                cell(organisation.getLocation()));
+                cell(organisation.getCity() == null ? null : organisation.getCity().getName()));
         slackClient.sendNotification(message);
     }
 

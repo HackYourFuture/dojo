@@ -2,6 +2,8 @@ import { ChangeEvent, useState } from 'react';
 import { NewOrganisation, OrganisationStatus } from '../Organisation';
 import { SelectChangeEvent, Stack, TextField } from '@mui/material';
 
+import { City } from '../../geo/models/city';
+import { CityAutocomplete } from '../../geo/components/CityAutocomplete';
 import { DropdownSelect } from '../../../components/DropdownSelect';
 import { FormDialog } from '../../../components/FormDialog';
 import { nameValidationError } from '../../../data/text';
@@ -17,7 +19,7 @@ interface AddOrganisationDialogProps {
 const INITIAL_STATE: NewOrganisation = {
   name: '',
   status: OrganisationStatus.Active,
-  location: '',
+  city: null,
   websiteUrl: '',
   linkedinUrl: '',
 };
@@ -48,6 +50,10 @@ export const AddOrganisationDialog = ({ isOpen, handleClose }: AddOrganisationDi
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
     setFormState((prevState) => ({ ...prevState, status: event.target.value as OrganisationStatus }));
+  };
+
+  const handleCityChange = (city: City | null) => {
+    setFormState((prevState) => ({ ...prevState, city }));
   };
 
   const handleSubmit = () => {
@@ -98,14 +104,13 @@ export const AddOrganisationDialog = ({ isOpen, handleClose }: AddOrganisationDi
           value={formState.status}
           onChange={handleStatusChange}
         />
-        <TextField
+        <CityAutocomplete
+          id="city"
+          label="City"
+          placeholder="Amsterdam"
           disabled={isPending}
-          id="location"
-          name="location"
-          label="Location"
-          value={formState.location}
-          onChange={handleTextChange}
-          slotProps={{ htmlInput: { maxLength: 100 } }}
+          value={formState.city}
+          onChange={handleCityChange}
           sx={{ flex: 1 }}
         />
       </Stack>

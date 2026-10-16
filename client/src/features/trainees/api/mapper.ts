@@ -1,5 +1,6 @@
 import { TraineeSummary } from '../models/trainee-summary';
 import { TraineeSummaryResponse } from './types';
+import { mapCityToDomain } from '../../geo/api/mapper';
 
 export const mapTraineeSummaryToDomain = (trainee: TraineeSummaryResponse): TraineeSummary => {
   return {
@@ -7,7 +8,7 @@ export const mapTraineeSummaryToDomain = (trainee: TraineeSummaryResponse): Trai
     displayName: trainee.displayName,
     profilePath: trainee.profilePath,
     thumbnailUrl: trainee.thumbnailUrl,
-    location: trainee.location,
+    city: trainee.city ? mapCityToDomain(trainee.city) : null,
     email: trainee.email,
     slackId: trainee.slackId,
     githubHandle: trainee.githubHandle,

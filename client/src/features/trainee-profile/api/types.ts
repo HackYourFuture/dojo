@@ -9,6 +9,7 @@ import {
   Track,
 } from '../../../data/types/Trainee';
 
+import { CityResponse } from '../../geo/api/types';
 import { Gender } from '../../../data/types/Person';
 
 export interface TraineeResponse {
@@ -25,7 +26,7 @@ export interface TraineeResponse {
   gender: Gender | null;
   pronouns: string | null;
   dateOfBirth: string | null; // YYYY-MM-DD
-  location: string | null;
+  city: CityResponse | null;
   englishLevel: EnglishLevel | null;
   professionalDutch: boolean | null;
   countryOfOrigin: string | null;
@@ -72,11 +73,13 @@ export interface TraineeResponse {
 
 type EditableField = Exclude<
   keyof TraineeResponse,
-  'id' | 'displayName' | 'profilePath' | 'pictureUrl' | 'thumbnailUrl'
+  'id' | 'displayName' | 'profilePath' | 'pictureUrl' | 'thumbnailUrl' | 'city'
 >;
 
-// A merge patch: every field that is sent is stored, and null clears it.
-export type UpdateTraineeRequest = { [Field in EditableField]?: TraineeResponse[Field] | null };
+// A merge patch: every field that is sent is stored, and null clears it. The city is sent as its id.
+export type UpdateTraineeRequest = { [Field in EditableField]?: TraineeResponse[Field] | null } & {
+  cityId?: string | null;
+};
 
 export type CreateTraineeRequest = Pick<
   TraineeResponse,

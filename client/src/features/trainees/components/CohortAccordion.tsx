@@ -44,7 +44,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                 <TableCell width={200}>Name</TableCell>
                 <TableCell width={200}>Status</TableCell>
                 <TableCell width={200}>Track</TableCell>
-                <TableCell>Location</TableCell>
+                <TableCell>City</TableCell>
                 <TableCell width={100}>Avg Score</TableCell>
                 <TableCell />
               </TableRow>
@@ -66,7 +66,7 @@ const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
                     )}
                   </TableCell>
                   <TableCell>{getTrackLabel(trainee.track)}</TableCell>
-                  <TableCell>{trainee.location}</TableCell>
+                  <TableCell>{trainee.city?.name}</TableCell>
                   <TableCell sx={{ color: getScoreColor(trainee.averageAssessmentScore) }}>
                     {trainee.averageAssessmentScore !== null ? trainee.averageAssessmentScore.toFixed(1) : '-'}
                   </TableCell>

@@ -2,6 +2,8 @@ package nl.hackyourfuture.dojoserver.trainee.profile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import nl.hackyourfuture.dojoserver.geo.City;
+import nl.hackyourfuture.dojoserver.geo.CityRepository;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.trainee.assessment.Assessment;
 import nl.hackyourfuture.dojoserver.trainee.assessment.AssessmentRepository;
@@ -43,6 +45,8 @@ public class TraineeListTest {
     private TraineeRepository traineeRepository;
     @Autowired
     private AssessmentRepository assessmentRepository;
+    @Autowired
+    private CityRepository cityRepository;
 
     private Trainee earlier;
     private Trainee later;
@@ -146,6 +150,29 @@ public class TraineeListTest {
         assertThat(assessments(earlier)).bodyJson()
                 .extractingPath("$").asMap()
                 .containsEntry("averageScore", null);
+    }
+
+    // ------------------------------------------------------------------ city
+
+    @Test
+    void theCityIsEmbeddedAndNullWithoutOne() {
+        String id = RandomUtils.generateRandomId();
+        City city = cityRepository.save(City.builder()
+                .id(id)
+                .name("Stad " + id)
+                .population(1)
+                .province("Utrecht")
+                .region("Midden-Utrecht")
+                .latitude(52.09)
+                .longitude(5.12)
+                .build());
+        earlier.setCity(city);
+        traineeRepository.save(earlier);
+
+        MvcTestResult result = list("?startCohort=9001&endCohort=9002");
+        assertThat(result).bodyJson().extractingPath("$.content[0].city.id").isEqualTo(id);
+        assertThat(result).bodyJson().extractingPath("$.content[0].city.name").isEqualTo("Stad " + id);
+        assertThat(result).bodyJson().extractingPath("$.content[1]").asMap().containsEntry("city", null);
     }
 
     // ------------------------------------------------------------------ paging

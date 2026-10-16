@@ -1,6 +1,7 @@
 package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import nl.hackyourfuture.dojoserver.geo.dto.CityResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
@@ -62,11 +63,10 @@ public record TraineeSummaryResponse(
 
         @Schema(
                 description = "The city the trainee lives in",
-                example = "Amsterdam",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String location,
+        CityResponse city,
 
         @Schema(
                 description = "The mean of the trainee's best score per assessment type. Null until an assessment is scored.",
@@ -124,7 +124,7 @@ public record TraineeSummaryResponse(
                 trainee.getLearningStatus(),
                 trainee.getJobPath(),
                 trainee.getTrack(),
-                trainee.getLocation(),
+                trainee.getCity() == null ? null : CityResponse.from(trainee.getCity()),
                 averageAssessmentScore,
                 trainee.getEmail(),
                 trainee.getSlackId(),

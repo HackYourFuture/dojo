@@ -40,7 +40,7 @@ export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) =
             <TableCell width={150}>Status</TableCell>
             <TableCell>Partnership</TableCell>
             <TableCell>Responsible</TableCell>
-            <TableCell>Location</TableCell>
+            <TableCell>City</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -84,7 +84,7 @@ export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) =
                   ))}
                 </AvatarGroup>
               </TableCell>
-              <TableCell>{organisation.location}</TableCell>
+              <TableCell>{organisation.city?.name}</TableCell>
               <RowLinksCell>
                 {organisation.websiteUrl && (
                   <IconButton aria-label="Website" href={organisation.websiteUrl} target="_blank" rel="noopener">

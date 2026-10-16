@@ -30,9 +30,10 @@ public record OrganisationRequest(
                 example = "https://linkedin.com/company/acme")
         String linkedinUrl,
 
-        @Size(min = 2, max = 100)
-        @Schema(description = "The city the organisation is based in.", example = "Amsterdam")
-        String location,
+        @Size(max = 100)
+        @Schema(description = "The id of the city the organisation is based in, as listed by /api/geo/cities.",
+                example = "amsterdam")
+        String cityId,
 
         @NotNull
         @Schema(description = "Where the partnership with the organisation stands.", example = "active")
@@ -54,7 +55,6 @@ public record OrganisationRequest(
         name = name == null ? null : name.strip();
         websiteUrl = websiteUrl == null ? null : websiteUrl.strip();
         linkedinUrl = linkedinUrl == null ? null : linkedinUrl.strip();
-        location = location == null ? null : location.strip();
         notes = notes == null ? null : notes.strip();
         partnershipTypes = partnershipTypes == null ? Set.of() : partnershipTypes;
         // Not List.copyOf, which throws on a null id: a 500 instead of the validation 400.
@@ -66,7 +66,7 @@ public record OrganisationRequest(
                 organisation.getName(),
                 organisation.getWebsiteUrl(),
                 organisation.getLinkedinUrl(),
-                organisation.getLocation(),
+                organisation.getCityId(),
                 organisation.getStatus(),
                 organisation.getNotes(),
                 organisation.getPartnershipTypes(),

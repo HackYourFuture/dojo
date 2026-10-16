@@ -96,29 +96,42 @@ def replace_countries(connection: psycopg.Connection, countries: list[dict[str, 
 
 
 def replace_cities(connection: psycopg.Connection, cities: list[dict[str, Any]]) -> None:
-    """The JSON has no ids, so a city's id is its unique name as a slug, e.g. hengelo-gelderland."""
-    connection.execute("DELETE FROM cities")
+    """The JSON has no ids, so a city's id is its unique name as a slug, e.g. hengelo-gelderland.
+
+    Updated in place rather than deleted and inserted, as trainees and organisations refer to a city and deleting
+    one clears it from them. Only cities that are no longer in the JSON are deleted.
+    """
+    rows = [
+        (
+            to_slug(city["name"]),
+            city["name"],
+            city["alternativeNames"],
+            city["population"],
+            city["province"],
+            city["region"],
+            city["coordinates"]["lat"],
+            city["coordinates"]["lon"],
+            city["distanceAmsterdam"],
+        )
+        for city in cities
+    ]
     connection.cursor().executemany(
         """
         INSERT INTO cities (id, name, alternative_names, population, province, region, latitude, longitude,
                             distance_amsterdam)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (id) DO UPDATE SET name               = excluded.name,
+                                       alternative_names  = excluded.alternative_names,
+                                       population         = excluded.population,
+                                       province           = excluded.province,
+                                       region             = excluded.region,
+                                       latitude           = excluded.latitude,
+                                       longitude          = excluded.longitude,
+                                       distance_amsterdam = excluded.distance_amsterdam
         """,
-        [
-            (
-                to_slug(city["name"]),
-                city["name"],
-                city["alternativeNames"],
-                city["population"],
-                city["province"],
-                city["region"],
-                city["coordinates"]["lat"],
-                city["coordinates"]["lon"],
-                city["distanceAmsterdam"],
-            )
-            for city in cities
-        ],
+        rows,
     )
+    connection.execute("DELETE FROM cities WHERE id <> ALL(%s)", ([row[0] for row in rows],))
 
 
 def count_trainees(connection: psycopg.Connection) -> int:

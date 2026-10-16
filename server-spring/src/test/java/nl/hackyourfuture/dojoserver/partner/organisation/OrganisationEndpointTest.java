@@ -12,11 +12,14 @@ import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
 import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
 import nl.hackyourfuture.dojoserver.filestorage.FileStorageService;
+import nl.hackyourfuture.dojoserver.geo.City;
+import nl.hackyourfuture.dojoserver.geo.CityRepository;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPerson;
 import nl.hackyourfuture.dojoserver.partner.contactperson.ContactPersonRepository;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.slack.SlackClient;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,8 @@ class OrganisationEndpointTest {
     private ContactPersonRepository contactPersonRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CityRepository cityRepository;
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -158,19 +163,19 @@ class OrganisationEndpointTest {
     @Test
     void patchChangesOnlyTheKeysSentAndNullClearsOne() {
         Organisation organisation = organisation("Acme");
-        organisation.setLocation("Amsterdam");
+        organisation.setCity(cityRepository.save(city()));
         organisation.setNotes("Hires interns.");
         organisation.setPartnershipTypes(Set.of(PartnershipType.FUNDING));
         organisation.setResponsibleIds(List.of(user.getId()));
         organisationRepository.save(organisation);
 
         MvcTestResult result = patch(organisation.getId(), """
-                {"status": "inactive", "location": null}
+                {"status": "inactive", "cityId": null}
                 """);
 
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("inactive");
-        assertThat(result).bodyJson().extractingPath("$.location").isNull();
+        assertThat(result).bodyJson().extractingPath("$.city").isNull();
         assertThat(result).bodyJson().extractingPath("$.notes").isEqualTo("Hires interns.");
         assertThat(result).bodyJson().extractingPath("$.name").isEqualTo(organisation.getName());
         assertThat(result).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("funding");
@@ -292,8 +297,46 @@ class OrganisationEndpointTest {
                 .extractingPath("$.responsibles[*].id").asArray().containsExactly(user.getId());
         // Only a changed list is checked, so the gone id doesn't block other changes.
         assertThat(patch(organisation.getId(), """
-                {"location": "Utrecht"}
-                """)).hasStatusOk();
+                {"cityId": "%s"}
+                """.formatted(cityRepository.save(city()).getId()))).hasStatusOk();
+    }
+
+    // ------------------------------------------------------------------ city
+
+    @Test
+    void theCityIsSentAsItsIdAndReturnedWhole() {
+        City city = cityRepository.save(city());
+
+        MvcTestResult created = post("""
+                {"name": "Acme", "status": "active", "cityId": "%s"}
+                """.formatted(city.getId()));
+
+        assertThat(created).hasStatus(201);
+        assertThat(created).bodyJson().extractingPath("$.city.id").isEqualTo(city.getId());
+        assertThat(created).bodyJson().extractingPath("$.city.name").isEqualTo(city.getName());
+        assertThat(created).bodyJson().extractingPath("$.city.province").isEqualTo("Utrecht");
+        verify(slackClient).sendNotification(contains(city.getName()));
+
+        byte[] body = created.getResponse().getContentAsByteArray();
+        String id = JsonPath.read(new String(body, StandardCharsets.UTF_8), "$.id");
+        Map<String, Object> summary = everySummary("ASC").stream()
+                .filter(each -> id.equals(each.get("id")))
+                .findFirst()
+                .orElseThrow();
+        assertThat(summary.get("city")).asInstanceOf(InstanceOfAssertFactories.MAP).containsEntry("id", city.getId());
+    }
+
+    @Test
+    void anUnknownCityIsRejected() {
+        Organisation organisation = organisationRepository.save(organisation("Acme"));
+        String unknown = RandomUtils.generateRandomId();
+
+        assertThat(post("""
+                {"name": "Acme", "status": "active", "cityId": "%s"}
+                """.formatted(unknown))).hasStatus(400);
+        assertThat(patch(organisation.getId(), """
+                {"cityId": "%s"}
+                """.formatted(unknown))).hasStatus(400);
     }
 
     // ------------------------------------------------------------------ delete
@@ -363,6 +406,20 @@ class OrganisationEndpointTest {
     }
 
     // ------------------------------------------------------------------ helpers
+
+    // A random id and name, so it never matches a city that scripts/setup loaded.
+    private City city() {
+        String id = RandomUtils.generateRandomId();
+        return City.builder()
+                .id(id)
+                .name("Stad " + id)
+                .population(1)
+                .province("Utrecht")
+                .region("Midden-Utrecht")
+                .latitude(52.09)
+                .longitude(5.12)
+                .build();
+    }
 
     private MvcTestResult post(String body) {
         return mvc.post().uri(ORGANISATIONS).header(AUTHORIZATION, "Bearer " + token)
