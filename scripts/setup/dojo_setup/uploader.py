@@ -20,6 +20,7 @@ class UploadReport:
     volunteer_pictures: int = 0
     volunteer_interactions: int = 0
     volunteer_assignments: int = 0
+    mentor_pairings: int = 0
     organisations: int = 0
     logos: int = 0
     contact_persons: int = 0
@@ -27,13 +28,13 @@ class UploadReport:
     errors: list[str] = field(default_factory=list)
 
 
-def upload_trainee(api: DojoApi, trainee: GeneratedTrainee, report: UploadReport) -> None:
-    """Creates the trainee with its picture and records. Rejected requests are added to the report."""
+def upload_trainee(api: DojoApi, trainee: GeneratedTrainee, report: UploadReport) -> str | None:
+    """Creates the trainee with its picture and records and returns its id. Rejected requests go to the report."""
     try:
         trainee_id = api.create_trainee(trainee.profile)
     except ApiError as error:
         report.errors.append(f"Trainee {trainee.name} was not created. {error}")
-        return
+        return None
     report.trainees += 1
 
     try:
@@ -49,6 +50,7 @@ def upload_trainee(api: DojoApi, trainee: GeneratedTrainee, report: UploadReport
     report.employment_history += _add_all(
         api.add_employment_history, trainee_id, trainee.name, trainee.employment_history, report
     )
+    return trainee_id
 
 
 def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: UploadReport) -> None:
@@ -72,6 +74,7 @@ def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: Upload
     report.volunteer_assignments += _add_all(
         api.add_volunteer_assignment, volunteer_id, volunteer.name, volunteer.assignments, report
     )
+    report.mentor_pairings += _add_all(api.add_mentor_pairing, volunteer_id, volunteer.name, volunteer.pairings, report)
 
 
 def upload_organisation(api: DojoApi, organisation: GeneratedOrganisation, report: UploadReport) -> None:
