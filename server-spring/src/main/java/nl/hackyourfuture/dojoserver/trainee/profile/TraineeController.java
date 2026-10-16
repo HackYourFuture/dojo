@@ -168,6 +168,11 @@ public class TraineeController {
             description = "The trainee id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
+    @ApiResponse(
+            responseCode = "409",
+            description = "The trainee has mentor pairings, which have to keep their trainee.",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
     public void deleteTrainee(
             @AuthenticationPrincipal
             AuthenticatedUser currentUser,
