@@ -212,6 +212,27 @@ create table volunteer_assignments
 
 create index volunteer_assignments_volunteer_idx on volunteer_assignments (volunteer_id);
 
+-- Volunteer mentor pairings
+create table mentor_pairings
+(
+    id                text        not null
+        constraint mentor_pairings_pk primary key,
+    volunteer_id      text        not null
+        constraint mentor_pairings_volunteer_fk references volunteers on delete cascade,
+    trainee_id        text        not null
+        constraint mentor_pairings_trainee_fk references trainees,
+    type              text        not null,
+    start_date        date        not null,
+    last_checkin_date date,
+    end_date          date,
+    next_checkin_date date,
+    created_at        timestamptz not null,
+    updated_at        timestamptz not null
+);
+
+create index mentor_pairings_volunteer_idx on mentor_pairings (volunteer_id);
+create index mentor_pairings_trainee_idx on mentor_pairings (trainee_id);
+
 -- Partner organisations
 create table organisations
 (

@@ -121,20 +121,25 @@ def choose_amounts() -> tuple[int, int, int]:
     return trainee_count, volunteer_count, organisation_count
 
 
-def generate_trainees(api: DojoApi, trainee_count: int, report: UploadReport) -> None:
+def generate_trainees(api: DojoApi, trainee_count: int, report: UploadReport) -> list[str]:
+    """Returns the ids of the trainees the API accepted, for the volunteers to mentor."""
     _start_step("Trainees")
+    trainee_ids: list[str] = []
     if trainee_count == 0:
         output.skipped("No trainees requested")
-        return
+        return trainee_ids
     with _progress_bar("Generating trainees") as progress:
         for _ in progress.track(range(trainee_count)):
             errors_before = len(report.errors)
-            upload_trainee(api, generate_trainee(), report)
+            trainee_id = upload_trainee(api, generate_trainee(), report)
+            if trainee_id is not None:
+                trainee_ids.append(trainee_id)
             _show_new_errors(report, errors_before)
     output.success(f"Created {report.trainees} of {trainee_count} trainees")
+    return trainee_ids
 
 
-def generate_volunteers(api: DojoApi, volunteer_count: int, report: UploadReport) -> None:
+def generate_volunteers(api: DojoApi, volunteer_count: int, report: UploadReport, trainee_ids: list[str]) -> None:
     _start_step("Volunteers")
     if volunteer_count == 0:
         output.skipped("No volunteers requested")
@@ -142,7 +147,7 @@ def generate_volunteers(api: DojoApi, volunteer_count: int, report: UploadReport
     with _progress_bar("Generating volunteers") as progress:
         for _ in progress.track(range(volunteer_count)):
             errors_before = len(report.errors)
-            upload_volunteer(api, generate_volunteer(), report)
+            upload_volunteer(api, generate_volunteer(trainee_ids), report)
             _show_new_errors(report, errors_before)
     output.success(f"Created {report.volunteers} of {volunteer_count} volunteers")
 
@@ -174,6 +179,7 @@ def show_summary(report: UploadReport) -> None:
     table.add_row("Volunteer pictures", str(report.volunteer_pictures))
     table.add_row("Volunteer interactions", str(report.volunteer_interactions))
     table.add_row("Volunteer assignments", str(report.volunteer_assignments))
+    table.add_row("Mentor pairings", str(report.mentor_pairings))
     table.add_row("Organisations", str(report.organisations))
     table.add_row("Logos", str(report.logos))
     table.add_row("Contact persons", str(report.contact_persons))

@@ -2,8 +2,9 @@
 
 Fills a local Dojo environment with reproducible dummy data: a test user with an API token,
 trainees with profile pictures, assessments, interactions and employment history, volunteers with
-profile pictures, interactions and assignments, and partner organisations with logos, contact persons
-and interactions. It also loads the countries and Dutch cities from dojo_setup/geo-data.
+profile pictures, interactions, assignments and mentor pairings with those trainees, and partner
+organisations with logos, contact persons and interactions. It also loads the countries and Dutch
+cities from dojo_setup/geo-data.
 
 Usage: python main.py
 """
@@ -22,8 +23,8 @@ def main() -> None:
     api = steps.connect_to_api(config)
     trainee_count, volunteer_count, organisation_count = steps.choose_amounts()
     report = UploadReport()
-    steps.generate_trainees(api, trainee_count, report)
-    steps.generate_volunteers(api, volunteer_count, report)
+    trainee_ids = steps.generate_trainees(api, trainee_count, report)
+    steps.generate_volunteers(api, volunteer_count, report, trainee_ids)
     steps.generate_organisations(api, organisation_count, report)
     steps.show_summary(report)
 

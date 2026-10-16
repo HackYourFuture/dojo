@@ -1,9 +1,10 @@
-"""Generates a complete volunteer: the profile, portrait, interactions and assignments."""
+"""Generates a complete volunteer: the profile, portrait, interactions, assignments and mentor pairings."""
 
 from dataclasses import dataclass
 from typing import Any
 
 from dojo_setup.generators.interaction import generate_volunteer_interaction
+from dojo_setup.generators.mentor_pairing import generate_mentor_pairing
 from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.portrait import generate_portrait_url
 from dojo_setup.generators.profile import GENDERS, PRONOUNS, example_email
@@ -61,13 +62,14 @@ class GeneratedVolunteer:
     portrait_url: str
     interactions: list[dict[str, Any]]
     assignments: list[dict[str, Any]]
+    pairings: list[dict[str, Any]]
 
     @property
     def name(self) -> str:
         return f"{self.profile['firstName']} {self.profile['lastName']}"
 
 
-def generate_volunteer() -> GeneratedVolunteer:
+def generate_volunteer(trainee_ids: list[str]) -> GeneratedVolunteer:
     gender = weighted(GENDERS)
     first_name, last_name = generate_name(weighted(NAME_ORIGINS), gender)
     profile = {
@@ -89,9 +91,12 @@ def generate_volunteer() -> GeneratedVolunteer:
         "rolePreferences": fake.random_sample(ASSIGNMENT_TYPES, length=fake.random_int(0, 3)),
         "notes": "🤖 Auto generated dummy data for testing",
     }
+    # Up to three different trainees from this run. The pick depends only on how many there are, not their ids.
+    mentees = fake.random_sample(trainee_ids, length=fake.random_int(0, min(3, len(trainee_ids))))
     return GeneratedVolunteer(
         profile=profile,
         portrait_url=generate_portrait_url(gender),
         interactions=[generate_volunteer_interaction() for _ in range(fake.random_int(0, 10))],
         assignments=[generate_volunteer_assignment(profile) for _ in range(fake.random_int(0, 4))],
+        pairings=[generate_mentor_pairing(profile, trainee_id) for trainee_id in mentees],
     )

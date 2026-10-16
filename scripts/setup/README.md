@@ -5,7 +5,8 @@ Fills a local Dojo environment with dummy data for development and testing:
 
 - A test user with the API token `DOJOTEST`
 - Trainees with profile pictures, assessments, interactions and employment history
-- Volunteers with profile pictures, types, expertise, role preferences, interactions and assignments
+- Volunteers with profile pictures, types, expertise, role preferences, interactions, assignments and
+  mentor pairings with the trainees of the same run
 - Partner organisations with logos, partnership types, responsibles, contact persons and interactions
 - The countries and Dutch cities from `dojo_setup/geo-data`, which are real data, not dummy data
 
@@ -52,7 +53,8 @@ The script walks through eight steps:
    organisations (200 by default) to generate. Enter 0 to skip any of them.
 5. **Trainees**: generates the trainees and sends them to the API.
 6. **Volunteers**: generates the volunteers and sends them to the API. Their portraits come from the
-   same collection as the trainees' pictures.
+   same collection as the trainees' pictures. Each volunteer mentors up to three of the trainees from
+   step 5, so with 0 trainees there are no mentor pairings.
 7. **Organisations**: generates the organisations and sends them to the API. Logos are abstract
    images drawn by Faker, which is why the script needs Pillow. The responsibles are picked from
    the active users in the database, so the organisations only repeat on a database with the same
