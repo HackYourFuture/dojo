@@ -59,6 +59,10 @@ export const INTERACTION_TYPES: Record<ProfileType, InteractionType[]> = {
     InteractionType.Email,
     InteractionType.Feedback,
     InteractionType.InPerson,
+    InteractionType.EnglishMentorship,
+    InteractionType.TechSupport,
+    InteractionType.GradMentorship,
+    InteractionType.HRMentorship,
     InteractionType.Other,
   ],
 };
