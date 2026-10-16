@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ApiContext } from './useAuth';
 import { AxiosError } from 'axios';
-import { Loader } from '../../components';
+import { ErrorBox, Loader } from '../../components';
 import { User } from './User';
 
 // The message is the server's text (see data/http/interceptors.ts), or axios' own when there is no response.
@@ -16,13 +16,21 @@ export const ApiProvider = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [sessionError, setSessionError] = useState('');
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getSession()
       .then(setUser)
-      .catch(() => setUser(null))
+      .catch((error) => {
+        // Only a 401 means signed out. Anything else is the server failing, even after the retries.
+        if (error instanceof AxiosError && error.response?.status === 401) {
+          setUser(null);
+        } else {
+          setSessionError(`The server is not available. Refresh the page to try again. ${toErrorMessage(error)}`);
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -87,5 +95,12 @@ export const ApiProvider = () => {
     [user, errorMessage, login, logout, clearUser]
   );
 
-  return <ApiContext.Provider value={value}>{loading ? <Loader /> : <Outlet />}</ApiContext.Provider>;
+  // Without a known session every page would redirect to the login page, so show the error instead.
+  const content = sessionError ? (
+    <ErrorBox errorMessage={sessionError} sx={{ maxWidth: 400, margin: '20vh auto' }} />
+  ) : (
+    <Outlet />
+  );
+
+  return <ApiContext.Provider value={value}>{loading ? <Loader /> : content}</ApiContext.Provider>;
 };

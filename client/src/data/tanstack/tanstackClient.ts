@@ -51,7 +51,7 @@ const handleError = (error: unknown) => {
   }
 };
 
-const MAX_RETRIES = 1;
+const MAX_RETRIES = 2;
 
 // A 4xx response fails the same way on every attempt, so only network and server errors are retried.
 const shouldRetry = (failureCount: number, error: unknown) => {
@@ -81,6 +81,9 @@ export const queryClient = new QueryClient({
     mutations: { retry: shouldRetry },
   },
 });
+
+// The provider mounts it only once Root renders. Until then, a retry paused in a hidden tab would never resume.
+queryClient.mount();
 
 // Profile edit forms diff against the loaded profile, so a refetch mid-edit would undo a colleague's newer values.
 export const PROFILE_QUERY_OPTIONS = { refetchOnMount: false, refetchOnWindowFocus: false, refetchOnReconnect: false };
