@@ -38,6 +38,7 @@ public class TraineeListTest {
     private static final String TRAINEES = "/api/trainees";
     private static final int EARLIER_COHORT = 9001;
     private static final int LATER_COHORT = 9002;
+    private static final String SEEDED_COHORTS = "?startCohort=9001&endCohort=9002";
 
     @Autowired
     private MockMvcTester mvc;
@@ -55,7 +56,10 @@ public class TraineeListTest {
     @BeforeEach
     void givenThreeTrainees() {
         earlier = traineeRepository.save(trainee("Ann", "Earlier", EARLIER_COHORT));
-        later = traineeRepository.save(trainee("Bob", "Later", LATER_COHORT));
+        later = trainee("Bob", "Later", LATER_COHORT);
+        later.setLearningStatus(LearningStatus.ON_HOLD);
+        later.setJobPath(JobPath.SEARCHING);
+        later = traineeRepository.save(later);
         noCohort = traineeRepository.save(trainee("Cam", "Nocohort", null));
     }
 
@@ -99,6 +103,68 @@ public class TraineeListTest {
     @Test
     void aRangeExcludesTheTraineesWithNoCohort() {
         ids("?startCohort=9000&endCohort=9999").doesNotContain(noCohort.getId());
+    }
+
+    @Test
+    void aStatusIsGivenByItsConstantName() {
+        ids(SEEDED_COHORTS + "&status=ON_HOLD").containsExactly(later.getId());
+        assertThat(list(SEEDED_COHORTS + "&status=on-hold")).hasStatus(400);
+    }
+
+    @Test
+    void repeatedStatusesMatchAnyOfThem() {
+        ids(SEEDED_COHORTS + "&status=ON_HOLD&status=STUDYING").containsExactly(earlier.getId(), later.getId());
+        ids(SEEDED_COHORTS + "&status=ON_HOLD,STUDYING").containsExactly(earlier.getId(), later.getId());
+        ids(SEEDED_COHORTS + "&status=QUIT").isEmpty();
+    }
+
+    @Test
+    void repeatedJobPathsMatchAnyOfThem() {
+        ids(SEEDED_COHORTS + "&jobPath=SEARCHING").containsExactly(later.getId());
+        ids(SEEDED_COHORTS + "&jobPath=SEARCHING&jobPath=NOT_GRADUATED")
+                .containsExactly(earlier.getId(), later.getId());
+    }
+
+    @Test
+    void theProvinceIsTheOneOfTheCity() {
+        City city = cityRepository.save(city());
+        earlier.setCity(city);
+        traineeRepository.save(earlier);
+
+        ids(SEEDED_COHORTS + "&province=" + city.getProvince()).containsExactly(earlier.getId());
+        ids(SEEDED_COHORTS + "&province=" + city.getProvince() + "&province=Elsewhere")
+                .containsExactly(earlier.getId());
+    }
+
+    @Test
+    void searchWordsKeepTheCohortOrder() {
+        later.setPreferredName("Ann");
+        traineeRepository.save(later);
+
+        ids(SEEDED_COHORTS + "&q=ann&direction=ASC").containsExactly(earlier.getId(), later.getId());
+        ids(SEEDED_COHORTS + "&q=ann&direction=DESC").containsExactly(later.getId(), earlier.getId());
+    }
+
+    @Test
+    void searchWordsMatchLikeTheSearch() {
+        ids(SEEDED_COHORTS + "&q=ann earlier").containsExactly(earlier.getId());
+        ids(SEEDED_COHORTS + "&q=erlier").containsExactly(earlier.getId());
+        ids(SEEDED_COHORTS + "&q=").containsExactly(earlier.getId(), later.getId());
+    }
+
+    @Test
+    void searchWordsThatMatchNoTraineeLeaveAnEmptyPage() {
+        MvcTestResult result = list(SEEDED_COHORTS + "&q=xyzzy");
+
+        assertThat(result).bodyJson().extractingPath("$.content").asArray().isEmpty();
+        assertThat(result).bodyJson().extractingPath("$.page.totalElements").isEqualTo(0);
+    }
+
+    @Test
+    void everyFilterMustMatch() {
+        ids(SEEDED_COHORTS + "&q=earlier&status=STUDYING").containsExactly(earlier.getId());
+        ids(SEEDED_COHORTS + "&q=earlier&status=ON_HOLD").isEmpty();
+        ids(SEEDED_COHORTS + "&status=ON_HOLD&jobPath=NOT_GRADUATED").isEmpty();
     }
 
     // ------------------------------------------------------------------ average score
@@ -156,22 +222,13 @@ public class TraineeListTest {
 
     @Test
     void theCityIsEmbeddedAndNullWithoutOne() {
-        String id = RandomUtils.generateRandomId();
-        City city = cityRepository.save(City.builder()
-                .id(id)
-                .name("Stad " + id)
-                .population(1)
-                .province("Utrecht")
-                .region("Midden-Utrecht")
-                .latitude(52.09)
-                .longitude(5.12)
-                .build());
+        City city = cityRepository.save(city());
         earlier.setCity(city);
         traineeRepository.save(earlier);
 
-        MvcTestResult result = list("?startCohort=9001&endCohort=9002");
-        assertThat(result).bodyJson().extractingPath("$.content[0].city.id").isEqualTo(id);
-        assertThat(result).bodyJson().extractingPath("$.content[0].city.name").isEqualTo("Stad " + id);
+        MvcTestResult result = list(SEEDED_COHORTS);
+        assertThat(result).bodyJson().extractingPath("$.content[0].city.id").isEqualTo(city.getId());
+        assertThat(result).bodyJson().extractingPath("$.content[0].city.name").isEqualTo(city.getName());
         assertThat(result).bodyJson().extractingPath("$.content[1]").asMap().containsEntry("city", null);
     }
 
@@ -217,6 +274,20 @@ public class TraineeListTest {
                 .track(Track.CORE_PROGRAM)
                 .learningStatus(LearningStatus.STUDYING)
                 .jobPath(JobPath.NOT_GRADUATED)
+                .build();
+    }
+
+    // Its province is as unique as its id, so only the seeded trainees can be in it.
+    private static City city() {
+        String id = RandomUtils.generateRandomId();
+        return City.builder()
+                .id(id)
+                .name("Stad " + id)
+                .population(1)
+                .province("Provincie" + id)
+                .region("Midden-Utrecht")
+                .latitude(52.09)
+                .longitude(5.12)
                 .build();
     }
 

@@ -8,6 +8,7 @@ import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
 import nl.hackyourfuture.dojoserver.geo.GeoService;
 import nl.hackyourfuture.dojoserver.picture.PictureService;
+import nl.hackyourfuture.dojoserver.search.SearchService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
@@ -26,6 +27,7 @@ import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
@@ -47,9 +49,27 @@ public class TraineeService {
     private final GeoService geoService;
 
     @Transactional(readOnly = true)
-    public Page<TraineeSummaryResponse> getTrainees(Integer startCohort, Integer endCohort,
+    public Page<TraineeSummaryResponse> getTrainees(String query, List<LearningStatus> statuses,
+            List<JobPath> jobPaths, List<String> provinces, Integer startCohort, Integer endCohort,
             Sort.Direction direction, int page, int size) {
         List<PredicateSpecification<Trainee>> filters = new ArrayList<>();
+        if (query != null && !query.isBlank()) {
+            // The search's close spellings can't be queried, so the matching ids come from Java.
+            List<String> ids = traineeRepository.findAll().stream()
+                    .filter(trainee -> SearchService.matches(trainee, query))
+                    .map(Trainee::getId)
+                    .toList();
+            filters.add(TraineeSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(statuses)) {
+            filters.add(TraineeSpecifications.learningStatusIn(statuses));
+        }
+        if (!CollectionUtils.isEmpty(jobPaths)) {
+            filters.add(TraineeSpecifications.jobPathIn(jobPaths));
+        }
+        if (!CollectionUtils.isEmpty(provinces)) {
+            filters.add(TraineeSpecifications.provinceIn(provinces));
+        }
         if (startCohort != null) {
             filters.add(TraineeSpecifications.currentCohortFrom(startCohort));
         }

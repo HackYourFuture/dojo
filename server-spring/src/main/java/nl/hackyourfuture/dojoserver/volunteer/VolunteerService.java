@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
 import nl.hackyourfuture.dojoserver.picture.PictureService;
+import nl.hackyourfuture.dojoserver.search.SearchService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
@@ -20,11 +21,16 @@ import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerSummaryResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.PredicateSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -37,10 +43,32 @@ public class VolunteerService {
     private final PictureService pictureService;
 
     @Transactional(readOnly = true)
-    public Page<VolunteerSummaryResponse> getVolunteers(Sort.Direction direction, int page, int size) {
+    public Page<VolunteerSummaryResponse> getVolunteers(String query, List<VolunteerStatus> statuses,
+            List<VolunteerType> types, List<VolunteerExpertise> expertise, Sort.Direction direction, int page,
+            int size) {
+        List<PredicateSpecification<Volunteer>> filters = new ArrayList<>();
+        if (query != null && !query.isBlank()) {
+            // The search's close spellings can't be queried, so the matching ids come from Java.
+            List<String> ids = volunteerRepository.findAll().stream()
+                    .filter(volunteer -> SearchService.matches(volunteer, query))
+                    .map(Volunteer::getId)
+                    .toList();
+            filters.add(VolunteerSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(statuses)) {
+            filters.add(VolunteerSpecifications.statusIn(statuses));
+        }
+        if (!CollectionUtils.isEmpty(types)) {
+            filters.add(VolunteerSpecifications.volunteerTypeIn(types));
+        }
+        if (!CollectionUtils.isEmpty(expertise)) {
+            filters.add(VolunteerSpecifications.expertiseIn(expertise));
+        }
+
         Sort sort = Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase(),
                 Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
-        return volunteerRepository.findAll(PageRequest.of(page, size, sort)).map(VolunteerSummaryResponse::from);
+        return volunteerRepository.findAll(Specification.where(PredicateSpecification.allOf(filters)),
+                PageRequest.of(page, size, sort)).map(VolunteerSummaryResponse::from);
     }
 
     @Transactional(readOnly = true)

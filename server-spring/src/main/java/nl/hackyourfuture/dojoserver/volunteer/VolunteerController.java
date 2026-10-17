@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.picture.PictureResponses;
@@ -38,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/volunteers")
 @RequiredArgsConstructor
@@ -47,7 +50,8 @@ public class VolunteerController {
 
     @GetMapping
     @Operation(summary = "List volunteers",
-            description = "Returns a page of volunteer summaries, ordered by first name.")
+            description = "Returns a page of volunteer summaries, ordered by first name. Every filter narrows the"
+                    + " page; a repeated one matches any of its values.")
     @ApiResponse(responseCode = "200", description = "The page of volunteer summaries")
     @ApiResponse(
             responseCode = "400",
@@ -55,6 +59,24 @@ public class VolunteerController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public Page<VolunteerSummaryResponse> getVolunteers(
+            @Parameter(description = "Only volunteers the search finds for these words: by name, email, GitHub"
+                    + " handle, company, job role or notes, close spellings included", example = "jan")
+            @RequestParam(required = false)
+            @Size(max = 100)
+            String q,
+
+            @Parameter(description = "Only volunteers with one of these statuses")
+            @RequestParam(required = false)
+            List<VolunteerStatus> status,
+
+            @Parameter(description = "Only volunteers of at least one of these types")
+            @RequestParam(required = false)
+            List<VolunteerType> type,
+
+            @Parameter(description = "Only volunteers with at least one of these kinds of expertise")
+            @RequestParam(required = false)
+            List<VolunteerExpertise> expertise,
+
             @Parameter(description = "The direction to order the first names in")
             @RequestParam(defaultValue = "ASC")
             Sort.Direction direction,
@@ -70,7 +92,7 @@ public class VolunteerController {
             @Max(100)
             int size
     ) {
-        return volunteerService.getVolunteers(direction, page, size);
+        return volunteerService.getVolunteers(q, status, type, expertise, direction, page, size);
     }
 
     @GetMapping("/{id}")
