@@ -2,6 +2,9 @@ import { Box, Button } from '@mui/material';
 
 import { ReactNode } from 'react';
 
+// The tabs with a list of items that each have their own add, edit and delete.
+const ITEM_TABS = ['interactions', 'pairings'];
+
 interface ProfileButtonsProps {
   activeTab: string;
   isEditMode: boolean;
@@ -21,8 +24,9 @@ export const ProfileButtons = ({
   onCancel,
   actions,
 }: ProfileButtonsProps) => {
-  // Interactions are edited one by one, so their tab only needs Save and Cancel while the profile is being edited.
-  const showsEditButtons = activeTab !== 'interactions' || isEditMode;
+  // Interactions and pairings are edited one by one, so their tabs only need Save and Cancel while the profile is
+  // being edited.
+  const showsEditButtons = !ITEM_TABS.includes(activeTab) || isEditMode;
 
   return (
     <Box sx={{ display: 'flex', gap: 1 }}>

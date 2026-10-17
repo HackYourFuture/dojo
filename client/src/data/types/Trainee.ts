@@ -152,3 +152,11 @@ export interface NewTrainee {
   learningStatus: LearningStatus;
   jobPath: JobPath;
 }
+
+// A trainee as another record refers to them, like the trainee of a mentor pairing.
+export interface TraineeReference {
+  readonly id: string;
+  name: string;
+  profilePath: string;
+  thumbnailUrl: string | null;
+}

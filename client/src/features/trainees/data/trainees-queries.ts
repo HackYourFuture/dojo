@@ -1,10 +1,13 @@
 import { Cohort, TraineeFilters, TraineeSummary } from '../models/trainee-summary';
-import { InfiniteData, keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
+import { InfiniteData, keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Page, getLoadedItemsAndTotal, getNextPageParam } from '../../../data/pagination';
+import { getTraineeSummaries, searchTrainees } from '../api/api';
 
 import { LearningStatus } from '../../../data/types/Trainee';
 import { traineeListKeys } from './keys';
-import { getTraineeSummaries } from '../api/api';
+
+// The search finds nothing useful for a single letter.
+export const MIN_TRAINEE_QUERY_LENGTH = 2;
 
 const LEARNING_STATUS_ORDER = [
   LearningStatus.Studying,
@@ -53,5 +56,14 @@ export const useGetTraineesByCohort = (filters: TraineeFilters) => {
     select: selectCohorts,
     // The list stays on screen while the next filter loads.
     placeholderData: keepPreviousData,
+  });
+};
+
+/** Hook to find trainees for a picker: the first page of the search, newest cohort first. */
+export const useSearchTrainees = (query: string) => {
+  return useQuery({
+    queryKey: traineeListKeys.search(query),
+    queryFn: () => searchTrainees(query),
+    enabled: query.length >= MIN_TRAINEE_QUERY_LENGTH,
   });
 };
