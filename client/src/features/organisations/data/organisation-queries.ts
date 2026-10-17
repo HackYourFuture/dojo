@@ -1,18 +1,21 @@
-import { getLoadedItems, getNextPageParam } from '../../../data/pagination';
+import { getLoadedItemsAndTotal, getNextPageParam } from '../../../data/pagination';
 import { getOrganisation, getOrganisationSummaries } from '../api/api';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
+import { OrganisationFilters } from '../Organisation';
 import { PROFILE_QUERY_OPTIONS } from '../../../data/tanstack/tanstackClient';
 import { organisationKeys } from './keys';
 
-/** Hook to get the organisations, page by page. */
-export const useGetOrganisations = () => {
+/** Hook to get the organisations that match the filters, page by page. */
+export const useGetOrganisations = (filters: OrganisationFilters) => {
   return useInfiniteQuery({
-    queryKey: organisationKeys.list(),
-    queryFn: ({ pageParam }) => getOrganisationSummaries(pageParam),
+    queryKey: organisationKeys.filteredList(filters),
+    queryFn: ({ pageParam }) => getOrganisationSummaries(pageParam, filters),
     initialPageParam: 0,
     getNextPageParam,
-    select: getLoadedItems,
+    select: getLoadedItemsAndTotal,
+    // The list stays on screen while the next filter loads.
+    placeholderData: keepPreviousData,
   });
 };
 

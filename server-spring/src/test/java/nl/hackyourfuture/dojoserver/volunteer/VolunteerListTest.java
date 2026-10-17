@@ -56,6 +56,8 @@ class VolunteerListTest {
         ids(seeded).containsExactly(annabel.getId(), bob.getId(), cameron.getId());
         ids("?q=annabel " + annabel.getLastName()).containsExactly(annabel.getId());
         ids("?q=xyzzy" + annabel.getLastName()).isEmpty();
+        assertThat(list("?q= ")).bodyJson().extractingPath("$.page.totalElements")
+                .isEqualTo((int) volunteerRepository.count());
     }
 
     @Test

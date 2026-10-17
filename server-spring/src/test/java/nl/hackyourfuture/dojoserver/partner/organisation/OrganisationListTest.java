@@ -76,6 +76,7 @@ class OrganisationListTest {
         ids(seeded).containsExactly(alpha.getId(), beta.getId(), gamma.getId());
         ids(seeded + " beta").containsExactly(beta.getId());
         ids(seeded + "xyzzy").isEmpty();
+        ids("?q= &province=" + alphaCity.getProvince()).containsExactly(alpha.getId());
     }
 
     @Test

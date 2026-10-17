@@ -17,7 +17,7 @@ final class VolunteerSpecifications {
         return (volunteer, cb) -> volunteer.get("status").in(statuses);
     }
 
-    // An empty value, as in type=,tech, arrives as null.
+    // An empty value, as in type=,TECH, arrives as null.
     static PredicateSpecification<Volunteer> volunteerTypeIn(List<VolunteerType> types) {
         return (volunteer, cb) -> cb.or(types.stream()
                 .filter(Objects::nonNull)
@@ -25,6 +25,7 @@ final class VolunteerSpecifications {
                 .toArray(Predicate[]::new));
     }
 
+    // An empty value, as in expertise=,BACKEND, arrives as null.
     static PredicateSpecification<Volunteer> expertiseIn(List<VolunteerExpertise> expertise) {
         return (volunteer, cb) -> cb.or(expertise.stream()
                 .filter(Objects::nonNull)

@@ -1,4 +1,4 @@
-import { NewOrganisation, OrganisationChanges } from '../Organisation';
+import { NewOrganisation, OrganisationChanges, OrganisationFilters } from '../Organisation';
 import { OrganisationResponse, OrganisationSummaryResponse } from './types';
 import { PAGE_SIZE, PagedModel, mapPageToDomain } from '../../../data/pagination';
 import {
@@ -10,10 +10,11 @@ import {
 
 import axios from 'axios';
 
-// Sorted by name, from A to Z.
-export const getOrganisationSummaries = async (page: number) => {
+// Sorted by name, from A to Z. A filter with several values goes as partnership=A&partnership=B.
+export const getOrganisationSummaries = async (page: number, filters: OrganisationFilters) => {
   const { data } = await axios.get<PagedModel<OrganisationSummaryResponse>>('/api/organisations', {
-    params: { page, size: PAGE_SIZE },
+    params: { page, size: PAGE_SIZE, ...filters, q: filters.q || undefined },
+    paramsSerializer: { indexes: null },
   });
   return mapPageToDomain(data, mapOrganisationSummaryToDomain);
 };
