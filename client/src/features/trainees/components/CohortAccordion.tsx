@@ -19,6 +19,8 @@ import { memo } from 'react';
 
 export interface CohortAccordionProps {
   cohortInfo: Cohort;
+  // Open when it mounts.
+  defaultExpanded: boolean;
 }
 
 /**
@@ -27,12 +29,10 @@ export interface CohortAccordionProps {
  * @param {CohortAccordionProps} cohortInfo the cohort and its trainees.
  * @returns {ReactNode} A React element that renders the trainees of one cohort in an accordion component.
  */
-const CohortAccordion = ({ cohortInfo }: CohortAccordionProps) => {
-  const expandFlag = cohortInfo.cohort !== null ? true : false;
-
+const CohortAccordion = ({ cohortInfo, defaultExpanded }: CohortAccordionProps) => {
   return (
     <>
-      <Accordion defaultExpanded={expandFlag}>
+      <Accordion defaultExpanded={defaultExpanded}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {cohortInfo.cohort !== null ? `Cohort ${cohortInfo.cohort}` : 'No cohort assigned'}
         </AccordionSummary>
