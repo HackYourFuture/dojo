@@ -61,11 +61,11 @@ class OrganisationListTest {
         alphaCity = cityRepository.save(city());
         gammaCity = cityRepository.save(city());
 
-        alpha = organisation(name + " Alpha", alphaCity, Set.of(PartnershipType.VOLUNTEER, PartnershipType.FUNDING),
-                List.of(jane.getId()));
-        beta = organisation(name + " Beta", null, Set.of(PartnershipType.EMPLOYMENT),
+        alpha = organisation(name + " Alpha", OrganisationStatus.ACTIVE, alphaCity,
+                Set.of(PartnershipType.VOLUNTEER, PartnershipType.FUNDING), List.of(jane.getId()));
+        beta = organisation(name + " Beta", OrganisationStatus.NEVER_ENGAGED, null, Set.of(PartnershipType.EMPLOYMENT),
                 List.of(omar.getId(), jane.getId()));
-        gamma = organisation(name + " Gamma", gammaCity, Set.of(), List.of());
+        gamma = organisation(name + " Gamma", OrganisationStatus.INACTIVE, gammaCity, Set.of(), List.of());
         alpha = organisationRepository.save(alpha);
         beta = organisationRepository.save(beta);
         gamma = organisationRepository.save(gamma);
@@ -77,6 +77,18 @@ class OrganisationListTest {
         ids(seeded + " beta").containsExactly(beta.getId());
         ids(seeded + "xyzzy").isEmpty();
         ids("?q= &province=" + alphaCity.getProvince()).containsExactly(alpha.getId());
+    }
+
+    @Test
+    void aStatusIsGivenByItsConstantName() {
+        ids(seeded + "&status=INACTIVE").containsExactly(gamma.getId());
+        assertThat(list(seeded + "&status=inactive")).hasStatus(400);
+    }
+
+    @Test
+    void repeatedStatusesMatchAnyOfThem() {
+        ids(seeded + "&status=ACTIVE&status=NEVER_ENGAGED").containsExactly(alpha.getId(), beta.getId());
+        ids(seeded + "&status=,INACTIVE").containsExactly(gamma.getId());
     }
 
     @Test
@@ -118,6 +130,8 @@ class OrganisationListTest {
     void everyFilterMustMatch() {
         ids(seeded + "&responsibleId=" + jane.getId() + "&partnership=EMPLOYMENT").containsExactly(beta.getId());
         ids(seeded + "&responsibleId=" + omar.getId() + "&province=" + alphaCity.getProvince()).isEmpty();
+        ids(seeded + "&status=NEVER_ENGAGED&responsibleId=" + jane.getId()).containsExactly(beta.getId());
+        ids(seeded + "&status=ACTIVE&partnership=EMPLOYMENT").isEmpty();
     }
 
     private MvcTestResult list(String query) {
@@ -151,13 +165,13 @@ class OrganisationListTest {
                 .build();
     }
 
-    private static Organisation organisation(String name, City city, Set<PartnershipType> partnershipTypes,
-            List<String> responsibleIds) {
+    private static Organisation organisation(String name, OrganisationStatus status, City city,
+            Set<PartnershipType> partnershipTypes, List<String> responsibleIds) {
         return Organisation.builder()
                 .id(RandomUtils.generateRandomId())
                 .name(name)
                 .city(city)
-                .status(OrganisationStatus.ACTIVE)
+                .status(status)
                 .partnershipTypes(partnershipTypes)
                 .responsibleIds(responsibleIds)
                 .build();

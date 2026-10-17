@@ -65,6 +65,10 @@ public class OrganisationController {
             @Size(max = 100)
             String q,
 
+            @Parameter(description = "Only organisations with one of these statuses")
+            @RequestParam(required = false)
+            List<OrganisationStatus> status,
+
             @Parameter(description = "Only organisations that at least one of these users is responsible for",
                     example = "WTh1qLhy3K")
             @RequestParam(required = false)
@@ -95,8 +99,8 @@ public class OrganisationController {
             @Max(100)
             int size
     ) {
-        return organisationService.getOrganisations(q, responsibleId, partnership, province, direction, page,
-                size);
+        return organisationService.getOrganisations(q, status, responsibleId, partnership, province, direction,
+                page, size);
     }
 
     @GetMapping("/{id}")

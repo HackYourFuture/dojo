@@ -25,6 +25,7 @@ export interface Responsible {
 // The filters of the organisations list, named as in its URL and the API.
 export interface OrganisationFilters {
   q: string;
+  status: string[];
   responsibleId: string[];
   partnership: string[];
   province: string[];

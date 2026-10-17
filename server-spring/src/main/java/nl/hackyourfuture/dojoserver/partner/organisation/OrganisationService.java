@@ -50,9 +50,9 @@ public class OrganisationService {
     private final GeoService geoService;
 
     @Transactional(readOnly = true)
-    public Page<OrganisationSummaryResponse> getOrganisations(String query, List<String> responsibleIds,
-            List<PartnershipType> partnershipTypes, List<String> provinces, Sort.Direction direction, int page,
-            int size) {
+    public Page<OrganisationSummaryResponse> getOrganisations(String query, List<OrganisationStatus> statuses,
+            List<String> responsibleIds, List<PartnershipType> partnershipTypes, List<String> provinces,
+            Sort.Direction direction, int page, int size) {
         List<PredicateSpecification<Organisation>> filters = new ArrayList<>();
         if (query != null && !query.isBlank()) {
             // The search's close spellings can't be queried, so the matching ids come from Java.
@@ -61,6 +61,9 @@ public class OrganisationService {
                     .map(Organisation::getId)
                     .toList();
             filters.add(OrganisationSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(statuses)) {
+            filters.add(OrganisationSpecifications.statusIn(statuses));
         }
         if (!CollectionUtils.isEmpty(responsibleIds)) {
             filters.add(OrganisationSpecifications.responsibleIdIn(responsibleIds));

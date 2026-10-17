@@ -21,6 +21,7 @@ const OrganisationsOverviewPage = () => {
   const [searchParams] = useSearchParams();
   const filters: OrganisationFilters = {
     q: searchParams.get('q') ?? '',
+    status: searchParams.getAll('status'),
     responsibleId: searchParams.getAll('responsibleId'),
     partnership: searchParams.getAll('partnership'),
     province: searchParams.getAll('province'),

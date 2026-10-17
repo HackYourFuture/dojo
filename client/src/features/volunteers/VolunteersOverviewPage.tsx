@@ -24,6 +24,7 @@ const VolunteersOverviewPage = () => {
     status: searchParams.getAll('status'),
     type: searchParams.getAll('type'),
     expertise: searchParams.getAll('expertise'),
+    rolePreference: searchParams.getAll('rolePreference'),
   };
   // Searched once the typing stops, not at every key.
   const q = useDebounce(filters.q, 300);
