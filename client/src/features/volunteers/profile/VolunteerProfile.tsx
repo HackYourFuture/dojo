@@ -4,12 +4,14 @@ import { EDITABLE_VOLUNTEER_FIELDS, EditableVolunteerField, Volunteer, Volunteer
 import { ContactFields } from '../../../components/profile/ContactFields';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
 import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
+import { PairingsTabLabel } from '../pairings/components/PairingsTabLabel';
 import { ProfileButtons } from '../../../components/profile/ProfileButtons';
 import { ProfileSection } from '../../../components/profile/ProfileSection';
 import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
 import { VolunteerActions } from './VolunteerActions';
 import VolunteerHeader from './VolunteerHeader';
 import VolunteerInfo from './VolunteerInfo';
+import { VolunteerPairings } from '../pairings/VolunteerPairings';
 import { createFieldChangeHandlers } from '../../../components/profile/fieldChangeHandlers';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../hooks/useProfileSave';
@@ -32,7 +34,7 @@ const getChangedFields = (original: Volunteer, edited: Volunteer): VolunteerChan
 };
 
 // The open tab is in the URL, and Slack links to the interactions tab by name.
-const TABS = ['overview', 'contact', 'interactions'];
+const TABS = ['overview', 'contact', 'pairings', 'interactions'];
 
 interface VolunteerProfileProps {
   volunteer: Volunteer;
@@ -86,6 +88,7 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
         <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab}>
           <Tab label="Overview" value="overview" />
           <Tab label="Contact" value="contact" />
+          <Tab label={<PairingsTabLabel volunteerId={volunteer.id} />} value="pairings" />
           <Tab label={<InteractionsTabLabel profileType="volunteer" profileId={volunteer.id} />} value="interactions" />
         </ProfileTabBar>
       </Stack>
@@ -108,6 +111,7 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
             />
           </ProfileSection>
         )}
+        {activeTab === 'pairings' && <VolunteerPairings volunteerId={volunteer.id} />}
         {activeTab === 'interactions' && <InteractionsInfo profileType="volunteer" profileId={volunteer.id} />}
       </Box>
     </Box>
