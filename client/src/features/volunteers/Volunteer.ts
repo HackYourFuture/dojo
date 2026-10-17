@@ -10,6 +10,7 @@ export interface VolunteerFilters {
   status: string[];
   type: string[];
   expertise: string[];
+  rolePreference: string[];
 }
 
 export interface VolunteerSummary {

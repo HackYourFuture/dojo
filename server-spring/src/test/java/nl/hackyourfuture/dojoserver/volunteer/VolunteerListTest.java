@@ -43,12 +43,14 @@ class VolunteerListTest {
         String lastName = RandomUtils.generateRandomId();
         seeded = "?q=" + lastName;
         annabel = volunteerRepository.save(volunteer("Annabel", lastName, VolunteerStatus.ACTIVE,
-                Set.of(VolunteerType.TECH), Set.of(VolunteerExpertise.BACKEND)));
+                Set.of(VolunteerType.TECH), Set.of(VolunteerExpertise.BACKEND),
+                Set.of(VolunteerAssignmentType.TEACHING)));
         bob = volunteerRepository.save(volunteer("Bob", lastName, VolunteerStatus.PAUSED,
                 Set.of(VolunteerType.PERSONAL_DEVELOPMENT),
-                Set.of(VolunteerExpertise.HR_MENTOR, VolunteerExpertise.ENGLISH_MENTOR)));
+                Set.of(VolunteerExpertise.HR_MENTOR, VolunteerExpertise.ENGLISH_MENTOR),
+                Set.of(VolunteerAssignmentType.TECH_INTERVIEW, VolunteerAssignmentType.HR_MENTORSHIP)));
         cameron = volunteerRepository.save(volunteer("Cameron", lastName, VolunteerStatus.STOPPED,
-                Set.of(VolunteerType.TECH, VolunteerType.PERSONAL_DEVELOPMENT), Set.of()));
+                Set.of(VolunteerType.TECH, VolunteerType.PERSONAL_DEVELOPMENT), Set.of(), Set.of()));
     }
 
     @Test
@@ -88,9 +90,21 @@ class VolunteerListTest {
     }
 
     @Test
+    void repeatedRolePreferencesMatchAnyOfThem() {
+        ids(seeded + "&rolePreference=TEACHING").containsExactly(annabel.getId());
+        ids(seeded + "&rolePreference=HR_MENTORSHIP&rolePreference=TEACHING")
+                .containsExactly(annabel.getId(), bob.getId());
+        ids(seeded + "&rolePreference=WORKSHOP_HOST").isEmpty();
+        ids(seeded + "&rolePreference=,TEACHING").containsExactly(annabel.getId());
+        assertThat(list(seeded + "&rolePreference=teaching")).hasStatus(400);
+    }
+
+    @Test
     void everyFilterMustMatch() {
         ids(seeded + "&type=TECH&status=STOPPED").containsExactly(cameron.getId());
         ids(seeded + "&type=TECH&expertise=HR_MENTOR").isEmpty();
+        ids(seeded + "&type=PERSONAL_DEVELOPMENT&rolePreference=TECH_INTERVIEW").containsExactly(bob.getId());
+        ids(seeded + "&status=ACTIVE&rolePreference=TECH_INTERVIEW").isEmpty();
     }
 
     @Test
@@ -107,7 +121,8 @@ class VolunteerListTest {
     }
 
     private static Volunteer volunteer(String firstName, String lastName, VolunteerStatus status,
-            Set<VolunteerType> types, Set<VolunteerExpertise> expertise) {
+            Set<VolunteerType> types, Set<VolunteerExpertise> expertise,
+            Set<VolunteerAssignmentType> rolePreferences) {
         return Volunteer.builder()
                 .id(RandomUtils.generateRandomId())
                 .firstName(firstName)
@@ -116,6 +131,7 @@ class VolunteerListTest {
                 .status(status)
                 .volunteerTypes(types)
                 .expertise(expertise)
+                .rolePreferences(rolePreferences)
                 .build();
     }
 }

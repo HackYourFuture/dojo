@@ -44,8 +44,8 @@ public class VolunteerService {
 
     @Transactional(readOnly = true)
     public Page<VolunteerSummaryResponse> getVolunteers(String query, List<VolunteerStatus> statuses,
-            List<VolunteerType> types, List<VolunteerExpertise> expertise, Sort.Direction direction, int page,
-            int size) {
+            List<VolunteerType> types, List<VolunteerExpertise> expertise,
+            List<VolunteerAssignmentType> rolePreferences, Sort.Direction direction, int page, int size) {
         List<PredicateSpecification<Volunteer>> filters = new ArrayList<>();
         if (query != null && !query.isBlank()) {
             // The search's close spellings can't be queried, so the matching ids come from Java.
@@ -63,6 +63,9 @@ public class VolunteerService {
         }
         if (!CollectionUtils.isEmpty(expertise)) {
             filters.add(VolunteerSpecifications.expertiseIn(expertise));
+        }
+        if (!CollectionUtils.isEmpty(rolePreferences)) {
+            filters.add(VolunteerSpecifications.rolePreferenceIn(rolePreferences));
         }
 
         Sort sort = Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase(),

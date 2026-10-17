@@ -1,4 +1,5 @@
 import { Button, Checkbox, InputAdornment, ListItemText, MenuItem, Stack, TextField } from '@mui/material';
+import { VolunteerAssignmentType, volunteerAssignmentTypeLabels } from '../VolunteerAssignmentType';
 import { VolunteerExpertise, volunteerExpertiseLabels } from '../VolunteerExpertise';
 import { VolunteerStatus, volunteerStatusLabels } from '../VolunteerStatus';
 import { VolunteerType, volunteerTypeLabels } from '../VolunteerType';
@@ -23,6 +24,11 @@ const typeOptions: SelectOption[] = Object.values(VolunteerType).map((type) => (
 const expertiseOptions: SelectOption[] = Object.values(VolunteerExpertise).map((expertise) => ({
   label: volunteerExpertiseLabels[expertise],
   value: toApiEnumName(expertise),
+}));
+
+const rolePreferenceOptions: SelectOption[] = Object.values(VolunteerAssignmentType).map((type) => ({
+  label: volunteerAssignmentTypeLabels[type],
+  value: toApiEnumName(type),
 }));
 
 const URL_UPDATE = { replace: true, preventScrollReset: true, flushSync: true };
@@ -131,6 +137,24 @@ export const VolunteerFilterBar = ({ filters }: VolunteerFilterBarProps) => {
         }}
       >
         {menuItems(expertiseOptions, filters.expertise)}
+      </TextField>
+      <TextField
+        select
+        size="small"
+        label="Role preferences"
+        value={filters.rolePreference}
+        onChange={(event) => setFilter('rolePreference', toValues(event.target.value))}
+        sx={{ width: 170 }}
+        slotProps={{
+          select: {
+            multiple: true,
+            displayEmpty: true,
+            renderValue: () => pickedLabels(rolePreferenceOptions, filters.rolePreference),
+          },
+          inputLabel: { shrink: true },
+        }}
+      >
+        {menuItems(rolePreferenceOptions, filters.rolePreference)}
       </TextField>
       {searchParams.size > 0 && <Button onClick={clearFilters}>Clear filters</Button>}
     </Stack>

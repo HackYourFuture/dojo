@@ -14,6 +14,10 @@ final class OrganisationSpecifications {
     private OrganisationSpecifications() {
     }
 
+    static PredicateSpecification<Organisation> statusIn(List<OrganisationStatus> statuses) {
+        return (organisation, cb) -> organisation.get("status").in(statuses);
+    }
+
     // The plain overlap is text[] && varchar[], which Postgres has no operator for. The nullable one unnests both.
     static PredicateSpecification<Organisation> responsibleIdIn(List<String> userIds) {
         return (organisation, cb) -> ((HibernateCriteriaBuilder) cb)

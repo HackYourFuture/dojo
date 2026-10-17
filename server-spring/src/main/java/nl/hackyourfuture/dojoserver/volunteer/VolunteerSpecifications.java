@@ -33,6 +33,14 @@ final class VolunteerSpecifications {
                 .toArray(Predicate[]::new));
     }
 
+    // An empty value, as in rolePreference=,TEACHING, arrives as null.
+    static PredicateSpecification<Volunteer> rolePreferenceIn(List<VolunteerAssignmentType> rolePreferences) {
+        return (volunteer, cb) -> cb.or(rolePreferences.stream()
+                .filter(Objects::nonNull)
+                .map(preference -> arrayContains(cb, volunteer.get("rolePreferences"), preference.name()))
+                .toArray(Predicate[]::new));
+    }
+
     static PredicateSpecification<Volunteer> idIn(List<String> ids) {
         return (volunteer, cb) -> volunteer.get("id").in(ids);
     }

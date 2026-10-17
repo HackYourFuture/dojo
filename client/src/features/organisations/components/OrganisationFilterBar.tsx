@@ -4,11 +4,17 @@ import { pickedLabels, setParam, toApiEnumName, toValues } from '../../../data/l
 
 import SearchIcon from '@mui/icons-material/Search';
 import { SelectOption } from '../../../data/types/SelectOption';
+import { organisationStatusOptions } from '../utils/organisationStatus';
 import { partnershipTypeLabels } from '../utils/partnershipTypes';
 import { provinceOptions } from '../../geo/provinces';
 import { useGetUsers } from '../../admin/users/data/user-queries';
 import { useSearchParams } from 'react-router';
 import { useState } from 'react';
+
+const statusOptions: SelectOption[] = organisationStatusOptions.map((option) => ({
+  ...option,
+  value: toApiEnumName(option.value),
+}));
 
 const partnershipOptions: SelectOption[] = Object.values(PartnershipType).map((type) => ({
   label: partnershipTypeLabels[type],
@@ -78,6 +84,24 @@ export const OrganisationFilterBar = ({ filters }: OrganisationFilterBarProps) =
           },
         }}
       />
+      <TextField
+        select
+        size="small"
+        label="Status"
+        value={filters.status}
+        onChange={(event) => setFilter('status', toValues(event.target.value))}
+        sx={{ width: 170 }}
+        slotProps={{
+          select: {
+            multiple: true,
+            displayEmpty: true,
+            renderValue: () => pickedLabels(statusOptions, filters.status),
+          },
+          inputLabel: { shrink: true },
+        }}
+      >
+        {menuItems(statusOptions, filters.status)}
+      </TextField>
       <TextField
         select
         size="small"
