@@ -20,7 +20,7 @@ final class OrganisationSpecifications {
                 .collectionOverlapsNullable(organisation.<List<String>>get("responsibleIds"), userIds);
     }
 
-    // An empty value, as in partnership=,funding, arrives as null.
+    // An empty value, as in partnership=,FUNDING, arrives as null.
     static PredicateSpecification<Organisation> partnershipTypeIn(List<PartnershipType> partnershipTypes) {
         return (organisation, cb) -> cb.or(partnershipTypes.stream()
                 .filter(Objects::nonNull)

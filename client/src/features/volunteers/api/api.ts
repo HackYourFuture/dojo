@@ -1,4 +1,4 @@
-import { NewVolunteer, VolunteerChanges } from '../Volunteer';
+import { NewVolunteer, VolunteerChanges, VolunteerFilters } from '../Volunteer';
 import { PAGE_SIZE, PagedModel, mapPageToDomain } from '../../../data/pagination';
 import { VolunteerResponse, VolunteerSummaryResponse } from './types';
 import {
@@ -10,10 +10,11 @@ import {
 
 import axios from 'axios';
 
-// Sorted by first name, from A to Z.
-export const getVolunteerSummaries = async (page: number) => {
+// Sorted by first name, from A to Z. A filter with several values goes as status=A&status=B.
+export const getVolunteerSummaries = async (page: number, filters: VolunteerFilters) => {
   const { data } = await axios.get<PagedModel<VolunteerSummaryResponse>>('/api/volunteers', {
-    params: { page, size: PAGE_SIZE },
+    params: { page, size: PAGE_SIZE, ...filters, q: filters.q || undefined },
+    paramsSerializer: { indexes: null },
   });
   return mapPageToDomain(data, mapVolunteerSummaryToDomain);
 };

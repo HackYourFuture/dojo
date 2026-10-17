@@ -8,6 +8,7 @@ export interface PagedModel<T> {
   content: T[];
   page: {
     totalPages: number;
+    totalElements: number;
   };
 }
 
@@ -15,6 +16,7 @@ export interface PagedModel<T> {
 export interface Page<T> {
   items: T[];
   totalPages: number;
+  totalElements: number;
 }
 
 export const mapPageToDomain = <ApiItem, Item>(
@@ -24,6 +26,7 @@ export const mapPageToDomain = <ApiItem, Item>(
   return {
     items: page.content.map(mapItem),
     totalPages: page.page.totalPages,
+    totalElements: page.page.totalElements,
   };
 };
 
@@ -32,7 +35,7 @@ export const getNextPageParam = (lastPage: Page<unknown>, _allPages: unknown, la
   lastPageParam + 1 < lastPage.totalPages ? lastPageParam + 1 : undefined;
 
 // The loaded items, each once. Pages are fetched by offset, so an item added or removed while scrolling can repeat.
-export const getLoadedItems = <Item extends { id: string }>(data: InfiniteData<Page<Item>>): Item[] => {
+const getLoadedItems = <Item extends { id: string }>(data: InfiniteData<Page<Item>>): Item[] => {
   const seenIds = new Set<string>();
 
   return data.pages
@@ -45,3 +48,9 @@ export const getLoadedItems = <Item extends { id: string }>(data: InfiniteData<P
       return true;
     });
 };
+
+// The loaded items and the size of the whole list. Defined once, so React Query only runs it when the pages change.
+export const selectList = <Item extends { id: string }>(data: InfiniteData<Page<Item>>) => ({
+  items: getLoadedItems(data),
+  total: data.pages[0].totalElements,
+});

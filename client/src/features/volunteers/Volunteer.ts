@@ -4,6 +4,14 @@ import { VolunteerExpertise } from './VolunteerExpertise';
 import { VolunteerStatus } from './VolunteerStatus';
 import { VolunteerType } from './VolunteerType';
 
+// The filters of the volunteers list, named as in its URL and the API.
+export interface VolunteerFilters {
+  q: string;
+  status: string[];
+  type: string[];
+  expertise: string[];
+}
+
 export interface VolunteerSummary {
   readonly id: string;
   displayName: string;

@@ -1,6 +1,6 @@
-import { Cohort, TraineeSummary } from '../models/trainee-summary';
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
-import { Page, getLoadedItems, getNextPageParam } from '../../../data/pagination';
+import { Cohort, TraineeFilters, TraineeSummary } from '../models/trainee-summary';
+import { InfiniteData, keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
+import { Page, getNextPageParam, selectList } from '../../../data/pagination';
 
 import { LearningStatus } from '../../../data/types/Trainee';
 import { traineeListKeys } from './keys';
@@ -19,13 +19,14 @@ const compareTrainees = (a: TraineeSummary, b: TraineeSummary) => {
 };
 
 /**
- * Groups the loaded pages by cohort, keeping the server's order of the cohorts.
+ * Groups the loaded pages by cohort, keeping the server's order of the cohorts, with the size of the whole list.
  * Defined outside the hook so that React Query only runs it when the pages change.
  */
-const selectCohorts = (data: InfiniteData<Page<TraineeSummary>>): Cohort[] => {
+const selectCohorts = (data: InfiniteData<Page<TraineeSummary>>): { cohorts: Cohort[]; total: number } => {
+  const { items, total } = selectList(data);
   const cohorts = new Map<number | null, TraineeSummary[]>();
 
-  for (const trainee of getLoadedItems(data)) {
+  for (const trainee of items) {
     const cohort = cohorts.get(trainee.cohort);
     if (cohort) {
       cohort.push(trainee);
@@ -34,18 +35,23 @@ const selectCohorts = (data: InfiniteData<Page<TraineeSummary>>): Cohort[] => {
     }
   }
 
-  return Array.from(cohorts, ([cohort, trainees]) => ({ cohort, trainees: trainees.sort(compareTrainees) }));
+  return {
+    cohorts: Array.from(cohorts, ([cohort, trainees]) => ({ cohort, trainees: trainees.sort(compareTrainees) })),
+    total,
+  };
 };
 
 /**
- * A React Query hook that fetches the trainees page by page and groups them by cohort.
+ * A React Query hook that fetches the trainees that match the filters page by page and groups them by cohort.
  */
-export const useGetTraineesByCohort = () => {
+export const useGetTraineesByCohort = (filters: TraineeFilters) => {
   return useInfiniteQuery({
-    queryKey: traineeListKeys.list(),
-    queryFn: ({ pageParam }) => getTraineeSummaries(pageParam),
+    queryKey: traineeListKeys.filteredList(filters),
+    queryFn: ({ pageParam }) => getTraineeSummaries(pageParam, filters),
     initialPageParam: 0,
     getNextPageParam,
     select: selectCohorts,
+    // The list stays on screen while the next filter loads.
+    placeholderData: keepPreviousData,
   });
 };

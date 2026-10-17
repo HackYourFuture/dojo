@@ -194,8 +194,8 @@ trainees/
 ├── TraineesPage.tsx              # Main page component, lists the trainees grouped by cohort
 ├── api/                          # API calls, response types and mappers
 ├── components/                   # Trainees-specific components
-│   ├── ActionsCard.tsx
-│   └── CohortAccordion.tsx
+│   ├── CohortAccordion.tsx
+│   └── TraineeFilterBar.tsx      # The search and filters, kept in the URL
 ├── data/                         # React Query keys and hooks
 │   ├── keys.ts
 │   └── trainees-queries.ts

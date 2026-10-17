@@ -2,6 +2,16 @@ import { JobPath, LearningStatus, Track } from '../../../data/types/Trainee';
 
 import { City } from '../../geo/models/city';
 
+// The filters of the trainees list, named as in its URL and the API.
+export interface TraineeFilters {
+  q: string;
+  status: string[];
+  jobPath: string[];
+  province: string[];
+  startCohort: number | null;
+  endCohort: number | null;
+}
+
 export interface Cohort {
   cohort: number | null;
   trainees: TraineeSummary[];
