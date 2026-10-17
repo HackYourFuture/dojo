@@ -66,7 +66,7 @@ public class OrganisationController {
             String q,
 
             @Parameter(description = "Only organisations that at least one of these users is responsible for",
-                    example = "USERID")
+                    example = "WTh1qLhy3K")
             @RequestParam(required = false)
             List<String> responsibleId,
 

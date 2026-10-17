@@ -22,6 +22,14 @@ export interface Responsible {
   thumbnailUrl: string | null;
 }
 
+// The filters of the organisations list, named as in its URL and the API.
+export interface OrganisationFilters {
+  q: string;
+  responsibleId: string[];
+  partnership: string[];
+  province: string[];
+}
+
 export interface OrganisationSummary {
   readonly id: string;
   name: string;

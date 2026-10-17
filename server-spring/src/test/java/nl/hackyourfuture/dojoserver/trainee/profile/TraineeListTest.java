@@ -132,7 +132,7 @@ public class TraineeListTest {
         traineeRepository.save(earlier);
 
         ids(SEEDED_COHORTS + "&province=" + city.getProvince()).containsExactly(earlier.getId());
-        ids(SEEDED_COHORTS + "&province=" + city.getProvince() + "&province=Elsewhere")
+        ids(SEEDED_COHORTS + "&province=Elsewhere&province=" + city.getProvince())
                 .containsExactly(earlier.getId());
     }
 
@@ -149,7 +149,7 @@ public class TraineeListTest {
     void searchWordsMatchLikeTheSearch() {
         ids(SEEDED_COHORTS + "&q=ann earlier").containsExactly(earlier.getId());
         ids(SEEDED_COHORTS + "&q=erlier").containsExactly(earlier.getId());
-        ids(SEEDED_COHORTS + "&q=").containsExactly(earlier.getId(), later.getId());
+        ids(SEEDED_COHORTS + "&q= ").containsExactly(earlier.getId(), later.getId());
     }
 
     @Test
