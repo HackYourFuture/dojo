@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.picture.PictureResponses;
@@ -38,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/trainees")
 @RequiredArgsConstructor
@@ -47,7 +50,8 @@ public class TraineeController {
 
     @GetMapping
     @Operation(summary = "List trainees",
-            description = "Returns a page of trainee summaries, ordered by the current cohort.")
+            description = "Returns a page of trainee summaries, ordered by the current cohort. Every filter narrows"
+                    + " the page; a repeated one matches any of its values.")
     @ApiResponse(responseCode = "200", description = "The page of trainee summaries")
     @ApiResponse(
             responseCode = "400",
@@ -55,6 +59,25 @@ public class TraineeController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public Page<TraineeSummaryResponse> getTrainees(
+            @Parameter(description = "Only trainees the search finds for these words: by name, email, GitHub handle"
+                    + " or comments, close spellings included", example = "mariam h")
+            @RequestParam(required = false)
+            @Size(max = 100)
+            String q,
+
+            @Parameter(description = "Only trainees with one of these learning statuses")
+            @RequestParam(required = false)
+            List<LearningStatus> status,
+
+            @Parameter(description = "Only trainees on one of these job paths")
+            @RequestParam(required = false)
+            List<JobPath> jobPath,
+
+            @Parameter(description = "Only trainees whose city is in one of these provinces, by their English name",
+                    example = "North Holland")
+            @RequestParam(required = false)
+            List<String> province,
+
             @Parameter(
                     description = "Only trainees whose current cohort is this one or later",
                     example = "0")
@@ -82,7 +105,8 @@ public class TraineeController {
             @Max(100)
             int size
     ) {
-        return traineeService.getTrainees(startCohort, endCohort, direction, page, size);
+        return traineeService.getTrainees(q, status, jobPath, province, startCohort, endCohort, direction, page,
+                size);
     }
 
     @GetMapping("/{id}")

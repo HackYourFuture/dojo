@@ -52,6 +52,18 @@ public class SearchService {
         ).stream().limit(MAX_RESULTS).toList();
     }
 
+    public static boolean matches(Trainee trainee, String query) {
+        return score(traineeFields(trainee), query) > 0;
+    }
+
+    public static boolean matches(Volunteer volunteer, String query) {
+        return score(volunteerFields(volunteer), query) > 0;
+    }
+
+    public static boolean matches(Organisation organisation, String query) {
+        return score(organisationFields(organisation), query) > 0;
+    }
+
     // Every matching record, best first. The sort is stable, so equal scores put trainees first, then volunteers,
     // then organisations, then contact persons, each in its own order.
     static List<SearchResult> rank(List<Trainee> trainees, List<Volunteer> volunteers,

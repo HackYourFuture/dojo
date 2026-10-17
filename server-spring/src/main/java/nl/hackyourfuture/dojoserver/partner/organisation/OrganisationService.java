@@ -14,6 +14,7 @@ import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationRequest
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationSummaryResponse;
 import nl.hackyourfuture.dojoserver.picture.PictureService;
+import nl.hackyourfuture.dojoserver.search.SearchService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
@@ -22,11 +23,15 @@ import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.PredicateSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,9 +50,31 @@ public class OrganisationService {
     private final GeoService geoService;
 
     @Transactional(readOnly = true)
-    public Page<OrganisationSummaryResponse> getOrganisations(Sort.Direction direction, int page, int size) {
+    public Page<OrganisationSummaryResponse> getOrganisations(String query, List<String> responsibleIds,
+            List<PartnershipType> partnershipTypes, List<String> provinces, Sort.Direction direction, int page,
+            int size) {
+        List<PredicateSpecification<Organisation>> filters = new ArrayList<>();
+        if (query != null && !query.isBlank()) {
+            // The search's close spellings can't be queried, so the matching ids come from Java.
+            List<String> ids = organisationRepository.findAll().stream()
+                    .filter(organisation -> SearchService.matches(organisation, query))
+                    .map(Organisation::getId)
+                    .toList();
+            filters.add(OrganisationSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(responsibleIds)) {
+            filters.add(OrganisationSpecifications.responsibleIdIn(responsibleIds));
+        }
+        if (!CollectionUtils.isEmpty(partnershipTypes)) {
+            filters.add(OrganisationSpecifications.partnershipTypeIn(partnershipTypes));
+        }
+        if (!CollectionUtils.isEmpty(provinces)) {
+            filters.add(OrganisationSpecifications.provinceIn(provinces));
+        }
+
         Sort sort = Sort.by(Sort.Order.by("name").with(direction).ignoreCase()).and(Sort.by("id"));
-        Page<Organisation> organisations = organisationRepository.findAll(PageRequest.of(page, size, sort));
+        Page<Organisation> organisations = organisationRepository.findAll(
+                Specification.where(PredicateSpecification.allOf(filters)), PageRequest.of(page, size, sort));
         Map<String, User> users = usersMap();
         return organisations.map(organisation -> OrganisationSummaryResponse.from(organisation, users));
     }

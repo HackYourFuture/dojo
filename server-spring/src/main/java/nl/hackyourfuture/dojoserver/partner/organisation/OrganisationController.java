@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationPictureResponse;
@@ -38,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/organisations")
 @RequiredArgsConstructor
@@ -47,7 +50,8 @@ public class OrganisationController {
 
     @GetMapping
     @Operation(summary = "List organisations",
-            description = "Returns a page of organisation summaries, ordered by name.")
+            description = "Returns a page of organisation summaries, ordered by name. Every filter narrows the page;"
+                    + " a repeated one matches any of its values.")
     @ApiResponse(responseCode = "200", description = "The page of organisation summaries")
     @ApiResponse(
             responseCode = "400",
@@ -55,6 +59,27 @@ public class OrganisationController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public Page<OrganisationSummaryResponse> getOrganisations(
+            @Parameter(description = "Only organisations the search finds for these words: by name, website or"
+                    + " notes, close spellings included", example = "adyen")
+            @RequestParam(required = false)
+            @Size(max = 100)
+            String q,
+
+            @Parameter(description = "Only organisations that at least one of these users is responsible for",
+                    example = "USERID")
+            @RequestParam(required = false)
+            List<String> responsibleId,
+
+            @Parameter(description = "Only organisations with at least one of these partnership types")
+            @RequestParam(required = false)
+            List<PartnershipType> partnership,
+
+            @Parameter(
+                    description = "Only organisations whose city is in one of these provinces, by their English name",
+                    example = "North Holland")
+            @RequestParam(required = false)
+            List<String> province,
+
             @Parameter(description = "The direction to order the names in")
             @RequestParam(defaultValue = "ASC")
             Sort.Direction direction,
@@ -70,7 +95,8 @@ public class OrganisationController {
             @Max(100)
             int size
     ) {
-        return organisationService.getOrganisations(direction, page, size);
+        return organisationService.getOrganisations(q, responsibleId, partnership, province, direction, page,
+                size);
     }
 
     @GetMapping("/{id}")
