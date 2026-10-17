@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { LinkTableRow, RowLinksCell } from '../../../components/LinkTableRow';
 
+import { CityLabel } from '../../geo/components/CityLabel';
 import LanguageIcon from '@mui/icons-material/Language';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { OrganisationLogo } from '../../../components/OrganisationLogo';
@@ -84,7 +85,7 @@ export const OrganisationsTable = ({ organisations }: OrganisationsTableProps) =
                   ))}
                 </AvatarGroup>
               </TableCell>
-              <TableCell>{organisation.city?.name}</TableCell>
+              <TableCell>{organisation.city && <CityLabel city={organisation.city} />}</TableCell>
               <RowLinksCell>
                 {organisation.websiteUrl && (
                   <IconButton aria-label="Website" href={organisation.websiteUrl} target="_blank" rel="noopener">

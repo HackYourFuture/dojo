@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 
+import { CityLabel } from '../../geo/components/CityLabel';
 import { EditableProfilePicture } from '../../profile-picture/components/EditableProfilePicture';
 import { Organisation } from '../Organisation';
 import { OrganisationLogo } from '../../../components/OrganisationLogo';
@@ -38,7 +39,7 @@ const OrganisationHeader = ({ organisation, children }: OrganisationHeaderProps)
           <OrganisationStatusChip status={organisation.status} />
           {organisation.city && (
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {organisation.city.name}
+              <CityLabel city={organisation.city} />
             </Typography>
           )}
         </Box>
