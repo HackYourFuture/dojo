@@ -1,6 +1,7 @@
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import { CityLabel } from '../../geo/components/CityLabel';
 import { Cohort } from '../models/trainee-summary';
 import { ContactLinkButtons } from '../../../components/ContactLinkButtons';
 import { LinkTableRow, RowLinksCell } from '../../../components/LinkTableRow';
@@ -66,7 +67,7 @@ const CohortAccordion = ({ cohortInfo, defaultExpanded }: CohortAccordionProps) 
                     )}
                   </TableCell>
                   <TableCell>{getTrackLabel(trainee.track)}</TableCell>
-                  <TableCell>{trainee.city?.name}</TableCell>
+                  <TableCell>{trainee.city && <CityLabel city={trainee.city} />}</TableCell>
                   <TableCell sx={{ color: getScoreColor(trainee.averageAssessmentScore) }}>
                     {trainee.averageAssessmentScore !== null ? trainee.averageAssessmentScore.toFixed(1) : '-'}
                   </TableCell>
