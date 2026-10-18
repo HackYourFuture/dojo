@@ -50,7 +50,7 @@ class OrganisationInteractionTest {
     private static final String INTERACTIONS = "/api/organisations/{organisationId}/interactions";
     private static final String BODY =
             """
-                    {"date": "2026-09-01T10:00:00Z", "type": "call", "title": " Intro call ", "details": "Talked about interns."}
+                    {"date": "2026-09-01T10:00:00Z", "type": "CALL", "title": " Intro call ", "details": "Talked about interns."}
                     """;
 
     @Autowired
@@ -99,9 +99,9 @@ class OrganisationInteractionTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"email", "meeting"})
+    @ValueSource(strings = {"EMAIL", "MEETING"})
     void anInteractionCanBeAnEmailOrAMeeting(String type) {
-        String body = BODY.replace("\"call\"", "\"" + type + "\"");
+        String body = BODY.replace("\"CALL\"", "\"" + type + "\"");
 
         MvcTestResult result = mvc.post().uri(INTERACTIONS, acme.getId()).header(AUTHORIZATION, bearer(reporterToken))
                 .contentType(MediaType.APPLICATION_JSON).content(body).exchange();

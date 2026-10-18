@@ -68,14 +68,14 @@ public class DashboardEndpointTest {
     void countsLearningStatusesInEnumOrder() {
         var json = assertThat(get(COHORT_9001)).bodyJson();
         json.extractingPath("$.learningStatuses[*].status").asArray()
-                .containsExactly("studying", "graduated", "on-hold", "quit");
+                .containsExactly("STUDYING", "GRADUATED", "ON_HOLD", "QUIT");
         json.extractingPath("$.learningStatuses[*].count").asArray().containsExactly(2, 3, 1, 1);
     }
 
     @Test
     void countsOnlyTracksWithTrainees() {
         var json = assertThat(get(COHORT_9001)).bodyJson();
-        json.extractingPath("$.tracks[*].track").asArray().containsExactly("core-program", "frontend", "backend");
+        json.extractingPath("$.tracks[*].track").asArray().containsExactly("CORE_PROGRAM", "FRONTEND", "BACKEND");
         json.extractingPath("$.tracks[*].count").asArray().containsExactly(3, 2, 2);
     }
 
@@ -83,7 +83,7 @@ public class DashboardEndpointTest {
     void countsEducationLevelsWithNotSetLast() {
         var json = assertThat(get(COHORT_9001)).bodyJson();
         json.extractingPath("$.educationLevels[*].educationLevel").asArray()
-                .containsExactly("high-school", "bachelors-degree", null);
+                .containsExactly("HIGH_SCHOOL", "BACHELORS_DEGREE", null);
         json.extractingPath("$.educationLevels[*].count").asArray().containsExactly(2, 2, 3);
     }
 
@@ -97,7 +97,7 @@ public class DashboardEndpointTest {
     @Test
     void countsGendersWithNotSetLast() {
         var json = assertThat(get(COHORT_9001)).bodyJson();
-        json.extractingPath("$.genders[*].gender").asArray().containsExactly("man", "woman", null);
+        json.extractingPath("$.genders[*].gender").asArray().containsExactly("MAN", "WOMAN", null);
         json.extractingPath("$.genders[*].count").asArray().containsExactly(3, 3, 1);
     }
 

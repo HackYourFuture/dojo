@@ -26,7 +26,7 @@ JOB_TITLES = [
 
 
 def generate_contact_person(email_domain: str) -> dict[str, Any]:
-    first_name, last_name = generate_name(weighted(NAME_ORIGINS), weighted({"man": 1, "woman": 1}))
+    first_name, last_name = generate_name(weighted(NAME_ORIGINS), weighted({"MAN": 1, "WOMAN": 1}))
     full_name = f"{first_name} {last_name}"
     return {
         "name": full_name,

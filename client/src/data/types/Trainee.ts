@@ -3,70 +3,70 @@ import { Gender } from './Person';
 
 // enums
 export enum EnglishLevel {
-  NeedsWork = 'needs-work',
-  Good = 'good',
+  NeedsWork = 'NEEDS_WORK',
+  Good = 'GOOD',
 }
 
 export enum Background {
-  Refugee = 'refugee',
-  FamilyReunification = 'family-reunification',
-  PartnerOfSkilledMigrant = 'partner-of-skilled-migrant',
-  VulnerableGroup = 'vulnerable-group',
-  EUCitizen = 'eu-citizen',
+  Refugee = 'REFUGEE',
+  FamilyReunification = 'FAMILY_REUNIFICATION',
+  PartnerOfSkilledMigrant = 'PARTNER_OF_SKILLED_MIGRANT',
+  VulnerableGroup = 'VULNERABLE_GROUP',
+  EUCitizen = 'EU_CITIZEN',
 }
 
 export enum FinancialSupport {
-  SideJob = 'side-job',
-  Uitkering = 'uitkering',
-  Family = 'family',
-  Savings = 'savings',
-  None = 'none',
+  SideJob = 'SIDE_JOB',
+  Uitkering = 'UITKERING',
+  Family = 'FAMILY',
+  Savings = 'SAVINGS',
+  None = 'NONE',
 }
 
 export enum EducationLevel {
-  None = 'none',
-  HighSchool = 'high-school',
-  Diploma = 'diploma',
-  BachelorsDegree = 'bachelors-degree',
-  MastersDegree = 'masters-degree',
-  PhD = 'phd',
+  None = 'NONE',
+  HighSchool = 'HIGH_SCHOOL',
+  Diploma = 'DIPLOMA',
+  BachelorsDegree = 'BACHELORS_DEGREE',
+  MastersDegree = 'MASTERS_DEGREE',
+  PhD = 'PHD',
 }
 
 export enum LearningStatus {
-  Studying = 'studying',
-  Graduated = 'graduated',
-  OnHold = 'on-hold',
-  Quit = 'quit',
+  Studying = 'STUDYING',
+  Graduated = 'GRADUATED',
+  OnHold = 'ON_HOLD',
+  Quit = 'QUIT',
 }
 
 export enum Track {
-  CoreProgram = 'core-program',
-  Frontend = 'frontend',
-  Backend = 'backend',
-  Data = 'data',
-  Tester = 'tester',
-  Cloud = 'cloud',
-  FullstackLegacy = 'fullstack-legacy',
+  CoreProgram = 'CORE_PROGRAM',
+  Frontend = 'FRONTEND',
+  Backend = 'BACKEND',
+  Data = 'DATA',
+  Tester = 'TESTER',
+  Cloud = 'CLOUD',
+  FullstackLegacy = 'FULLSTACK_LEGACY',
 }
 
 export enum QuitReason {
-  Technical = 'technical',
-  SocialSkills = 'social-skills',
-  Personal = 'personal',
-  Withdrawn = 'withdrawn',
-  MunicipalityOrMonetary = 'municipality-or-monetary',
-  LeftNL = 'left-nl',
-  Other = 'other',
+  Technical = 'TECHNICAL',
+  SocialSkills = 'SOCIAL_SKILLS',
+  Personal = 'PERSONAL',
+  Withdrawn = 'WITHDRAWN',
+  MunicipalityOrMonetary = 'MUNICIPALITY_OR_MONETARY',
+  LeftNL = 'LEFT_NL',
+  Other = 'OTHER',
 }
 
 export enum JobPath {
-  NotGraduated = 'not-graduated',
-  Searching = 'searching',
-  Internship = 'internship',
-  TechJob = 'tech-job',
-  NonTechJob = 'non-tech-job',
-  OtherStudies = 'other-studies',
-  SupportEnded = 'support-ended',
+  NotGraduated = 'NOT_GRADUATED',
+  Searching = 'SEARCHING',
+  Internship = 'INTERNSHIP',
+  TechJob = 'TECH_JOB',
+  NonTechJob = 'NON_TECH_JOB',
+  OtherStudies = 'OTHER_STUDIES',
+  SupportEnded = 'SUPPORT_ENDED',
 }
 
 // interfaces

@@ -26,14 +26,14 @@ public record AssessmentResponse(
 
         @Schema(
                 description = "The assessment the trainee took",
-                example = "core-end-interview",
+                example = "CORE_END_INTERVIEW",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         AssessmentType type,
 
         @Schema(
                 description = "The outcome of the assessment",
-                example = "passed",
+                example = "PASSED",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         AssessmentResult result,

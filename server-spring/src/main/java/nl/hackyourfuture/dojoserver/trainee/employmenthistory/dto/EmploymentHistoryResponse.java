@@ -18,7 +18,7 @@ public record EmploymentHistoryResponse(
 
         @Schema(
                 description = "The type of the position",
-                example = "job",
+                example = "JOB",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         EmploymentType type,

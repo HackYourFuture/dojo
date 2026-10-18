@@ -1,14 +1,14 @@
 // The types of assignment a volunteer can take on, in the server's order: their role preferences, and each assignment's type.
 export enum VolunteerAssignmentType {
-  AssignmentReview = 'assignment-review',
-  TechInterview = 'tech-interview',
-  Teaching = 'teaching',
-  ProjectMentor = 'project-mentor',
-  TechMentorship = 'tech-mentorship',
-  EnglishMentorship = 'english-mentorship',
-  HrMentorship = 'hr-mentorship',
-  ContentCreation = 'content-creation',
-  WorkshopHost = 'workshop-host',
+  AssignmentReview = 'ASSIGNMENT_REVIEW',
+  TechInterview = 'TECH_INTERVIEW',
+  Teaching = 'TEACHING',
+  ProjectMentor = 'PROJECT_MENTOR',
+  TechMentorship = 'TECH_MENTORSHIP',
+  EnglishMentorship = 'ENGLISH_MENTORSHIP',
+  HrMentorship = 'HR_MENTORSHIP',
+  ContentCreation = 'CONTENT_CREATION',
+  WorkshopHost = 'WORKSHOP_HOST',
 }
 
 export const volunteerAssignmentTypeLabels: Record<VolunteerAssignmentType, string> = {

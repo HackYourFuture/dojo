@@ -15,7 +15,7 @@ public record MentorPairingRequest(
         String traineeId,
 
         @NotNull
-        @Schema(description = "What the volunteer mentors the trainee in.", example = "english-mentorship")
+        @Schema(description = "What the volunteer mentors the trainee in.", example = "ENGLISH_MENTORSHIP")
         MentorPairingType type,
 
         @NotNull

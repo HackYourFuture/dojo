@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Schema(description = "An assignment of a volunteer, as sent to create or update one")
 public record VolunteerAssignmentRequest(
         @NotNull
-        @Schema(description = "The type of the assignment", example = "tech-mentorship")
+        @Schema(description = "The type of the assignment", example = "TECH_MENTORSHIP")
         VolunteerAssignmentType type,
 
         @Min(1)

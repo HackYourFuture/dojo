@@ -36,14 +36,14 @@ public record OrganisationRequest(
         String cityId,
 
         @NotNull
-        @Schema(description = "Where the partnership with the organisation stands.", example = "active")
+        @Schema(description = "Where the partnership with the organisation stands.", example = "ACTIVE")
         OrganisationStatus status,
 
         @Size(max = 5000)
         @Schema(description = "Free-form notes about the organisation.")
         String notes,
 
-        @Schema(description = "What the organisation can offer HYF.", example = "[\"funding\", \"events\"]")
+        @Schema(description = "What the organisation can offer HYF.", example = "[\"FUNDING\", \"EVENTS\"]")
         Set<PartnershipType> partnershipTypes,
 
         @Schema(description = "The ids of the users responsible for the organisation, the primary first.",

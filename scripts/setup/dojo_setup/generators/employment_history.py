@@ -3,7 +3,7 @@ from typing import Any
 from dojo_setup.generators.randomness import YEAR, chance, date_after, fake, weighted
 
 # Only graduates on these job paths get an employment history
-EMPLOYED_JOB_PATHS = ["internship", "tech-job", "non-tech-job"]
+EMPLOYED_JOB_PATHS = ["INTERNSHIP", "TECH_JOB", "NON_TECH_JOB"]
 TECH_ROLES = [
     "Frontend Developer",
     "Backend Developer",
@@ -28,7 +28,7 @@ NON_TECH_ROLES = [
 
 def generate_employment(trainee: dict[str, Any]) -> dict[str, Any]:
     employment_type = _employment_type(trainee["jobPath"])
-    is_non_tech_job = trainee["jobPath"] == "non-tech-job" and employment_type == "job"
+    is_non_tech_job = trainee["jobPath"] == "NON_TECH_JOB" and employment_type == "JOB"
     role = fake.random_element(NON_TECH_ROLES if is_non_tech_job else TECH_ROLES)
     start_date = date_after(YEAR, trainee["graduationDate"])
     fee_collected = chance(0.3)
@@ -36,7 +36,7 @@ def generate_employment(trainee: dict[str, Any]) -> dict[str, Any]:
     return {
         "type": employment_type,
         "companyName": fake.company(),
-        "role": f"{role} Intern" if employment_type == "internship" else role,
+        "role": f"{role} Intern" if employment_type == "INTERNSHIP" else role,
         "startDate": start_date,
         "endDate": None if chance(0.5) else date_after(2 * YEAR, start_date),
         "feeCollected": fee_collected,
@@ -46,6 +46,6 @@ def generate_employment(trainee: dict[str, Any]) -> dict[str, Any]:
 
 
 def _employment_type(job_path: str) -> str:
-    if job_path == "internship":
-        return "internship"
-    return weighted({"job": 80, "internship": 20})
+    if job_path == "INTERNSHIP":
+        return "INTERNSHIP"
+    return weighted({"JOB": 80, "INTERNSHIP": 20})

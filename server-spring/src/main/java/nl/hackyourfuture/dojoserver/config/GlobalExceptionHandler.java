@@ -29,7 +29,6 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.exc.InvalidFormatException;
 import tools.jackson.databind.exc.MismatchedInputException;
 
@@ -51,7 +50,6 @@ public class GlobalExceptionHandler {
             "Could not parse the request. Make sure that the message format is correct.";
 
     private final ServerConfig serverConfig;
-    private final ObjectMapper objectMapper;
 
     // ---------------------------------------------------------------- 400
 
@@ -114,7 +112,7 @@ public class GlobalExceptionHandler {
         }
         if (expected.isEnum() && ex instanceof InvalidFormatException invalid) {
             String allowedValues = Arrays.stream(expected.getEnumConstants())
-                    .map(this::wireValue)
+                    .map(Object::toString)
                     .collect(Collectors.joining(", "));
 
             var message = "'%s' is not a valid value for '%s'. Allowed values: %s.";
@@ -132,15 +130,6 @@ public class GlobalExceptionHandler {
                 .map(JacksonException.Reference::getPropertyName)
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining("."));
-    }
-
-    /** An enum constant as it appears on the wire (its @JsonValue), or its name if that fails. */
-    private String wireValue(Object constant) {
-        try {
-            return objectMapper.convertValue(constant, String.class);
-        } catch (IllegalArgumentException _) {
-            return ((Enum<?>) constant).name();
-        }
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

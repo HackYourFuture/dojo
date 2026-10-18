@@ -25,7 +25,7 @@ public record MentorPairingResponse(
 
         @Schema(
                 description = "What the volunteer mentors the trainee in",
-                example = "english-mentorship",
+                example = "ENGLISH_MENTORSHIP",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         MentorPairingType type,

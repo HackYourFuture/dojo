@@ -52,7 +52,7 @@ class VolunteerInteractionTest {
     private static final String INTERACTIONS = "/api/volunteers/{volunteerId}/interactions";
     private static final String BODY =
             """
-                    {"date": "2026-09-01T10:00:00Z", "type": "call", "title": " Intro call ", "details": "Talked about mentoring."}
+                    {"date": "2026-09-01T10:00:00Z", "type": "CALL", "title": " Intro call ", "details": "Talked about mentoring."}
                     """;
 
     @Autowired

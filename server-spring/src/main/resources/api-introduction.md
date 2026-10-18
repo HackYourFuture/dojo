@@ -40,6 +40,7 @@ use by another trainee."
   such as `NL`, and cities a readable id, such as `amsterdam`.
 - Field names are camelCase. A response always has every field of its schema, with `null` for a value that is
   not set.
+- Enum values are upper case with underscores, such as `ON_HOLD`, in bodies and query parameters alike.
 - Dates are ISO 8601: `2026-03-01` for a day and `2024-01-15T14:30:00Z` for a moment.
 
 ### Paging

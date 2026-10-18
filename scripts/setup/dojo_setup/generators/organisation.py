@@ -9,8 +9,8 @@ from dojo_setup.generators.interaction import generate_organisation_interaction
 from dojo_setup.generators.randomness import chance, fake, localized, weighted
 from dojo_setup.generators.transliteration import to_slug
 
-STATUSES = {"active": 50, "inactive": 20, "never-engaged": 30}
-PARTNERSHIP_TYPES = ["volunteer", "funding", "employment", "events"]
+STATUSES = {"ACTIVE": 50, "INACTIVE": 20, "NEVER_ENGAGED": 30}
+PARTNERSHIP_TYPES = ["VOLUNTEER", "FUNDING", "EMPLOYMENT", "EVENTS"]
 # Faker's Dutch company() also picks from a list of real companies, so only its made-up formats are used
 DUTCH_COMPANY_FORMATS = [
     "{{last_name}} {{company_suffix}}",

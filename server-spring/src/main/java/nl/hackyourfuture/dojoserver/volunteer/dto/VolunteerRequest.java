@@ -28,7 +28,7 @@ public record VolunteerRequest(
         @Schema(description = "The last name of the volunteer.", example = "Roe")
         String lastName,
 
-        @Schema(description = "How the volunteer describes their gender.", example = "woman")
+        @Schema(description = "How the volunteer describes their gender.", example = "WOMAN")
         Gender gender,
 
         @Size(min = 2, max = 100)
@@ -69,18 +69,18 @@ public record VolunteerRequest(
         String linkedinUrl,
 
         @NotNull
-        @Schema(description = "Where the volunteer stands with HackYourFuture.", example = "active")
+        @Schema(description = "Where the volunteer stands with HackYourFuture.", example = "ACTIVE")
         VolunteerStatus status,
 
-        @Schema(description = "The kind of volunteering the volunteer does.", example = "[\"tech\"]")
+        @Schema(description = "The kind of volunteering the volunteer does.", example = "[\"TECH\"]")
         Set<VolunteerType> volunteerTypes,
 
         @Schema(description = "What the volunteer can help with: tracks, project management, English or HR mentoring.",
-                example = "[\"core-program\", \"backend\"]")
+                example = "[\"CORE_PROGRAM\", \"BACKEND\"]")
         Set<VolunteerExpertise> expertise,
 
         @Schema(description = "The assignments the volunteer prefers to take on.",
-                example = "[\"assignment-review\", \"teaching\"]")
+                example = "[\"ASSIGNMENT_REVIEW\", \"TEACHING\"]")
         Set<VolunteerAssignmentType> rolePreferences,
 
         @Size(max = 5000)

@@ -70,7 +70,7 @@ class SearchEndpointTest {
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$[*].id").asArray()
                 .containsExactly(mariam.getId(), maryam.getId());
-        assertThat(result).bodyJson().extractingPath("$[0].type").isEqualTo("trainee");
+        assertThat(result).bodyJson().extractingPath("$[0].type").isEqualTo("TRAINEE");
         assertThat(result).bodyJson().extractingPath("$[0].title").isEqualTo(mariam.getDisplayName());
         assertThat(result).bodyJson().extractingPath("$[0].subtitle").isEqualTo("Cohort 52");
         assertThat(result).bodyJson().extractingPath("$[0].path")
@@ -96,7 +96,7 @@ class SearchEndpointTest {
         // The trainees' last name and a word of the contact's name are the word; the organisation's name starts with
         // it.
         assertThat(result).bodyJson().extractingPath("$[*].type").asArray()
-                .containsExactly("trainee", "trainee", "contact-person", "organisation");
+                .containsExactly("TRAINEE", "TRAINEE", "CONTACT_PERSON", "ORGANISATION");
         assertThat(result).bodyJson().extractingPath("$[2].path").isEqualTo(organisation.getProfilePath());
         assertThat(result).bodyJson().extractingPath("$[2].subtitle").isEqualTo(organisation.getName());
         assertThat(result).bodyJson().extractingPath("$[3].path").isEqualTo(organisation.getProfilePath());
@@ -116,7 +116,7 @@ class SearchEndpointTest {
 
         // All three match on the last name, so the trainees come first.
         assertThat(result).bodyJson().extractingPath("$[*].type").asArray()
-                .containsExactly("trainee", "trainee", "volunteer");
+                .containsExactly("TRAINEE", "TRAINEE", "VOLUNTEER");
         assertThat(result).bodyJson().extractingPath("$[2].id").isEqualTo(volunteer.getId());
         assertThat(result).bodyJson().extractingPath("$[2].subtitle").isEqualTo("Volunteer");
         assertThat(result).bodyJson().extractingPath("$[2].path").isEqualTo(volunteer.getProfilePath());

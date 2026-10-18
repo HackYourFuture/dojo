@@ -45,8 +45,9 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 - `@Table(name = ...)`, not `@Entity(name = ...)`.
 - `@DynamicUpdate` on an entity written by a PATCH or by more than one endpoint, so an `UPDATE`
   touches only the columns that changed.
-- Enums are `@Enumerated(EnumType.STRING)` in the entity and `@JsonValue` on the wire: `NON_BINARY`
-  in the column, `non-binary` in JSON.
+- Enums are `@Enumerated(EnumType.STRING)` in the entity and go by their constant name everywhere:
+  `NON_BINARY` in the column, JSON and query params. No `@JsonValue` and no `toString()` override:
+  Jackson 3 reads and writes enums by `toString()`.
 
 ## Services
 

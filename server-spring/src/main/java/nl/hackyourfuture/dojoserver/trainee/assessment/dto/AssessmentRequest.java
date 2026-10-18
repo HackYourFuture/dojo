@@ -19,11 +19,11 @@ public record AssessmentRequest(
         LocalDate date,
 
         @NotNull
-        @Schema(description = "The assessment the trainee took.", example = "core-end-interview")
+        @Schema(description = "The assessment the trainee took.", example = "CORE_END_INTERVIEW")
         AssessmentType type,
 
         @NotNull
-        @Schema(description = "The outcome of the assessment.", example = "passed")
+        @Schema(description = "The outcome of the assessment.", example = "PASSED")
         AssessmentResult result,
 
         @DecimalMin("0.0")

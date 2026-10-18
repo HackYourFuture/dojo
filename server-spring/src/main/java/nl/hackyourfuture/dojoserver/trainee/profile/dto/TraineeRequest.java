@@ -41,7 +41,7 @@ public record TraineeRequest(
         @Schema(description = "The name the trainee prefers to be called.", example = "Johnny")
         String preferredName,
 
-        @Schema(description = "How the trainee describes their gender.", example = "non-binary")
+        @Schema(description = "How the trainee describes their gender.", example = "NON_BINARY")
         Gender gender,
 
         @Size(min = 2, max = 100)
@@ -58,7 +58,7 @@ public record TraineeRequest(
                 example = "amsterdam")
         String cityId,
 
-        @Schema(description = "How well the trainee speaks English.", example = "good")
+        @Schema(description = "How well the trainee speaks English.", example = "GOOD")
         EnglishLevel englishLevel,
 
         @Schema(description = "Whether the trainee can work in a professional Dutch environment.",
@@ -69,7 +69,7 @@ public record TraineeRequest(
         @Schema(description = "The country the trainee came from.", example = "Syria")
         String countryOfOrigin,
 
-        @Schema(description = "The route by which the trainee came to the Netherlands.", example = "refugee")
+        @Schema(description = "The route by which the trainee came to the Netherlands.", example = "REFUGEE")
         Background background,
 
         @PastOrPresent
@@ -80,10 +80,10 @@ public record TraineeRequest(
         @Schema(description = "The date the trainee's first residence permit was issued.", example = "2019-02-15")
         LocalDate firstPermitIssueDate,
 
-        @Schema(description = "How the trainee supports themselves while studying.", example = "uitkering")
+        @Schema(description = "How the trainee supports themselves while studying.", example = "UITKERING")
         FinancialSupport financialSupport,
 
-        @Schema(description = "The highest level of education the trainee completed.", example = "bachelors-degree")
+        @Schema(description = "The highest level of education the trainee completed.", example = "BACHELORS_DEGREE")
         EducationLevel educationLevel,
 
         @Size(min = 3, max = 100)
@@ -164,11 +164,11 @@ public record TraineeRequest(
         Integer currentCohort,
 
         @NotNull
-        @Schema(description = "The track the trainee is studying.", example = "core-program")
+        @Schema(description = "The track the trainee is studying.", example = "CORE_PROGRAM")
         Track track,
 
         @NotNull
-        @Schema(description = "Where the trainee stands in the program.", example = "studying")
+        @Schema(description = "Where the trainee stands in the program.", example = "STUDYING")
         LearningStatus learningStatus,
 
         @Schema(description = "The date the trainee started the program.", example = "2024-01-15")
@@ -181,7 +181,7 @@ public record TraineeRequest(
         @Schema(description = "The date the trainee left the program.", example = "2024-05-20")
         LocalDate quitDate,
 
-        @Schema(description = "Why the trainee left the program.", example = "personal")
+        @Schema(description = "Why the trainee left the program.", example = "PERSONAL")
         QuitReason quitReason,
 
         @Size(min = 2, max = 100)
@@ -198,7 +198,7 @@ public record TraineeRequest(
 
         // Placement
         @NotNull
-        @Schema(description = "Where the trainee stands in finding work.", example = "searching")
+        @Schema(description = "Where the trainee stands in finding work.", example = "SEARCHING")
         JobPath jobPath,
 
         @Schema(description = "The date HackYourFuture stops supporting the trainee's job search.",

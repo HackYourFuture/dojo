@@ -1,25 +1,18 @@
 package nl.hackyourfuture.dojoserver.trainee.assessment;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public enum AssessmentType {
-    PRESENTATION("presentation"),
-    JAVASCRIPT("javascript"),
-    BROWSERS_INTERVIEW("browsers-interview"),
-    USING_APIS_INTERVIEW("using-apis-interview"),
-    NODEJS("nodejs"),
-    REACT_INTERVIEW("react-interview"),
-    FINAL_PROJECT_INTERVIEW("final-project-interview"),
-    CORE_MID_TERM_INTERVIEW("core-mid-term-interview"),
-    CORE_END_INTERVIEW("core-end-interview"),
-    FRONTEND_MID_TERM_INTERVIEW("frontend-mid-term-interview"),
-    BACKEND_MID_TERM_INTERVIEW("backend-mid-term-interview"),
-    CLOUD_MID_TERM_INTERVIEW("cloud-mid-term-interview"),
-    DATA_MID_TERM_INTERVIEW("data-mid-term-interview"),
-    TESTER_MID_TERM_INTERVIEW("tester-mid-term-interview");
-
-    @JsonValue
-    private final String value;
+    PRESENTATION,
+    JAVASCRIPT,
+    BROWSERS_INTERVIEW,
+    USING_APIS_INTERVIEW,
+    NODEJS,
+    REACT_INTERVIEW,
+    FINAL_PROJECT_INTERVIEW,
+    CORE_MID_TERM_INTERVIEW,
+    CORE_END_INTERVIEW,
+    FRONTEND_MID_TERM_INTERVIEW,
+    BACKEND_MID_TERM_INTERVIEW,
+    CLOUD_MID_TERM_INTERVIEW,
+    DATA_MID_TERM_INTERVIEW,
+    TESTER_MID_TERM_INTERVIEW
 }

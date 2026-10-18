@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Schema(description = "An employment record of a trainee, as sent to create or update one")
 public record EmploymentHistoryRequest(
         @NotNull
-        @Schema(description = "The type of the employment", example = "job")
+        @Schema(description = "The type of the employment", example = "JOB")
         EmploymentType type,
 
         @NotBlank

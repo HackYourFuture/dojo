@@ -3,15 +3,15 @@ from typing import Any
 from dojo_setup.generators.randomness import YEAR, chance, date_after, date_before, fake
 
 ASSIGNMENT_TYPES = [
-    "assignment-review",
-    "tech-interview",
-    "teaching",
-    "project-mentor",
-    "tech-mentorship",
-    "english-mentorship",
-    "hr-mentorship",
-    "content-creation",
-    "workshop-host",
+    "ASSIGNMENT_REVIEW",
+    "TECH_INTERVIEW",
+    "TEACHING",
+    "PROJECT_MENTOR",
+    "TECH_MENTORSHIP",
+    "ENGLISH_MENTORSHIP",
+    "HR_MENTORSHIP",
+    "CONTENT_CREATION",
+    "WORKSHOP_HOST",
 ]
 # Notes are picked independently of the type, so each fits any type
 NOTES = [
@@ -27,7 +27,7 @@ NOTES = [
 def generate_volunteer_assignment(volunteer: dict[str, Any]) -> dict[str, Any]:
     start_date = date_before(3 * YEAR)
     # Only an active volunteer can still be on an assignment
-    is_ongoing = volunteer["status"] == "active" and chance(0.3)
+    is_ongoing = volunteer["status"] == "ACTIVE" and chance(0.3)
     return {
         # One of the volunteer's role preferences, or any type when they have none
         "type": fake.random_element(volunteer["rolePreferences"] or ASSIGNMENT_TYPES),
