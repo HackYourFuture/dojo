@@ -1,23 +1,16 @@
 package nl.hackyourfuture.dojoserver.interaction;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public enum InteractionType {
-    CALL("call"),
-    CHAT("chat"),
-    EMAIL("email"),
-    MEETING("meeting"),
-    FEEDBACK("feedback"),
-    IN_PERSON("in-person"),
-    TECH_HOUR("tech-hour"),
-    ENGLISH_MENTORSHIP("english-mentorship"),
-    TECH_SUPPORT("tech-support"),
-    HR_MENTORSHIP("hr-mentorship"),
-    GRAD_MENTORSHIP("grad-mentorship"),
-    OTHER("other");
-
-    @JsonValue
-    private final String value;
+    CALL,
+    CHAT,
+    EMAIL,
+    MEETING,
+    FEEDBACK,
+    IN_PERSON,
+    TECH_HOUR,
+    ENGLISH_MENTORSHIP,
+    TECH_SUPPORT,
+    HR_MENTORSHIP,
+    GRAD_MENTORSHIP,
+    OTHER
 }

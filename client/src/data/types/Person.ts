@@ -2,10 +2,10 @@ import { SelectOption } from './SelectOption';
 
 // How a person describes their gender, like the server's Gender.
 export enum Gender {
-  Man = 'man',
-  Woman = 'woman',
-  NonBinary = 'non-binary',
-  Other = 'other',
+  Man = 'MAN',
+  Woman = 'WOMAN',
+  NonBinary = 'NON_BINARY',
+  Other = 'OTHER',
 }
 
 export const genderOptions: SelectOption[] = [

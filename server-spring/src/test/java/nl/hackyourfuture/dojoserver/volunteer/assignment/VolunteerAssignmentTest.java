@@ -58,11 +58,11 @@ class VolunteerAssignmentTest {
     @Test
     void createAddsTheAssignmentToTheVolunteer() {
         MvcTestResult result = post(jane.getId(), """
-                {"type": "tech-mentorship", "estimatedHours": 40, "startDate": "2026-03-01", "notes": " Final project "}
+                {"type": "TECH_MENTORSHIP", "estimatedHours": 40, "startDate": "2026-03-01", "notes": " Final project "}
                 """);
 
         assertThat(result).hasStatus(201);
-        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("tech-mentorship");
+        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("TECH_MENTORSHIP");
         assertThat(result).bodyJson().extractingPath("$.estimatedHours").isEqualTo(40);
         assertThat(result).bodyJson().extractingPath("$.startDate").isEqualTo("2026-03-01");
         assertThat(result).bodyJson().extractingPath("$.endDate").isNull();
@@ -119,11 +119,11 @@ class VolunteerAssignmentTest {
         assignmentRepository.save(assignment);
 
         MvcTestResult result = put(jane.getId(), assignment.getId(), """
-                {"type": "workshop-host", "startDate": "2026-02-01"}
+                {"type": "WORKSHOP_HOST", "startDate": "2026-02-01"}
                 """);
 
         assertThat(result).hasStatusOk();
-        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("workshop-host");
+        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("WORKSHOP_HOST");
         assertThat(result).bodyJson().extractingPath("$.startDate").isEqualTo("2026-02-01");
         assertThat(result).bodyJson().extractingPath("$.estimatedHours").isNull();
         assertThat(result).bodyJson().extractingPath("$.endDate").isNull();
@@ -145,7 +145,7 @@ class VolunteerAssignmentTest {
 
         assertThat(list(unknown)).hasStatus(404);
         assertThat(post(unknown, """
-                {"type": "teaching", "startDate": "2026-03-01"}
+                {"type": "TEACHING", "startDate": "2026-03-01"}
                 """)).hasStatus(404);
     }
 
@@ -153,9 +153,9 @@ class VolunteerAssignmentTest {
     void anAssignmentIsNotFoundUnderAnotherVolunteer() {
         VolunteerAssignment assignment = assignmentRepository.save(assignment(jane, LocalDate.of(2026, 3, 1)));
 
-        assertThat(put(john.getId(), assignment.getId(), bodyWith("type", "workshop-host"))).hasStatus(404);
+        assertThat(put(john.getId(), assignment.getId(), bodyWith("type", "WORKSHOP_HOST"))).hasStatus(404);
         assertThat(mvc.delete().uri(ASSIGNMENTS + "/{id}", john.getId(), assignment.getId())).hasStatus(404);
-        assertThat(list(jane.getId())).bodyJson().extractingPath("$[0].type").isEqualTo("teaching");
+        assertThat(list(jane.getId())).bodyJson().extractingPath("$[0].type").isEqualTo("TEACHING");
     }
 
     @Test
@@ -187,7 +187,7 @@ class VolunteerAssignmentTest {
     // A valid body with one member replaced, so a 400 can only come from that member.
     private String bodyWith(String key, Object value) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("type", "teaching");
+        body.put("type", "TEACHING");
         body.put("startDate", "2026-03-01");
         body.put(key, value);
         return objectMapper.writeValueAsString(body);

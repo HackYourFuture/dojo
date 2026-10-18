@@ -1,6 +1,6 @@
 import { Button, Checkbox, InputAdornment, ListItemText, MenuItem, Stack, TextField } from '@mui/material';
 import { jobPathOptions, learningStatusOptions } from '../../trainee-profile/utils/selectOptions';
-import { pickedLabels, setParam, toApiEnumName, toValues } from '../../../data/listFilters';
+import { pickedLabels, setParam, toValues } from '../../../data/listFilters';
 
 import { NumberField } from '../../../components/NumberField';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,16 +9,6 @@ import { TraineeFilters } from '../models/trainee-summary';
 import { provinceOptions } from '../../geo/provinces';
 import { useSearchParams } from 'react-router';
 import { useState } from 'react';
-
-const statusOptions: SelectOption[] = learningStatusOptions.map((option) => ({
-  ...option,
-  value: toApiEnumName(option.value),
-}));
-
-const jobPathFilterOptions: SelectOption[] = jobPathOptions.map((option) => ({
-  ...option,
-  value: toApiEnumName(option.value),
-}));
 
 const URL_UPDATE = { replace: true, preventScrollReset: true, flushSync: true };
 
@@ -88,12 +78,12 @@ export const TraineeFilterBar = ({ filters }: TraineeFilterBarProps) => {
           select: {
             multiple: true,
             displayEmpty: true,
-            renderValue: () => pickedLabels(statusOptions, filters.status),
+            renderValue: () => pickedLabels(learningStatusOptions, filters.status),
           },
           inputLabel: { shrink: true },
         }}
       >
-        {menuItems(statusOptions, filters.status)}
+        {menuItems(learningStatusOptions, filters.status)}
       </TextField>
       <TextField
         select
@@ -106,12 +96,12 @@ export const TraineeFilterBar = ({ filters }: TraineeFilterBarProps) => {
           select: {
             multiple: true,
             displayEmpty: true,
-            renderValue: () => pickedLabels(jobPathFilterOptions, filters.jobPath),
+            renderValue: () => pickedLabels(jobPathOptions, filters.jobPath),
           },
           inputLabel: { shrink: true },
         }}
       >
-        {menuItems(jobPathFilterOptions, filters.jobPath)}
+        {menuItems(jobPathOptions, filters.jobPath)}
       </TextField>
       <TextField
         select

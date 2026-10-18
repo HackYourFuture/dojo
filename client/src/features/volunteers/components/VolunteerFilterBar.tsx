@@ -3,7 +3,7 @@ import { VolunteerAssignmentType, volunteerAssignmentTypeLabels } from '../Volun
 import { VolunteerExpertise, volunteerExpertiseLabels } from '../VolunteerExpertise';
 import { VolunteerStatus, volunteerStatusLabels } from '../VolunteerStatus';
 import { VolunteerType, volunteerTypeLabels } from '../VolunteerType';
-import { pickedLabels, setParam, toApiEnumName, toValues } from '../../../data/listFilters';
+import { pickedLabels, setParam, toValues } from '../../../data/listFilters';
 
 import SearchIcon from '@mui/icons-material/Search';
 import { SelectOption } from '../../../data/types/SelectOption';
@@ -13,22 +13,22 @@ import { useState } from 'react';
 
 const statusOptions: SelectOption[] = Object.values(VolunteerStatus).map((status) => ({
   label: volunteerStatusLabels[status],
-  value: toApiEnumName(status),
+  value: status,
 }));
 
 const typeOptions: SelectOption[] = Object.values(VolunteerType).map((type) => ({
   label: volunteerTypeLabels[type],
-  value: toApiEnumName(type),
+  value: type,
 }));
 
 const expertiseOptions: SelectOption[] = Object.values(VolunteerExpertise).map((expertise) => ({
   label: volunteerExpertiseLabels[expertise],
-  value: toApiEnumName(expertise),
+  value: expertise,
 }));
 
 const rolePreferenceOptions: SelectOption[] = Object.values(VolunteerAssignmentType).map((type) => ({
   label: volunteerAssignmentTypeLabels[type],
-  value: toApiEnumName(type),
+  value: type,
 }));
 
 const URL_UPDATE = { replace: true, preventScrollReset: true, flushSync: true };

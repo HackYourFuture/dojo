@@ -2,17 +2,17 @@ import { City } from '../geo/models/city';
 
 // Where the partnership with the organisation stands.
 export enum OrganisationStatus {
-  Active = 'active',
-  Inactive = 'inactive',
-  NeverEngaged = 'never-engaged',
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  NeverEngaged = 'NEVER_ENGAGED',
 }
 
 // What the organisation can offer HYF.
 export enum PartnershipType {
-  Volunteer = 'volunteer',
-  Funding = 'funding',
-  Employment = 'employment',
-  Events = 'events',
+  Volunteer = 'VOLUNTEER',
+  Funding = 'FUNDING',
+  Employment = 'EMPLOYMENT',
+  Events = 'EVENTS',
 }
 
 // A user responsible for the organisation.

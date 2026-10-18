@@ -16,18 +16,18 @@ export interface Reporter {
 }
 
 export enum InteractionType {
-  Call = 'call',
-  Chat = 'chat',
-  Email = 'email',
-  Meeting = 'meeting',
-  Feedback = 'feedback',
-  TechHour = 'tech-hour',
-  InPerson = 'in-person',
-  EnglishMentorship = 'english-mentorship',
-  TechSupport = 'tech-support',
-  GradMentorship = 'grad-mentorship',
-  HRMentorship = 'hr-mentorship',
-  Other = 'other',
+  Call = 'CALL',
+  Chat = 'CHAT',
+  Email = 'EMAIL',
+  Meeting = 'MEETING',
+  Feedback = 'FEEDBACK',
+  TechHour = 'TECH_HOUR',
+  InPerson = 'IN_PERSON',
+  EnglishMentorship = 'ENGLISH_MENTORSHIP',
+  TechSupport = 'TECH_SUPPORT',
+  GradMentorship = 'GRAD_MENTORSHIP',
+  HRMentorship = 'HR_MENTORSHIP',
+  Other = 'OTHER',
 }
 
 // The types each profile offers when adding or editing an interaction. The server accepts every type on every profile.

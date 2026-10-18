@@ -10,7 +10,7 @@ import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
 public record SearchResult(
         @Schema(
                 description = "The kind of the search result",
-                example = "trainee",
+                example = "TRAINEE",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         SearchResultType type,

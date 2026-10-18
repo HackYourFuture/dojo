@@ -1,8 +1,5 @@
 import { SelectOption } from './types/SelectOption';
 
-// The list filters take an enum by its Java name: on-hold is ON_HOLD.
-export const toApiEnumName = (value: string) => value.toUpperCase().split('-').join('_');
-
 // The labels of the picked options, as a closed dropdown shows them.
 export const pickedLabels = (options: SelectOption[], values: string[]) =>
   options

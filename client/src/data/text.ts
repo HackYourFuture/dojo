@@ -43,9 +43,9 @@ export const emailValidationError = (email: string): string | null => {
   return null;
 };
 
-// The text with spaces for dashes and a capital first letter, so "in-progress" becomes "In progress".
+// The text with spaces for underscores and a capital first letter, so "ON_HOLD" becomes "On hold".
 // TODO: rename this function
 export const formatTextToFriendly = (value: string): string => {
-  const text = value.split('-').join(' ');
+  const text = value.toLowerCase().split('_').join(' ');
   return text.charAt(0).toUpperCase() + text.slice(1);
 };

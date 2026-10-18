@@ -85,10 +85,10 @@ class VolunteerEndpointTest {
         String email = RandomUtils.generateRandomId() + "@Example.ORG";
 
         MvcTestResult result = post("""
-                {"firstName": "  Jane ", "lastName": " Roe ", "gender": "non-binary", "pronouns": " They/them ",
+                {"firstName": "  Jane ", "lastName": " Roe ", "gender": "NON_BINARY", "pronouns": " They/them ",
                  "companyName": " Acme B.V. ", "jobRole": " Developer ", "email": " %s ", "phone": " +31612345678 ",
                  "githubHandle": " janeroe ", "slackId": " U068AQ9G99F ",
-                 "linkedinUrl": " https://linkedin.com/in/jane-roe ", "status": "active", "notes": " Mentors. "}
+                 "linkedinUrl": " https://linkedin.com/in/jane-roe ", "status": "ACTIVE", "notes": " Mentors. "}
                 """.formatted(email));
 
         assertThat(result).hasStatus(201);
@@ -129,7 +129,7 @@ class VolunteerEndpointTest {
         assertThat(post(bodyWith("status", null))).hasStatus(400);
         // The keys may also be left out altogether.
         assertThat(post("""
-                {"firstName": "Jane", "lastName": "Roe", "status": "active"}
+                {"firstName": "Jane", "lastName": "Roe", "status": "ACTIVE"}
                 """)).hasStatus(400);
         assertThat(post("""
                 {"firstName": "Jane", "lastName": "Roe", "email": "%s@example.org"}
@@ -138,8 +138,13 @@ class VolunteerEndpointTest {
 
     @Test
     void createRejectsAnUnknownStatusOrGender() {
-        assertThat(post(bodyWith("status", "retired"))).hasStatus(400);
+        MvcTestResult retired = post(bodyWith("status", "retired"));
+        assertThat(retired).hasStatus(400);
+        assertThat(retired).bodyJson().extractingPath("$.error")
+                .isEqualTo("'retired' is not a valid value for 'status'. Allowed values: ACTIVE, PAUSED, STOPPED.");
         assertThat(post(bodyWith("gender", "unknown"))).hasStatus(400);
+        // Values are the constant names, case and all.
+        assertThat(post(bodyWith("status", "active"))).hasStatus(400);
         // Enum indexes are not values either.
         assertThat(post(bodyWith("status", 1))).hasStatus(400);
         assertThat(post(bodyWith("status", "1"))).hasStatus(400);
@@ -179,7 +184,7 @@ class VolunteerEndpointTest {
 
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$.displayName").isEqualTo("Jane Roe");
-        assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("active");
+        assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("ACTIVE");
         assertThat(result).bodyJson().extractingPath("$.profilePath").isEqualTo(volunteer.getProfilePath());
     }
 
@@ -189,7 +194,7 @@ class VolunteerEndpointTest {
 
         assertThat(mvc.get().uri(VOLUNTEERS + "/{id}", unknown)).hasStatus(404);
         assertThat(patch(unknown, """
-                {"status": "paused"}
+                {"status": "PAUSED"}
                 """)).hasStatus(404);
         assertThat(delete(unknown)).hasStatus(404);
     }
@@ -211,7 +216,7 @@ class VolunteerEndpointTest {
         volunteerRepository.save(volunteer);
 
         MvcTestResult result = patch(volunteer.getId(), """
-                {"status": "paused", "companyName": null, "gender": "woman", "notes": "Mentors on Tuesdays."}
+                {"status": "PAUSED", "companyName": null, "gender": "WOMAN", "notes": "Mentors on Tuesdays."}
                 """);
 
         assertThat(result).hasStatusOk();
@@ -245,7 +250,7 @@ class VolunteerEndpointTest {
 
         // The same values again, the list included.
         assertThat(patch(volunteer.getId(), """
-                {"status": "active", "volunteerTypes": ["tech"]}
+                {"status": "ACTIVE", "volunteerTypes": ["TECH"]}
                 """)).hasStatusOk();
 
         verifyNoInteractions(slackClient);
@@ -301,18 +306,18 @@ class VolunteerEndpointTest {
     @Test
     void createStoresTheListsEachOnceInDeclarationOrder() {
         MvcTestResult result = post("""
-                {"firstName": "Jane", "lastName": "Roe", "email": "%s@example.org", "status": "active",
-                 "volunteerTypes": ["personal-development", "tech", "tech"], "expertise": ["hr-mentor", "core-program"],
-                 "rolePreferences": ["teaching", "assignment-review", "teaching"]}
+                {"firstName": "Jane", "lastName": "Roe", "email": "%s@example.org", "status": "ACTIVE",
+                 "volunteerTypes": ["PERSONAL_DEVELOPMENT", "TECH", "TECH"], "expertise": ["HR_MENTOR", "CORE_PROGRAM"],
+                 "rolePreferences": ["TEACHING", "ASSIGNMENT_REVIEW", "TEACHING"]}
                 """.formatted(RandomUtils.generateRandomId()));
 
         assertThat(result).hasStatus(201);
         assertThat(result).bodyJson().extractingPath("$.volunteerTypes").asArray()
-                .containsExactly("tech", "personal-development");
+                .containsExactly("TECH", "PERSONAL_DEVELOPMENT");
         assertThat(result).bodyJson().extractingPath("$.expertise").asArray()
-                .containsExactly("core-program", "hr-mentor");
+                .containsExactly("CORE_PROGRAM", "HR_MENTOR");
         assertThat(result).bodyJson().extractingPath("$.rolePreferences").asArray()
-                .containsExactly("assignment-review", "teaching");
+                .containsExactly("ASSIGNMENT_REVIEW", "TEACHING");
     }
 
     @Test
@@ -323,12 +328,12 @@ class VolunteerEndpointTest {
         assertThat(post(bodyWith("expertise", List.of("catering")))).hasStatus(400);
         assertThat(post(bodyWith("rolePreferences", List.of("catering")))).hasStatus(400);
         // A bare value instead of an array.
-        assertThat(post(bodyWith("volunteerTypes", "tech"))).hasStatus(400);
+        assertThat(post(bodyWith("volunteerTypes", "TECH"))).hasStatus(400);
         assertThat(patch(volunteer.getId(), """
                 {"volunteerTypes": [null]}
                 """)).hasStatus(400);
         assertThat(patch(volunteer.getId(), """
-                {"expertise": "core-program"}
+                {"expertise": "CORE_PROGRAM"}
                 """)).hasStatus(400);
         assertThat(patch(volunteer.getId(), """
                 {"rolePreferences": ["catering"]}
@@ -344,16 +349,16 @@ class VolunteerEndpointTest {
         volunteerRepository.save(volunteer);
 
         MvcTestResult replaced = patch(volunteer.getId(), """
-                {"volunteerTypes": ["personal-development"], "rolePreferences": ["hr-mentorship", "teaching"]}
+                {"volunteerTypes": ["PERSONAL_DEVELOPMENT"], "rolePreferences": ["HR_MENTORSHIP", "TEACHING"]}
                 """);
 
         assertThat(replaced).hasStatusOk();
         assertThat(replaced).bodyJson().extractingPath("$.volunteerTypes").asArray()
-                .containsExactly("personal-development");
+                .containsExactly("PERSONAL_DEVELOPMENT");
         // Left out, so kept.
-        assertThat(replaced).bodyJson().extractingPath("$.expertise").asArray().containsExactly("core-program");
+        assertThat(replaced).bodyJson().extractingPath("$.expertise").asArray().containsExactly("CORE_PROGRAM");
         assertThat(replaced).bodyJson().extractingPath("$.rolePreferences").asArray()
-                .containsExactly("teaching", "hr-mentorship");
+                .containsExactly("TEACHING", "HR_MENTORSHIP");
         verify(slackClient).sendNotification(contains("| Volunteer types | Tech | Personal development |"));
         verify(slackClient).sendNotification(contains("| Role preferences | Teaching | Hr mentorship, Teaching |"));
 
@@ -424,16 +429,16 @@ class VolunteerEndpointTest {
                 .containsEntry("displayName", "Jane Roe")
                 .containsEntry("profilePath", volunteer.getProfilePath())
                 .containsEntry("thumbnailUrl", volunteer.getThumbnailUrl())
-                .containsEntry("status", "active")
+                .containsEntry("status", "ACTIVE")
                 .containsEntry("companyName", "Acme")
                 .containsEntry("jobRole", "Recruiter")
                 .containsEntry("email", volunteer.getEmail())
                 .containsEntry("githubHandle", "janeroe")
                 .containsEntry("slackId", "U068AQ9G99F")
                 .containsEntry("linkedinUrl", "https://linkedin.com/in/jane-roe")
-                .containsEntry("volunteerTypes", List.of("tech"))
-                .containsEntry("expertise", List.of("core-program", "hr-mentor"))
-                .containsEntry("rolePreferences", List.of("teaching"))
+                .containsEntry("volunteerTypes", List.of("TECH"))
+                .containsEntry("expertise", List.of("CORE_PROGRAM", "HR_MENTOR"))
+                .containsEntry("rolePreferences", List.of("TEACHING"))
                 .doesNotContainKeys("notes", "pictureUrl");
     }
 
@@ -471,7 +476,7 @@ class VolunteerEndpointTest {
         body.put("firstName", "Jane");
         body.put("lastName", "Roe");
         body.put("email", RandomUtils.generateRandomId() + "@example.org");
-        body.put("status", "active");
+        body.put("status", "ACTIVE");
         body.put(key, value);
         return objectMapper.writeValueAsString(body);
     }

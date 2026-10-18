@@ -17,7 +17,7 @@ public record VolunteerAssignmentResponse(
 
         @Schema(
                 description = "The type of the assignment",
-                example = "tech-mentorship",
+                example = "TECH_MENTORSHIP",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         VolunteerAssignmentType type,

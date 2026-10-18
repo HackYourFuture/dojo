@@ -64,7 +64,7 @@ public record DashboardResponse(
     }
 
     public record StatusCount(
-            @Schema(description = "The learning status", example = "studying",
+            @Schema(description = "The learning status", example = "STUDYING",
                     requiredMode = Schema.RequiredMode.REQUIRED)
             LearningStatus status,
 
@@ -74,7 +74,7 @@ public record DashboardResponse(
     }
 
     public record TrackCount(
-            @Schema(description = "The track", example = "frontend", requiredMode = Schema.RequiredMode.REQUIRED)
+            @Schema(description = "The track", example = "FRONTEND", requiredMode = Schema.RequiredMode.REQUIRED)
             Track track,
 
             @Schema(description = "Number of trainees", example = "8", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -83,7 +83,7 @@ public record DashboardResponse(
     }
 
     public record EducationLevelCount(
-            @Schema(description = "The education level, null when not set", example = "bachelors-degree",
+            @Schema(description = "The education level, null when not set", example = "BACHELORS_DEGREE",
                     requiredMode = Schema.RequiredMode.REQUIRED, nullable = true)
             EducationLevel educationLevel,
 
@@ -103,7 +103,7 @@ public record DashboardResponse(
     }
 
     public record GenderCount(
-            @Schema(description = "The gender, null when not set", example = "woman",
+            @Schema(description = "The gender, null when not set", example = "WOMAN",
                     requiredMode = Schema.RequiredMode.REQUIRED, nullable = true)
             Gender gender,
 

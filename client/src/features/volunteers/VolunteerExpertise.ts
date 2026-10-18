@@ -1,14 +1,14 @@
 // What a volunteer can help with
 export enum VolunteerExpertise {
-  CoreProgram = 'core-program',
-  Frontend = 'frontend',
-  Backend = 'backend',
-  Data = 'data',
-  Tester = 'tester',
-  Cloud = 'cloud',
-  ProjectManagement = 'project-management',
-  EnglishMentor = 'english-mentor',
-  HrMentor = 'hr-mentor',
+  CoreProgram = 'CORE_PROGRAM',
+  Frontend = 'FRONTEND',
+  Backend = 'BACKEND',
+  Data = 'DATA',
+  Tester = 'TESTER',
+  Cloud = 'CLOUD',
+  ProjectManagement = 'PROJECT_MANAGEMENT',
+  EnglishMentor = 'ENGLISH_MENTOR',
+  HrMentor = 'HR_MENTOR',
 }
 
 export const volunteerExpertiseLabels: Record<VolunteerExpertise, string> = {

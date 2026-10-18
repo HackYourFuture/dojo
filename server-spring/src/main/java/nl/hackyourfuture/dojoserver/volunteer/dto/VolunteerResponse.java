@@ -65,7 +65,7 @@ public record VolunteerResponse(
 
         @Schema(
                 description = "How the volunteer describes their gender",
-                example = "woman",
+                example = "WOMAN",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -136,28 +136,28 @@ public record VolunteerResponse(
 
         @Schema(
                 description = "Where the volunteer stands with HackYourFuture",
-                example = "active",
+                example = "ACTIVE",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         VolunteerStatus status,
 
         @Schema(
                 description = "The kind of volunteering the volunteer does",
-                example = "[\"tech\"]",
+                example = "[\"TECH\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         List<VolunteerType> volunteerTypes,
 
         @Schema(
                 description = "What the volunteer can help with: tracks, project management, English or HR mentoring",
-                example = "[\"core-program\", \"backend\"]",
+                example = "[\"CORE_PROGRAM\", \"BACKEND\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         List<VolunteerExpertise> expertise,
 
         @Schema(
                 description = "The assignments the volunteer prefers to take on",
-                example = "[\"assignment-review\", \"teaching\"]",
+                example = "[\"ASSIGNMENT_REVIEW\", \"TEACHING\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         List<VolunteerAssignmentType> rolePreferences,

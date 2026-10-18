@@ -13,18 +13,18 @@ from dojo_setup.generators.volunteer_assignment import ASSIGNMENT_TYPES, generat
 
 # Mostly Dutch, with international colleagues and graduates who came back to mentor
 NAME_ORIGINS = {"dutch": 45, "english": 15, "arabic": 10, "turkish": 10, "spanish": 10, "ukrainian": 5, "russian": 5}
-STATUSES = {"active": 50, "paused": 5, "stopped": 45}
-VOLUNTEER_TYPES = ["tech", "personal-development"]
+STATUSES = {"ACTIVE": 50, "PAUSED": 5, "STOPPED": 45}
+VOLUNTEER_TYPES = ["TECH", "PERSONAL_DEVELOPMENT"]
 EXPERTISE = [
-    "core-program",
-    "frontend",
-    "backend",
-    "data",
-    "tester",
-    "cloud",
-    "project-management",
-    "english-mentor",
-    "hr-mentor",
+    "CORE_PROGRAM",
+    "FRONTEND",
+    "BACKEND",
+    "DATA",
+    "TESTER",
+    "CLOUD",
+    "PROJECT_MANAGEMENT",
+    "ENGLISH_MENTOR",
+    "HR_MENTOR",
 ]
 JOB_ROLES = [
     "Software Engineer",

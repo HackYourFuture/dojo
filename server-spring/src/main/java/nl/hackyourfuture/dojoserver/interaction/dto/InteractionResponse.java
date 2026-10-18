@@ -25,7 +25,7 @@ public record InteractionResponse(
 
         @Schema(
                 description = "The kind of interaction",
-                example = "feedback",
+                example = "FEEDBACK",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         InteractionType type,

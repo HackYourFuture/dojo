@@ -11,6 +11,6 @@ export interface EmploymentHistory {
 }
 
 export enum EmploymentType {
-  Internship = 'internship',
-  Job = 'job',
+  Internship = 'INTERNSHIP',
+  Job = 'JOB',
 }

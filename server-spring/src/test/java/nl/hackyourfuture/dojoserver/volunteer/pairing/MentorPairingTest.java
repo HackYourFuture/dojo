@@ -74,7 +74,7 @@ class MentorPairingTest {
         LocalDate nextCheckin = lastCheckin.plusDays(14);
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("traineeId", " " + ann.getId() + " ");
-        body.put("type", "english-mentorship");
+        body.put("type", "ENGLISH_MENTORSHIP");
         body.put("startDate", "2026-03-01");
         body.put("lastCheckinDate", lastCheckin.toString());
         body.put("nextCheckinDate", nextCheckin.toString());
@@ -86,7 +86,7 @@ class MentorPairingTest {
         assertThat(result).bodyJson().extractingPath("$.trainee.name").isEqualTo("Ann Paired");
         assertThat(result).bodyJson().extractingPath("$.trainee.profilePath").isEqualTo(ann.getProfilePath());
         assertThat(result).bodyJson().extractingPath("$.trainee.thumbnailUrl").isNull();
-        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("english-mentorship");
+        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("ENGLISH_MENTORSHIP");
         assertThat(result).bodyJson().extractingPath("$.startDate").isEqualTo("2026-03-01");
         assertThat(result).bodyJson().extractingPath("$.lastCheckinDate").isEqualTo(lastCheckin.toString());
         assertThat(result).bodyJson().extractingPath("$.endDate").isNull();
@@ -105,7 +105,7 @@ class MentorPairingTest {
         assertThat(post(jane.getId(), bodyWith("traineeId", " "))).hasStatus(400);
         assertThat(post(jane.getId(), bodyWith("type", null))).hasStatus(400);
         // An assignment type that is not a kind of mentorship.
-        assertThat(post(jane.getId(), bodyWith("type", "teaching"))).hasStatus(400);
+        assertThat(post(jane.getId(), bodyWith("type", "TEACHING"))).hasStatus(400);
         assertThat(post(jane.getId(), bodyWith("startDate", null))).hasStatus(400);
         assertThat(post(jane.getId(), bodyWith("lastCheckinDate", "yesterday"))).hasStatus(400);
         assertThat(list(jane.getId())).bodyJson().isEqualTo("[]");
@@ -189,12 +189,12 @@ class MentorPairingTest {
         pairingRepository.save(pairing);
 
         MvcTestResult result = put(jane.getId(), pairing.getId(), """
-                {"traineeId": "%s", "type": "hr-mentorship", "startDate": "2026-02-01"}
+                {"traineeId": "%s", "type": "HR_MENTORSHIP", "startDate": "2026-02-01"}
                 """.formatted(ben.getId()));
 
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$.trainee.id").isEqualTo(ben.getId());
-        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("hr-mentorship");
+        assertThat(result).bodyJson().extractingPath("$.type").isEqualTo("HR_MENTORSHIP");
         assertThat(result).bodyJson().extractingPath("$.startDate").isEqualTo("2026-02-01");
         assertThat(result).bodyJson().extractingPath("$.lastCheckinDate").isNull();
         assertThat(result).bodyJson().extractingPath("$.endDate").isNull();
@@ -218,7 +218,7 @@ class MentorPairingTest {
 
         assertThat(list(unknown)).hasStatus(404);
         assertThat(post(unknown, """
-                {"traineeId": "%s", "type": "tech-mentorship", "startDate": "2026-03-01"}
+                {"traineeId": "%s", "type": "TECH_MENTORSHIP", "startDate": "2026-03-01"}
                 """.formatted(ann.getId()))).hasStatus(404);
     }
 
@@ -226,9 +226,9 @@ class MentorPairingTest {
     void aPairingIsNotFoundUnderAnotherVolunteer() {
         MentorPairing pairing = pairingRepository.save(pairing(jane, ann, LocalDate.of(2026, 3, 1)));
 
-        assertThat(put(john.getId(), pairing.getId(), bodyWith("type", "hr-mentorship"))).hasStatus(404);
+        assertThat(put(john.getId(), pairing.getId(), bodyWith("type", "HR_MENTORSHIP"))).hasStatus(404);
         assertThat(mvc.delete().uri(PAIRINGS + "/{id}", john.getId(), pairing.getId())).hasStatus(404);
-        assertThat(list(jane.getId())).bodyJson().extractingPath("$[0].type").isEqualTo("tech-mentorship");
+        assertThat(list(jane.getId())).bodyJson().extractingPath("$[0].type").isEqualTo("TECH_MENTORSHIP");
     }
 
     @Test
@@ -271,7 +271,7 @@ class MentorPairingTest {
     private String bodyWith(String key, Object value) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("traineeId", ann.getId());
-        body.put("type", "tech-mentorship");
+        body.put("type", "TECH_MENTORSHIP");
         body.put("startDate", "2026-03-01");
         body.put(key, value);
         return objectMapper.writeValueAsString(body);

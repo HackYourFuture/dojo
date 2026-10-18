@@ -9,20 +9,20 @@ from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.randomness import YEAR, chance, date_after, date_before, fake, weighted
 from dojo_setup.generators.transliteration import to_ascii, to_slug
 
-GENDERS = {"man": 50, "woman": 50, "non-binary": 1}
+GENDERS = {"MAN": 50, "WOMAN": 50, "NON_BINARY": 1}
 NAME_ORIGINS = {"arabic": 30, "turkish": 20, "ukrainian": 15, "spanish": 15, "russian": 10, "english": 10}
-PRONOUNS = {"man": "He/him", "woman": "She/her", "non-binary": "They/them"}
-LEARNING_STATUSES = {"studying": 30, "graduated": 60, "on-hold": 1, "quit": 10}
-ENGLISH_LEVELS = ["good", "needs-work"]
-BACKGROUNDS = ["refugee", "family-reunification", "partner-of-skilled-migrant", "vulnerable-group", "eu-citizen"]
-FINANCIAL_SUPPORT = ["side-job", "uitkering", "family", "savings", "none"]
-EDUCATION_LEVELS = ["none", "high-school", "diploma", "bachelors-degree", "masters-degree", "phd"]
+PRONOUNS = {"MAN": "He/him", "WOMAN": "She/her", "NON_BINARY": "They/them"}
+LEARNING_STATUSES = {"STUDYING": 30, "GRADUATED": 60, "ON_HOLD": 1, "QUIT": 10}
+ENGLISH_LEVELS = ["GOOD", "NEEDS_WORK"]
+BACKGROUNDS = ["REFUGEE", "FAMILY_REUNIFICATION", "PARTNER_OF_SKILLED_MIGRANT", "VULNERABLE_GROUP", "EU_CITIZEN"]
+FINANCIAL_SUPPORT = ["SIDE_JOB", "UITKERING", "FAMILY", "SAVINGS", "NONE"]
+EDUCATION_LEVELS = ["NONE", "HIGH_SCHOOL", "DIPLOMA", "BACHELORS_DEGREE", "MASTERS_DEGREE", "PHD"]
 DIETARY_PREFERENCES = ["Vegetarian", "Vegan", "Halal", "No dairy"]
 HEALTH_CONDITIONS = ["None", "Allergies", "Chronic illness", "Disability"]
 EMERGENCY_CONTACT_RELATIONSHIPS = ["Parent", "Sibling", "Spouse", "Friend", "Other"]
-TRACKS = ["frontend", "backend", "cloud", "tester", "data", "core-program"]
-QUIT_REASONS = ["technical", "social-skills", "personal", "withdrawn", "municipality-or-monetary", "left-nl", "other"]
-JOB_PATHS = ["searching", "internship", "tech-job", "non-tech-job", "other-studies", "support-ended"]
+TRACKS = ["FRONTEND", "BACKEND", "CLOUD", "TESTER", "DATA", "CORE_PROGRAM"]
+QUIT_REASONS = ["TECHNICAL", "SOCIAL_SKILLS", "PERSONAL", "WITHDRAWN", "MUNICIPALITY_OR_MONETARY", "LEFT_NL", "OTHER"]
+JOB_PATHS = ["SEARCHING", "INTERNSHIP", "TECH_JOB", "NON_TECH_JOB", "OTHER_STUDIES", "SUPPORT_ENDED"]
 # Reserved for documentation, so the generated addresses never belong to anyone
 EMAIL_DOMAINS = ["example.com", "example.net", "example.org"]
 
@@ -68,7 +68,7 @@ def _personal_info(gender: str, first_name: str, last_name: str) -> dict[str, An
 
 def _contact_info(first_name: str, last_name: str, name_origin: str) -> dict[str, Any]:
     # A relative or friend, with a name from the same background as the trainee
-    emergency_contact_name = " ".join(generate_name(name_origin, weighted({"man": 1, "woman": 1})))
+    emergency_contact_name = " ".join(generate_name(name_origin, weighted({"MAN": 1, "WOMAN": 1})))
     return {
         "email": example_email(first_name, last_name),
         "slackId": "USLACKBOT",
@@ -89,8 +89,8 @@ def _program_info() -> dict[str, Any]:
 
     start_date = date_before(10 * YEAR)
     learning_status = weighted(LEARNING_STATUSES)
-    has_quit = learning_status == "quit"
-    has_graduated = learning_status == "graduated"
+    has_quit = learning_status == "QUIT"
+    has_graduated = learning_status == "GRADUATED"
     graduation_date = date_after(YEAR, start_date) if has_graduated else None
 
     return {
@@ -103,7 +103,7 @@ def _program_info() -> dict[str, Any]:
         # The API rejects quit dates in the future
         "quitDate": min(date_after(120, start_date), REFERENCE_DATE) if has_quit else None,
         "graduationDate": graduation_date,
-        "jobPath": fake.random_element(JOB_PATHS) if has_graduated else "not-graduated",
+        "jobPath": fake.random_element(JOB_PATHS) if has_graduated else "NOT_GRADUATED",
         "jobSupportEndDate": date_after(YEAR, graduation_date) if has_graduated else None,
         "hasCar": chance(0.01),
     }

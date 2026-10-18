@@ -51,26 +51,26 @@ def _is_clean(name: str) -> bool:
 
 
 def _first_name(locale_fake: Faker, gender: str) -> str:
-    if gender == "man":
+    if gender == "MAN":
         return locale_fake.first_name_male()
-    if gender == "woman":
+    if gender == "WOMAN":
         return locale_fake.first_name_female()
     return locale_fake.first_name_nonbinary()
 
 
 def _last_name(locale_fake: Faker, gender: str) -> str:
     # Russian and some Ukrainian last names change with gender, e.g. Ivanov and Ivanova
-    if gender == "man":
+    if gender == "MAN":
         return locale_fake.last_name_male()
-    if gender == "woman":
+    if gender == "WOMAN":
         return locale_fake.last_name_female()
     return locale_fake.last_name()
 
 
 def _arabic_name(gender: str) -> tuple[str, str]:
-    if gender == "man":
+    if gender == "MAN":
         first_names = ARABIC_NAMES["male"]
-    elif gender == "woman":
+    elif gender == "WOMAN":
         first_names = ARABIC_NAMES["female"]
     else:
         first_names = ARABIC_NAMES["male"] + ARABIC_NAMES["female"]

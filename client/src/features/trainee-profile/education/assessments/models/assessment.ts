@@ -13,25 +13,25 @@ export interface TraineeAssessments {
 }
 
 export enum AssessmentResult {
-  Passed = 'passed',
-  PassedWithWarning = 'passed-with-warning',
-  Failed = 'failed',
-  Disqualified = 'disqualified',
+  Passed = 'PASSED',
+  PassedWithWarning = 'PASSED_WITH_WARNING',
+  Failed = 'FAILED',
+  Disqualified = 'DISQUALIFIED',
 }
 
 export enum AssessmentType {
-  Presentation = 'presentation',
-  JavaScript = 'javascript',
-  BrowsersInterview = 'browsers-interview',
-  UsingApisInterview = 'using-apis-interview',
-  NodeJS = 'nodejs',
-  ReactInterview = 'react-interview',
-  FinalProjectInterview = 'final-project-interview',
-  CoreMidTermInterview = 'core-mid-term-interview',
-  CoreEndInterview = 'core-end-interview',
-  FrontEndMidTermInterview = 'frontend-mid-term-interview',
-  BackEndMidTermInterview = 'backend-mid-term-interview',
-  CloudMidTermInterview = 'cloud-mid-term-interview',
-  DataMidTermInterview = 'data-mid-term-interview',
-  TesterMidTermInterview = 'tester-mid-term-interview',
+  Presentation = 'PRESENTATION',
+  JavaScript = 'JAVASCRIPT',
+  BrowsersInterview = 'BROWSERS_INTERVIEW',
+  UsingApisInterview = 'USING_APIS_INTERVIEW',
+  NodeJS = 'NODEJS',
+  ReactInterview = 'REACT_INTERVIEW',
+  FinalProjectInterview = 'FINAL_PROJECT_INTERVIEW',
+  CoreMidTermInterview = 'CORE_MID_TERM_INTERVIEW',
+  CoreEndInterview = 'CORE_END_INTERVIEW',
+  FrontEndMidTermInterview = 'FRONTEND_MID_TERM_INTERVIEW',
+  BackEndMidTermInterview = 'BACKEND_MID_TERM_INTERVIEW',
+  CloudMidTermInterview = 'CLOUD_MID_TERM_INTERVIEW',
+  DataMidTermInterview = 'DATA_MID_TERM_INTERVIEW',
+  TesterMidTermInterview = 'TESTER_MID_TERM_INTERVIEW',
 }

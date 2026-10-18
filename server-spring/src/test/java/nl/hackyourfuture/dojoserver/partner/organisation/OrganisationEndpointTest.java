@@ -84,7 +84,7 @@ class OrganisationEndpointTest {
     @Test
     void createReturnsTheOrganisationWithItsIdAndPath() {
         MvcTestResult result = post("""
-                {"name": "  Acme B.V. ", "websiteUrl": "https://acme.example", "status": "never-engaged"}
+                {"name": "  Acme B.V. ", "websiteUrl": "https://acme.example", "status": "NEVER_ENGAGED"}
                 """);
 
         assertThat(result).hasStatus(201);
@@ -103,10 +103,10 @@ class OrganisationEndpointTest {
     @Test
     void createRejectsAMissingNameOrStatus() {
         assertThat(post("""
-                {"status": "active"}
+                {"status": "ACTIVE"}
                 """)).hasStatus(400);
         assertThat(post("""
-                {"name": "  ", "status": "active"}
+                {"name": "  ", "status": "ACTIVE"}
                 """)).hasStatus(400);
         assertThat(post("""
                 {"name": "Acme"}
@@ -123,13 +123,13 @@ class OrganisationEndpointTest {
     @Test
     void createRejectsInvalidUrls() {
         assertThat(post("""
-                {"name": "Acme", "status": "active", "websiteUrl": "acme.example"}
+                {"name": "Acme", "status": "ACTIVE", "websiteUrl": "acme.example"}
                 """)).hasStatus(400);
         assertThat(post("""
-                {"name": "Acme", "status": "active", "websiteUrl": "javascript:alert(1)"}
+                {"name": "Acme", "status": "ACTIVE", "websiteUrl": "javascript:alert(1)"}
                 """)).hasStatus(400);
         assertThat(post("""
-                {"name": "Acme", "status": "active", "linkedinUrl": ""}
+                {"name": "Acme", "status": "ACTIVE", "linkedinUrl": ""}
                 """)).hasStatus(400);
     }
 
@@ -143,7 +143,7 @@ class OrganisationEndpointTest {
 
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$.name").isEqualTo(organisation.getName());
-        assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("active");
+        assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("ACTIVE");
         assertThat(result).bodyJson().extractingPath("$.profilePath").isEqualTo(organisation.getProfilePath());
     }
 
@@ -153,7 +153,7 @@ class OrganisationEndpointTest {
 
         assertThat(mvc.get().uri(ORGANISATIONS + "/{id}", unknown)).hasStatus(404);
         assertThat(patch(unknown, """
-                {"status": "inactive"}
+                {"status": "INACTIVE"}
                 """)).hasStatus(404);
         assertThat(delete(unknown)).hasStatus(404);
     }
@@ -170,15 +170,15 @@ class OrganisationEndpointTest {
         organisationRepository.save(organisation);
 
         MvcTestResult result = patch(organisation.getId(), """
-                {"status": "inactive", "cityId": null}
+                {"status": "INACTIVE", "cityId": null}
                 """);
 
         assertThat(result).hasStatusOk();
-        assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("inactive");
+        assertThat(result).bodyJson().extractingPath("$.status").isEqualTo("INACTIVE");
         assertThat(result).bodyJson().extractingPath("$.city").isNull();
         assertThat(result).bodyJson().extractingPath("$.notes").isEqualTo("Hires interns.");
         assertThat(result).bodyJson().extractingPath("$.name").isEqualTo(organisation.getName());
-        assertThat(result).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("funding");
+        assertThat(result).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("FUNDING");
         assertThat(result).bodyJson().extractingPath("$.responsibles[*].id").asArray().containsExactly(user.getId());
     }
 
@@ -202,14 +202,14 @@ class OrganisationEndpointTest {
         User other = userRepository.save(user("Other"));
 
         MvcTestResult result = post("""
-                {"name": "Acme", "status": "active", "partnershipTypes": ["events", "funding", "events"],
+                {"name": "Acme", "status": "ACTIVE", "partnershipTypes": ["EVENTS", "FUNDING", "EVENTS"],
                  "responsibleIds": ["%s", "%s", "%s"]}
                 """.formatted(other.getId(), user.getId(), other.getId()));
 
         assertThat(result).hasStatus(201);
         // Each once: the types in declaration order, the responsibles in the order they were sent.
         assertThat(result).bodyJson().extractingPath("$.partnershipTypes").asArray()
-                .containsExactly("funding", "events");
+                .containsExactly("FUNDING", "EVENTS");
         assertThat(result).bodyJson().extractingPath("$.responsibles[*].id").asArray()
                 .containsExactly(other.getId(), user.getId());
         assertThat(result).bodyJson().extractingPath("$.responsibles[0].name").isEqualTo("Other");
@@ -220,7 +220,7 @@ class OrganisationEndpointTest {
         Organisation organisation = organisationRepository.save(organisation("Acme"));
 
         assertThat(post("""
-                {"name": "Acme", "status": "active", "partnershipTypes": ["catering"]}
+                {"name": "Acme", "status": "ACTIVE", "partnershipTypes": ["catering"]}
                 """)).hasStatus(400);
         assertThat(patch(organisation.getId(), """
                 {"partnershipTypes": [null]}
@@ -239,7 +239,7 @@ class OrganisationEndpointTest {
         String unknown = RandomUtils.generateRandomId();
 
         assertThat(post("""
-                {"name": "Acme", "status": "active", "responsibleIds": ["%s"]}
+                {"name": "Acme", "status": "ACTIVE", "responsibleIds": ["%s"]}
                 """.formatted(unknown))).hasStatus(400);
         assertThat(patch(organisation.getId(), """
                 {"responsibleIds": ["%s"]}
@@ -255,11 +255,11 @@ class OrganisationEndpointTest {
         User other = userRepository.save(user("Other"));
 
         MvcTestResult replaced = patch(organisation.getId(), """
-                {"partnershipTypes": ["volunteer"], "responsibleIds": ["%s"]}
+                {"partnershipTypes": ["VOLUNTEER"], "responsibleIds": ["%s"]}
                 """.formatted(other.getId()));
 
         assertThat(replaced).hasStatusOk();
-        assertThat(replaced).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("volunteer");
+        assertThat(replaced).bodyJson().extractingPath("$.partnershipTypes").asArray().containsExactly("VOLUNTEER");
         assertThat(replaced).bodyJson().extractingPath("$.responsibles[*].id").asArray()
                 .containsExactly(other.getId());
 
@@ -308,7 +308,7 @@ class OrganisationEndpointTest {
         City city = cityRepository.save(city());
 
         MvcTestResult created = post("""
-                {"name": "Acme", "status": "active", "cityId": "%s"}
+                {"name": "Acme", "status": "ACTIVE", "cityId": "%s"}
                 """.formatted(city.getId()));
 
         assertThat(created).hasStatus(201);
@@ -332,7 +332,7 @@ class OrganisationEndpointTest {
         String unknown = RandomUtils.generateRandomId();
 
         assertThat(post("""
-                {"name": "Acme", "status": "active", "cityId": "%s"}
+                {"name": "Acme", "status": "ACTIVE", "cityId": "%s"}
                 """.formatted(unknown))).hasStatus(400);
         assertThat(patch(organisation.getId(), """
                 {"cityId": "%s"}
@@ -391,8 +391,8 @@ class OrganisationEndpointTest {
         assertThat(summary)
                 .containsEntry("profilePath", organisation.getProfilePath())
                 .containsEntry("thumbnailUrl", organisation.getThumbnailUrl())
-                .containsEntry("status", "active")
-                .containsEntry("partnershipTypes", List.of("events"))
+                .containsEntry("status", "ACTIVE")
+                .containsEntry("partnershipTypes", List.of("EVENTS"))
                 .doesNotContainKeys("notes", "pictureUrl");
         assertThat(JsonPath.<List<Object>>read(summary, "$.responsibles[*].name")).containsExactly("Reporter");
     }

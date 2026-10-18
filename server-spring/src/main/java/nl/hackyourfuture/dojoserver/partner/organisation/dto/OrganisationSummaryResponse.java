@@ -68,14 +68,14 @@ public record OrganisationSummaryResponse(
 
         @Schema(
                 description = "Where the partnership with the organisation stands",
-                example = "active",
+                example = "ACTIVE",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         OrganisationStatus status,
 
         @Schema(
                 description = "What the organisation can offer HYF",
-                example = "[\"funding\", \"events\"]",
+                example = "[\"FUNDING\", \"EVENTS\"]",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         List<PartnershipType> partnershipTypes,

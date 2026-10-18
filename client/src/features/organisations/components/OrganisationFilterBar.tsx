@@ -1,6 +1,6 @@
 import { Button, Checkbox, InputAdornment, ListItemText, MenuItem, Stack, TextField } from '@mui/material';
 import { OrganisationFilters, PartnershipType } from '../Organisation';
-import { pickedLabels, setParam, toApiEnumName, toValues } from '../../../data/listFilters';
+import { pickedLabels, setParam, toValues } from '../../../data/listFilters';
 
 import SearchIcon from '@mui/icons-material/Search';
 import { SelectOption } from '../../../data/types/SelectOption';
@@ -11,14 +11,9 @@ import { useGetUsers } from '../../admin/users/data/user-queries';
 import { useSearchParams } from 'react-router';
 import { useState } from 'react';
 
-const statusOptions: SelectOption[] = organisationStatusOptions.map((option) => ({
-  ...option,
-  value: toApiEnumName(option.value),
-}));
-
 const partnershipOptions: SelectOption[] = Object.values(PartnershipType).map((type) => ({
   label: partnershipTypeLabels[type],
-  value: toApiEnumName(type),
+  value: type,
 }));
 
 const URL_UPDATE = { replace: true, preventScrollReset: true, flushSync: true };
@@ -95,12 +90,12 @@ export const OrganisationFilterBar = ({ filters }: OrganisationFilterBarProps) =
           select: {
             multiple: true,
             displayEmpty: true,
-            renderValue: () => pickedLabels(statusOptions, filters.status),
+            renderValue: () => pickedLabels(organisationStatusOptions, filters.status),
           },
           inputLabel: { shrink: true },
         }}
       >
-        {menuItems(statusOptions, filters.status)}
+        {menuItems(organisationStatusOptions, filters.status)}
       </TextField>
       <TextField
         select

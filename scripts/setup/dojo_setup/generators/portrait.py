@@ -2,7 +2,7 @@ from dojo_setup.generators.randomness import fake
 
 # The same portrait collection faker.js uses: 100 photos per sex
 PORTRAIT_URL = "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/{sex}/512/{number}.jpg"
-PORTRAIT_SEXES = {"man": "male", "woman": "female"}
+PORTRAIT_SEXES = {"MAN": "male", "WOMAN": "female"}
 
 
 def generate_portrait_url(gender: str) -> str:

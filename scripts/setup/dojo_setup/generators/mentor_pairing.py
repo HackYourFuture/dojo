@@ -6,14 +6,14 @@ from typing import Any
 from dojo_setup.config import REFERENCE_DATE
 from dojo_setup.generators.randomness import YEAR, chance, date_after, date_before, fake
 
-PAIRING_TYPES = ["tech-mentorship", "english-mentorship", "hr-mentorship"]
+PAIRING_TYPES = ["TECH_MENTORSHIP", "ENGLISH_MENTORSHIP", "HR_MENTORSHIP"]
 CHECKIN_INTERVAL = timedelta(weeks=4)
 
 
 def generate_mentor_pairing(volunteer: dict[str, Any], trainee_id: str) -> dict[str, Any]:
     start_date = date_before(2 * YEAR)
     # Only an active volunteer can still be mentoring
-    is_ongoing = volunteer["status"] == "active" and chance(0.5)
+    is_ongoing = volunteer["status"] == "ACTIVE" and chance(0.5)
     if is_ongoing:
         end_date = None
         # Most checked in within the last four weeks. The rest fell behind, so their next check-in is overdue.

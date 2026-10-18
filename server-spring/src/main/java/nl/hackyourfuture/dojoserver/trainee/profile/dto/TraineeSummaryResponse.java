@@ -42,21 +42,21 @@ public record TraineeSummaryResponse(
 
         @Schema(
                 description = "Where the trainee stands in the program",
-                example = "studying",
+                example = "STUDYING",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         LearningStatus learningStatus,
 
         @Schema(
                 description = "Where the trainee stands in finding work",
-                example = "searching",
+                example = "SEARCHING",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         JobPath jobPath,
 
         @Schema(
                 description = "The track the trainee is studying",
-                example = "core-program",
+                example = "CORE_PROGRAM",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         Track track,

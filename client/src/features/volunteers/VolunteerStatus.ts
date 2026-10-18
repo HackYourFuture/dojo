@@ -1,8 +1,8 @@
 // Where the volunteer stands with HackYourFuture.
 export enum VolunteerStatus {
-  Active = 'active',
-  Paused = 'paused',
-  Stopped = 'stopped',
+  Active = 'ACTIVE',
+  Paused = 'PAUSED',
+  Stopped = 'STOPPED',
 }
 
 export const volunteerStatusLabels: Record<VolunteerStatus, string> = {

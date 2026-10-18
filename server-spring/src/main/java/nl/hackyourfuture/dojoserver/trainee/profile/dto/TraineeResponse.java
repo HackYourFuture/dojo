@@ -78,7 +78,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "How the trainee describes their gender",
-                example = "non-binary",
+                example = "NON_BINARY",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -109,7 +109,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "How well the trainee speaks English",
-                example = "good",
+                example = "GOOD",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -133,7 +133,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "The route by which the trainee came to the Netherlands",
-                example = "refugee",
+                example = "REFUGEE",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -157,7 +157,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "How the trainee supports themselves while studying",
-                example = "uitkering",
+                example = "UITKERING",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -165,7 +165,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "The highest level of education the trainee completed",
-                example = "bachelors-degree",
+                example = "BACHELORS_DEGREE",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -299,14 +299,14 @@ public record TraineeResponse(
 
         @Schema(
                 description = "The track the trainee is studying",
-                example = "core-program",
+                example = "CORE_PROGRAM",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         Track track,
 
         @Schema(
                 description = "Where the trainee stands in the program",
-                example = "studying",
+                example = "STUDYING",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         LearningStatus learningStatus,
@@ -337,7 +337,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "Why the trainee left the program",
-                example = "personal",
+                example = "PERSONAL",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
@@ -369,7 +369,7 @@ public record TraineeResponse(
 
         @Schema(
                 description = "Where the trainee stands in finding work",
-                example = "searching",
+                example = "SEARCHING",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         JobPath jobPath,

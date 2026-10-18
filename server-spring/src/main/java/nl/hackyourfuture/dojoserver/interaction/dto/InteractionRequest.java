@@ -15,7 +15,7 @@ public record InteractionRequest(
         Instant date,
 
         @NotNull
-        @Schema(description = "The kind of the interaction", example = "feedback")
+        @Schema(description = "The kind of the interaction", example = "FEEDBACK")
         InteractionType type,
 
         @NotBlank

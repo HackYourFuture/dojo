@@ -32,7 +32,7 @@ const FormSelect: React.FC<FormSelectProps> = ({
 
       <Select id={id} name={id} value={value} onChange={onChange} label={label} sx={sx} disabled={disabled}>
         {options.map((option: string) => {
-          // For example, 'in-person' becomes 'In person'.
+          // For example, 'IN_PERSON' becomes 'In person'.
           const label = formatTextToFriendly(option);
 
           return (
