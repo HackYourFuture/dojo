@@ -44,7 +44,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/volunteers")
 @RequiredArgsConstructor
-@Tag(name = "Volunteers", description = "Operations on volunteer profiles")
+@Tag(name = "Volunteer profiles",
+        description = "The volunteers who teach and mentor trainees, with their expertise and the roles they prefer.")
 public class VolunteerController {
     private final VolunteerService volunteerService;
 

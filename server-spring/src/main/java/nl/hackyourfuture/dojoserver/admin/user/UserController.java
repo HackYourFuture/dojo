@@ -34,7 +34,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
-@Tag(name = "Users", description = "Operations on user accounts")
+@Tag(name = "Users", description = "The accounts of the people who can sign in to Dojo.")
 public class UserController {
 
     private final UserService userService;

@@ -28,7 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/trainees/{traineeId}/assessments")
 @RequiredArgsConstructor
-@Tag(name = "Trainee Assessment", description = "Operations on the education records of a trainee")
+@Tag(name = "Trainee assessments",
+        description = "The tests and interviews a trainee took, with their results and scores.")
 public class AssessmentController {
 
     private final AssessmentService assessmentService;

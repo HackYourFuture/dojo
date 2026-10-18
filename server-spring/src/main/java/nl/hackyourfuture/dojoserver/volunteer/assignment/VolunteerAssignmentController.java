@@ -27,7 +27,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/volunteers/{volunteerId}/assignments")
 @RequiredArgsConstructor
-@Tag(name = "Volunteer Assignments", description = "Operations on the assignments of a volunteer")
+@Tag(name = "Volunteer assignments",
+        description = "The work a volunteer took on, such as reviewing assignments, teaching or hosting a workshop.")
 public class VolunteerAssignmentController {
 
     private final VolunteerAssignmentService assignmentService;

@@ -70,6 +70,8 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
 - Statuses: 200 read, 201 create, 204 delete, 400 invalid body, 404 unknown id, 409 conflict.
 - Every endpoint has `@Operation` and one `@ApiResponse` per status it can actually return. Error
   responses use `@Schema(implementation = DojoError.class)`.
+- A controller's `@Tag` goes in a group of `TAG_GROUPS` in `OpenApiConfig`, the sections of the docs
+  sidebar. The docs' introduction is `src/main/resources/api-introduction.md`.
 - Response components are `requiredMode = REQUIRED`, plus `nullable = true` where null is possible.
   Request records use `Boolean` and `Integer`, never primitives.
 - Embed a user as `ReporterResponse`, never `UserResponse`, which carries the staff email.

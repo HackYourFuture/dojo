@@ -20,7 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/search")
 @RequiredArgsConstructor
-@Tag(name = "Search", description = "Find records by name and other details")
+@Tag(name = "Search",
+        description = "Finds trainees, volunteers, organisations and contact persons by name and other details.")
 public class SearchController {
     private final SearchService searchService;
 

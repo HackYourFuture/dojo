@@ -96,7 +96,13 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-scalar</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
+        </dependency>
+        <!-- springdoc pins an older Scalar; this brings the latest Scalar API reference. -->
+        <dependency>
+            <groupId>com.scalar.maven</groupId>
+            <artifactId>scalar-webmvc</artifactId>
+            <version>0.6.81</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
