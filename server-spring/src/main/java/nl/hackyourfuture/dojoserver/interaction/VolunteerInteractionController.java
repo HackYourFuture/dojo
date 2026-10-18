@@ -30,7 +30,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/volunteers/{volunteerId}/interactions")
 @RequiredArgsConstructor
-@Tag(name = "Volunteer Interactions", description = "Operations on the interactions recorded with a volunteer")
+@Tag(name = "Volunteer interactions",
+        description = "Calls, meetings and other contact with a volunteer. Only the person who recorded an"
+                + " interaction can change or delete it.")
 public class VolunteerInteractionController {
 
     private final InteractionService interactionService;

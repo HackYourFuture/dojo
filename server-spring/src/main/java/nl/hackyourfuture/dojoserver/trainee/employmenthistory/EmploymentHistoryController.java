@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/trainees/{traineeId}/employment-history")
 @RequiredArgsConstructor
-@Tag(name = "Trainee Employment", description = "Operations on the employment history of a trainee")
+@Tag(name = "Trainee employment", description = "The internships and jobs of a trainee.")
 public class EmploymentHistoryController {
 
     private final EmploymentHistoryService employmentHistoryService;

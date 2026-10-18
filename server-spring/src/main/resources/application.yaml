@@ -36,12 +36,23 @@ springdoc:
     path: /api/docs/openapi
     enabled: ${API_DOCS_ENABLED:true}
   override-with-generic-response: false
+  # Responses are JSON unless an endpoint says otherwise. springdoc's default is */*.
+  default-produces-media-type: application/json
 scalar:
   path: /api/docs
   url: ${springdoc.api-docs.path}
-  page-title: "Dojo API description"
+  page-title: Dojo API
+  favicon: /api/docs/favicon.png
   enabled: ${API_DOCS_ENABLED:true}
-
+  # Hide Scalar's extras: the developer toolbar and the "Generate SDKs & MCP" button on localhost, and Ask AI,
+  # which sends what it sees to Scalar.
+  show-developer-tools: never
+  agent:
+    disabled: true
+  mcp:
+    disabled: true
+  # List schema properties in the order the records declare them, not alphabetically.
+  schema-property-order: preserve
 # Health and metrics
 management:
   endpoint:

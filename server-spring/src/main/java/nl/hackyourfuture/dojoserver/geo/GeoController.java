@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/geo")
 @RequiredArgsConstructor
-@Tag(name = "Geo", description = "City and country information")
+@Tag(name = "Cities and countries", description = "The cities of the Netherlands and the countries of the world.")
 public class GeoController {
     private final GeoService geoService;
 

@@ -44,7 +44,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/organisations")
 @RequiredArgsConstructor
-@Tag(name = "Organisations", description = "Operations on partner organisations")
+@Tag(name = "Organisation profiles",
+        description = "The partner organisations, which help with volunteers, funding, jobs or events.")
 public class OrganisationController {
     private final OrganisationService organisationService;
 

@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/volunteers/{volunteerId}/pairings")
 @RequiredArgsConstructor
-@Tag(name = "Volunteer Pairings", description = "Operations on the mentor pairings")
+@Tag(name = "Mentor pairings", description = "The trainees a volunteer mentors or mentored, and their check-ins.")
 public class MentorPairingController {
 
     private final MentorPairingService pairingService;

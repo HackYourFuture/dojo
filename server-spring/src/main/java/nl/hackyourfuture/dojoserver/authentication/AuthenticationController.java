@@ -28,7 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "Authentication and session management")
+@Tag(name = "Sessions",
+        description = "The session of the web client: signing in with Google, renewing it and signing out.")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AuthenticationCookieManager authenticationCookieManager;
