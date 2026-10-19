@@ -7,7 +7,7 @@ import { ContactLinkButtons } from '../../../components/ContactLinkButtons';
 import { LinkTableRow, RowLinksCell } from '../../../components/LinkTableRow';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LearningStatus } from '../../../data/types/Trainee';
-import { getTrackLabel } from '../../../data/labels/traineeLabels';
+import { getCohortLabel, getTrackLabel } from '../../../data/labels/traineeLabels';
 import { SidebarJobPath } from '../../../components/SidebarJobPath';
 import { SidebarLearningStatus } from '../../../components/SidebarLearningStatus';
 import Table from '@mui/material/Table';
@@ -34,9 +34,7 @@ const CohortAccordion = ({ cohortInfo, defaultExpanded }: CohortAccordionProps) 
   return (
     <>
       <Accordion defaultExpanded={defaultExpanded}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {cohortInfo.cohort !== null ? `Cohort ${cohortInfo.cohort}` : 'No cohort assigned'}
-        </AccordionSummary>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>{getCohortLabel(cohortInfo.cohort)}</AccordionSummary>
         <AccordionDetails>
           <Table size="small" aria-label="trainees table">
             <TableHead>

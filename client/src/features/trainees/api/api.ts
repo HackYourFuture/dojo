@@ -5,9 +5,9 @@ import { TraineeSummaryResponse } from './types';
 import axios from 'axios';
 import { mapTraineeSummaryToDomain } from './mapper';
 
-export const getTraineeSummaries = async (page: number, filters: TraineeFilters) => {
+export const getTraineeSummaries = async (page: number, filters: TraineeFilters, size = PAGE_SIZE) => {
   const { data } = await axios.get<PagedModel<TraineeSummaryResponse>>('/api/trainees', {
-    params: { page, size: PAGE_SIZE, direction: 'DESC', ...filters, q: filters.q || undefined },
+    params: { page, size, direction: 'DESC', ...filters, q: filters.q || undefined },
     paramsSerializer: { indexes: null },
   });
   return mapPageToDomain(data, mapTraineeSummaryToDomain);
