@@ -46,8 +46,8 @@ use by another trainee."
 ### Paging
 
 The trainee, volunteer and organisation lists return one page at a time. `page` counts from 0, and `size` is 25
-unless you ask for up to 100. Each filter narrows the list, and a filter repeated in the query matches any of its
-values.
+unless you ask for up to 100, or up to 5000 trainees. Each filter narrows the list, and a filter repeated in the
+query matches any of its values.
 
 ```json
 {

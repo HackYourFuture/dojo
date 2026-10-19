@@ -243,6 +243,14 @@ public class TraineeListTest {
     }
 
     @Test
+    void theMapGetsEveryTraineeInOnePage() {
+        MvcTestResult everything = list("?startCohort=9000&endCohort=9999&size=5000");
+
+        assertThat(everything).hasStatusOk();
+        assertThat(everything).bodyJson().extractingPath("$.content").asArray().hasSize(2);
+    }
+
+    @Test
     void pagingParametersOutOfBoundsAreRejected() {
         assertThat(list("?size=9999")).hasStatus(400);
         assertThat(list("?size=0")).hasStatus(400);

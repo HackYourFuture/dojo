@@ -42,7 +42,10 @@ export const TraineeFilterBar = ({ filters }: TraineeFilterBarProps) => {
   const setFilter = (key: string, values: string[]) =>
     setSearchParams((params) => setParam(params, key, values), URL_UPDATE);
 
-  const clearFilters = () => setSearchParams({}, URL_UPDATE);
+  // The map view is in the URL too, but isn't a filter, so clearing keeps it.
+  const view = searchParams.get('view');
+  const isFiltered = searchParams.size > (view === null ? 0 : 1);
+  const clearFilters = () => setSearchParams(view === null ? {} : { view }, URL_UPDATE);
 
   return (
     <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 2, alignItems: 'center', mt: 3, mb: 2 }}>
@@ -137,7 +140,7 @@ export const TraineeFilterBar = ({ filters }: TraineeFilterBarProps) => {
         onValueChange={(cohort) => setFilter('endCohort', cohort === null ? [] : [String(cohort)])}
         sx={{ width: 110 }}
       />
-      {searchParams.size > 0 && <Button onClick={clearFilters}>Clear filters</Button>}
+      {isFiltered && <Button onClick={clearFilters}>Clear filters</Button>}
     </Stack>
   );
 };

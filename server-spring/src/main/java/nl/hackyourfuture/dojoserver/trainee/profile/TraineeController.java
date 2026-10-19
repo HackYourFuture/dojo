@@ -103,7 +103,7 @@ public class TraineeController {
             @Parameter(description = "Number of trainees per page", example = "25")
             @RequestParam(defaultValue = "25")
             @Min(1)
-            @Max(100)
+            @Max(5000)
             int size
     ) {
         return traineeService.getTrainees(q, status, jobPath, province, startCohort, endCohort, direction, page,

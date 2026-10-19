@@ -22,6 +22,9 @@ export const getTrackLabel = (track: Track): string => {
   }
 };
 
+export const getCohortLabel = (cohort: number | null): string =>
+  cohort !== null ? `Cohort ${cohort}` : 'No cohort assigned';
+
 export const learningStatusToLabel = (status?: LearningStatus | string): string => {
   switch (status) {
     case LearningStatus.Studying:

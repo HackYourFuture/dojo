@@ -108,7 +108,7 @@ features/
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
 ├── trainee-profile/         # Trainee profile feature (see detailed structure below)
-├── trainees/                # Trainees list, grouped by cohort (see below)
+├── trainees/                # Trainees list, grouped by cohort, and map (see below)
 └── volunteers/              # Volunteers list, the dialog to add one, and the volunteer profile
 ```
 
@@ -191,14 +191,23 @@ trainee-profile/
 
 ```
 trainees/
-├── TraineesPage.tsx              # Main page component, lists the trainees grouped by cohort
+├── TraineesPage.tsx              # Main page component, with the filters and the list or map switch
 ├── api/                          # API calls, response types and mappers
 ├── components/                   # Trainees-specific components
 │   ├── CohortAccordion.tsx
-│   └── TraineeFilterBar.tsx      # The search and filters, kept in the URL
+│   ├── TraineeFilterBar.tsx      # The search and filters, kept in the URL
+│   └── TraineeList.tsx           # The trainees grouped by cohort, loaded page by page
 ├── data/                         # React Query keys and hooks
 │   ├── keys.ts
 │   └── trainees-queries.ts
+├── map/                          # Everything for the map view, loaded only when it is opened
+│   ├── MapViewToggle.tsx         # The list or map switch, kept in the URL as view=map
+│   ├── TraineeMap.tsx            # Every matching trainee on a map (Leaflet), grouped when close; loaded lazily
+│   ├── BaseMapLayer.tsx          # The map under the markers: OpenFreeMap's vector tiles, drawn by MapLibre
+│   ├── mapStyle.ts               # The map's style: borders, provinces, motorways only, bold cities, Dutch names
+│   ├── TraineeMarker.tsx         # A trainee's picture on the map, with a popup linking to the profile
+│   ├── person.svg                # The picture of a trainee without one
+│   └── useGetAllTrainees.ts      # Every matching trainee in one request, for the map
 └── models/                       # Type definitions for the trainees list
     └── trainee-summary.ts
 ```
