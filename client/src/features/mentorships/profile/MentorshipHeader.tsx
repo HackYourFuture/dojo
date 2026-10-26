@@ -39,7 +39,7 @@ const Person = ({ person, role }: PersonProps) => (
 
 interface MentorshipHeaderProps {
   mentorship: Mentorship;
-  // The Edit button, at the top right.
+  // The Edit and Actions buttons, at the top right.
   children: ReactNode;
 }
 

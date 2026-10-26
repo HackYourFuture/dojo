@@ -1,6 +1,7 @@
 import { Box, Divider, Stack } from '@mui/material';
 import { EditedMentorship, Mentorship } from '../Mentorship';
 
+import { MentorshipActions } from './MentorshipActions';
 import MentorshipHeader from './MentorshipHeader';
 import MentorshipInfo from './MentorshipInfo';
 import { ProfileButtons } from '../../../components/profile/ProfileButtons';
@@ -50,6 +51,7 @@ const MentorshipProfile = ({ mentorship }: MentorshipProfileProps) => {
             isSaving={isSaveLoading}
             onClickEditButton={onClickEditButton}
             onCancel={onCancelEdit}
+            actions={<MentorshipActions mentorship={mentorship} />}
           />
         </MentorshipHeader>
         {/* Where the other profiles have their tabs. */}

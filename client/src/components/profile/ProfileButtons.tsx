@@ -9,8 +9,8 @@ interface ProfileButtonsProps {
   isSaving: boolean;
   onClickEditButton: () => void;
   onCancel: () => void;
-  // The Actions button, last so it stays in place when the edit buttons are hidden. None on a profile without actions.
-  actions?: ReactNode;
+  // The Actions button, last so it stays in place when the edit buttons are hidden.
+  actions: ReactNode;
 }
 
 /** The Edit button, or Cancel and Save while editing, and the Actions button at the top right of a profile. */
