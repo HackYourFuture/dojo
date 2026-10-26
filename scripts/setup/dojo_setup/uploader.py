@@ -21,6 +21,7 @@ class UploadReport:
     volunteer_interactions: int = 0
     volunteer_assignments: int = 0
     mentorships: int = 0
+    checkins: int = 0
     organisations: int = 0
     logos: int = 0
     contact_persons: int = 0
@@ -74,7 +75,14 @@ def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: Upload
     report.volunteer_assignments += _add_all(
         api.add_volunteer_assignment, volunteer_id, volunteer.name, volunteer.assignments, report
     )
-    report.mentorships += _add_all(api.add_mentorship, volunteer_id, volunteer.name, volunteer.mentorships, report)
+    for mentorship in volunteer.mentorships:
+        try:
+            mentorship_id = api.add_mentorship(volunteer_id, mentorship.details)
+        except ApiError as error:
+            report.errors.append(f"Mentorship of {volunteer.name} was not added. {error}")
+            continue
+        report.mentorships += 1
+        report.checkins += _add_all(api.add_checkin, mentorship_id, volunteer.name, mentorship.checkins, report)
 
 
 def upload_organisation(api: DojoApi, organisation: GeneratedOrganisation, report: UploadReport) -> None:
