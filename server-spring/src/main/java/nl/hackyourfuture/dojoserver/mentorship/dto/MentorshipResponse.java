@@ -62,6 +62,13 @@ public record MentorshipResponse(
         LocalDate endDate,
 
         @Schema(
+                description = "Whether the mentorship has ended: its end date is today or earlier",
+                example = "false",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        boolean isEnded,
+
+        @Schema(
                 description = "The date of the next planned check-in with the trainee",
                 example = "2026-06-17",
                 requiredMode = Schema.RequiredMode.REQUIRED,
@@ -80,6 +87,7 @@ public record MentorshipResponse(
     // The last check-in is a record of its own, so the caller looks it up. Null when there is none.
     public static MentorshipResponse from(Mentorship mentorship, MentorshipCheckin lastCheckin) {
         LocalDate lastCheckinDate = lastCheckin == null ? null : lastCheckin.getDate();
+        LocalDate endDate = mentorship.getEndDate();
         return new MentorshipResponse(
                 mentorship.getId(),
                 VolunteerReferenceResponse.from(mentorship.getVolunteer()),
@@ -87,7 +95,9 @@ public record MentorshipResponse(
                 mentorship.getType(),
                 mentorship.getStartDate(),
                 lastCheckinDate,
-                mentorship.getEndDate(),
+                endDate,
+                // The end date itself counts as ended.
+                endDate != null && !endDate.isAfter(LocalDate.now()),
                 mentorship.getNextCheckinDate(),
                 daysSince(lastCheckinDate));
     }

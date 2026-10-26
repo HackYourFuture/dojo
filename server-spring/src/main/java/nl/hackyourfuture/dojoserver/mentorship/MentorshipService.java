@@ -12,12 +12,16 @@ import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,27 +35,44 @@ public class MentorshipService {
     private final MentorshipCheckinService checkinService;
 
     @Transactional(readOnly = true)
-    public List<MentorshipResponse> getMentorships(String volunteerId, String traineeId) {
+    public Page<MentorshipResponse> getMentorships(List<String> volunteerIds, List<String> traineeIds,
+            List<MentorshipType> types, LocalDate startDateFrom, LocalDate startDateTo, LocalDate endDateFrom,
+            LocalDate endDateTo, int page, int size) {
         List<PredicateSpecification<Mentorship>> filters = new ArrayList<>();
-        if (volunteerId != null && !volunteerId.isBlank()) {
-            filters.add(MentorshipSpecifications.volunteerIs(volunteerId));
+        if (!CollectionUtils.isEmpty(volunteerIds)) {
+            filters.add(MentorshipSpecifications.volunteerIdIn(volunteerIds));
         }
-        if (traineeId != null && !traineeId.isBlank()) {
-            filters.add(MentorshipSpecifications.traineeIs(traineeId));
+        if (!CollectionUtils.isEmpty(traineeIds)) {
+            filters.add(MentorshipSpecifications.traineeIdIn(traineeIds));
+        }
+        if (!CollectionUtils.isEmpty(types)) {
+            filters.add(MentorshipSpecifications.typeIn(types));
+        }
+        if (startDateFrom != null) {
+            filters.add(MentorshipSpecifications.startDateFrom(startDateFrom));
+        }
+        if (startDateTo != null) {
+            filters.add(MentorshipSpecifications.startDateTo(startDateTo));
+        }
+        if (endDateFrom != null) {
+            filters.add(MentorshipSpecifications.endDateFrom(endDateFrom));
+        }
+        if (endDateTo != null) {
+            filters.add(MentorshipSpecifications.endDateTo(endDateTo));
         }
 
-        Specification<Mentorship> spec = Specification.where(PredicateSpecification.allOf(filters));
         // Latest start first. The id keeps mentorships that started on the same day in a fixed order.
         Sort latestStartFirst = Sort.by(Sort.Order.desc("startDate"), Sort.Order.asc("id"));
-        List<Mentorship> mentorships = mentorshipRepository.findAll(spec, latestStartFirst);
+        Page<Mentorship> mentorships = mentorshipRepository.findAll(
+                Specification.where(PredicateSpecification.allOf(filters)),
+                PageRequest.of(page, size, latestStartFirst));
 
-        // Get the latest check-in of all mentorships in one query
-        List<String> mentorshipIds = mentorships.stream().map(Mentorship::getId).toList();
+        // Get the latest check-in of the mentorships on the page in one query
+        List<String> mentorshipIds = mentorships.getContent().stream().map(Mentorship::getId).toList();
         Map<String, MentorshipCheckin> latestCheckins = checkinService.getLatestCheckins(mentorshipIds);
 
-        return mentorships.stream()
-                .map(mentorship -> MentorshipResponse.from(mentorship, latestCheckins.get(mentorship.getId())))
-                .toList();
+        return mentorships.map(mentorship -> MentorshipResponse.from(mentorship,
+                latestCheckins.get(mentorship.getId())));
     }
 
     @Transactional(readOnly = true)
