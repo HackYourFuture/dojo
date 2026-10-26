@@ -12,3 +12,11 @@ export const getTraineeSummaries = async (page: number, filters: TraineeFilters,
   });
   return mapPageToDomain(data, mapTraineeSummaryToDomain);
 };
+
+// The trainees the search finds for the text, newest cohort first. Only the first page, for a picker.
+export const searchTrainees = async (query: string) => {
+  const { data } = await axios.get<PagedModel<TraineeSummaryResponse>>('/api/trainees', {
+    params: { q: query, size: 100, direction: 'DESC' },
+  });
+  return data.content.map(mapTraineeSummaryToDomain);
+};

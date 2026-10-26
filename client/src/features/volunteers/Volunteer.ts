@@ -74,3 +74,11 @@ export interface NewVolunteer {
   expertise: VolunteerExpertise[];
   rolePreferences: VolunteerAssignmentType[];
 }
+
+// A volunteer as another record refers to them, like the mentor of a mentorship.
+export interface VolunteerReference {
+  readonly id: string;
+  name: string;
+  profilePath: string;
+  thumbnailUrl: string | null;
+}
