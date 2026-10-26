@@ -142,9 +142,7 @@ public class TraineeService {
                 .graduationDate(request.graduationDate())
                 .quitDate(request.quitDate())
                 .quitReason(request.quitReason())
-                .mentorTech(request.mentorTech())
-                .mentorHr(request.mentorHr())
-                .mentorEnglish(request.mentorEnglish())
+                .certificateId(request.certificateId())
                 .jobPath(request.jobPath())
                 .jobSupportEndDate(request.jobSupportEndDate())
                 .hasCar(request.hasCar())
@@ -212,9 +210,7 @@ public class TraineeService {
         trainee.setGraduationDate(merged.graduationDate());
         trainee.setQuitDate(merged.quitDate());
         trainee.setQuitReason(merged.quitReason());
-        trainee.setMentorTech(merged.mentorTech());
-        trainee.setMentorHr(merged.mentorHr());
-        trainee.setMentorEnglish(merged.mentorEnglish());
+        trainee.setCertificateId(merged.certificateId());
         trainee.setJobPath(merged.jobPath());
         trainee.setJobSupportEndDate(merged.jobSupportEndDate());
         trainee.setHasCar(merged.hasCar());

@@ -106,11 +106,9 @@ create table trainees
     learning_status                text        not null,
     start_date                     date,
     graduation_date                date,
+    certificate_id                 text,
     quit_date                      date,
     quit_reason                    text,
-    mentor_tech                    text,
-    mentor_hr                      text,
-    mentor_english                 text,
 
     -- Placement
     job_path                       text        not null,

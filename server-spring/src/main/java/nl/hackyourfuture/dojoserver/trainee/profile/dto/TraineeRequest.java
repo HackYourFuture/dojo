@@ -184,17 +184,9 @@ public record TraineeRequest(
         @Schema(description = "Why the trainee left the program.", example = "PERSONAL")
         QuitReason quitReason,
 
-        @Size(min = 2, max = 100)
-        @Schema(description = "The name of the trainee's tech mentor.", example = "Jane Roe")
-        String mentorTech,
-
-        @Size(min = 2, max = 100)
-        @Schema(description = "The name of the trainee's HR mentor.", example = "Jane Roe")
-        String mentorHr,
-
-        @Size(min = 2, max = 100)
-        @Schema(description = "The name of the trainee's English mentor.", example = "Jane Roe")
-        String mentorEnglish,
+        @Size(min = 2, max = 50)
+        @Schema(description = "The id of the trainee's graduation certificate.", example = "CERTIFICATEID")
+        String certificateId,
 
         // Placement
         @NotNull
@@ -229,9 +221,7 @@ public record TraineeRequest(
         emergencyContactRelationship =
                 emergencyContactRelationship == null ? null : emergencyContactRelationship.strip();
         emergencyContactPhone = emergencyContactPhone == null ? null : emergencyContactPhone.strip();
-        mentorTech = mentorTech == null ? null : mentorTech.strip();
-        mentorHr = mentorHr == null ? null : mentorHr.strip();
-        mentorEnglish = mentorEnglish == null ? null : mentorEnglish.strip();
+        certificateId = certificateId == null ? null : certificateId.strip();
     }
 
     public static TraineeRequest from(Trainee trainee) {
@@ -273,9 +263,7 @@ public record TraineeRequest(
                 trainee.getGraduationDate(),
                 trainee.getQuitDate(),
                 trainee.getQuitReason(),
-                trainee.getMentorTech(),
-                trainee.getMentorHr(),
-                trainee.getMentorEnglish(),
+                trainee.getCertificateId(),
                 trainee.getJobPath(),
                 trainee.getJobSupportEndDate(),
                 trainee.getHasCar());

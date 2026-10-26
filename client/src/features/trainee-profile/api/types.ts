@@ -61,9 +61,7 @@ export interface TraineeResponse {
   graduationDate: string | null; // YYYY-MM-DD
   quitDate: string | null; // YYYY-MM-DD
   quitReason: QuitReason | null;
-  mentorTech: string | null;
-  mentorHr: string | null;
-  mentorEnglish: string | null;
+  certificateId: string | null;
 
   // Employment
   jobPath: JobPath;

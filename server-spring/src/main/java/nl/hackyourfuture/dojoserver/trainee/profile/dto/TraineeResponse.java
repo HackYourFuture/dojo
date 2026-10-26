@@ -344,28 +344,12 @@ public record TraineeResponse(
         QuitReason quitReason,
 
         @Schema(
-                description = "The name of the trainee's tech mentor",
-                example = "Jane Roe",
+                description = "The id of the trainee's graduation certificate",
+                example = "CERTIFICATEID",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String mentorTech,
-
-        @Schema(
-                description = "The name of the trainee's HR mentor",
-                example = "Jane Roe",
-                requiredMode = Schema.RequiredMode.REQUIRED,
-                nullable = true
-        )
-        String mentorHr,
-
-        @Schema(
-                description = "The name of the trainee's English mentor",
-                example = "Jane Roe",
-                requiredMode = Schema.RequiredMode.REQUIRED,
-                nullable = true
-        )
-        String mentorEnglish,
+        String certificateId,
 
         @Schema(
                 description = "Where the trainee stands in finding work",
@@ -434,9 +418,7 @@ public record TraineeResponse(
                 trainee.getGraduationDate(),
                 trainee.getQuitDate(),
                 trainee.getQuitReason(),
-                trainee.getMentorTech(),
-                trainee.getMentorHr(),
-                trainee.getMentorEnglish(),
+                trainee.getCertificateId(),
                 trainee.getJobPath(),
                 trainee.getJobSupportEndDate(),
                 trainee.getHasCar());
