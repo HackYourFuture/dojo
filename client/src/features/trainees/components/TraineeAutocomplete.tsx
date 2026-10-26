@@ -25,10 +25,21 @@ interface TraineeAutocompleteProps {
   onChange: (trainee: TraineeReference | null) => void;
   error?: string;
   disabled?: boolean;
+  size?: 'small' | 'medium';
+  // Shown while no trainee is picked.
+  placeholder?: string;
 }
 
 /** Picks a trainee, searched on the API as the user types. */
-export const TraineeAutocomplete = ({ label, value, onChange, error, disabled }: TraineeAutocompleteProps) => {
+export const TraineeAutocomplete = ({
+  label,
+  value,
+  onChange,
+  error,
+  disabled,
+  size,
+  placeholder,
+}: TraineeAutocompleteProps) => {
   const [text, setText] = useState('');
   const query = useDebounce(text, 250);
   const { data: trainees = [], isFetching } = useSearchTrainees(query);
@@ -37,6 +48,7 @@ export const TraineeAutocomplete = ({ label, value, onChange, error, disabled }:
   return (
     <Autocomplete<TraineeOption>
       forcePopupIcon={false}
+      size={size}
       options={trainees.map(toTraineeOption)}
       value={value}
       disabled={disabled}
@@ -77,6 +89,7 @@ export const TraineeAutocomplete = ({ label, value, onChange, error, disabled }:
         <TextField
           {...params}
           label={label}
+          placeholder={placeholder}
           error={!!error}
           helperText={error}
           slotProps={{

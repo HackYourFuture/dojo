@@ -104,6 +104,7 @@ features/
 ├── geo/                     # City and country autocompletes searched on the API, and their profile fields
 ├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
 ├── login/                   # Login feature
+├── mentorships/             # Mentorships list with its filters, the ended ones dimmed, and the dialog to add one
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature

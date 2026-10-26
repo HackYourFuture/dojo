@@ -4,6 +4,8 @@ import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import CorporateFareOutlinedIcon from '@mui/icons-material/CorporateFareOutlined';
 import DashboardIcon from '@mui/icons-material/SpaceDashboard';
 import DashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
+import Diversity2OutlinedIcon from '@mui/icons-material/Diversity2Outlined';
 import HomeIcon from '@mui/icons-material/Home';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SchoolIcon from '@mui/icons-material/School';
@@ -50,6 +52,7 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     activeIcon: Diversity3Icon,
     relatedPaths: ['/volunteer'],
   },
+  { name: 'Mentorships', path: '/mentorships', icon: Diversity2OutlinedIcon, activeIcon: Diversity2Icon },
   {
     name: 'Organisations',
     path: '/organisations',
