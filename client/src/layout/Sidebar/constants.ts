@@ -52,7 +52,13 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     activeIcon: Diversity3Icon,
     relatedPaths: ['/volunteer'],
   },
-  { name: 'Mentorships', path: '/mentorships', icon: Diversity2OutlinedIcon, activeIcon: Diversity2Icon },
+  {
+    name: 'Mentorships',
+    path: '/mentorships',
+    icon: Diversity2OutlinedIcon,
+    activeIcon: Diversity2Icon,
+    relatedPaths: ['/mentorship'],
+  },
   {
     name: 'Organisations',
     path: '/organisations',

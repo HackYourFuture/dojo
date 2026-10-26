@@ -1,25 +1,12 @@
-import {
-  Box,
-  Link,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip,
-} from '@mui/material';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
+import { Mentorship, formatPeriod } from '../Mentorship';
 import { daysFromToday, formatDateForDisplay } from '../../../data/dates';
 
 import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
-import { Mentorship } from '../Mentorship';
+import { LinkTableRow } from '../../../components/LinkTableRow';
 import { MentorshipStatusChip } from './MentorshipStatusChip';
 import { MentorshipTypeChip } from './MentorshipTypeChip';
-import { PersonAvatar } from '../../../components/PersonAvatar';
-import { Link as RouterLink } from 'react-router';
-import { TraineeReference } from '../../../data/types/Trainee';
-import { VolunteerReference } from '../../volunteers/Volunteer';
+import { PersonLink } from './PersonLink';
 
 // Fit the longest content, with room for a fourth digit of days, so nothing wraps or moves. Names share the rest.
 const COLUMNS = [
@@ -117,24 +104,6 @@ const Checkins = ({ mentorship }: CheckinsProps) => {
   );
 };
 
-interface PersonLinkProps {
-  person: VolunteerReference | TraineeReference;
-}
-
-// The picture and the name, which open the person's profile.
-const PersonLink = ({ person }: PersonLinkProps) => (
-  <Link
-    component={RouterLink}
-    to={person.profilePath}
-    color="textPrimary"
-    underline="hover"
-    sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, fontWeight: 500, overflowWrap: 'anywhere' }}
-  >
-    <PersonAvatar src={person.thumbnailUrl} size={32} />
-    {person.name}
-  </Link>
-);
-
 interface MentorshipRowProps {
   mentorship: Mentorship;
 }
@@ -143,7 +112,7 @@ const MentorshipRow = ({ mentorship }: MentorshipRowProps) => {
   const { isEnded } = mentorship;
 
   return (
-    <TableRow sx={isEnded ? endedStyle : undefined}>
+    <LinkTableRow to={mentorship.profilePath} sx={isEnded ? endedStyle : undefined}>
       <TableCell>
         <MentorshipTypeChip type={mentorship.type} />
       </TableCell>
@@ -156,15 +125,11 @@ const MentorshipRow = ({ mentorship }: MentorshipRowProps) => {
       <TableCell>
         <MentorshipStatusChip isEnded={isEnded} />
       </TableCell>
-      <TableCell>
-        {mentorship.endDate
-          ? `${formatDateForDisplay(mentorship.startDate)} to ${formatDateForDisplay(mentorship.endDate)}`
-          : `From ${formatDateForDisplay(mentorship.startDate)}`}
-      </TableCell>
+      <TableCell>{formatPeriod(mentorship.startDate, mentorship.endDate)}</TableCell>
       <TableCell>
         <Checkins mentorship={mentorship} />
       </TableCell>
-    </TableRow>
+    </LinkTableRow>
   );
 };
 
@@ -172,7 +137,7 @@ interface MentorshipsTableProps {
   mentorships: Mentorship[];
 }
 
-/** The mentorships in a table, where the mentor and the trainee open their profiles. */
+/** The mentorships in a table, where a row opens the mentorship, and the mentor and the trainee open their profiles. */
 export const MentorshipsTable = ({ mentorships }: MentorshipsTableProps) => {
   return (
     // Scrolls sideways in a narrow window.
@@ -187,7 +152,7 @@ export const MentorshipsTable = ({ mentorships }: MentorshipsTableProps) => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody sx={{ '& tr:last-child td': { border: 0 } }}>
+        <TableBody>
           {mentorships.map((mentorship) => (
             <MentorshipRow key={mentorship.id} mentorship={mentorship} />
           ))}

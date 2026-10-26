@@ -4,7 +4,7 @@ import { learningStatusOptions, quitReasonOptions, trackOptions } from '../utils
 
 import { AssessmentsComponent } from './assessments/AssessmentsComponent';
 import { LearningStatus } from '../../../data/types/Trainee';
-import { ProfileDateField } from '../profile/components/ProfileDateField';
+import { ProfileDateField } from '../../../components/profile/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { Stack } from '@mui/material';

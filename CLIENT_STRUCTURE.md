@@ -67,7 +67,7 @@ Authentication-related logic:
 ```
 components/profile/
 ├── ProfileTabBar.tsx         # The tabs
-├── ProfileButtons.tsx        # The Edit, or Cancel and Save, and Actions buttons at the top right of the header
+├── ProfileButtons.tsx        # The Edit, or Cancel and Save, buttons at the top right of the header, and Actions when a profile has it
 ├── ProfileSection.tsx        # Section title, and FieldRow for a line of fields
 ├── ProfileValue.tsx          # A field's label and value, shown until the profile is edited
 ├── fieldStyles.ts            # The field width, the label above every field, and the input style that keeps it there
@@ -75,6 +75,7 @@ components/profile/
 ├── ProfileTextField.tsx      # Text field, shown as a ProfileValue until the profile is edited
 ├── ProfileSelect.tsx         # Dropdown, with an empty option for a nullable field
 ├── ProfileMultiSelect.tsx    # Several values picked from a list, shown as their labels until the profile is edited
+├── ProfileDateField.tsx      # Date picker, can be cleared; works in YYYY-MM-DD strings
 ├── ProfileNotes.tsx          # The Markdown notes section
 ├── ContactFields.tsx         # The email, phone, Slack, GitHub and LinkedIn fields of a contact tab
 ├── SocialLinks.tsx           # The website, Slack, GitHub and LinkedIn buttons of a profile header
@@ -104,7 +105,7 @@ features/
 ├── geo/                     # City and country autocompletes searched on the API, and their profile fields
 ├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
 ├── login/                   # Login feature
-├── mentorships/             # Mentorships list with its filters, the ended ones dimmed, and the dialog to add one
+├── mentorships/             # Mentorships list with its filters, the dialog to add one, and the mentorship profile
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
@@ -173,7 +174,6 @@ trainee-profile/
 │   ├── TraineeActions.tsx        # The Actions button, with the dialog to delete the trainee
 │   └── components/
 │       ├── TraineeProfile.tsx    # Header, tab bar and the page padding
-│       ├── ProfileDateField.tsx  # MUI date picker, can be cleared
 │       └── ProfileNumberField.tsx # MUI number field (Base UI), for whole numbers
 ├── personal-info/                # Personal information tab
 │   └── PersonalInfo.tsx
@@ -186,7 +186,7 @@ trainee-profile/
 └── create/                       # Dialog to add a trainee
 ```
 
-**Profile tabs:** the profile (`TraineeProfile`, `OrganisationProfile`, `VolunteerProfile`) owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s from `components/profile/`; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileSelect`, `ProfileMultiSelect` and the fields a single profile adds (like `ProfileDateField` for trainees and `ProfileUserPicker` for organisations), so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
+**Profile tabs:** the profile (`TraineeProfile`, `OrganisationProfile`, `VolunteerProfile`, and `MentorshipProfile`, which has sections instead of tabs) owns the page padding, so the tabs have none. A tab is a stack of `ProfileSection`s from `components/profile/`; lay out fields in `FieldRow`s with `ProfileTextField`, `ProfileSelect`, `ProfileMultiSelect`, `ProfileDateField` and the fields a single profile adds (like `ProfileUserPicker` for organisations), so every field gets the same width, spacing, and read-only and edit behavior. Until the profile is edited, a field is its label and value as text, not a read-only input; while editing it is a small outlined input with the label above it, in the same place. Use `<FieldRow fill>` when the fields should share the width of the row instead.
 
 ### Example: Trainees Feature
 

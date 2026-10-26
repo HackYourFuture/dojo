@@ -3,6 +3,7 @@ import { Navigate, createBrowserRouter } from 'react-router';
 import { ApiProvider } from '../auth/hooks/useAuthProvider';
 import DashboardPage from '../features/dashboard/DashboardPage';
 import LoginPage from '../features/login/LoginPage';
+import MentorshipProfilePage from '../features/mentorships/MentorshipProfilePage';
 import MentorshipsOverviewPage from '../features/mentorships/MentorshipsOverviewPage';
 import OrganisationProfilePage from '../features/organisations/OrganisationProfilePage';
 import OrganisationsOverviewPage from '../features/organisations/OrganisationsOverviewPage';
@@ -100,6 +101,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <VolunteerProfilePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: '/mentorship/:mentorshipId',
+            element: (
+              <ProtectedRoute>
+                <MentorshipProfilePage />
               </ProtectedRoute>
             ),
           },
