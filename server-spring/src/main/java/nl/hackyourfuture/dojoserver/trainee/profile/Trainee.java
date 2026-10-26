@@ -112,9 +112,7 @@ public class Trainee implements PictureOwner {
     @Enumerated(EnumType.STRING)
     private QuitReason quitReason;
 
-    private String mentorTech;
-    private String mentorHr;
-    private String mentorEnglish;
+    private String certificateId;
 
     // Placement
     @Enumerated(EnumType.STRING)

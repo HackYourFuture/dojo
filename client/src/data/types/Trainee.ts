@@ -123,13 +123,11 @@ export interface TraineeEducationInfo {
   currentCohort: number | null;
   learningStatus: LearningStatus;
   track: Track;
-  mentorTech: string | null;
-  mentorHr: string | null;
-  mentorEnglish: string | null;
   startDate: string | null;
   graduationDate: string | null;
   quitReason: QuitReason | null;
   quitDate: string | null;
+  certificateId: string | null;
 }
 
 export interface TraineeEmploymentInfo {

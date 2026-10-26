@@ -1,5 +1,5 @@
 import { FieldRow, ProfileSection } from '../../../components/profile/ProfileSection';
-import { createTextChangeHandler, createValueChangeHandler } from '../utils/formHelper';
+import { createValueChangeHandler } from '../utils/formHelper';
 import { learningStatusOptions, quitReasonOptions, trackOptions } from '../utils/selectOptions';
 
 import { AssessmentsComponent } from './assessments/AssessmentsComponent';
@@ -7,7 +7,6 @@ import { LearningStatus } from '../../../data/types/Trainee';
 import { ProfileDateField } from '../profile/components/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
-import { ProfileTextField } from '../../../components/profile/ProfileTextField';
 import { Stack } from '@mui/material';
 import { useTraineeProfileContext } from '../context/useTraineeProfileContext';
 
@@ -26,7 +25,6 @@ const EducationInfo = () => {
     isEditMode: isEditing,
   } = useTraineeProfileContext();
 
-  const handleTextChange = createTextChangeHandler(setTrainee, 'educationInfo');
   const handleValueChange = createValueChangeHandler(setTrainee, 'educationInfo');
 
   const hasGraduated = editedFields.learningStatus === LearningStatus.Graduated;
@@ -108,35 +106,6 @@ const EducationInfo = () => {
             max={MAX_COHORT}
             isEditing={isEditing}
             onChange={handleValueChange}
-          />
-        </FieldRow>
-      </ProfileSection>
-
-      <ProfileSection title="Mentors">
-        <FieldRow>
-          <ProfileTextField
-            name="mentorTech"
-            label="Technical Mentor"
-            placeholder="John Doe"
-            value={editedFields.mentorTech}
-            isEditing={isEditing}
-            onChange={handleTextChange}
-          />
-          <ProfileTextField
-            name="mentorHr"
-            label="HR Mentor"
-            placeholder="Jane Smith"
-            value={editedFields.mentorHr}
-            isEditing={isEditing}
-            onChange={handleTextChange}
-          />
-          <ProfileTextField
-            name="mentorEnglish"
-            label="English Mentor"
-            placeholder="John Doe"
-            value={editedFields.mentorEnglish}
-            isEditing={isEditing}
-            onChange={handleTextChange}
           />
         </FieldRow>
       </ProfileSection>
