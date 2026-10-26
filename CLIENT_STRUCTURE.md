@@ -108,8 +108,8 @@ features/
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
 ├── trainee-profile/         # Trainee profile feature (see detailed structure below)
-├── trainees/                # Trainees list, grouped by cohort, and map (see below)
-└── volunteers/              # Volunteers list, the dialog to add one, and the volunteer profile
+├── trainees/                # Trainees list, grouped by cohort, map and the trainee picker (see below)
+└── volunteers/              # Volunteers list, the dialog to add one, the volunteer profile and the volunteer picker
 ```
 
 ### `/src/layout`
@@ -195,6 +195,7 @@ trainees/
 ├── api/                          # API calls, response types and mappers
 ├── components/                   # Trainees-specific components
 │   ├── CohortAccordion.tsx
+│   ├── TraineeAutocomplete.tsx   # Picks a trainee, searched on the API as the user types
 │   ├── TraineeFilterBar.tsx      # The search and filters, kept in the URL
 │   └── TraineeList.tsx           # The trainees grouped by cohort, loaded page by page
 ├── data/                         # React Query keys and hooks

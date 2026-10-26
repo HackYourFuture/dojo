@@ -39,3 +39,11 @@ export const createVolunteer = async (newVolunteer: NewVolunteer) => {
 export const deleteVolunteer = async (volunteerId: string) => {
   await axios.delete(`/api/volunteers/${volunteerId}`);
 };
+
+// The volunteers the search finds for the text, by first name. Only the first page, for a picker.
+export const searchVolunteers = async (query: string) => {
+  const { data } = await axios.get<PagedModel<VolunteerSummaryResponse>>('/api/volunteers', {
+    params: { q: query, size: 100 },
+  });
+  return data.content.map(mapVolunteerSummaryToDomain);
+};
