@@ -60,3 +60,15 @@ export const today = () => {
   const now = new Date();
   return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
 };
+
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+// Whole days from today to the date, negative once it has passed. Both are midnight UTC, so every day has 24 hours.
+export const daysFromToday = (date: Date) => {
+  return Math.round((date.getTime() - today().getTime()) / DAY_IN_MS);
+};
+
+// The date that many days later, still at midnight UTC.
+export const addDays = (date: Date, days: number) => {
+  return new Date(date.getTime() + days * DAY_IN_MS);
+};

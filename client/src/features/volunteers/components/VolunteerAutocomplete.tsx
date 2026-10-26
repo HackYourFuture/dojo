@@ -24,10 +24,21 @@ interface VolunteerAutocompleteProps {
   onChange: (volunteer: VolunteerReference | null) => void;
   error?: string;
   disabled?: boolean;
+  size?: 'small' | 'medium';
+  // Shown while no volunteer is picked.
+  placeholder?: string;
 }
 
 /** Picks a volunteer, searched on the API as the user types. */
-export const VolunteerAutocomplete = ({ label, value, onChange, error, disabled }: VolunteerAutocompleteProps) => {
+export const VolunteerAutocomplete = ({
+  label,
+  value,
+  onChange,
+  error,
+  disabled,
+  size,
+  placeholder,
+}: VolunteerAutocompleteProps) => {
   const [text, setText] = useState('');
   const query = useDebounce(text, 250);
   const { data: volunteers = [], isFetching } = useSearchVolunteers(query);
@@ -36,6 +47,7 @@ export const VolunteerAutocomplete = ({ label, value, onChange, error, disabled 
   return (
     <Autocomplete<VolunteerOption>
       forcePopupIcon={false}
+      size={size}
       options={volunteers.map(toVolunteerOption)}
       value={value}
       disabled={disabled}
@@ -76,6 +88,7 @@ export const VolunteerAutocomplete = ({ label, value, onChange, error, disabled 
         <TextField
           {...params}
           label={label}
+          placeholder={placeholder}
           error={!!error}
           helperText={error}
           slotProps={{
