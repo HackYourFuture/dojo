@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from dojo_setup.generators.interaction import generate_volunteer_interaction
-from dojo_setup.generators.mentorship import generate_mentorship
+from dojo_setup.generators.mentorship import GeneratedMentorship, generate_mentorship
 from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.portrait import generate_portrait_url
 from dojo_setup.generators.profile import GENDERS, PRONOUNS, example_email
@@ -62,7 +62,7 @@ class GeneratedVolunteer:
     portrait_url: str
     interactions: list[dict[str, Any]]
     assignments: list[dict[str, Any]]
-    mentorships: list[dict[str, Any]]
+    mentorships: list[GeneratedMentorship]
 
     @property
     def name(self) -> str:

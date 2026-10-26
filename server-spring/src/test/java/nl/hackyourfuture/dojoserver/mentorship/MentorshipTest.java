@@ -95,7 +95,7 @@ class MentorshipTest {
         assertThat(result).bodyJson().extractingPath("$.startDate").isEqualTo("2026-03-01");
         assertThat(result).bodyJson().extractingPath("$.endDate").isNull();
         assertThat(result).bodyJson().extractingPath("$.nextCheckinDate").isEqualTo("2026-03-15");
-        // Check-ins are not recorded yet, so both are null until the check-in records exist.
+        // No check-in has been recorded yet. MentorshipCheckinTest covers the mentorship with check-ins.
         assertThat(result).bodyJson().extractingPath("$.lastCheckinDate").isNull();
         assertThat(result).bodyJson().extractingPath("$.daysSinceLastCheckin").isNull();
         assertThat(storedFor(jane)).singleElement().satisfies(stored -> {

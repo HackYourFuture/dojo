@@ -1,6 +1,8 @@
 package nl.hackyourfuture.dojoserver.mentorship;
 
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckin;
+import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckinService;
 import nl.hackyourfuture.dojoserver.mentorship.dto.MentorshipRequest;
 import nl.hackyourfuture.dojoserver.mentorship.dto.MentorshipResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
@@ -18,15 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class MentorshipService {
-    // Latest start first; the id keeps mentorships that started on the same day in a fixed order.
-
     private final MentorshipRepository mentorshipRepository;
     private final VolunteerRepository volunteerRepository;
     private final TraineeRepository traineeRepository;
+    private final MentorshipCheckinService checkinService;
 
     @Transactional(readOnly = true)
     public List<MentorshipResponse> getMentorships(String volunteerId, String traineeId) {
@@ -39,15 +41,22 @@ public class MentorshipService {
         }
 
         Specification<Mentorship> spec = Specification.where(PredicateSpecification.allOf(filters));
-        final Sort latestStartFirst = Sort.by(Sort.Order.desc("startDate"), Sort.Order.asc("id"));
-        return mentorshipRepository.findAll(spec, latestStartFirst).stream()
-                .map(MentorshipResponse::from)
+        // Latest start first. The id keeps mentorships that started on the same day in a fixed order.
+        Sort latestStartFirst = Sort.by(Sort.Order.desc("startDate"), Sort.Order.asc("id"));
+        List<Mentorship> mentorships = mentorshipRepository.findAll(spec, latestStartFirst);
+
+        // Get the latest check-in of all mentorships in one query
+        List<String> mentorshipIds = mentorships.stream().map(Mentorship::getId).toList();
+        Map<String, MentorshipCheckin> latestCheckins = checkinService.getLatestCheckins(mentorshipIds);
+
+        return mentorships.stream()
+                .map(mentorship -> MentorshipResponse.from(mentorship, latestCheckins.get(mentorship.getId())))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public MentorshipResponse getMentorship(String id) {
-        return MentorshipResponse.from(findMentorship(id));
+        return MentorshipResponse.from(findMentorship(id), checkinService.getLatestCheckin(id));
     }
 
     @Transactional
@@ -64,7 +73,8 @@ public class MentorshipService {
                 .nextCheckinDate(request.nextCheckinDate())
                 .build();
 
-        return MentorshipResponse.from(mentorshipRepository.save(newMentorship));
+        // A new mentorship has no check-ins yet.
+        return MentorshipResponse.from(mentorshipRepository.save(newMentorship), null);
     }
 
     @Transactional
@@ -79,7 +89,7 @@ public class MentorshipService {
         mentorship.setEndDate(request.endDate());
         mentorship.setNextCheckinDate(request.nextCheckinDate());
 
-        return MentorshipResponse.from(mentorship);
+        return MentorshipResponse.from(mentorship, checkinService.getLatestCheckin(id));
     }
 
     @Transactional

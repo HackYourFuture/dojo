@@ -31,7 +31,7 @@ public class OpenApiConfig {
                     List.of("Trainee profiles", "Trainee assessments", "Trainee employment", "Trainee interactions")),
             new TagGroup("Volunteers",
                     List.of("Volunteer profiles", "Volunteer assignments", "Volunteer interactions")),
-            new TagGroup("Mentorships", List.of("Mentorships")),
+            new TagGroup("Mentorships", List.of("Mentorships", "Mentorship check-ins")),
             new TagGroup("Organisations",
                     List.of("Organisation profiles", "Contact persons", "Organisation interactions")),
             new TagGroup("Tools", List.of("Search", "Dashboard", "Cities and countries")),

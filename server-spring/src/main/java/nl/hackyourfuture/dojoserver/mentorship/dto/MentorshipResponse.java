@@ -3,12 +3,13 @@ package nl.hackyourfuture.dojoserver.mentorship.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import nl.hackyourfuture.dojoserver.mentorship.Mentorship;
 import nl.hackyourfuture.dojoserver.mentorship.MentorshipType;
+import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckin;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeReferenceResponse;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerReferenceResponse;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
-// lastCheckinDate and daysSinceLastCheckin stay null until they can be derived from check-in records.
 @Schema(description = "A mentorship between a volunteer and a trainee as returned by the API")
 public record MentorshipResponse(
         @Schema(
@@ -45,7 +46,7 @@ public record MentorshipResponse(
         LocalDate startDate,
 
         @Schema(
-                description = "The date of the last check-in with the trainee. Not recorded yet, so always null.",
+                description = "The date of the latest check-in with the trainee. Null until one is recorded.",
                 example = "2026-05-20",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
@@ -69,23 +70,32 @@ public record MentorshipResponse(
         LocalDate nextCheckinDate,
 
         @Schema(
-                description = "Days from the last check-in until today. Not recorded yet, so always null.",
+                description = "Days from the latest check-in until today. Null until one is recorded.",
                 example = "14",
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
         Integer daysSinceLastCheckin
 ) {
-    public static MentorshipResponse from(Mentorship mentorship) {
+    // The last check-in is a record of its own, so the caller looks it up. Null when there is none.
+    public static MentorshipResponse from(Mentorship mentorship, MentorshipCheckin lastCheckin) {
+        LocalDate lastCheckinDate = lastCheckin == null ? null : lastCheckin.getDate();
         return new MentorshipResponse(
                 mentorship.getId(),
                 VolunteerReferenceResponse.from(mentorship.getVolunteer()),
                 TraineeReferenceResponse.from(mentorship.getTrainee()),
                 mentorship.getType(),
                 mentorship.getStartDate(),
-                null,
+                lastCheckinDate,
                 mentorship.getEndDate(),
                 mentorship.getNextCheckinDate(),
-                null);
+                daysSince(lastCheckinDate));
+    }
+
+    private static Integer daysSince(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return (int) ChronoUnit.DAYS.between(date, LocalDate.now());
     }
 }

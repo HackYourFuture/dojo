@@ -232,6 +232,21 @@ create table mentorships
 create index mentorships_volunteer_idx on mentorships (volunteer_id);
 create index mentorships_trainee_idx on mentorships (trainee_id);
 
+-- Check-ins, follow-ups and updates of a mentorship
+create table mentorship_checkins
+(
+    id            text        not null
+        constraint mentorship_checkins_pk primary key,
+    mentorship_id text        not null
+        constraint mentorship_checkins_mentorship_fk references mentorships on delete cascade,
+    date          date        not null,
+    notes         text        not null,
+    created_at    timestamptz not null,
+    updated_at    timestamptz not null
+);
+
+create index mentorship_checkins_mentorship_idx on mentorship_checkins (mentorship_id);
+
 -- Partner organisations
 create table organisations
 (

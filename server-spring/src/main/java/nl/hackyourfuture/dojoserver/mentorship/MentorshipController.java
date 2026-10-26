@@ -106,7 +106,7 @@ public class MentorshipController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an existing mentorship",
-            description = "Permanently deletes the mentorship. The volunteer and the trainee are kept.")
+            description = "Permanently deletes the mentorship with its check-ins. The volunteer and the trainee are kept.")
     @ApiResponse(responseCode = "204", description = "The mentorship has been successfully deleted")
     @ApiResponse(
             responseCode = "404",
