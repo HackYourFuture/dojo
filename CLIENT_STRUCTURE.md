@@ -67,7 +67,7 @@ Authentication-related logic:
 ```
 components/profile/
 ├── ProfileTabBar.tsx         # The tabs
-├── ProfileButtons.tsx        # The Edit, or Cancel and Save, buttons at the top right of the header, and Actions when a profile has it
+├── ProfileButtons.tsx        # The Edit, or Cancel and Save, and Actions buttons at the top right of the header
 ├── ProfileSection.tsx        # Section title, and FieldRow for a line of fields
 ├── ProfileValue.tsx          # A field's label and value, shown until the profile is edited
 ├── fieldStyles.ts            # The field width, the label above every field, and the input style that keeps it there

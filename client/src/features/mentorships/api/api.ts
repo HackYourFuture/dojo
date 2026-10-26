@@ -36,3 +36,7 @@ export const updateMentorship = async (mentorship: EditedMentorship) => {
   const { data } = await axios.put<MentorshipResponse>(`/api/mentorships/${mentorship.id}`, mentorshipRequest);
   return mapMentorshipToDomain(data);
 };
+
+export const deleteMentorship = async (mentorshipId: string) => {
+  await axios.delete(`/api/mentorships/${mentorshipId}`);
+};

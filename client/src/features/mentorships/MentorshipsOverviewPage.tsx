@@ -7,6 +7,7 @@ import { MentorshipFilterBar } from './components/MentorshipFilterBar';
 import { MentorshipFilters } from './Mentorship';
 import { MentorshipStatus } from './MentorshipStatus';
 import { MentorshipsTable } from './components/MentorshipsTable';
+import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
 import { useGetMentorships } from './data/mentorship-queries';
 import { usePageTitle } from '../../hooks/usePageTitle';
 import { useSearchParams } from 'react-router';
@@ -59,6 +60,7 @@ const MentorshipsOverviewPage = () => {
         <ListLoader query={mentorshipsQuery} />
       </Box>
 
+      <SuccessMessageSnackbar />
       <AddMentorshipDialog
         // A new key on every open and close resets the form.
         key={`add-mentorship-${isAddDialogOpen}`}
