@@ -1,15 +1,17 @@
 import { MouseEvent, ReactNode } from 'react';
-import { TableCell, TableRow } from '@mui/material';
+import { SxProps, TableCell, TableRow, Theme } from '@mui/material';
 
 import { useNavigate } from 'react-router';
 
 interface LinkTableRowProps {
   to: string;
+  // Added to the row's own style, like the dimming of an ended mentorship.
+  sx?: SxProps<Theme>;
   children: ReactNode;
 }
 
 /** A table row that opens a page when it is clicked. */
-export const LinkTableRow = ({ to, children }: LinkTableRowProps) => {
+export const LinkTableRow = ({ to, sx = [], children }: LinkTableRowProps) => {
   const navigate = useNavigate();
 
   // Cmd, Ctrl or Shift opens the page in a new tab, as with a link.
@@ -34,7 +36,10 @@ export const LinkTableRow = ({ to, children }: LinkTableRowProps) => {
       hover
       onClick={handleClick}
       onAuxClick={handleAuxClick}
-      sx={{ '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' }}
+      sx={[
+        { '&:last-child td, &:last-child th': { border: 0 }, cursor: 'pointer' },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {children}
     </TableRow>

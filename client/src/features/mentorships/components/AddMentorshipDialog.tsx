@@ -1,20 +1,18 @@
-import { Box, Chip, FormControl, FormHelperText, Stack, Tooltip } from '@mui/material';
+import { Box, FormControl, FormHelperText, Stack } from '@mui/material';
 import { MentorshipType, mentorshipTypeOptions } from '../MentorshipType';
 
 import { DropdownSelect } from '../../../components/DropdownSelect';
 import { FIELD_REQUIRED_ERROR } from '../../../data/text';
 import { FormDateField } from '../../../components/FormDateField';
 import { FormDialog } from '../../../components/FormDialog';
+import { NextCheckinShortcuts } from './NextCheckinShortcuts';
 import { TraineeAutocomplete } from '../../trainees/components/TraineeAutocomplete';
 import { TraineeReference } from '../../../data/types/Trainee';
 import { VolunteerAutocomplete } from '../../volunteers/components/VolunteerAutocomplete';
 import { VolunteerReference } from '../../volunteers/Volunteer';
-import { addDays, formatDateForDisplay, today } from '../../../data/dates';
+import { today } from '../../../data/dates';
 import { useCreateMentorship } from '../data/mutations';
 import { useState } from 'react';
-
-// The next check-in shortcuts, in days after the start date.
-const NEXT_CHECKIN_SHORTCUTS = [7, 14, 30];
 
 // The fields of the dialog, empty until they are filled in.
 interface MentorshipForm {
@@ -75,11 +73,8 @@ export const AddMentorshipDialog = ({ isOpen, handleClose }: AddMentorshipDialog
     setErrors((prevErrors) => (prevErrors ? { ...prevErrors, [name]: undefined } : null));
   };
 
-  // That many days after the start date, or after today while the start date is empty.
-  const shortcutDate = (days: number) => addDays(form.startDate ?? today(), days);
-
-  const applyShortcut = (days: number) => {
-    setField('nextCheckinDate', shortcutDate(days));
+  const applyShortcut = (date: Date) => {
+    setField('nextCheckinDate', date);
     setNextCheckinFieldKey((key) => key + 1);
   };
 
@@ -171,20 +166,8 @@ export const AddMentorshipDialog = ({ isOpen, handleClose }: AddMentorshipDialog
             clearable
             onChange={(date) => setField('nextCheckinDate', date)}
           />
-          <Stack direction="row" spacing={1} sx={{ pt: 1 }}>
-            {NEXT_CHECKIN_SHORTCUTS.map((days) => (
-              // The date describes the chip, so a screen reader still says "+7d" as its name.
-              <Tooltip key={days} title={formatDateForDisplay(shortcutDate(days))} placement="bottom" describeChild>
-                <Chip
-                  label={`+${days}d`}
-                  size="small"
-                  variant="outlined"
-                  disabled={isPending}
-                  onClick={() => applyShortcut(days)}
-                />
-              </Tooltip>
-            ))}
-          </Stack>
+          {/* That many days after the start date, or after today while the start date is empty. */}
+          <NextCheckinShortcuts from={form.startDate ?? today()} disabled={isPending} onPick={applyShortcut} />
         </FormControl>
       </Stack>
     </FormDialog>

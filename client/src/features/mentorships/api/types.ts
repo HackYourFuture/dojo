@@ -25,7 +25,8 @@ export interface MentorshipRequest {
   volunteerId: string;
   traineeId: string;
   type: MentorshipType;
-  startDate: string; // YYYY-MM-DD
+  // Required by the API, which says so when the profile is saved without one.
+  startDate: string | null; // YYYY-MM-DD
   endDate: string | null; // YYYY-MM-DD
   nextCheckinDate: string | null; // YYYY-MM-DD
 }

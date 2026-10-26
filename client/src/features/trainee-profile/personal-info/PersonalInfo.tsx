@@ -12,7 +12,7 @@ import { genderOptions, pronounOptions } from '../../../data/types/Person';
 import { City } from '../../geo/models/city';
 import { ProfileCityField } from '../../geo/components/ProfileCityField';
 import { ProfileCountryField } from '../../geo/components/ProfileCountryField';
-import { ProfileDateField } from '../profile/components/ProfileDateField';
+import { ProfileDateField } from '../../../components/profile/ProfileDateField';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { ProfileTextField } from '../../../components/profile/ProfileTextField';

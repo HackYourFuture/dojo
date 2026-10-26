@@ -2,7 +2,7 @@ import { FieldRow, ProfileSection } from '../../../components/profile/ProfileSec
 import { jobPathOptions, yesNoOptions } from '../utils/selectOptions';
 
 import { EmploymentHistoryGroup } from './components/EmploymentHistoryGroup';
-import { ProfileDateField } from '../profile/components/ProfileDateField';
+import { ProfileDateField } from '../../../components/profile/ProfileDateField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { Stack } from '@mui/material';
 import { createValueChangeHandler } from '../utils/formHelper';

@@ -1,5 +1,5 @@
 import { addDays, toISODateString, today } from '../../../data/dates';
-import { Mentorship, MentorshipFilters, NewMentorship } from '../Mentorship';
+import { EditedMentorship, Mentorship, MentorshipFilters, NewMentorship } from '../Mentorship';
 import { MentorshipRequest, MentorshipResponse } from './types';
 
 import { MentorshipStatus } from '../MentorshipStatus';
@@ -11,6 +11,7 @@ const toOptionalDateString = (date: Date | null) => (date ? toISODateString(date
 export const mapMentorshipToDomain = (mentorship: MentorshipResponse): Mentorship => {
   return {
     id: mentorship.id,
+    profilePath: `/mentorship/${mentorship.id}`,
     volunteer: {
       id: mentorship.volunteer.id,
       name: mentorship.volunteer.name,
@@ -39,6 +40,18 @@ export const mapDomainToMentorshipRequest = (mentorship: NewMentorship): Mentors
     traineeId: mentorship.traineeId,
     type: mentorship.type,
     startDate: toISODateString(mentorship.startDate),
+    endDate: toOptionalDateString(mentorship.endDate),
+    nextCheckinDate: toOptionalDateString(mentorship.nextCheckinDate),
+  };
+};
+
+// The whole mentorship, as PUT replaces it. The ids come from the volunteer and the trainee, which the profile keeps.
+export const mapEditedMentorshipToRequest = (mentorship: EditedMentorship): MentorshipRequest => {
+  return {
+    volunteerId: mentorship.volunteer.id,
+    traineeId: mentorship.trainee.id,
+    type: mentorship.type,
+    startDate: toOptionalDateString(mentorship.startDate),
     endDate: toOptionalDateString(mentorship.endDate),
     nextCheckinDate: toOptionalDateString(mentorship.nextCheckinDate),
   };

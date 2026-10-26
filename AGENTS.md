@@ -5,12 +5,12 @@ and search. A small number of trusted HYF staff use it.
 
 ## Stack
 
-| Folder           | What                                                                                     |
-|------------------|------------------------------------------------------------------------------------------|
-| `client/`        | Front-end. React 19, TypeScript, Vite 7, MUI 7, TanStack Query 5, React Router 6, Axios  |
-| `server-spring/` | Back-end. Java 25, Spring Boot 4.1, PostgreSQL 18, Flyway, Hibernate/JPA, Lombok         |
-| `server/`        | Legacy Node/Express + MongoDB back-end, replaced by `server-spring/`. Kept for reference |
-| `scripts/setup/` | Python script that fills a local environment with dummy trainees through the API         |
+| Folder           | What                                                                                      |
+|------------------|-------------------------------------------------------------------------------------------|
+| `client/`        | Front-end. React 19, TypeScript 6, Vite 8, MUI 9, TanStack Query 5, React Router 8, Axios |
+| `server-spring/` | Back-end. Java 25, Spring Boot 4.1, PostgreSQL 18, Flyway, Hibernate/JPA, Lombok          |
+| `server/`        | Legacy Node/Express + MongoDB back-end, replaced by `server-spring/`. Kept for reference  |
+| `scripts/setup/` | Python script that fills a local environment with dummy trainees through the API          |
 
 Sign-in is Google OAuth, pictures are stored in S3-compatible storage.
 
