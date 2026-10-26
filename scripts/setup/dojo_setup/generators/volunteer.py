@@ -1,10 +1,10 @@
-"""Generates a complete volunteer: the profile, portrait, interactions, assignments and mentor pairings."""
+"""Generates a complete volunteer: the profile, portrait, interactions, assignments and mentorships."""
 
 from dataclasses import dataclass
 from typing import Any
 
 from dojo_setup.generators.interaction import generate_volunteer_interaction
-from dojo_setup.generators.mentor_pairing import generate_mentor_pairing
+from dojo_setup.generators.mentorship import generate_mentorship
 from dojo_setup.generators.names import generate_name
 from dojo_setup.generators.portrait import generate_portrait_url
 from dojo_setup.generators.profile import GENDERS, PRONOUNS, example_email
@@ -62,7 +62,7 @@ class GeneratedVolunteer:
     portrait_url: str
     interactions: list[dict[str, Any]]
     assignments: list[dict[str, Any]]
-    pairings: list[dict[str, Any]]
+    mentorships: list[dict[str, Any]]
 
     @property
     def name(self) -> str:
@@ -98,5 +98,5 @@ def generate_volunteer(trainee_ids: list[str]) -> GeneratedVolunteer:
         portrait_url=generate_portrait_url(gender),
         interactions=[generate_volunteer_interaction() for _ in range(fake.random_int(0, 10))],
         assignments=[generate_volunteer_assignment(profile) for _ in range(fake.random_int(0, 4))],
-        pairings=[generate_mentor_pairing(profile, trainee_id) for trainee_id in mentees],
+        mentorships=[generate_mentorship(profile, trainee_id) for trainee_id in mentees],
     )

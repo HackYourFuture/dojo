@@ -1,4 +1,4 @@
-package nl.hackyourfuture.dojoserver.volunteer.pairing;
+package nl.hackyourfuture.dojoserver.mentorship;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -29,28 +30,28 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @Entity
-@Table(name = "mentor_pairings")
+@Table(name = "mentorships")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
 @Setter
-public class MentorPairing {
+public class Mentorship {
     @Id
     @EqualsAndHashCode.Include
     @Setter(AccessLevel.NONE)
     private String id;
 
-    @Setter(AccessLevel.NONE)
-    private String volunteerId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "volunteer_id")
+    private Volunteer volunteer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "trainee_id")
     private Trainee trainee;
 
     @Enumerated(EnumType.STRING)
-    private MentorPairingType type;
+    private MentorshipType type;
 
     private LocalDate startDate;
-    private LocalDate lastCheckinDate;
     private LocalDate endDate;
     private LocalDate nextCheckinDate;
 
