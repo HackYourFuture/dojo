@@ -195,7 +195,7 @@ public class TraineeController {
     )
     @ApiResponse(
             responseCode = "409",
-            description = "The trainee has mentor pairings, which have to keep their trainee.",
+            description = "The trainee has mentorships, which have to keep their trainee.",
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public void deleteTrainee(

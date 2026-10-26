@@ -20,7 +20,7 @@ class UploadReport:
     volunteer_pictures: int = 0
     volunteer_interactions: int = 0
     volunteer_assignments: int = 0
-    mentor_pairings: int = 0
+    mentorships: int = 0
     organisations: int = 0
     logos: int = 0
     contact_persons: int = 0
@@ -74,7 +74,7 @@ def upload_volunteer(api: DojoApi, volunteer: GeneratedVolunteer, report: Upload
     report.volunteer_assignments += _add_all(
         api.add_volunteer_assignment, volunteer_id, volunteer.name, volunteer.assignments, report
     )
-    report.mentor_pairings += _add_all(api.add_mentor_pairing, volunteer_id, volunteer.name, volunteer.pairings, report)
+    report.mentorships += _add_all(api.add_mentorship, volunteer_id, volunteer.name, volunteer.mentorships, report)
 
 
 def upload_organisation(api: DojoApi, organisation: GeneratedOrganisation, report: UploadReport) -> None:

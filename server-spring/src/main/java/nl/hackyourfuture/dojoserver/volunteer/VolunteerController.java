@@ -178,7 +178,7 @@ public class VolunteerController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an existing volunteer",
-            description = "Permanently deletes the volunteer profile with its assignments, mentor pairings, "
+            description = "Permanently deletes the volunteer profile with its assignments, mentorships, "
                     + "interactions and picture.")
     @ApiResponse(responseCode = "204", description = "The volunteer has been successfully deleted")
     @ApiResponse(

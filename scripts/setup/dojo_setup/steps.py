@@ -179,7 +179,7 @@ def show_summary(report: UploadReport) -> None:
     table.add_row("Volunteer pictures", str(report.volunteer_pictures))
     table.add_row("Volunteer interactions", str(report.volunteer_interactions))
     table.add_row("Volunteer assignments", str(report.volunteer_assignments))
-    table.add_row("Mentor pairings", str(report.mentor_pairings))
+    table.add_row("Mentorships", str(report.mentorships))
     table.add_row("Organisations", str(report.organisations))
     table.add_row("Logos", str(report.logos))
     table.add_row("Contact persons", str(report.contact_persons))
