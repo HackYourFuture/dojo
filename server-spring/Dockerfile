@@ -11,4 +11,5 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 7777
 ENV SPRING_PROFILES_ACTIVE=prod
+ENV TZ=Europe/Amsterdam
 CMD ["java", "-jar", "app.jar"]

@@ -220,9 +220,11 @@ class MentorshipCheckinTest {
         // The list looks the check-ins of all its rows up in one go, and each row gets its own.
         MvcTestResult listed = mvc.get().uri("/api/mentorships").param("volunteerId", mentorship.getVolunteer().getId())
                 .exchange();
-        assertThat(listed).bodyJson().extractingPath("$[?(@.id == '" + mentorship.getId() + "')].lastCheckinDate")
+        assertThat(listed).bodyJson()
+                .extractingPath("$.content[?(@.id == '" + mentorship.getId() + "')].lastCheckinDate")
                 .asArray().containsExactly(tenDaysAgo.toString());
-        assertThat(listed).bodyJson().extractingPath("$[?(@.id == '" + other.getId() + "')].lastCheckinDate")
+        assertThat(listed).bodyJson()
+                .extractingPath("$.content[?(@.id == '" + other.getId() + "')].lastCheckinDate")
                 .asArray().containsExactly("2025-06-01");
 
         // Moving the latest check-in before the other one makes that one the latest.
