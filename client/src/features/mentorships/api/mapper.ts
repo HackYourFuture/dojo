@@ -34,7 +34,7 @@ export const mapMentorshipToDomain = (mentorship: MentorshipResponse): Mentorshi
   };
 };
 
-export const mapDomainToMentorshipRequest = (mentorship: NewMentorship): MentorshipRequest => {
+export const mapDomainToCreateMentorshipRequest = (mentorship: NewMentorship): MentorshipRequest => {
   return {
     volunteerId: mentorship.volunteerId,
     traineeId: mentorship.traineeId,
@@ -46,7 +46,7 @@ export const mapDomainToMentorshipRequest = (mentorship: NewMentorship): Mentors
 };
 
 // The whole mentorship, as PUT replaces it. The ids come from the volunteer and the trainee, which the profile keeps.
-export const mapEditedMentorshipToRequest = (mentorship: EditedMentorship): MentorshipRequest => {
+export const mapDomainToUpdateMentorshipRequest = (mentorship: EditedMentorship): MentorshipRequest => {
   return {
     volunteerId: mentorship.volunteer.id,
     traineeId: mentorship.trainee.id,

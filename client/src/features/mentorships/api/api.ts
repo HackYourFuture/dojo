@@ -1,8 +1,8 @@
 import { EditedMentorship, MentorshipFilters, NewMentorship } from '../Mentorship';
 import { PAGE_SIZE, PagedModel, mapPageToDomain } from '../../../data/pagination';
 import {
-  mapDomainToMentorshipRequest,
-  mapEditedMentorshipToRequest,
+  mapDomainToCreateMentorshipRequest,
+  mapDomainToUpdateMentorshipRequest,
   mapFiltersToQueryParams,
   mapMentorshipToDomain,
 } from './mapper';
@@ -25,14 +25,14 @@ export const getMentorship = async (mentorshipId: string) => {
 };
 
 export const createMentorship = async (newMentorship: NewMentorship) => {
-  const mentorshipRequest = mapDomainToMentorshipRequest(newMentorship);
+  const mentorshipRequest = mapDomainToCreateMentorshipRequest(newMentorship);
   const { data } = await axios.post<MentorshipResponse>('/api/mentorships', mentorshipRequest);
   return mapMentorshipToDomain(data);
 };
 
 // Replaces the whole mentorship, so a date that is left out is cleared.
 export const updateMentorship = async (mentorship: EditedMentorship) => {
-  const mentorshipRequest = mapEditedMentorshipToRequest(mentorship);
+  const mentorshipRequest = mapDomainToUpdateMentorshipRequest(mentorship);
   const { data } = await axios.put<MentorshipResponse>(`/api/mentorships/${mentorship.id}`, mentorshipRequest);
   return mapMentorshipToDomain(data);
 };

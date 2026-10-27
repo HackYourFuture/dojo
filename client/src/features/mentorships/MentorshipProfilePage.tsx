@@ -16,17 +16,18 @@ const MentorshipProfilePage = () => {
     return <Loader />;
   }
 
+  // Before the error, so a failed reload after a check-in change keeps the profile on screen.
+  if (data) {
+    // Keyed by mentorship, so going straight from one mentorship to another does not keep the previous one's state.
+    return <MentorshipProfile key={mentorshipId} mentorship={data} />;
+  }
+
   if (isError && error instanceof Error) {
     return (
       <Box sx={{ width: '50%', margin: 'auto', marginTop: '2rem' }}>
         <ErrorBox errorMessage={error.message} />
       </Box>
     );
-  }
-
-  if (data) {
-    // Keyed by mentorship, so going straight from one mentorship to another does not keep the previous one's state.
-    return <MentorshipProfile key={mentorshipId} mentorship={data} />;
   }
 };
 
