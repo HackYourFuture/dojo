@@ -1,7 +1,6 @@
 import { MentorshipType } from './MentorshipType';
 import { TraineeReference } from '../../data/types/Trainee';
 import { VolunteerReference } from '../volunteers/Volunteer';
-import { formatDateForDisplay } from '../../data/dates';
 
 // A volunteer mentoring a trainee. The dates are calendar dates at midnight UTC, like the API's.
 export interface Mentorship {
@@ -23,12 +22,6 @@ export interface Mentorship {
 
 // The mentorship while it is edited. The start date can be cleared, which the server rejects when it is saved.
 export type EditedMentorship = Omit<Mentorship, 'startDate'> & { startDate: Date | null };
-
-// Like "01-09-2026 to 01-12-2026", or "From 01-09-2026" while the mentorship has no end date.
-export const formatPeriod = (startDate: Date, endDate: Date | null) =>
-  endDate
-    ? `${formatDateForDisplay(startDate)} to ${formatDateForDisplay(endDate)}`
-    : `From ${formatDateForDisplay(startDate)}`;
 
 // The filters of the mentorships list, named as in its URL. An empty id filters nothing.
 export interface MentorshipFilters {

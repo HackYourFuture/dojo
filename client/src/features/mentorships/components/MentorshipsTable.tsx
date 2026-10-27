@@ -1,12 +1,13 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
-import { Mentorship, formatPeriod } from '../Mentorship';
 import { daysFromToday, formatDateForDisplay } from '../../../data/dates';
 
 import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
 import { LinkTableRow } from '../../../components/LinkTableRow';
+import { Mentorship } from '../Mentorship';
 import { MentorshipStatusChip } from './MentorshipStatusChip';
 import { MentorshipTypeChip } from './MentorshipTypeChip';
 import { PersonLink } from './PersonLink';
+import { formatPeriod } from '../utils/formatPeriod';
 
 // Fit the longest content, with room for a fourth digit of days, so nothing wraps or moves. Names share the rest.
 const COLUMNS = [

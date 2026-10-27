@@ -21,7 +21,7 @@ interface PersonNameProps {
   person: VolunteerReference | TraineeReference;
 }
 
-// The name, which opens the person's profile. Without the picture, which cannot sit in the value's paragraph.
+// The name, which opens the person's profile. Without the picture, which the header already shows.
 const PersonName = ({ person }: PersonNameProps) => (
   <Link component={RouterLink} to={person.profilePath} color="textPrimary">
     {person.name}

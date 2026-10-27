@@ -5,7 +5,7 @@ import { DropdownSelect } from '../../../components/DropdownSelect';
 import { FIELD_REQUIRED_ERROR } from '../../../data/text';
 import { FormDateField } from '../../../components/FormDateField';
 import { FormDialog } from '../../../components/FormDialog';
-import { NextCheckinShortcuts } from './NextCheckinShortcuts';
+import { NextCheckinDateField } from './NextCheckinDateField';
 import { TraineeAutocomplete } from '../../trainees/components/TraineeAutocomplete';
 import { TraineeReference } from '../../../data/types/Trainee';
 import { VolunteerAutocomplete } from '../../volunteers/components/VolunteerAutocomplete';
@@ -64,18 +64,11 @@ export const AddMentorshipDialog = ({ isOpen, handleClose }: AddMentorshipDialog
   const { mutate: createMentorship, isPending, error: submitError } = useCreateMentorship();
   const [form, setForm] = useState<MentorshipForm>(newMentorshipForm);
   const [errors, setErrors] = useState<FormErrors | null>(null);
-  // The date field keeps what it shows itself, so a shortcut mounts it again with a new key to show its date.
-  const [nextCheckinFieldKey, setNextCheckinFieldKey] = useState(0);
 
   // Sets a field and clears its error, if it had one.
   const setField = <K extends keyof MentorshipForm>(name: K, value: MentorshipForm[K]) => {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
     setErrors((prevErrors) => (prevErrors ? { ...prevErrors, [name]: undefined } : null));
-  };
-
-  const applyShortcut = (date: Date) => {
-    setField('nextCheckinDate', date);
-    setNextCheckinFieldKey((key) => key + 1);
   };
 
   const handleSubmit = () => {
@@ -158,16 +151,13 @@ export const AddMentorshipDialog = ({ isOpen, handleClose }: AddMentorshipDialog
           />
         </FormControl>
         <FormControl sx={{ flex: 1 }}>
-          <FormDateField
-            key={nextCheckinFieldKey}
-            disabled={isPending}
-            label="Next check-in date"
+          {/* The shortcuts count from the start date, or from today while it is empty. */}
+          <NextCheckinDateField
             value={form.nextCheckinDate}
-            clearable
+            from={form.startDate ?? today()}
+            disabled={isPending}
             onChange={(date) => setField('nextCheckinDate', date)}
           />
-          {/* That many days after the start date, or after today while the start date is empty. */}
-          <NextCheckinShortcuts from={form.startDate ?? today()} disabled={isPending} onPick={applyShortcut} />
         </FormControl>
       </Stack>
     </FormDialog>

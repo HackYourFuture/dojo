@@ -2,6 +2,7 @@ import { Box, Divider, Stack } from '@mui/material';
 import { EditedMentorship, Mentorship } from '../Mentorship';
 
 import { MentorshipActions } from './MentorshipActions';
+import { MentorshipCheckins } from '../checkins/MentorshipCheckins';
 import MentorshipHeader from './MentorshipHeader';
 import MentorshipInfo from './MentorshipInfo';
 import { ProfileButtons } from '../../../components/profile/ProfileButtons';
@@ -14,7 +15,7 @@ interface MentorshipProfileProps {
   mentorship: Mentorship;
 }
 
-/** The mentorship profile: the header and the details. */
+/** The mentorship profile: the header, the details and the check-ins. */
 const MentorshipProfile = ({ mentorship }: MentorshipProfileProps) => {
   const [isEditMode, setIsEditMode] = useState(false);
   // A copy of the mentorship with the changes made while editing.
@@ -59,13 +60,15 @@ const MentorshipProfile = ({ mentorship }: MentorshipProfileProps) => {
       </Stack>
       {saveResultSnackbar}
 
-      <Box sx={{ paddingY: 3 }}>
+      <Stack spacing={4} useFlexGap sx={{ paddingY: 3 }}>
         <MentorshipInfo
           mentorship={isEditMode ? editedMentorship : mentorship}
           setMentorship={setEditedMentorship}
           isEditing={isEditMode}
         />
-      </Box>
+        {/* Never the edited copy: adding a check-in PUTs the whole mentorship it is given, unsaved edits and all. */}
+        <MentorshipCheckins mentorship={mentorship} isEditing={isEditMode} />
+      </Stack>
     </Box>
   );
 };

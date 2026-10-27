@@ -1,13 +1,14 @@
 import { Avatar, Box, Link, Stack, Typography } from '@mui/material';
-import { Mentorship, formatPeriod } from '../Mentorship';
 
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import { Mentorship } from '../Mentorship';
 import { MentorshipStatusChip } from '../components/MentorshipStatusChip';
 import { MentorshipTypeChip } from '../components/MentorshipTypeChip';
 import { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router';
 import { TraineeReference } from '../../../data/types/Trainee';
 import { VolunteerReference } from '../../volunteers/Volunteer';
+import { formatPeriod } from '../utils/formatPeriod';
 
 // As tall as the name and the role under it. The API only has the 70px thumbnails, so no bigger.
 const PICTURE_SIZE = 56;
