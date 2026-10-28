@@ -1,8 +1,8 @@
+import { MentorshipFilters, MentorshipPerson } from '../Mentorship';
 import { getLoadedItemsAndTotal, getNextPageParam } from '../../../data/pagination';
 import { getMentorship, getMentorships } from '../api/api';
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { MentorshipFilters } from '../Mentorship';
 import { PROFILE_QUERY_OPTIONS } from '../../../data/tanstack/tanstackClient';
 import { mentorshipKeys } from './keys';
 
@@ -16,6 +16,17 @@ export const useGetMentorships = (filters: MentorshipFilters) => {
     select: getLoadedItemsAndTotal,
     // The list stays on screen while the next filter loads.
     placeholderData: keepPreviousData,
+  });
+};
+
+/** Hook to get every mentorship of a volunteer or a trainee, for their profile, the latest start date first. */
+export const useGetProfileMentorships = (profileType: MentorshipPerson, profileId: string) => {
+  // Every status, so the ended ones are listed too. Under the list key, so the mentorship mutations reach it.
+  return useGetMentorships({
+    volunteerId: profileType === 'volunteer' ? profileId : '',
+    traineeId: profileType === 'trainee' ? profileId : '',
+    type: [],
+    status: [],
   });
 };
 

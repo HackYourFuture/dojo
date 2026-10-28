@@ -4,7 +4,8 @@ import { NewVolunteer, Volunteer, VolunteerChanges, VolunteerSummary } from '../
 import { VolunteerStatus } from '../VolunteerStatus';
 import { blankFieldsToNull } from '../../../data/text';
 
-export const mapVolunteerSummaryToDomain = (volunteer: VolunteerSummaryResponse): VolunteerSummary => {
+// The fields the list item and the profile share.
+const mapVolunteerFieldsToDomain = (volunteer: Omit<VolunteerSummaryResponse, 'activeMentorshipCount'>) => {
   return {
     id: volunteer.id,
     displayName: volunteer.displayName,
@@ -20,13 +21,16 @@ export const mapVolunteerSummaryToDomain = (volunteer: VolunteerSummaryResponse)
     volunteerTypes: volunteer.volunteerTypes,
     expertise: volunteer.expertise,
     rolePreferences: volunteer.rolePreferences,
-    activeMentorshipCount: volunteer.activeMentorshipCount,
   };
+};
+
+export const mapVolunteerSummaryToDomain = (volunteer: VolunteerSummaryResponse): VolunteerSummary => {
+  return { ...mapVolunteerFieldsToDomain(volunteer), activeMentorshipCount: volunteer.activeMentorshipCount };
 };
 
 export const mapVolunteerToDomain = (volunteer: VolunteerResponse): Volunteer => {
   return {
-    ...mapVolunteerSummaryToDomain(volunteer),
+    ...mapVolunteerFieldsToDomain(volunteer),
     pictureUrl: volunteer.pictureUrl,
     firstName: volunteer.firstName,
     lastName: volunteer.lastName,

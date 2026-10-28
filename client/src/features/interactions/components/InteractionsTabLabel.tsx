@@ -1,6 +1,7 @@
 import { Badge, Box } from '@mui/material';
 
 import { ProfileType } from '../../../data/types/ProfileType';
+import { tabCountBadgeStyle } from '../../../components/profile/fieldStyles';
 import { useGetInteractions } from '../data/interaction-queries';
 
 interface InteractionsTabLabelProps {
@@ -15,19 +16,8 @@ export const InteractionsTabLabel = ({ profileType, profileId }: InteractionsTab
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       Interactions
-      {/* Static, so the badge sits next to the label instead of on its corner. Hidden while loading. */}
-      <Badge
-        badgeContent={interactions?.length}
-        showZero
-        sx={{
-          '& .MuiBadge-badge': {
-            position: 'static',
-            transform: 'none',
-            bgcolor: 'action.selected',
-            color: 'text.secondary',
-          },
-        }}
-      />
+      {/* Hidden while the interactions load. */}
+      <Badge badgeContent={interactions?.length} showZero sx={tabCountBadgeStyle} />
     </Box>
   );
 };

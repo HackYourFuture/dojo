@@ -1,16 +1,19 @@
-import { Box, Stack, Tab } from '@mui/material';
+import { Badge, Box, Stack, Tab } from '@mui/material';
 import { EDITABLE_VOLUNTEER_FIELDS, EditableVolunteerField, Volunteer, VolunteerChanges } from '../Volunteer';
 
 import { ContactFields } from '../../../components/profile/ContactFields';
 import InteractionsInfo from '../../interactions/InteractionsInfo';
 import { InteractionsTabLabel } from '../../interactions/components/InteractionsTabLabel';
 import { ProfileButtons } from '../../../components/profile/ProfileButtons';
+import { ProfileMentorships } from '../../mentorships/components/ProfileMentorships';
 import { ProfileSection } from '../../../components/profile/ProfileSection';
 import { ProfileTabBar } from '../../../components/profile/ProfileTabBar';
 import { VolunteerActions } from './VolunteerActions';
 import VolunteerHeader from './VolunteerHeader';
 import VolunteerInfo from './VolunteerInfo';
 import { createFieldChangeHandlers } from '../../../components/profile/fieldChangeHandlers';
+import { tabCountBadgeStyle } from '../../../components/profile/fieldStyles';
+import { useGetProfileMentorships } from '../../mentorships/data/mentorship-queries';
 import { usePageTitle } from '../../../hooks/usePageTitle';
 import { useProfileSave } from '../../../hooks/useProfileSave';
 import { useProfileTab } from '../../../hooks/useProfileTab';
@@ -32,7 +35,7 @@ const getChangedFields = (original: Volunteer, edited: Volunteer): VolunteerChan
 };
 
 // The open tab is in the URL, and Slack links to the interactions tab by name.
-const TABS = ['overview', 'contact', 'interactions'];
+const TABS = ['overview', 'contact', 'mentorships', 'interactions'];
 
 interface VolunteerProfileProps {
   volunteer: Volunteer;
@@ -47,6 +50,9 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
   const { isPending: isSaveLoading, mutate: updateVolunteer } = useUpdateVolunteer(volunteer.id);
 
   const { saveChanges, saveResultSnackbar } = useProfileSave('Volunteer', updateVolunteer);
+  const mentorshipsQuery = useGetProfileMentorships('volunteer', volunteer.id);
+  // Counted over the loaded mentorships, which are all of them for any volunteer. Undefined while they load.
+  const activeMentorshipCount = mentorshipsQuery.data?.items.filter((mentorship) => !mentorship.isEnded).length;
   usePageTitle(volunteer.displayName);
 
   // Starts editing, or saves the changes while editing.
@@ -86,6 +92,15 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
         <ProfileTabBar activeTab={activeTab} onTabChange={setActiveTab}>
           <Tab label="Overview" value="overview" />
           <Tab label="Contact" value="contact" />
+          <Tab
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                Mentorships
+                <Badge badgeContent={activeMentorshipCount} showZero sx={tabCountBadgeStyle} />
+              </Box>
+            }
+            value="mentorships"
+          />
           <Tab label={<InteractionsTabLabel profileType="volunteer" profileId={volunteer.id} />} value="interactions" />
         </ProfileTabBar>
       </Stack>
@@ -108,6 +123,7 @@ const VolunteerProfile = ({ volunteer }: VolunteerProfileProps) => {
             />
           </ProfileSection>
         )}
+        {activeTab === 'mentorships' && <ProfileMentorships profileType="volunteer" profileId={volunteer.id} />}
         {activeTab === 'interactions' && <InteractionsInfo profileType="volunteer" profileId={volunteer.id} />}
       </Box>
     </Box>

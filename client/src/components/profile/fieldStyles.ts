@@ -17,3 +17,8 @@ export const profileInputStyle = {
   // Closes the border's gap for the label as MUI does, since the date picker ignores notched={false}.
   '& fieldset > legend': { maxWidth: '0.01px' },
 } as const;
+
+// The number next to a tab's label: static, so the badge sits beside the label instead of on its corner.
+export const tabCountBadgeStyle = {
+  '& .MuiBadge-badge': { position: 'static', transform: 'none', bgcolor: 'action.selected', color: 'text.secondary' },
+} as const;
