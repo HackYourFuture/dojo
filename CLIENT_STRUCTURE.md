@@ -105,7 +105,7 @@ features/
 ├── geo/                     # City and country autocompletes searched on the API, and their profile fields
 ├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
 ├── login/                   # Login feature
-├── mentorships/             # Mentorships list with its filters, the dialog to add one, the mentorship profile with its check-ins, and the mentorships tab of the volunteer profile
+├── mentorships/             # Mentorships list with its filters, the dialog to add one, the mentorship profile with its check-ins, and the mentorships on the volunteer and trainee profiles
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
@@ -179,7 +179,7 @@ trainee-profile/
 │   └── PersonalInfo.tsx
 ├── contact/                      # Contact information tab
 │   └── ContactInfo.tsx
-├── education/                    # Education information tab, with the assessments
+├── education/                    # Education information tab, with the mentorships and the assessments
 │   └── EducationInfo.tsx
 ├── employment/                   # Employment information tab, with the employment history
 │   └── EmploymentInfo.tsx
