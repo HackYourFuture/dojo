@@ -20,6 +20,9 @@ export interface Mentorship {
   isEnded: boolean;
 }
 
+// A person of a mentorship, as its fields are named: the profile that lists them, and the column that shows them.
+export type MentorshipPerson = 'volunteer' | 'trainee';
+
 // The mentorship while it is edited. The start date can be cleared, which the server rejects when it is saved.
 export type EditedMentorship = Omit<Mentorship, 'startDate'> & { startDate: Date | null };
 

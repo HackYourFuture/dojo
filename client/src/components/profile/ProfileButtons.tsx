@@ -22,8 +22,8 @@ export const ProfileButtons = ({
   onCancel,
   actions,
 }: ProfileButtonsProps) => {
-  // Interactions are edited one by one, so their tab only needs Save and Cancel while the profile is being edited.
-  const showsEditButtons = activeTab !== 'interactions' || isEditMode;
+  // Interactions and mentorships are edited elsewhere, so their tabs only need Save and Cancel while editing.
+  const showsEditButtons = isEditMode || (activeTab !== 'interactions' && activeTab !== 'mentorships');
 
   return (
     <Box sx={{ display: 'flex', gap: 1 }}>

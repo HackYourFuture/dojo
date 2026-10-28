@@ -32,7 +32,8 @@ export interface VolunteerSummary {
   activeMentorshipCount: number;
 }
 
-export interface Volunteer extends VolunteerSummary {
+// Without the active mentorship count, which the API only works out for the list.
+export interface Volunteer extends Omit<VolunteerSummary, 'activeMentorshipCount'> {
   pictureUrl: string | null;
   firstName: string;
   lastName: string;

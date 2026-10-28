@@ -1,9 +1,9 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
+import { Mentorship, MentorshipPerson } from '../Mentorship';
 import { daysFromToday, formatDateForDisplay } from '../../../data/dates';
 
 import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
 import { LinkTableRow } from '../../../components/LinkTableRow';
-import { Mentorship } from '../Mentorship';
 import { MentorshipStatusChip } from './MentorshipStatusChip';
 import { MentorshipTypeChip } from './MentorshipTypeChip';
 import { PersonAvatar } from '../../../components/PersonAvatar';
@@ -12,10 +12,10 @@ import { VolunteerReference } from '../../volunteers/Volunteer';
 import { formatPeriod } from '../utils/formatPeriod';
 
 // Fit the longest content, with room for a fourth digit of days, so nothing wraps or moves. Names share the rest.
-const COLUMNS = [
+const COLUMNS: { title: string; width?: number; person?: MentorshipPerson }[] = [
   { title: 'Type', width: 96 },
-  { title: 'Mentor' },
-  { title: 'Trainee' },
+  { title: 'Mentor', person: 'volunteer' },
+  { title: 'Trainee', person: 'trainee' },
   { title: 'Status', width: 92 },
   { title: 'Period', width: 224 },
   { title: 'Check-ins', width: 268 },
@@ -120,9 +120,11 @@ const Person = ({ person }: PersonProps) => (
 
 interface MentorshipRowProps {
   mentorship: Mentorship;
+  showVolunteer: boolean;
+  showTrainee: boolean;
 }
 
-const MentorshipRow = ({ mentorship }: MentorshipRowProps) => {
+const MentorshipRow = ({ mentorship, showVolunteer, showTrainee }: MentorshipRowProps) => {
   const { isEnded } = mentorship;
 
   return (
@@ -130,12 +132,16 @@ const MentorshipRow = ({ mentorship }: MentorshipRowProps) => {
       <TableCell>
         <MentorshipTypeChip type={mentorship.type} />
       </TableCell>
-      <TableCell>
-        <Person person={mentorship.volunteer} />
-      </TableCell>
-      <TableCell>
-        <Person person={mentorship.trainee} />
-      </TableCell>
+      {showVolunteer && (
+        <TableCell>
+          <Person person={mentorship.volunteer} />
+        </TableCell>
+      )}
+      {showTrainee && (
+        <TableCell>
+          <Person person={mentorship.trainee} />
+        </TableCell>
+      )}
       <TableCell>
         <MentorshipStatusChip isEnded={isEnded} />
       </TableCell>
@@ -149,17 +155,27 @@ const MentorshipRow = ({ mentorship }: MentorshipRowProps) => {
 
 interface MentorshipsTableProps {
   mentorships: Mentorship[];
+  // A profile leaves out its own person's column, as every row would show them.
+  showVolunteer?: boolean;
+  showTrainee?: boolean;
 }
 
 /** The mentorships in a table, where a row opens the mentorship. */
-export const MentorshipsTable = ({ mentorships }: MentorshipsTableProps) => {
+export const MentorshipsTable = ({ mentorships, showVolunteer = true, showTrainee = true }: MentorshipsTableProps) => {
+  const isShown = { volunteer: showVolunteer, trainee: showTrainee };
+  const columns = COLUMNS.filter((column) => !column.person || isShown[column.person]);
+
   return (
-    // Scrolls sideways in a narrow window.
+    // Scrolls sideways in a narrow window. A left-out name column takes its share of the width with it.
     <TableContainer component={Paper}>
-      <Table size="small" aria-label="mentorships table" sx={{ tableLayout: 'fixed', minWidth: 1100 }}>
+      <Table
+        size="small"
+        aria-label="mentorships table"
+        sx={{ tableLayout: 'fixed', minWidth: showVolunteer && showTrainee ? 1100 : 880 }}
+      >
         <TableHead>
           <TableRow>
-            {COLUMNS.map((column) => (
+            {columns.map((column) => (
               <TableCell key={column.title} sx={{ width: column.width }}>
                 {column.title}
               </TableCell>
@@ -168,7 +184,12 @@ export const MentorshipsTable = ({ mentorships }: MentorshipsTableProps) => {
         </TableHead>
         <TableBody>
           {mentorships.map((mentorship) => (
-            <MentorshipRow key={mentorship.id} mentorship={mentorship} />
+            <MentorshipRow
+              key={mentorship.id}
+              mentorship={mentorship}
+              showVolunteer={showVolunteer}
+              showTrainee={showTrainee}
+            />
           ))}
         </TableBody>
       </Table>

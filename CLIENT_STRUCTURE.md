@@ -70,7 +70,7 @@ components/profile/
 ├── ProfileButtons.tsx        # The Edit, or Cancel and Save, and Actions buttons at the top right of the header
 ├── ProfileSection.tsx        # Section title, and FieldRow for a line of fields
 ├── ProfileValue.tsx          # A field's label and value, shown until the profile is edited
-├── fieldStyles.ts            # The field width, the label above every field, and the input style that keeps it there
+├── fieldStyles.ts            # The field width, the label above every field, the input style that keeps it there, and the count badge of a tab label
 ├── fieldChangeHandlers.ts    # The change handlers of a tab's fields, which set the field named after the input
 ├── ProfileTextField.tsx      # Text field, shown as a ProfileValue until the profile is edited
 ├── ProfileSelect.tsx         # Dropdown, with an empty option for a nullable field
@@ -105,7 +105,7 @@ features/
 ├── geo/                     # City and country autocompletes searched on the API, and their profile fields
 ├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
 ├── login/                   # Login feature
-├── mentorships/             # Mentorships list with its filters, the dialog to add one, and the mentorship profile with its check-ins
+├── mentorships/             # Mentorships list with its filters, the dialog to add one, the mentorship profile with its check-ins, and the mentorships tab of the volunteer profile
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
