@@ -2,7 +2,15 @@ package nl.hackyourfuture.dojoserver.volunteer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import nl.hackyourfuture.dojoserver.mentorship.Mentorship;
+import nl.hackyourfuture.dojoserver.mentorship.MentorshipRepository;
+import nl.hackyourfuture.dojoserver.mentorship.MentorshipType;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
+import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
+import nl.hackyourfuture.dojoserver.trainee.profile.Track;
+import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
+import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import org.assertj.core.api.ObjectArrayAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +22,7 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -32,6 +41,10 @@ class VolunteerListTest {
     private MockMvcTester mvc;
     @Autowired
     private VolunteerRepository volunteerRepository;
+    @Autowired
+    private TraineeRepository traineeRepository;
+    @Autowired
+    private MentorshipRepository mentorshipRepository;
 
     private String seeded;
     private Volunteer annabel;
@@ -112,6 +125,45 @@ class VolunteerListTest {
         ids(seeded + "&type=TECH&direction=DESC").containsExactly(cameron.getId(), annabel.getId());
     }
 
+    @Test
+    void onlyMentorshipsThatHaveNotEndedCount() {
+        Trainee trainee = traineeRepository.save(trainee());
+        LocalDate today = LocalDate.now();
+        mentorshipRepository.save(mentorship(annabel, trainee, null));
+        mentorshipRepository.save(mentorship(annabel, trainee, today.plusDays(1)));
+        // The end date itself counts as ended.
+        mentorshipRepository.save(mentorship(annabel, trainee, today));
+        mentorshipRepository.save(mentorship(bob, trainee, today.minusDays(1)));
+
+        assertThat(list(seeded)).bodyJson().extractingPath("$.content[*].activeMentorshipCount").asArray()
+                .containsExactly(2, 0, 0);
+    }
+
+    @Test
+    void pairedMatchesVolunteersWithAnActiveMentorship() {
+        Trainee trainee = traineeRepository.save(trainee());
+        mentorshipRepository.save(mentorship(annabel, trainee, null));
+        mentorshipRepository.save(mentorship(annabel, trainee, LocalDate.now().plusDays(1)));
+        mentorshipRepository.save(mentorship(bob, trainee, LocalDate.now()));
+
+        ids(seeded + "&paired=true").containsExactly(annabel.getId());
+        ids(seeded + "&paired=false").containsExactly(bob.getId(), cameron.getId());
+        ids(seeded + "&paired=true&paired=false").containsExactly(annabel.getId(), bob.getId(), cameron.getId());
+        ids(seeded + "&paired=false&status=STOPPED").containsExactly(cameron.getId());
+        ids(seeded + "&paired=,true").containsExactly(annabel.getId());
+        ids(seeded + "&paired=,").isEmpty();
+        assertThat(list(seeded + "&paired=maybe")).hasStatus(400);
+    }
+
+    @Test
+    void pairedIsFilteredBeforeThePaging() {
+        mentorshipRepository.save(mentorship(cameron, traineeRepository.save(trainee()), null));
+
+        MvcTestResult result = list(seeded + "&paired=false&size=1&page=1");
+        assertThat(result).bodyJson().extractingPath("$.content[*].id").asArray().containsExactly(bob.getId());
+        assertThat(result).bodyJson().extractingPath("$.page.totalElements").isEqualTo(2);
+    }
+
     private MvcTestResult list(String query) {
         return mvc.get().uri(VOLUNTEERS + query).exchange();
     }
@@ -132,6 +184,31 @@ class VolunteerListTest {
                 .volunteerTypes(types)
                 .expertise(expertise)
                 .rolePreferences(rolePreferences)
+                .build();
+    }
+
+    // Cohort 9001 keeps the trainee apart from local data.
+    private static Trainee trainee() {
+        return Trainee.builder()
+                .id(RandomUtils.generateRandomId())
+                .firstName("Ann")
+                .lastName("Mentored")
+                .email(RandomUtils.generateRandomId().toLowerCase() + "@example.org")
+                .startCohort(9001)
+                .track(Track.CORE_PROGRAM)
+                .learningStatus(LearningStatus.STUDYING)
+                .jobPath(JobPath.NOT_GRADUATED)
+                .build();
+    }
+
+    private static Mentorship mentorship(Volunteer volunteer, Trainee trainee, LocalDate endDate) {
+        return Mentorship.builder()
+                .id(RandomUtils.generateRandomId())
+                .volunteer(volunteer)
+                .trainee(trainee)
+                .type(MentorshipType.TECH_MENTORSHIP)
+                .startDate(LocalDate.now().minusMonths(1))
+                .endDate(endDate)
                 .build();
     }
 }

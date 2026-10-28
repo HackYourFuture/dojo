@@ -11,6 +11,7 @@ export interface VolunteerFilters {
   type: string[];
   expertise: string[];
   rolePreference: string[];
+  paired: string[];
 }
 
 export interface VolunteerSummary {
@@ -28,6 +29,7 @@ export interface VolunteerSummary {
   volunteerTypes: VolunteerType[];
   expertise: VolunteerExpertise[];
   rolePreferences: VolunteerAssignmentType[];
+  activeMentorshipCount: number;
 }
 
 export interface Volunteer extends VolunteerSummary {

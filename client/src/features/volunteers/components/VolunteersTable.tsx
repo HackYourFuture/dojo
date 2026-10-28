@@ -24,6 +24,7 @@ export const VolunteersTable = ({ volunteers }: VolunteersTableProps) => {
             <TableCell width={150}>Status</TableCell>
             <TableCell>Type</TableCell>
             <TableCell>Expertise</TableCell>
+            <TableCell width={80}>Paired</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -47,6 +48,9 @@ export const VolunteersTable = ({ volunteers }: VolunteersTableProps) => {
                     <Chip key={expertise} label={volunteerExpertiseLabels[expertise]} size="small" variant="outlined" />
                   ))}
                 </Box>
+              </TableCell>
+              <TableCell>
+                {volunteer.activeMentorshipCount > 0 ? `Yes (${volunteer.activeMentorshipCount})` : 'No'}
               </TableCell>
               <RowLinksCell>
                 <ContactLinkButtons contact={volunteer} />

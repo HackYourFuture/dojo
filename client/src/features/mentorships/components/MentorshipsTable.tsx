@@ -6,7 +6,9 @@ import { LinkTableRow } from '../../../components/LinkTableRow';
 import { Mentorship } from '../Mentorship';
 import { MentorshipStatusChip } from './MentorshipStatusChip';
 import { MentorshipTypeChip } from './MentorshipTypeChip';
-import { PersonLink } from './PersonLink';
+import { PersonAvatar } from '../../../components/PersonAvatar';
+import { TraineeReference } from '../../../data/types/Trainee';
+import { VolunteerReference } from '../../volunteers/Volunteer';
 import { formatPeriod } from '../utils/formatPeriod';
 
 // Fit the longest content, with room for a fourth digit of days, so nothing wraps or moves. Names share the rest.
@@ -105,6 +107,17 @@ const Checkins = ({ mentorship }: CheckinsProps) => {
   );
 };
 
+interface PersonProps {
+  person: VolunteerReference | TraineeReference;
+}
+
+const Person = ({ person }: PersonProps) => (
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, fontWeight: 500, overflowWrap: 'anywhere' }}>
+    <PersonAvatar src={person.thumbnailUrl} size={32} />
+    {person.name}
+  </Box>
+);
+
 interface MentorshipRowProps {
   mentorship: Mentorship;
 }
@@ -118,10 +131,10 @@ const MentorshipRow = ({ mentorship }: MentorshipRowProps) => {
         <MentorshipTypeChip type={mentorship.type} />
       </TableCell>
       <TableCell>
-        <PersonLink person={mentorship.volunteer} />
+        <Person person={mentorship.volunteer} />
       </TableCell>
       <TableCell>
-        <PersonLink person={mentorship.trainee} />
+        <Person person={mentorship.trainee} />
       </TableCell>
       <TableCell>
         <MentorshipStatusChip isEnded={isEnded} />
@@ -138,7 +151,7 @@ interface MentorshipsTableProps {
   mentorships: Mentorship[];
 }
 
-/** The mentorships in a table, where a row opens the mentorship, and the mentor and the trainee open their profiles. */
+/** The mentorships in a table, where a row opens the mentorship. */
 export const MentorshipsTable = ({ mentorships }: MentorshipsTableProps) => {
   return (
     // Scrolls sideways in a narrow window.

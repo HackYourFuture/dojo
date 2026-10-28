@@ -82,6 +82,11 @@ public class VolunteerController {
             @RequestParam(required = false)
             List<VolunteerAssignmentType> rolePreference,
 
+            @Parameter(description = "Only volunteers who are paired with a trainee in an active mentorship (true),"
+                    + " or who are not (false)")
+            @RequestParam(required = false)
+            List<Boolean> paired,
+
             @Parameter(description = "The direction to order the first names in")
             @RequestParam(defaultValue = "ASC")
             Sort.Direction direction,
@@ -97,7 +102,8 @@ public class VolunteerController {
             @Max(100)
             int size
     ) {
-        return volunteerService.getVolunteers(q, status, type, expertise, rolePreference, direction, page, size);
+        return volunteerService.getVolunteers(q, status, type, expertise, rolePreference, paired, direction, page,
+                size);
     }
 
     @GetMapping("/{id}")
