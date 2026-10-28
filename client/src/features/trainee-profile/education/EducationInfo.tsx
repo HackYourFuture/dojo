@@ -5,6 +5,7 @@ import { learningStatusOptions, quitReasonOptions, trackOptions } from '../utils
 import { AssessmentsComponent } from './assessments/AssessmentsComponent';
 import { LearningStatus } from '../../../data/types/Trainee';
 import { ProfileDateField } from '../../../components/profile/ProfileDateField';
+import { ProfileMentorships } from '../../mentorships/components/ProfileMentorships';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { Stack } from '@mui/material';
@@ -20,6 +21,7 @@ const MAX_COHORT = 999;
  */
 const EducationInfo = () => {
   const {
+    traineeId,
     trainee: { educationInfo: editedFields },
     setTrainee,
     isEditMode: isEditing,
@@ -110,6 +112,7 @@ const EducationInfo = () => {
         </FieldRow>
       </ProfileSection>
 
+      <ProfileMentorships profileType="trainee" profileId={traineeId} />
       <AssessmentsComponent />
     </Stack>
   );

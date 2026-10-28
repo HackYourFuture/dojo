@@ -36,8 +36,11 @@ export const ListLoader = ({ query }: ListLoaderProps) => {
     );
   }
 
+  // Padded only around a spinner or an error, so the idle end of a list takes no room between sections.
+  const paddingY = isError || isFetchingNextPage ? 2 : 0;
+
   return (
-    <Box ref={loadMoreRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, paddingY: 2 }}>
+    <Box ref={loadMoreRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, paddingY }}>
       {/* The first page, or a reload of the loaded pages, failed. */}
       {isError && !isFetchNextPageError && <ErrorBox errorMessage={errorMessage} sx={{ width: '50%' }} />}
       {isFetchingNextPage && <CircularProgress />}
