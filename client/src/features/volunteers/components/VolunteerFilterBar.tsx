@@ -31,6 +31,12 @@ const rolePreferenceOptions: SelectOption[] = Object.values(VolunteerAssignmentT
   value: type,
 }));
 
+// Paired with a trainee in an active mentorship, as the API's paired=true or paired=false.
+const pairedOptions: SelectOption[] = [
+  { label: 'Yes', value: 'true' },
+  { label: 'No', value: 'false' },
+];
+
 const URL_UPDATE = { replace: true, preventScrollReset: true, flushSync: true };
 
 // The options of a dropdown, with a checkmark on the picked ones.
@@ -155,6 +161,24 @@ export const VolunteerFilterBar = ({ filters }: VolunteerFilterBarProps) => {
         }}
       >
         {menuItems(rolePreferenceOptions, filters.rolePreference)}
+      </TextField>
+      <TextField
+        select
+        size="small"
+        label="Paired"
+        value={filters.paired}
+        onChange={(event) => setFilter('paired', toValues(event.target.value))}
+        sx={{ width: 170 }}
+        slotProps={{
+          select: {
+            multiple: true,
+            displayEmpty: true,
+            renderValue: () => pickedLabels(pairedOptions, filters.paired),
+          },
+          inputLabel: { shrink: true },
+        }}
+      >
+        {menuItems(pairedOptions, filters.paired)}
       </TextField>
       {searchParams.size > 0 && <Button onClick={clearFilters}>Clear filters</Button>}
     </Stack>

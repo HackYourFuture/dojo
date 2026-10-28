@@ -20,6 +20,7 @@ export const mapVolunteerSummaryToDomain = (volunteer: VolunteerSummaryResponse)
     volunteerTypes: volunteer.volunteerTypes,
     expertise: volunteer.expertise,
     rolePreferences: volunteer.rolePreferences,
+    activeMentorshipCount: volunteer.activeMentorshipCount,
   };
 };
 

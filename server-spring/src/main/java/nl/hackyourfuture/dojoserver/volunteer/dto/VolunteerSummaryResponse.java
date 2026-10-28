@@ -113,9 +113,16 @@ public record VolunteerSummaryResponse(
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 nullable = true
         )
-        String linkedinUrl
+        String linkedinUrl,
+
+        @Schema(
+                description = "The number of the volunteer's active mentorships: no end date, or one after today",
+                example = "2",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        long activeMentorshipCount
 ) {
-    public static VolunteerSummaryResponse from(Volunteer volunteer) {
+    public static VolunteerSummaryResponse from(Volunteer volunteer, long activeMentorshipCount) {
         return new VolunteerSummaryResponse(
                 volunteer.getId(),
                 volunteer.getDisplayName(),
@@ -130,6 +137,7 @@ public record VolunteerSummaryResponse(
                 volunteer.getEmail(),
                 volunteer.getGithubHandle(),
                 volunteer.getSlackId(),
-                volunteer.getLinkedinUrl());
+                volunteer.getLinkedinUrl(),
+                activeMentorshipCount);
     }
 }

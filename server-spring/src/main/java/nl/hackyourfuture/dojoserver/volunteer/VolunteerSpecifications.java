@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.PredicateSpecification;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 // Criteria fragments for the volunteer list filters. Each one is only built when its filter is present.
 final class VolunteerSpecifications {
@@ -43,6 +44,17 @@ final class VolunteerSpecifications {
 
     static PredicateSpecification<Volunteer> idIn(List<String> ids) {
         return (volunteer, cb) -> volunteer.get("id").in(ids);
+    }
+
+    // True matches the paired volunteers and false the others. An empty value, as in paired=,true, arrives as null.
+    static PredicateSpecification<Volunteer> pairedIn(List<Boolean> paired, Set<String> pairedIds) {
+        return (volunteer, cb) -> {
+            Predicate isPaired = volunteer.get("id").in(pairedIds);
+            return cb.or(paired.stream()
+                    .filter(Objects::nonNull)
+                    .map(value -> value ? isPaired : isPaired.not())
+                    .toArray(Predicate[]::new));
+        };
     }
 
     // Hibernate's array functions bind an enum by its ordinal, so its name goes in as a literal. 0 is not found.

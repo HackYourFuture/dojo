@@ -20,6 +20,7 @@ export interface VolunteerSummaryResponse {
   volunteerTypes: VolunteerType[];
   expertise: VolunteerExpertise[];
   rolePreferences: VolunteerAssignmentType[];
+  activeMentorshipCount: number;
 }
 
 export interface VolunteerResponse extends VolunteerSummaryResponse {

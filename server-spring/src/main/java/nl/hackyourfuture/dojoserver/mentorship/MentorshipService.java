@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +74,13 @@ public class MentorshipService {
 
         return mentorships.map(mentorship -> MentorshipResponse.from(mentorship,
                 latestCheckins.get(mentorship.getId())));
+    }
+
+    /** Active mentorships per volunteer. A volunteer with none is absent, so the keys are the paired volunteers. */
+    @Transactional(readOnly = true)
+    public Map<String, Long> getActiveMentorshipCounts() {
+        return mentorshipRepository.countActivePerVolunteer(LocalDate.now()).stream()
+                .collect(Collectors.toMap(ActiveMentorshipCount::volunteerId, ActiveMentorshipCount::count));
     }
 
     @Transactional(readOnly = true)

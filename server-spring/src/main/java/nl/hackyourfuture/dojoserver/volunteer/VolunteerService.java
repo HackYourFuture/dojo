@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
+import nl.hackyourfuture.dojoserver.mentorship.MentorshipService;
 import nl.hackyourfuture.dojoserver.picture.PictureService;
 import nl.hackyourfuture.dojoserver.search.SearchService;
 import nl.hackyourfuture.dojoserver.shared.JsonMergePatch;
@@ -31,6 +32,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -41,11 +43,13 @@ public class VolunteerService {
     private final Validator validator;
     private final SlackNotificationSender slackNotificationSender;
     private final PictureService pictureService;
+    private final MentorshipService mentorshipService;
 
     @Transactional(readOnly = true)
     public Page<VolunteerSummaryResponse> getVolunteers(String query, List<VolunteerStatus> statuses,
             List<VolunteerType> types, List<VolunteerExpertise> expertise,
-            List<VolunteerAssignmentType> rolePreferences, Sort.Direction direction, int page, int size) {
+            List<VolunteerAssignmentType> rolePreferences, List<Boolean> paired, Sort.Direction direction, int page,
+            int size) {
         List<PredicateSpecification<Volunteer>> filters = new ArrayList<>();
         if (query != null && !query.isBlank()) {
             // The search's close spellings can't be queried, so the matching ids come from Java.
@@ -67,11 +71,18 @@ public class VolunteerService {
         if (!CollectionUtils.isEmpty(rolePreferences)) {
             filters.add(VolunteerSpecifications.rolePreferenceIn(rolePreferences));
         }
+        // For all volunteers, not only the page's, because the paired filter runs before paging.
+        Map<String, Long> activeMentorshipCounts = mentorshipService.getActiveMentorshipCounts();
+        if (!CollectionUtils.isEmpty(paired)) {
+            filters.add(VolunteerSpecifications.pairedIn(paired, activeMentorshipCounts.keySet()));
+        }
 
         Sort sort = Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase(),
                 Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
-        return volunteerRepository.findAll(Specification.where(PredicateSpecification.allOf(filters)),
-                PageRequest.of(page, size, sort)).map(VolunteerSummaryResponse::from);
+        Page<Volunteer> volunteers = volunteerRepository.findAll(
+                Specification.where(PredicateSpecification.allOf(filters)), PageRequest.of(page, size, sort));
+        return volunteers.map(volunteer -> VolunteerSummaryResponse.from(volunteer,
+                activeMentorshipCounts.getOrDefault(volunteer.getId(), 0L)));
     }
 
     @Transactional(readOnly = true)
