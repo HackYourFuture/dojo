@@ -17,11 +17,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -164,8 +166,47 @@ class VolunteerListTest {
         assertThat(result).bodyJson().extractingPath("$.page.totalElements").isEqualTo(2);
     }
 
+    @Test
+    void theExportIsACsvDownloadWithEveryFieldReadable() {
+        mentorshipRepository.save(mentorship(annabel, traineeRepository.save(trainee()), null));
+
+        MvcTestResult result = export(seeded);
+        assertThat(result).hasStatusOk();
+        assertThat(result).hasContentType(new MediaType("text", "csv", StandardCharsets.UTF_8));
+        assertThat(result).headers().hasValue("Content-Disposition",
+                "attachment; filename=\"volunteers-" + LocalDate.now() + ".csv\"");
+
+        String[] lines = csv(result).split("\r\n");
+        assertThat(lines).hasSize(4);
+        assertThat(lines[0]).isEqualTo("\uFEFFFirst name,Last name,Gender,Pronouns,Company,Job role,Email,Phone,"
+                + "Slack ID,GitHub handle,LinkedIn URL,Status,Volunteer types,Expertise,Role preferences,"
+                + "Active mentorships,Notes");
+        assertThat(lines[1]).startsWith("Annabel,").contains(",Active,Tech,Backend,Teaching,1,");
+        assertThat(lines[2]).startsWith("Bob,")
+                .contains(",Paused,Personal development,English mentor; Hr mentor,Hr mentorship; Tech interview,0,");
+        assertThat(lines[3]).startsWith("Cameron,").contains(",Stopped,Personal development; Tech,,,0,");
+    }
+
+    @Test
+    void theExportAppliesTheFilters() {
+        mentorshipRepository.save(mentorship(annabel, traineeRepository.save(trainee()), null));
+
+        String[] lines = csv(export(seeded + "&paired=true")).split("\r\n");
+        assertThat(lines).hasSize(2);
+        assertThat(lines[1]).startsWith("Annabel,");
+    }
+
     private MvcTestResult list(String query) {
         return mvc.get().uri(VOLUNTEERS + query).exchange();
+    }
+
+    private MvcTestResult export(String query) {
+        return mvc.get().uri(VOLUNTEERS + "/export" + query).exchange();
+    }
+
+    // The body decoded as the UTF-8 it is declared as.
+    private static String csv(MvcTestResult result) {
+        return new String(result.getResponse().getContentAsByteArray(), StandardCharsets.UTF_8);
     }
 
     private ObjectArrayAssert<Object> ids(String query) {

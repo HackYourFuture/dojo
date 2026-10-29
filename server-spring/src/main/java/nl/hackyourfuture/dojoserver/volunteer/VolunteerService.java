@@ -15,12 +15,14 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoConflictException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.FieldChange;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
+import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerCsv;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerPictureResponse;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerRequest;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerResponse;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerSummaryResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
@@ -50,39 +52,25 @@ public class VolunteerService {
             List<VolunteerType> types, List<VolunteerExpertise> expertise,
             List<VolunteerAssignmentType> rolePreferences, List<Boolean> paired, Sort.Direction direction, int page,
             int size) {
-        List<PredicateSpecification<Volunteer>> filters = new ArrayList<>();
-        if (query != null && !query.isBlank()) {
-            // The search's close spellings can't be queried, so the matching ids come from Java.
-            List<String> ids = volunteerRepository.findAll().stream()
-                    .filter(volunteer -> SearchService.matches(volunteer, query))
-                    .map(Volunteer::getId)
-                    .toList();
-            filters.add(VolunteerSpecifications.idIn(ids));
-        }
-        if (!CollectionUtils.isEmpty(statuses)) {
-            filters.add(VolunteerSpecifications.statusIn(statuses));
-        }
-        if (!CollectionUtils.isEmpty(types)) {
-            filters.add(VolunteerSpecifications.volunteerTypeIn(types));
-        }
-        if (!CollectionUtils.isEmpty(expertise)) {
-            filters.add(VolunteerSpecifications.expertiseIn(expertise));
-        }
-        if (!CollectionUtils.isEmpty(rolePreferences)) {
-            filters.add(VolunteerSpecifications.rolePreferenceIn(rolePreferences));
-        }
         // For all volunteers, not only the page's, because the paired filter runs before paging.
         Map<String, Long> activeMentorshipCounts = mentorshipService.getActiveMentorshipCounts();
-        if (!CollectionUtils.isEmpty(paired)) {
-            filters.add(VolunteerSpecifications.pairedIn(paired, activeMentorshipCounts.keySet()));
-        }
-
-        Sort sort = Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase(),
-                Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
         Page<Volunteer> volunteers = volunteerRepository.findAll(
-                Specification.where(PredicateSpecification.allOf(filters)), PageRequest.of(page, size, sort));
+                filter(query, statuses, types, expertise, rolePreferences, paired, activeMentorshipCounts.keySet()),
+                PageRequest.of(page, size, sort(direction)));
         return volunteers.map(volunteer -> VolunteerSummaryResponse.from(volunteer,
                 activeMentorshipCounts.getOrDefault(volunteer.getId(), 0L)));
+    }
+
+    // Every volunteer the filters match as CSV, in the list's order.
+    @Transactional(readOnly = true)
+    public String exportVolunteers(String query, List<VolunteerStatus> statuses, List<VolunteerType> types,
+            List<VolunteerExpertise> expertise, List<VolunteerAssignmentType> rolePreferences, List<Boolean> paired,
+            Sort.Direction direction) {
+        Map<String, Long> activeMentorshipCounts = mentorshipService.getActiveMentorshipCounts();
+        List<Volunteer> volunteers = volunteerRepository.findAll(
+                filter(query, statuses, types, expertise, rolePreferences, paired, activeMentorshipCounts.keySet()),
+                Pageable.unpaged(sort(direction))).getContent();
+        return VolunteerCsv.of(volunteers, activeMentorshipCounts);
     }
 
     @Transactional(readOnly = true)
@@ -196,5 +184,41 @@ public class VolunteerService {
 
     private Volunteer findVolunteer(String id) {
         return volunteerRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Volunteer", id));
+    }
+
+    // The list's filters, each only when given; a volunteer must match every one of them.
+    private Specification<Volunteer> filter(String query, List<VolunteerStatus> statuses, List<VolunteerType> types,
+            List<VolunteerExpertise> expertise, List<VolunteerAssignmentType> rolePreferences, List<Boolean> paired,
+            Set<String> pairedIds) {
+        List<PredicateSpecification<Volunteer>> filters = new ArrayList<>();
+        if (query != null && !query.isBlank()) {
+            // The search's close spellings can't be queried, so the matching ids come from Java.
+            List<String> ids = volunteerRepository.findAll().stream()
+                    .filter(volunteer -> SearchService.matches(volunteer, query))
+                    .map(Volunteer::getId)
+                    .toList();
+            filters.add(VolunteerSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(statuses)) {
+            filters.add(VolunteerSpecifications.statusIn(statuses));
+        }
+        if (!CollectionUtils.isEmpty(types)) {
+            filters.add(VolunteerSpecifications.volunteerTypeIn(types));
+        }
+        if (!CollectionUtils.isEmpty(expertise)) {
+            filters.add(VolunteerSpecifications.expertiseIn(expertise));
+        }
+        if (!CollectionUtils.isEmpty(rolePreferences)) {
+            filters.add(VolunteerSpecifications.rolePreferenceIn(rolePreferences));
+        }
+        if (!CollectionUtils.isEmpty(paired)) {
+            filters.add(VolunteerSpecifications.pairedIn(paired, pairedIds));
+        }
+        return Specification.where(PredicateSpecification.allOf(filters));
+    }
+
+    private static Sort sort(Sort.Direction direction) {
+        return Sort.by(Sort.Order.by("firstName").with(direction).ignoreCase(),
+                Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
     }
 }

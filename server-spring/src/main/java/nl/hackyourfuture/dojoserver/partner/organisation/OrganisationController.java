@@ -17,6 +17,7 @@ import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationRequest
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationSummaryResponse;
 import nl.hackyourfuture.dojoserver.picture.PictureResponses;
+import nl.hackyourfuture.dojoserver.shared.CsvResponses;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -102,6 +103,54 @@ public class OrganisationController {
     ) {
         return organisationService.getOrganisations(q, status, responsibleId, partnership, province, direction,
                 page, size);
+    }
+
+    @GetMapping("/export")
+    @Operation(summary = "Export organisations",
+            description = "Returns every organisation the filters match as a CSV file, in the order of the list."
+                    + " The filters are the list's; there is no paging.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "The CSV file: UTF-8 with a byte order mark, one row per organisation",
+            content = @Content(mediaType = "text/csv", schema = @Schema(type = "string"))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "A request parameter is invalid",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public ResponseEntity<byte[]> exportOrganisations(
+            @Parameter(description = "Only organisations the search finds for these words: by name, website or"
+                    + " notes, close spellings included", example = "adyen")
+            @RequestParam(required = false)
+            @Size(max = 100)
+            String q,
+
+            @Parameter(description = "Only organisations with one of these statuses")
+            @RequestParam(required = false)
+            List<OrganisationStatus> status,
+
+            @Parameter(description = "Only organisations that at least one of these users is responsible for",
+                    example = "WTh1qLhy3K")
+            @RequestParam(required = false)
+            List<String> responsibleId,
+
+            @Parameter(description = "Only organisations with at least one of these partnership types")
+            @RequestParam(required = false)
+            List<PartnershipType> partnership,
+
+            @Parameter(
+                    description = "Only organisations whose city is in one of these provinces, by their English name",
+                    example = "North Holland")
+            @RequestParam(required = false)
+            List<String> province,
+
+            @Parameter(description = "The direction to order the names in")
+            @RequestParam(defaultValue = "ASC")
+            Sort.Direction direction
+    ) {
+        return CsvResponses.of("organisations",
+                organisationService.exportOrganisations(q, status, responsibleId, partnership, province, direction));
     }
 
     @GetMapping("/{id}")

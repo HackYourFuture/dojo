@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.picture.PictureResponses;
+import nl.hackyourfuture.dojoserver.shared.CsvResponses;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineePictureResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
@@ -108,6 +109,60 @@ public class TraineeController {
     ) {
         return traineeService.getTrainees(q, status, jobPath, province, startCohort, endCohort, direction, page,
                 size);
+    }
+
+    @GetMapping("/export")
+    @Operation(summary = "Export trainees",
+            description = "Returns every trainee the filters match as a CSV file, in the order of the list. The"
+                    + " filters are the list's; there is no paging.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "The CSV file: UTF-8 with a byte order mark, one row per trainee",
+            content = @Content(mediaType = "text/csv", schema = @Schema(type = "string"))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "A request parameter is invalid",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public ResponseEntity<byte[]> exportTrainees(
+            @Parameter(description = "Only trainees the search finds for these words: by name, email, GitHub handle"
+                    + " or comments, close spellings included", example = "mariam h")
+            @RequestParam(required = false)
+            @Size(max = 100)
+            String q,
+
+            @Parameter(description = "Only trainees with one of these learning statuses")
+            @RequestParam(required = false)
+            List<LearningStatus> status,
+
+            @Parameter(description = "Only trainees on one of these job paths")
+            @RequestParam(required = false)
+            List<JobPath> jobPath,
+
+            @Parameter(description = "Only trainees whose city is in one of these provinces, by their English name",
+                    example = "North Holland")
+            @RequestParam(required = false)
+            List<String> province,
+
+            @Parameter(
+                    description = "Only trainees whose current cohort is this one or later",
+                    example = "0")
+            @RequestParam(required = false)
+            Integer startCohort,
+
+            @Parameter(
+                    description = "Only trainees whose current cohort is this one or earlier",
+                    example = "99")
+            @RequestParam(required = false)
+            Integer endCohort,
+
+            @Parameter(description = "The direction to order the cohorts in")
+            @RequestParam(defaultValue = "ASC")
+            Sort.Direction direction
+    ) {
+        return CsvResponses.of("trainees",
+                traineeService.exportTrainees(q, status, jobPath, province, startCohort, endCohort, direction));
     }
 
     @GetMapping("/{id}")

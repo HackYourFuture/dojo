@@ -45,4 +45,14 @@ public class StringUtils {
         }
         return previous[b.length()];
     }
+
+    /** `TECH_HOUR` and `learningStatus` both read as "Tech hour" / "Learning status". */
+    public static String humanize(Enum<?> value) {
+        return humanize(value.name().toLowerCase(Locale.ROOT).replace('_', ' '));
+    }
+
+    public static String humanize(String name) {
+        String words = name.replaceAll("([a-z0-9])([A-Z])", "$1 $2").toLowerCase(Locale.ROOT).strip();
+        return words.isEmpty() ? words : Character.toUpperCase(words.charAt(0)) + words.substring(1);
+    }
 }
