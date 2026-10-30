@@ -9,6 +9,7 @@ import {
 } from './mapper';
 
 import axios from 'axios';
+import { downloadFile } from '../../../data/http/downloadFile';
 
 // Sorted by name, from A to Z. A filter with several values goes as partnership=A&partnership=B.
 export const getOrganisationSummaries = async (page: number, filters: OrganisationFilters) => {
@@ -18,6 +19,10 @@ export const getOrganisationSummaries = async (page: number, filters: Organisati
   });
   return mapPageToDomain(data, mapOrganisationSummaryToDomain);
 };
+
+// The organisations the list shows, all of them, as a CSV file named by the server.
+export const exportOrganisations = (filters: OrganisationFilters) =>
+  downloadFile('/api/organisations/export', { ...filters, q: filters.q || undefined }, 'organisations.csv');
 
 export const getOrganisation = async (organisationId: string) => {
   const { data } = await axios.get<OrganisationResponse>(`/api/organisations/${organisationId}`);

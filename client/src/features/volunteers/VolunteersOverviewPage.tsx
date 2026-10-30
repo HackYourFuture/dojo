@@ -2,11 +2,13 @@ import { Box, Button, Container, LinearProgress, Stack, Typography } from '@mui/
 
 import AddIcon from '@mui/icons-material/Add';
 import { AddVolunteerDialog } from './components/AddVolunteerDialog';
+import { ExportCsvButton } from '../../components/ExportCsvButton';
 import { ListLoader } from '../../components/ListLoader';
 import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
 import { VolunteerFilterBar } from './components/VolunteerFilterBar';
 import { VolunteerFilters } from './Volunteer';
 import { VolunteersTable } from './components/VolunteersTable';
+import { exportVolunteers } from './api/api';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useGetVolunteers } from './data/volunteer-queries';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -37,11 +39,14 @@ const VolunteersOverviewPage = () => {
   return (
     <Container fixed>
       <Box sx={{ p: 2 }}>
-        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="h4">Volunteers</Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddDialogOpen(true)}>
-            Add Volunteer
-          </Button>
+          <Stack direction="row" sx={{ alignItems: 'center', gap: 2 }}>
+            <ExportCsvButton exportCsv={() => exportVolunteers({ ...filters, q })} />
+            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddDialogOpen(true)}>
+              Add Volunteer
+            </Button>
+          </Stack>
         </Stack>
         <VolunteerFilterBar filters={filters} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>

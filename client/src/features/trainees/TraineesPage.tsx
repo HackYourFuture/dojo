@@ -3,12 +3,14 @@ import { Suspense, lazy, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import { AddTraineeDialog } from '../trainee-profile/create/AddTraineeDialog';
+import { ExportCsvButton } from '../../components/ExportCsvButton';
 import { Loader } from '../../components/Loader';
 import { MapViewToggle } from './map/MapViewToggle';
 import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
 import { TraineeFilterBar } from './components/TraineeFilterBar';
 import { TraineeFilters } from './models/trainee-summary';
 import { TraineeList } from './components/TraineeList';
+import { exportTrainees } from './api/api';
 import { numberParam } from '../../data/listFilters';
 import { useDebounce } from '../../hooks/useDebounce';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -45,6 +47,7 @@ const TraineesPage = () => {
           <Typography variant="h4">Trainees</Typography>
           <Stack direction="row" sx={{ alignItems: 'center', gap: 2 }}>
             <MapViewToggle isMap={isMap} />
+            <ExportCsvButton exportCsv={() => exportTrainees({ ...filters, q })} />
             <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddDialogOpen(true)}>
               Add Trainee
             </Button>

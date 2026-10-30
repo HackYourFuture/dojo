@@ -2,11 +2,13 @@ import { Box, Button, Container, LinearProgress, Stack, Typography } from '@mui/
 
 import AddIcon from '@mui/icons-material/Add';
 import { AddOrganisationDialog } from './components/AddOrganisationDialog';
+import { ExportCsvButton } from '../../components/ExportCsvButton';
 import { ListLoader } from '../../components/ListLoader';
 import { OrganisationFilterBar } from './components/OrganisationFilterBar';
 import { OrganisationFilters } from './Organisation';
 import { OrganisationsTable } from './components/OrganisationsTable';
 import { SuccessMessageSnackbar } from '../../components/SuccessMessageSnackbar';
+import { exportOrganisations } from './api/api';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useGetOrganisations } from './data/organisation-queries';
 import { usePageTitle } from '../../hooks/usePageTitle';
@@ -36,11 +38,14 @@ const OrganisationsOverviewPage = () => {
   return (
     <Container fixed>
       <Box sx={{ p: 2 }}>
-        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="h4">Organisations</Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddDialogOpen(true)}>
-            Add Organisation
-          </Button>
+          <Stack direction="row" sx={{ alignItems: 'center', gap: 2 }}>
+            <ExportCsvButton exportCsv={() => exportOrganisations({ ...filters, q })} />
+            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setIsAddDialogOpen(true)}>
+              Add Organisation
+            </Button>
+          </Stack>
         </Stack>
         <OrganisationFilterBar filters={filters} />
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>

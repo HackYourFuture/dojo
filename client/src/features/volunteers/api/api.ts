@@ -9,6 +9,7 @@ import {
 } from './mapper';
 
 import axios from 'axios';
+import { downloadFile } from '../../../data/http/downloadFile';
 
 // Sorted by first name, from A to Z. A filter with several values goes as status=A&status=B.
 export const getVolunteerSummaries = async (page: number, filters: VolunteerFilters) => {
@@ -18,6 +19,10 @@ export const getVolunteerSummaries = async (page: number, filters: VolunteerFilt
   });
   return mapPageToDomain(data, mapVolunteerSummaryToDomain);
 };
+
+// The volunteers the list shows, all of them, as a CSV file named by the server.
+export const exportVolunteers = (filters: VolunteerFilters) =>
+  downloadFile('/api/volunteers/export', { ...filters, q: filters.q || undefined }, 'volunteers.csv');
 
 export const getVolunteer = async (volunteerId: string) => {
   const { data } = await axios.get<VolunteerResponse>(`/api/volunteers/${volunteerId}`);
