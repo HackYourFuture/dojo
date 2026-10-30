@@ -1,5 +1,8 @@
 import { EducationLevel, LearningStatus } from '../../../data/types/Trainee';
 
+// The label of a missing value, like a trainee without a gender.
+export const NOT_SPECIFIED = 'Not specified';
+
 export interface LabelCount {
   label: string;
   count: number;
@@ -30,5 +33,7 @@ export interface DashboardData {
   tracks: LabelCount[];
   educationLevels: EducationLevelCount[];
   countries: LabelCount[];
+  // The trainees without a country of origin, left out of the countries.
+  countriesNotSpecified: number;
   genders: LabelCount[];
 }

@@ -110,6 +110,11 @@ const DashboardPage = () => {
             <Grid size={{ xs: 12, md: 7 }}>
               <DashboardCard title="Country of origin">
                 <DistributionBarChart rows={data.countries} layout="horizontal" />
+                {data.countriesNotSpecified > 0 && (
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    {data.countriesNotSpecified} not specified
+                  </Typography>
+                )}
               </DashboardCard>
             </Grid>
             <Grid size={{ xs: 12, md: 5 }}>
