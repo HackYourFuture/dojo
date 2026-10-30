@@ -61,23 +61,20 @@ public class OrganisationController {
             @Parameter(description = "Only organisations the search finds for these words: by name, website or"
                     + " notes, close spellings included", example = "adyen")
             @RequestParam(required = false)
-            @Size(
-                    max = 100)
+            @Size(max = 100)
             String q,
 
             @Parameter(description = "Only organisations with one of these statuses")
-            @RequestParam(
-                    required = false)
+            @RequestParam(required = false)
             List<OrganisationStatus> status,
 
             @Parameter(description = "Only organisations that at least one of these users is responsible for",
-                    example = "WTh1qLhy3K")
+                    example = "USERID")
             @RequestParam(required = false)
             List<String> responsibleId,
 
             @Parameter(description = "Only organisations with at least one of these partnership types")
-            @RequestParam(
-                    required = false)
+            @RequestParam(required = false)
             List<PartnershipType> partnership,
 
             @Parameter(
@@ -87,19 +84,16 @@ public class OrganisationController {
             List<String> province,
 
             @Parameter(description = "The direction to order the names in")
-            @RequestParam(
-                    defaultValue = "ASC")
+            @RequestParam(defaultValue = "ASC")
             Sort.Direction direction,
 
             @Parameter(description = "Zero-based index of the page to fetch", example = "0")
-            @RequestParam(
-                    defaultValue = "0")
+            @RequestParam(defaultValue = "0")
             @Min(0)
             int page,
 
             @Parameter(description = "Number of organisations per page", example = "25")
-            @RequestParam(
-                    defaultValue = "25")
+            @RequestParam(defaultValue = "25")
             @Min(1)
             @Max(100)
             int size) {
@@ -119,13 +113,11 @@ public class OrganisationController {
             @Parameter(description = "Only organisations the search finds for these words: by name, website or"
                     + " notes, close spellings included", example = "adyen")
             @RequestParam(required = false)
-            @Size(
-                    max = 100)
+            @Size(max = 100)
             String q,
 
             @Parameter(description = "Only organisations with one of these statuses")
-            @RequestParam(
-                    required = false)
+            @RequestParam(required = false)
             List<OrganisationStatus> status,
 
             @Parameter(description = "Only organisations that at least one of these users is responsible for",
@@ -134,8 +126,7 @@ public class OrganisationController {
             List<String> responsibleId,
 
             @Parameter(description = "Only organisations with at least one of these partnership types")
-            @RequestParam(
-                    required = false)
+            @RequestParam(required = false)
             List<PartnershipType> partnership,
 
             @Parameter(
@@ -145,8 +136,7 @@ public class OrganisationController {
             List<String> province,
 
             @Parameter(description = "The direction to order the names in")
-            @RequestParam(
-                    defaultValue = "ASC")
+            @RequestParam(defaultValue = "ASC")
             Sort.Direction direction) {
         return CsvResponses.of("dojo-export-organisations",
                 organisationService.exportOrganisations(q, status, responsibleId, partnership, province,
@@ -159,8 +149,7 @@ public class OrganisationController {
     @ApiResponse(responseCode = "404", description = "The organisation id was not found",
             content = @Content(schema = @Schema(implementation = DojoError.class)))
     public OrganisationResponse getOrganisation(
-            @Parameter(description = "ID of the organisation to fetch",
-                    example = "Xk2pQ9rTbW")
+            @Parameter(description = "ID of the organisation to fetch", example = "Xk2pQ9rTbW")
             @PathVariable
             String id) {
         return organisationService.getOrganisation(id);
