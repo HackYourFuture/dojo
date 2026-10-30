@@ -143,7 +143,7 @@ class OrganisationListTest {
         assertThat(result).hasStatusOk();
         assertThat(result).hasContentType(new MediaType("text", "csv", StandardCharsets.UTF_8));
         assertThat(result).headers().hasValue("Content-Disposition",
-                "attachment; filename=\"organisations-" + LocalDate.now() + ".csv\"");
+                "attachment; filename=\"dojo-export-organisations-" + LocalDate.now() + ".csv\"");
 
         String[] lines = csv(result).split("\r\n");
         assertThat(lines).hasSize(4);

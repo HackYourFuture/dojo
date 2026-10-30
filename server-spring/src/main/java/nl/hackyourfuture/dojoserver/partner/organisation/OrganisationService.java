@@ -55,9 +55,9 @@ public class OrganisationService {
     public Page<OrganisationSummaryResponse> getOrganisations(String query, List<OrganisationStatus> statuses,
             List<String> responsibleIds, List<PartnershipType> partnershipTypes, List<String> provinces,
             Sort.Direction direction, int page, int size) {
-        Page<Organisation> organisations = organisationRepository.findAll(
-                filter(query, statuses, responsibleIds, partnershipTypes, provinces),
-                PageRequest.of(page, size, sort(direction)));
+        Specification<Organisation> spec = filter(query, statuses, responsibleIds, partnershipTypes, provinces);
+        PageRequest pageRequest = PageRequest.of(page, size, sort(direction));
+        Page<Organisation> organisations = organisationRepository.findAll(spec, pageRequest);
         Map<String, User> users = usersMap();
         return organisations.map(organisation -> OrganisationSummaryResponse.from(organisation, users));
     }
@@ -66,9 +66,10 @@ public class OrganisationService {
     @Transactional(readOnly = true)
     public String exportOrganisations(String query, List<OrganisationStatus> statuses, List<String> responsibleIds,
             List<PartnershipType> partnershipTypes, List<String> provinces, Sort.Direction direction) {
-        List<Organisation> organisations = organisationRepository.findAll(
-                filter(query, statuses, responsibleIds, partnershipTypes, provinces),
-                Pageable.unpaged(sort(direction))).getContent();
+        Specification<Organisation> spec = filter(query, statuses, responsibleIds, partnershipTypes, provinces);
+        Pageable unpagedRequest = Pageable.unpaged(sort(direction));
+        List<Organisation> organisations =
+                organisationRepository.findAll(spec, unpagedRequest).getContent();
         return OrganisationCsv.of(organisations, usersMap());
     }
 

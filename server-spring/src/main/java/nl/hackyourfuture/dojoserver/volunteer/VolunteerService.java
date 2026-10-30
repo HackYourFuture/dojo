@@ -48,9 +48,14 @@ public class VolunteerService {
     private final MentorshipService mentorshipService;
 
     @Transactional(readOnly = true)
-    public Page<VolunteerSummaryResponse> getVolunteers(String query, List<VolunteerStatus> statuses,
-            List<VolunteerType> types, List<VolunteerExpertise> expertise,
-            List<VolunteerAssignmentType> rolePreferences, List<Boolean> paired, Sort.Direction direction, int page,
+    public Page<VolunteerSummaryResponse> getVolunteers(
+            String query,
+            List<VolunteerStatus> statuses,
+            List<VolunteerType> types,
+            List<VolunteerExpertise> expertise,
+            List<VolunteerAssignmentType> rolePreferences,
+            List<Boolean> paired, Sort.Direction direction,
+            int page,
             int size) {
         // For all volunteers, not only the page's, because the paired filter runs before paging.
         Map<String, Long> activeMentorshipCounts = mentorshipService.getActiveMentorshipCounts();

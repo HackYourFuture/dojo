@@ -54,9 +54,9 @@ public class TraineeService {
     public Page<TraineeSummaryResponse> getTrainees(String query, List<LearningStatus> statuses,
             List<JobPath> jobPaths, List<String> provinces, Integer startCohort, Integer endCohort,
             Sort.Direction direction, int page, int size) {
-        Page<Trainee> trainees = traineeRepository.findAll(
-                filter(query, statuses, jobPaths, provinces, startCohort, endCohort),
-                PageRequest.of(page, size, sort(direction)));
+        Specification<Trainee> spec = filter(query, statuses, jobPaths, provinces, startCohort, endCohort);
+        PageRequest pageRequest = PageRequest.of(page, size, sort(direction));
+        Page<Trainee> trainees = traineeRepository.findAll(spec, pageRequest);
 
         Map<String, BigDecimal> averageScores = assessmentService.getAverageScores(
                 trainees.getContent().stream().map(Trainee::getId).toList());
@@ -68,12 +68,11 @@ public class TraineeService {
     @Transactional(readOnly = true)
     public String exportTrainees(String query, List<LearningStatus> statuses, List<JobPath> jobPaths,
             List<String> provinces, Integer startCohort, Integer endCohort, Sort.Direction direction) {
-        List<Trainee> trainees = traineeRepository.findAll(
-                filter(query, statuses, jobPaths, provinces, startCohort, endCohort),
-                Pageable.unpaged(sort(direction))).getContent();
-        Map<String, BigDecimal> averageScores = assessmentService.getAverageScores(
-                trainees.stream().map(Trainee::getId).toList());
-        return TraineeCsv.of(trainees, averageScores);
+        Specification<Trainee> spec = filter(query, statuses, jobPaths, provinces, startCohort, endCohort);
+        Pageable unpagedRequest = Pageable.unpaged(sort(direction));
+
+        List<Trainee> trainees = traineeRepository.findAll(spec, unpagedRequest).getContent();
+        return TraineeCsv.of(trainees);
     }
 
     @Transactional(readOnly = true)

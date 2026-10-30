@@ -3,16 +3,14 @@ package nl.hackyourfuture.dojoserver.trainee.profile.dto;
 import nl.hackyourfuture.dojoserver.shared.Csv;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /** The trainee export: every profile field but the health condition, the diet and the emergency contact. */
 public final class TraineeCsv {
     private TraineeCsv() {
     }
 
-    public static String of(List<Trainee> trainees, Map<String, BigDecimal> averageScores) {
+    public static String of(List<Trainee> trainees) {
         List<Csv.Column<Trainee>> columns = List.of(
                 new Csv.Column<>("First name", Trainee::getFirstName),
                 new Csv.Column<>("Last name", Trainee::getLastName),
@@ -50,7 +48,6 @@ public final class TraineeCsv {
                 new Csv.Column<>("Quit reason", Trainee::getQuitReason),
                 new Csv.Column<>("Job path", Trainee::getJobPath),
                 new Csv.Column<>("Job support end date", Trainee::getJobSupportEndDate),
-                new Csv.Column<>("Average assessment score", trainee -> averageScores.get(trainee.getId())),
                 new Csv.Column<>("ESF ID", Trainee::getEsfId),
                 new Csv.Column<>("Comments", Trainee::getComments));
         return Csv.of(columns, trainees);

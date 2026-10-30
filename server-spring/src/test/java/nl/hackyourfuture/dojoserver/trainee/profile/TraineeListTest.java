@@ -268,13 +268,13 @@ public class TraineeListTest {
         assertThat(result).hasStatusOk();
         assertThat(result).hasContentType(new MediaType("text", "csv", StandardCharsets.UTF_8));
         assertThat(result).headers().hasValue("Content-Disposition",
-                "attachment; filename=\"trainees-" + LocalDate.now() + ".csv\"");
+                "attachment; filename=\"dojo-export-trainees-" + LocalDate.now() + ".csv\"");
         assertThat(csv(result)).startsWith("\uFEFFFirst name,Last name,Preferred name,Gender,Pronouns,Date of birth,"
                 + "Email,Phone,Slack ID,GitHub handle,LinkedIn URL,City,Province,Country of origin,Background,"
                 + "NL arrival date,First permit issue date,English level,Professional Dutch,Financial support,"
                 + "Education level,Education background,Weekly work hours,Has car,Start cohort,Current cohort,Track,"
                 + "Learning status,Start date,Graduation date,Certificate ID,Quit date,Quit reason,Job path,"
-                + "Job support end date,Average assessment score,ESF ID,Comments\r\n");
+                + "Job support end date,ESF ID,Comments\r\n");
     }
 
     @Test
@@ -307,11 +307,10 @@ public class TraineeListTest {
         later.setProfessionalDutch(true);
         later.setStartDate(LocalDate.of(2026, 1, 5));
         traineeRepository.save(later);
-        score(later, AssessmentType.JAVASCRIPT, "8.0");
 
         String file = csv(export("?startCohort=9002&endCohort=9002"));
         assertThat(file.split("\r\n")).hasSize(2);
-        assertThat(file).contains(",On hold,", ",Searching,", ",Yes,", ",2026-01-05,", ",8.00,",
+        assertThat(file).contains(",On hold,", ",Searching,", ",Yes,", ",2026-01-05,",
                 "\"Likes \"\"tea\"\", coffee\nand cake\"");
     }
 

@@ -113,8 +113,7 @@ public class TraineeController {
 
     @GetMapping("/export")
     @Operation(summary = "Export trainees",
-            description = "Returns every trainee the filters match as a CSV file, in the order of the list. The"
-                    + " filters are the list's; there is no paging.")
+            description = "Returns every trainee the filters match as a CSV file, in the order of the list.")
     @ApiResponse(
             responseCode = "200",
             description = "The CSV file: UTF-8 with a byte order mark, one row per trainee",
@@ -161,7 +160,7 @@ public class TraineeController {
             @RequestParam(defaultValue = "ASC")
             Sort.Direction direction
     ) {
-        return CsvResponses.of("trainees",
+        return CsvResponses.of("dojo-export-trainees",
                 traineeService.exportTrainees(q, status, jobPath, province, startCohort, endCohort, direction));
     }
 
