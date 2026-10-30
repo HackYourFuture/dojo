@@ -9,6 +9,7 @@ import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.filestorage.StoredFile;
 import nl.hackyourfuture.dojoserver.geo.GeoService;
+import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationCsv;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationPictureResponse;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationRequest;
 import nl.hackyourfuture.dojoserver.partner.organisation.dto.OrganisationResponse;
@@ -22,6 +23,7 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
@@ -53,33 +55,22 @@ public class OrganisationService {
     public Page<OrganisationSummaryResponse> getOrganisations(String query, List<OrganisationStatus> statuses,
             List<String> responsibleIds, List<PartnershipType> partnershipTypes, List<String> provinces,
             Sort.Direction direction, int page, int size) {
-        List<PredicateSpecification<Organisation>> filters = new ArrayList<>();
-        if (query != null && !query.isBlank()) {
-            // The search's close spellings can't be queried, so the matching ids come from Java.
-            List<String> ids = organisationRepository.findAll().stream()
-                    .filter(organisation -> SearchService.matches(organisation, query))
-                    .map(Organisation::getId)
-                    .toList();
-            filters.add(OrganisationSpecifications.idIn(ids));
-        }
-        if (!CollectionUtils.isEmpty(statuses)) {
-            filters.add(OrganisationSpecifications.statusIn(statuses));
-        }
-        if (!CollectionUtils.isEmpty(responsibleIds)) {
-            filters.add(OrganisationSpecifications.responsibleIdIn(responsibleIds));
-        }
-        if (!CollectionUtils.isEmpty(partnershipTypes)) {
-            filters.add(OrganisationSpecifications.partnershipTypeIn(partnershipTypes));
-        }
-        if (!CollectionUtils.isEmpty(provinces)) {
-            filters.add(OrganisationSpecifications.provinceIn(provinces));
-        }
-
-        Sort sort = Sort.by(Sort.Order.by("name").with(direction).ignoreCase()).and(Sort.by("id"));
-        Page<Organisation> organisations = organisationRepository.findAll(
-                Specification.where(PredicateSpecification.allOf(filters)), PageRequest.of(page, size, sort));
+        Specification<Organisation> spec = filter(query, statuses, responsibleIds, partnershipTypes, provinces);
+        PageRequest pageRequest = PageRequest.of(page, size, sort(direction));
+        Page<Organisation> organisations = organisationRepository.findAll(spec, pageRequest);
         Map<String, User> users = usersMap();
         return organisations.map(organisation -> OrganisationSummaryResponse.from(organisation, users));
+    }
+
+    // Every organisation the filters match as CSV, in the list's order. Built here, where the lazy city can be read.
+    @Transactional(readOnly = true)
+    public String exportOrganisations(String query, List<OrganisationStatus> statuses, List<String> responsibleIds,
+            List<PartnershipType> partnershipTypes, List<String> provinces, Sort.Direction direction) {
+        Specification<Organisation> spec = filter(query, statuses, responsibleIds, partnershipTypes, provinces);
+        Pageable unpagedRequest = Pageable.unpaged(sort(direction));
+        List<Organisation> organisations =
+                organisationRepository.findAll(spec, unpagedRequest).getContent();
+        return OrganisationCsv.of(organisations, usersMap());
     }
 
     @Transactional(readOnly = true)
@@ -187,5 +178,36 @@ public class OrganisationService {
                 throw new DojoBadRequestException("The responsible with id '" + id + "' is not a user.");
             }
         }
+    }
+
+    // The list's filters, each only when given; an organisation must match every one of them.
+    private Specification<Organisation> filter(String query, List<OrganisationStatus> statuses,
+            List<String> responsibleIds, List<PartnershipType> partnershipTypes, List<String> provinces) {
+        List<PredicateSpecification<Organisation>> filters = new ArrayList<>();
+        if (query != null && !query.isBlank()) {
+            // The search's close spellings can't be queried, so the matching ids come from Java.
+            List<String> ids = organisationRepository.findAll().stream()
+                    .filter(organisation -> SearchService.matches(organisation, query))
+                    .map(Organisation::getId)
+                    .toList();
+            filters.add(OrganisationSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(statuses)) {
+            filters.add(OrganisationSpecifications.statusIn(statuses));
+        }
+        if (!CollectionUtils.isEmpty(responsibleIds)) {
+            filters.add(OrganisationSpecifications.responsibleIdIn(responsibleIds));
+        }
+        if (!CollectionUtils.isEmpty(partnershipTypes)) {
+            filters.add(OrganisationSpecifications.partnershipTypeIn(partnershipTypes));
+        }
+        if (!CollectionUtils.isEmpty(provinces)) {
+            filters.add(OrganisationSpecifications.provinceIn(provinces));
+        }
+        return Specification.where(PredicateSpecification.allOf(filters));
+    }
+
+    private static Sort sort(Sort.Direction direction) {
+        return Sort.by(Sort.Order.by("name").with(direction).ignoreCase()).and(Sort.by("id"));
     }
 }

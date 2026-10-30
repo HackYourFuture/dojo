@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.picture.PictureResponses;
+import nl.hackyourfuture.dojoserver.shared.CsvResponses;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerPictureResponse;
 import nl.hackyourfuture.dojoserver.volunteer.dto.VolunteerRequest;
@@ -104,6 +105,56 @@ public class VolunteerController {
     ) {
         return volunteerService.getVolunteers(q, status, type, expertise, rolePreference, paired, direction, page,
                 size);
+    }
+
+    @GetMapping("/export")
+    @Operation(summary = "Export volunteers",
+            description = "Returns every volunteer the filters match as a CSV file, in the order of the list. The"
+                    + " filters are the list's; there is no paging.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "The CSV file: UTF-8 with a byte order mark, one row per volunteer",
+            content = @Content(mediaType = "text/csv", schema = @Schema(type = "string"))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "A request parameter is invalid",
+            content = @Content(schema = @Schema(implementation = DojoError.class))
+    )
+    public ResponseEntity<byte[]> exportVolunteers(
+            @Parameter(description = "Only volunteers the search finds for these words: by name, email, GitHub"
+                    + " handle, company, job role or notes, close spellings included", example = "jan")
+            @RequestParam(required = false)
+            @Size(max = 100)
+            String q,
+
+            @Parameter(description = "Only volunteers with one of these statuses")
+            @RequestParam(required = false)
+            List<VolunteerStatus> status,
+
+            @Parameter(description = "Only volunteers of at least one of these types")
+            @RequestParam(required = false)
+            List<VolunteerType> type,
+
+            @Parameter(description = "Only volunteers with at least one of these kinds of expertise")
+            @RequestParam(required = false)
+            List<VolunteerExpertise> expertise,
+
+            @Parameter(description = "Only volunteers who prefer at least one of these roles")
+            @RequestParam(required = false)
+            List<VolunteerAssignmentType> rolePreference,
+
+            @Parameter(description = "Only volunteers who are paired with a trainee in an active mentorship (true),"
+                    + " or who are not (false)")
+            @RequestParam(required = false)
+            List<Boolean> paired,
+
+            @Parameter(description = "The direction to order the first names in")
+            @RequestParam(defaultValue = "ASC")
+            Sort.Direction direction
+    ) {
+        return CsvResponses.of("dojo-export-volunteers",
+                volunteerService.exportVolunteers(q, status, type, expertise, rolePreference, paired, direction));
     }
 
     @GetMapping("/{id}")

@@ -16,12 +16,14 @@ import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
 import nl.hackyourfuture.dojoserver.slack.FieldChange;
 import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.assessment.AssessmentService;
+import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeCsv;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineePictureResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeRequest;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeResponse;
 import nl.hackyourfuture.dojoserver.trainee.profile.dto.TraineeSummaryResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import org.springframework.data.jpa.domain.Specification;
@@ -52,43 +54,25 @@ public class TraineeService {
     public Page<TraineeSummaryResponse> getTrainees(String query, List<LearningStatus> statuses,
             List<JobPath> jobPaths, List<String> provinces, Integer startCohort, Integer endCohort,
             Sort.Direction direction, int page, int size) {
-        List<PredicateSpecification<Trainee>> filters = new ArrayList<>();
-        if (query != null && !query.isBlank()) {
-            // The search's close spellings can't be queried, so the matching ids come from Java.
-            List<String> ids = traineeRepository.findAll().stream()
-                    .filter(trainee -> SearchService.matches(trainee, query))
-                    .map(Trainee::getId)
-                    .toList();
-            filters.add(TraineeSpecifications.idIn(ids));
-        }
-        if (!CollectionUtils.isEmpty(statuses)) {
-            filters.add(TraineeSpecifications.learningStatusIn(statuses));
-        }
-        if (!CollectionUtils.isEmpty(jobPaths)) {
-            filters.add(TraineeSpecifications.jobPathIn(jobPaths));
-        }
-        if (!CollectionUtils.isEmpty(provinces)) {
-            filters.add(TraineeSpecifications.provinceIn(provinces));
-        }
-        if (startCohort != null) {
-            filters.add(TraineeSpecifications.currentCohortFrom(startCohort));
-        }
-        if (endCohort != null) {
-            filters.add(TraineeSpecifications.currentCohortTo(endCohort));
-        }
-
-        // Trainees with no cohort come first either way.
-        Sort sort = Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst(),
-                Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
-
-        Page<Trainee> trainees = traineeRepository.findAll(
-                Specification.where(PredicateSpecification.allOf(filters)),
-                PageRequest.of(page, size, sort));
+        Specification<Trainee> spec = filter(query, statuses, jobPaths, provinces, startCohort, endCohort);
+        PageRequest pageRequest = PageRequest.of(page, size, sort(direction));
+        Page<Trainee> trainees = traineeRepository.findAll(spec, pageRequest);
 
         Map<String, BigDecimal> averageScores = assessmentService.getAverageScores(
                 trainees.getContent().stream().map(Trainee::getId).toList());
 
         return trainees.map(trainee -> TraineeSummaryResponse.from(trainee, averageScores.get(trainee.getId())));
+    }
+
+    // Every trainee the filters match as CSV, in the list's order. Built here, where the lazy city can be read.
+    @Transactional(readOnly = true)
+    public String exportTrainees(String query, List<LearningStatus> statuses, List<JobPath> jobPaths,
+            List<String> provinces, Integer startCohort, Integer endCohort, Sort.Direction direction) {
+        Specification<Trainee> spec = filter(query, statuses, jobPaths, provinces, startCohort, endCohort);
+        Pageable unpagedRequest = Pageable.unpaged(sort(direction));
+
+        List<Trainee> trainees = traineeRepository.findAll(spec, unpagedRequest).getContent();
+        return TraineeCsv.of(trainees);
     }
 
     @Transactional(readOnly = true)
@@ -256,5 +240,41 @@ public class TraineeService {
 
     private Trainee findTrainee(String id) {
         return traineeRepository.findById(id).orElseThrow(() -> new DojoNotFoundException("Trainee", id));
+    }
+
+    // The list's filters, each only when given; a trainee must match every one of them.
+    private Specification<Trainee> filter(String query, List<LearningStatus> statuses, List<JobPath> jobPaths,
+            List<String> provinces, Integer startCohort, Integer endCohort) {
+        List<PredicateSpecification<Trainee>> filters = new ArrayList<>();
+        if (query != null && !query.isBlank()) {
+            // The search's close spellings can't be queried, so the matching ids come from Java.
+            List<String> ids = traineeRepository.findAll().stream()
+                    .filter(trainee -> SearchService.matches(trainee, query))
+                    .map(Trainee::getId)
+                    .toList();
+            filters.add(TraineeSpecifications.idIn(ids));
+        }
+        if (!CollectionUtils.isEmpty(statuses)) {
+            filters.add(TraineeSpecifications.learningStatusIn(statuses));
+        }
+        if (!CollectionUtils.isEmpty(jobPaths)) {
+            filters.add(TraineeSpecifications.jobPathIn(jobPaths));
+        }
+        if (!CollectionUtils.isEmpty(provinces)) {
+            filters.add(TraineeSpecifications.provinceIn(provinces));
+        }
+        if (startCohort != null) {
+            filters.add(TraineeSpecifications.currentCohortFrom(startCohort));
+        }
+        if (endCohort != null) {
+            filters.add(TraineeSpecifications.currentCohortTo(endCohort));
+        }
+        return Specification.where(PredicateSpecification.allOf(filters));
+    }
+
+    // Trainees with no cohort come first either way.
+    private static Sort sort(Sort.Direction direction) {
+        return Sort.by(Sort.Order.by("currentCohort").with(direction).nullsFirst(),
+                Sort.Order.asc("lastName").ignoreCase(), Sort.Order.asc("id"));
     }
 }

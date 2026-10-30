@@ -13,11 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -134,8 +137,43 @@ class OrganisationListTest {
         ids(seeded + "&status=ACTIVE&partnership=EMPLOYMENT").isEmpty();
     }
 
+    @Test
+    void theExportIsACsvDownloadWithTheCityAndTheResponsiblesByName() {
+        MvcTestResult result = export(seeded);
+        assertThat(result).hasStatusOk();
+        assertThat(result).hasContentType(new MediaType("text", "csv", StandardCharsets.UTF_8));
+        assertThat(result).headers().hasValue("Content-Disposition",
+                "attachment; filename=\"dojo-export-organisations-" + LocalDate.now() + ".csv\"");
+
+        String[] lines = csv(result).split("\r\n");
+        assertThat(lines).hasSize(4);
+        assertThat(lines[0]).isEqualTo(
+                "\uFEFFName,Website URL,LinkedIn URL,City,Province,Status,Partnership types,Responsibles,Notes");
+        assertThat(lines[1]).isEqualTo(alpha.getName() + ",,," + alphaCity.getName() + "," + alphaCity.getProvince()
+                + ",Active,Funding; Volunteer,Jane,");
+        assertThat(lines[2]).isEqualTo(beta.getName() + ",,,,,Never engaged,Employment,Omar; Jane,");
+        assertThat(lines[3]).isEqualTo(gamma.getName() + ",,," + gammaCity.getName() + "," + gammaCity.getProvince()
+                + ",Inactive,,,");
+    }
+
+    @Test
+    void theExportAppliesTheFilters() {
+        String[] lines = csv(export(seeded + "&status=NEVER_ENGAGED")).split("\r\n");
+        assertThat(lines).hasSize(2);
+        assertThat(lines[1]).startsWith(beta.getName() + ",");
+    }
+
     private MvcTestResult list(String query) {
         return mvc.get().uri(ORGANISATIONS + query).exchange();
+    }
+
+    private MvcTestResult export(String query) {
+        return mvc.get().uri(ORGANISATIONS + "/export" + query).exchange();
+    }
+
+    // The body decoded as the UTF-8 it is declared as.
+    private static String csv(MvcTestResult result) {
+        return new String(result.getResponse().getContentAsByteArray(), StandardCharsets.UTF_8);
     }
 
     private ObjectArrayAssert<Object> ids(String query) {

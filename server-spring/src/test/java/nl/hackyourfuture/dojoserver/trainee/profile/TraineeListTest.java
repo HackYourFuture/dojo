@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 /**
@@ -257,10 +259,82 @@ public class TraineeListTest {
         assertThat(list("?page=-1")).hasStatus(400);
     }
 
+    // ------------------------------------------------------------------ export
+
+    @Test
+    void theExportIsACsvDownloadNamedByTheDay() {
+        MvcTestResult result = export(SEEDED_COHORTS);
+
+        assertThat(result).hasStatusOk();
+        assertThat(result).hasContentType(new MediaType("text", "csv", StandardCharsets.UTF_8));
+        assertThat(result).headers().hasValue("Content-Disposition",
+                "attachment; filename=\"dojo-export-trainees-" + LocalDate.now() + ".csv\"");
+        assertThat(csv(result)).startsWith("\uFEFFFirst name,Last name,Preferred name,Gender,Pronouns,Date of birth,"
+                + "Email,Phone,Slack ID,GitHub handle,LinkedIn URL,City,Province,Country of origin,Background,"
+                + "NL arrival date,First permit issue date,English level,Professional Dutch,Financial support,"
+                + "Education level,Education background,Weekly work hours,Has car,Start cohort,Current cohort,Track,"
+                + "Learning status,Start date,Graduation date,Certificate ID,Quit date,Quit reason,Job path,"
+                + "Job support end date,ESF ID,Comments\r\n");
+    }
+
+    @Test
+    void theExportHoldsEveryTraineeTheFiltersMatchInTheOrderOfTheList() {
+        String[] descending = csv(export(SEEDED_COHORTS + "&direction=DESC")).split("\r\n");
+        assertThat(descending).hasSize(3);
+        assertThat(descending[1]).startsWith("Bob,Later,");
+        assertThat(descending[2]).startsWith("Ann,Earlier,");
+
+        String[] studying = csv(export(SEEDED_COHORTS + "&status=STUDYING")).split("\r\n");
+        assertThat(studying).hasSize(2);
+        assertThat(studying[1]).startsWith("Ann,Earlier,");
+
+        assertThat(csv(export(SEEDED_COHORTS + "&q=xyzzy")).split("\r\n")).hasSize(1);
+    }
+
+    @Test
+    void theExportNamesTheCityAndItsProvince() {
+        City city = cityRepository.save(city());
+        earlier.setCity(city);
+        traineeRepository.save(earlier);
+
+        String[] lines = csv(export("?startCohort=9001&endCohort=9001")).split("\r\n");
+        assertThat(lines[1]).contains("," + city.getName() + "," + city.getProvince() + ",");
+    }
+
+    @Test
+    void theExportReadsLikeTheProfileAndQuotesWhatItHasTo() {
+        later.setComments("Likes \"tea\", coffee\nand cake");
+        later.setProfessionalDutch(true);
+        later.setStartDate(LocalDate.of(2026, 1, 5));
+        traineeRepository.save(later);
+
+        String file = csv(export("?startCohort=9002&endCohort=9002"));
+        assertThat(file.split("\r\n")).hasSize(2);
+        assertThat(file).contains(",On hold,", ",Searching,", ",Yes,", ",2026-01-05,",
+                "\"Likes \"\"tea\"\", coffee\nand cake\"");
+    }
+
+    @Test
+    void theExportRejectsABadParameterWithTheUsualError() {
+        MvcTestResult result = export("?direction=sideways");
+
+        assertThat(result).hasStatus(400);
+        assertThat(result).bodyJson().extractingPath("$.error").isNotNull();
+    }
+
     // ------------------------------------------------------------------ helpers
 
     private MvcTestResult list(String query) {
         return mvc.get().uri(TRAINEES + query).exchange();
+    }
+
+    private MvcTestResult export(String query) {
+        return mvc.get().uri(TRAINEES + "/export" + query).exchange();
+    }
+
+    // The body decoded as the UTF-8 it is declared as.
+    private static String csv(MvcTestResult result) {
+        return new String(result.getResponse().getContentAsByteArray(), StandardCharsets.UTF_8);
     }
 
     private MvcTestResult assessments(Trainee trainee) {

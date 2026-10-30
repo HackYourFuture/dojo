@@ -1,7 +1,7 @@
 Dojo is HackYourFuture's internal tool for tracking trainees, volunteers and partner organisations. This API
 serves the Dojo web client, and scripts and integrations can use it too.
 
-Every endpoint is under `/api` and speaks JSON, apart from picture uploads and downloads.
+Every endpoint is under `/api` and speaks JSON, apart from picture uploads and downloads and the CSV exports.
 
 ## Authentication
 
@@ -47,7 +47,9 @@ use by another trainee."
 
 The trainee, volunteer, organisation and mentorship lists return one page at a time. `page` counts from 0, and
 `size` is 25 unless you ask for up to 100, or up to 5000 trainees. Each filter narrows the list, and a filter
-repeated in the query matches any of its values.
+repeated in the query matches any of its values. The trainee, volunteer and organisation lists each have a
+`GET …/export` too, which takes the same filters and returns every row they match as a CSV file in the order of
+the list: UTF-8 with a byte order mark, named like `trainees-2026-10-29.csv`.
 
 ```json
 {

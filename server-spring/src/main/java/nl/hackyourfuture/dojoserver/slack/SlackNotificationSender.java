@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.config.DojoProperties;
 import nl.hackyourfuture.dojoserver.interaction.Interaction;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
+import nl.hackyourfuture.dojoserver.shared.StringUtils;
 import nl.hackyourfuture.dojoserver.trainee.assessment.Assessment;
 import nl.hackyourfuture.dojoserver.trainee.employmenthistory.EmploymentHistory;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
@@ -250,7 +251,7 @@ public class SlackNotificationSender {
     private static String changeRows(List<FieldChange> changes) {
         var rows = new StringBuilder();
         changes.forEach(change -> rows.append("| %s | %s | %s |\n".formatted(
-                humanize(change.field()),
+                StringUtils.humanize(change.field()),
                 value(change.from()),
                 value(change.to())
         )));
@@ -260,7 +261,7 @@ public class SlackNotificationSender {
     private static String value(Object object) {
         return switch (object) {
             case null -> "—";
-            case Enum<?> constant -> humanize(constant);
+            case Enum<?> constant -> StringUtils.humanize(constant);
             case Boolean flag -> flag ? "Yes" : "No";
             case LocalDate date -> DATE.format(date);
             case Collection<?> items -> items.isEmpty() ? "—"
@@ -277,15 +278,5 @@ public class SlackNotificationSender {
                 .replace("|", "\\|")
                 .replaceAll("\\s+", " ")
                 .strip();
-    }
-
-    /** `TECH_HOUR` and `learningStatus` both read as "Tech hour" / "Learning status". */
-    private static String humanize(Enum<?> value) {
-        return humanize(value.name().toLowerCase(Locale.ROOT).replace('_', ' '));
-    }
-
-    private static String humanize(String name) {
-        String words = name.replaceAll("([a-z0-9])([A-Z])", "$1 $2").toLowerCase(Locale.ROOT).strip();
-        return words.isEmpty() ? words : Character.toUpperCase(words.charAt(0)) + words.substring(1);
     }
 }
