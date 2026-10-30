@@ -1,4 +1,4 @@
-import { Avatar, Button, alpha } from '@mui/material';
+import { Button } from '@mui/material';
 
 import { ConfirmationDialog } from './ConfirmationDialog';
 import DownloadIcon from '@mui/icons-material/Download';
