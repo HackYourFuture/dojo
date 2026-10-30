@@ -1,4 +1,4 @@
-import { DashboardData, LabelCount } from '../models/dashboard';
+import { DashboardData, LabelCount, NOT_SPECIFIED } from '../models/dashboard';
 import { DashboardResponse } from './types';
 import { SelectOption } from '../../../data/types/SelectOption';
 import { educationLevelOptions } from '../../trainee-profile/utils/selectOptions';
@@ -6,7 +6,6 @@ import { genderOptions } from '../../../data/types/Person';
 import { getTrackLabel } from '../../../data/labels/traineeLabels';
 
 const MAX_COUNTRY_ROWS = 10;
-const NOT_SPECIFIED = 'Not specified';
 
 // The label of the profile's dropdown, or the raw value when the dropdown does not have it yet.
 const optionLabel = (options: SelectOption[], value: string | null) =>
@@ -31,7 +30,10 @@ export const mapDashboardToDomain = (dashboard: DashboardResponse): DashboardDat
       label: optionLabel(educationLevelOptions, educationLevel),
       count,
     })),
-    countries: withOther(dashboard.countries.map(({ country, count }) => ({ label: country ?? NOT_SPECIFIED, count }))),
+    countries: withOther(
+      dashboard.countries.flatMap(({ country, count }) => (country === null ? [] : [{ label: country, count }]))
+    ),
+    countriesNotSpecified: dashboard.countries.find(({ country }) => country === null)?.count ?? 0,
     genders: dashboard.genders.map(({ gender, count }) => ({ label: optionLabel(genderOptions, gender), count })),
   };
 };
