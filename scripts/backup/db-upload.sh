@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Uploads the dump files in <directory> to the Google Shared Drive and deletes old backups.
+# Uploads the dump files in <directory> to the Google Drive and deletes old backups.
 #
 # Every run goes to the daily folder. On Mondays the dump is also copied to the weekly folder,
 # on the 1st of the month to the monthly folder. Each folder keeps its backups for its own
 # retention period.
 #
-# Usage: scripts/backup/upload.sh <directory>
+# Usage: scripts/backup/db-upload.sh <directory>
 #
-# Needs rclone with a remote called "gdrive". On Railway it is configured through the
-# RCLONE_CONFIG_GDRIVE_* variables of the backup service, see README.md; locally you can create
-# it with `rclone config`.
+# Needs rclone with a remote called "gdrive" for the Drive. On Railway it is configured through
+# the RCLONE_CONFIG_GDRIVE_* variables of the backup service, see README.md; locally you can
+# create it with `rclone config`.
 set -euo pipefail
 
-directory="${1:?usage: upload.sh <directory>}"
+directory="${1:?usage: db-upload.sh <directory>}"
 remote="gdrive:dojo"
 
 keep_daily=14d
@@ -40,5 +40,7 @@ rclone delete --verbose --drive-use-trash=false --min-age "$keep_weekly" "$remot
 rclone delete --verbose --drive-use-trash=false --min-age "$keep_monthly" "$remote/monthly"
 
 # Step 4: show what is in the Drive now.
-echo "Backups in the Drive:"
-rclone lsl "$remote"
+for folder in daily weekly monthly; do
+  echo "$folder:"
+  rclone lsl "$remote/$folder"
+done

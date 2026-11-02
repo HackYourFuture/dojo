@@ -6,10 +6,10 @@
 # the database stays unreachable from the internet. Locally point them at the local database, see
 # README.md.
 #
-# Usage: scripts/backup/dump.sh <directory>
+# Usage: scripts/backup/db-dump.sh <directory>
 set -euo pipefail
 
-directory="${1:?usage: dump.sh <directory>}"
+directory="${1:?usage: db-dump.sh <directory>}"
 file="$directory/dojo-$(date -u +%Y-%m-%d).dump"
 
 # Step 1: dump in pg_dump's custom format, which pg_restore can restore selectively.
