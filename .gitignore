@@ -26,3 +26,6 @@ server/dev-services/volumes
 *.njsproj
 *.sln
 *.sw?
+
+# Database dumps made by scripts/backup
+backups
