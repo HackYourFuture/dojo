@@ -2,9 +2,8 @@
 # Dumps the Dojo database into <directory>/dojo-<date>.sql.gz.
 #
 # pg_dump takes the host, port, user, password and database from the PG* environment variables.
-# On Railway they reference the Postgres service, so the dump goes over the private network and
-# the database stays unreachable from the internet. Locally point them at the local database, see
-# README.md.
+# The job sets them to the database's private network address, so the database stays unreachable
+# from the internet. Locally point them at the local database, see README.md.
 #
 # Usage: scripts/backup/db-dump.sh <directory>
 set -euo pipefail

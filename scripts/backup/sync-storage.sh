@@ -8,8 +8,8 @@
 # Usage: scripts/backup/sync-storage.sh <bucket>
 #
 # Needs rclone with a remote called "s3" for the bucket and one called "gdrive" for the Drive.
-# On Railway they are configured through the RCLONE_CONFIG_* variables of the backup service, see
-# README.md; locally you can create them with `rclone config`.
+# The job configures them through the RCLONE_CONFIG_* environment variables, see README.md;
+# locally you can create them with `rclone config`.
 set -euo pipefail
 
 bucket="${1:?usage: sync-storage.sh <bucket>}"
