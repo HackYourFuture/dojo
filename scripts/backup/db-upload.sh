@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Uploads the dump files in <directory> to the Google Drive and deletes old backups.
+# Uploads the dump files in <directory> to the database folder of the Google Drive and deletes
+# old backups.
 #
 # Every run goes to the daily folder. On Mondays the dump is also copied to the weekly folder,
 # on the 1st of the month to the monthly folder. Each folder keeps its backups for its own
@@ -7,13 +8,13 @@
 #
 # Usage: scripts/backup/db-upload.sh <directory>
 #
-# Needs rclone with a remote called "gdrive" for the Drive. On Railway it is configured through
-# the RCLONE_CONFIG_GDRIVE_* variables of the backup service, see README.md; locally you can
-# create it with `rclone config`.
+# Needs rclone with a remote called "gdrive" for the Drive. The job configures it through the
+# RCLONE_CONFIG_GDRIVE_* environment variables, see README.md; locally you can create it with
+# `rclone config`.
 set -euo pipefail
 
 directory="${1:?usage: db-upload.sh <directory>}"
-remote="gdrive:dojo"
+remote="gdrive:database"
 
 keep_daily=14d
 keep_weekly=13w

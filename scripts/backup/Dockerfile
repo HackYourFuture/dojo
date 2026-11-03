@@ -1,4 +1,4 @@
-# Image of the backup cron service on Railway: pg_dump 18, rclone and the scripts.
+# Image of the nightly backup job: pg_dump 18, rclone and the scripts.
 FROM postgres:18-alpine
 RUN apk add --no-cache rclone
 # rclone is configured through RCLONE_CONFIG_* variables; the empty config file keeps it quiet and
