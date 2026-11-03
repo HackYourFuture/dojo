@@ -20,6 +20,6 @@ pg_dump --format=plain --clean --if-exists --no-owner --file "$file"
 # Step 2: make sure the dump is complete; pg_dump writes this line near the very end.
 tail -n 10 "$file" | grep -q 'PostgreSQL database dump complete'
 
-# Step 3: compress it. gzip replaces the file with $file.gz.
-gzip "$file"
+# Step 3: compress it. gzip replaces the file with $file.gz, overwriting a dump of the same day.
+gzip -f "$file"
 echo "Done, $(du -h "$file.gz" | cut -f1)"
