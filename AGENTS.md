@@ -25,6 +25,9 @@ Sign-in is Google OAuth, pictures are stored in S3-compatible storage.
 - **Database schema:** Flyway migrations in `server-spring/src/main/resources/db/migration/`.
 - **API:** everything is under `/api`. Docs at <http://localhost:7777/api/docs> while the back-end
   runs.
+- **Certificates site:** the public pages where anyone can check a certificate are the back-end's
+  `certificate/` feature under `/api/public/certificates`. The client's nginx serves them on the
+  certificates domain.
 - **CI/CD:** `.github/workflows/`. `frontend-ci-cd.yml` and `server-ci-cd.yml` lint, test and build
   the Docker images, and push them to GHCR from `main`. `pr-security-review.lock.yml` is generated
   from `pr-security-review.md` by `gh aw compile`; never edit it by hand.

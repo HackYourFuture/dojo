@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+}
+.header-section {
+  text-align: center;
+  padding: 2rem;
+}
+#hyf-logo {
+  width: 40vw;
+  min-width: 300px;
+  margin-bottom: 10px;
+}
+#verified-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: top;
+}
+.header {
+  font-size: max(3vw, 2rem);
+  color: #111;
+  font-weight: lighter;
+}
+.pdf-section {
+  padding: 1rem;
+  text-align: center;
+}
+#pdf-object {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.414 / 1;
+}
+.fancy-border {
+  display: inline-block;
+  width: calc(100% - 2rem);
+  max-width: 842px;
+  padding: 16px;
+  background: linear-gradient(
+    135deg,
+    #5c1500 0%,
+    #b12900 10%,
+    #e8450a 22%,
+    #ff7043 33%,
+    #ffa07a 44%,
+    #ffcc99 50%,
+    #ffa07a 56%,
+    #ff7043 67%,
+    #e8450a 78%,
+    #b12900 90%,
+    #5c1500 100%
+  );
+  background-size: 250% 100%;
+  outline: 3px solid #b12900;
+  box-shadow:
+    0 0 0 1px rgba(177, 41, 0, 0.25),
+    0 0 0 8px rgba(177, 41, 0, 0.08),
+    0 0 30px rgba(177, 41, 0, 0.45),
+    0 20px 50px rgba(0, 0, 0, 0.35);
+  animation: light-sweep 10s ease-in-out infinite;
+}
+@keyframes light-sweep {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}

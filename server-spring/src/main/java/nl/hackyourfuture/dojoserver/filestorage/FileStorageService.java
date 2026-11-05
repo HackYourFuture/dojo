@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -82,6 +83,19 @@ public class FileStorageService {
         );
         log.debug("Downloaded file '{}' ({}, {} bytes)", key, file.contentType(), file.contentLength());
         return file;
+    }
+
+    public boolean exists(String key) {
+        var request = HeadObjectRequest.builder()
+                .bucket(this.fileStorageProperties.bucket())
+                .key(key)
+                .build();
+        try {
+            this.s3Client.headObject(request);
+            return true;
+        } catch (NoSuchKeyException _) {
+            return false;
+        }
     }
 
     public void delete(String key) {
