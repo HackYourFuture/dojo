@@ -100,7 +100,7 @@ public class VolunteerController {
             @Parameter(description = "Number of volunteers per page", example = "25")
             @RequestParam(defaultValue = "25")
             @Min(1)
-            @Max(100)
+            @Max(5000)
             int size
     ) {
         return volunteerService.getVolunteers(q, status, type, expertise, rolePreference, paired, direction, page,

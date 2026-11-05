@@ -46,10 +46,10 @@ use by another trainee."
 ### Paging
 
 The trainee, volunteer, organisation and mentorship lists return one page at a time. `page` counts from 0, and
-`size` is 25 unless you ask for up to 100, or up to 5000 trainees. Each filter narrows the list, and a filter
-repeated in the query matches any of its values. The trainee, volunteer and organisation lists each have a
-`GET …/export` too, which takes the same filters and returns every row they match as a CSV file in the order of
-the list: UTF-8 with a byte order mark, named like `trainees-2026-10-29.csv`.
+`size` is 25 unless you ask for up to 100, or up to 5000 trainees or volunteers. Each filter narrows the list,
+and a filter repeated in the query matches any of its values. The trainee, volunteer and organisation lists
+each have a `GET …/export` too, which takes the same filters and returns every row they match as a CSV file in
+the order of the list: UTF-8 with a byte order mark, named like `trainees-2026-10-29.csv`.
 
 ```json
 {
