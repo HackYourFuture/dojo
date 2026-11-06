@@ -143,6 +143,12 @@ helpers and the `DojoException` family, and `shared/model/` the enums several fe
   so it fits inside whole. To delete an owner, delete and `flush()` it before
   `PictureService.deleteAll`. Locally, storage is the MinIO in `../server/dev-services`
   (`docker compose up storage`).
+- **Certificates** (`certificate/`): the public site where anyone can check a graduation
+  certificate, the PDF at `certificates/<id>` in the bucket, so `/api/public/certificates/**` needs
+  no sign-in. The client's nginx serves it on the certificates domain, where `/<path>` is
+  `/api/public/certificates/<path>` here, and sets its Content-Security-Policy. It is a web site,
+  so it answers with HTML pages, not `DojoError`, and is hidden from the API docs. The pages and
+  their files are in `src/main/resources/certificates/`.
 - **Search** (`search/`): ranking runs in Java over every trainee, volunteer, organisation and
   contact person, because names match by close spelling. Each type ranks on its own, then a stable
   sort by score merges them, so equal scores list trainees first, then volunteers, organisations
