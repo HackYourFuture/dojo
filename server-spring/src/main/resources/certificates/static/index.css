@@ -33,6 +33,16 @@ body {
   display: block;
   width: 100%;
   aspect-ratio: 1.414 / 1;
+  background: #fff;
+}
+.pdf-fallback {
+  padding: 2rem;
+}
+.download {
+  margin-top: 1.5rem;
+}
+.download a {
+  color: #b12900;
 }
 .fancy-border {
   display: inline-block;

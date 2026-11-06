@@ -39,7 +39,7 @@ class CertificateTest {
                 .hasStatusOk()
                 .hasContentTypeCompatibleWith(MediaType.TEXT_HTML)
                 .bodyText()
-                .contains("Certificate is valid", "/Cert-1_a?raw=1")
+                .contains("Certificate is valid", "/Cert-1_a?raw=1", "HackYourFuture-certificate-Cert-1_a.pdf")
                 .doesNotContain("XXXXXXXX");
     }
 
