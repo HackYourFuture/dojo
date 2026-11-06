@@ -1,11 +1,14 @@
 package nl.hackyourfuture.dojoserver.mentorship.checkin;
 
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
+import nl.hackyourfuture.dojoserver.mentorship.Mentorship;
 import nl.hackyourfuture.dojoserver.mentorship.MentorshipRepository;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.dto.MentorshipCheckinRequest;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.dto.MentorshipCheckinResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class MentorshipCheckinService {
     private final MentorshipCheckinRepository checkinRepository;
     private final MentorshipRepository mentorshipRepository;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public List<MentorshipCheckinResponse> getCheckins(String mentorshipId) {
@@ -45,8 +49,9 @@ public class MentorshipCheckinService {
     }
 
     @Transactional
-    public MentorshipCheckinResponse createCheckin(String mentorshipId, MentorshipCheckinRequest request) {
-        requireMentorship(mentorshipId);
+    public MentorshipCheckinResponse createCheckin(AuthenticatedUser currentUser, String mentorshipId,
+            MentorshipCheckinRequest request) {
+        Mentorship mentorship = requireMentorship(mentorshipId);
 
         var newCheckin = MentorshipCheckin.builder()
                 .id(RandomUtils.generateRandomId())
@@ -55,7 +60,9 @@ public class MentorshipCheckinService {
                 .notes(request.notes())
                 .build();
 
-        return MentorshipCheckinResponse.from(checkinRepository.save(newCheckin));
+        MentorshipCheckin created = checkinRepository.save(newCheckin);
+        slackNotificationSender.mentorshipCheckinCreated(currentUser.name(), mentorship, created);
+        return MentorshipCheckinResponse.from(created);
     }
 
     @Transactional
@@ -74,10 +81,9 @@ public class MentorshipCheckinService {
     }
 
     // Every endpoint here is nested under a mentorship, so an unknown mentorship id is a 404 of its own.
-    private void requireMentorship(String mentorshipId) {
-        if (!mentorshipRepository.existsById(mentorshipId)) {
-            throw new DojoNotFoundException("Mentorship", mentorshipId);
-        }
+    private Mentorship requireMentorship(String mentorshipId) {
+        return mentorshipRepository.findById(mentorshipId)
+                .orElseThrow(() -> new DojoNotFoundException("Mentorship", mentorshipId));
     }
 
     private MentorshipCheckin findCheckin(String mentorshipId, String id) {

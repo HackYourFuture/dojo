@@ -1,6 +1,7 @@
 package nl.hackyourfuture.dojoserver.mentorship;
 
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckin;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckinService;
 import nl.hackyourfuture.dojoserver.mentorship.dto.MentorshipRequest;
@@ -8,6 +9,7 @@ import nl.hackyourfuture.dojoserver.mentorship.dto.MentorshipResponse;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoBadRequestException;
 import nl.hackyourfuture.dojoserver.shared.exception.DojoNotFoundException;
+import nl.hackyourfuture.dojoserver.slack.SlackNotificationSender;
 import nl.hackyourfuture.dojoserver.trainee.profile.Trainee;
 import nl.hackyourfuture.dojoserver.trainee.profile.TraineeRepository;
 import nl.hackyourfuture.dojoserver.volunteer.Volunteer;
@@ -34,6 +36,7 @@ public class MentorshipService {
     private final VolunteerRepository volunteerRepository;
     private final TraineeRepository traineeRepository;
     private final MentorshipCheckinService checkinService;
+    private final SlackNotificationSender slackNotificationSender;
 
     @Transactional(readOnly = true)
     public Page<MentorshipResponse> getMentorships(List<String> volunteerIds, List<String> traineeIds,
@@ -89,7 +92,7 @@ public class MentorshipService {
     }
 
     @Transactional
-    public MentorshipResponse createMentorship(MentorshipRequest request) {
+    public MentorshipResponse createMentorship(AuthenticatedUser currentUser, MentorshipRequest request) {
         validateDates(request);
 
         var newMentorship = Mentorship.builder()
@@ -102,8 +105,10 @@ public class MentorshipService {
                 .nextCheckinDate(request.nextCheckinDate())
                 .build();
 
+        Mentorship created = mentorshipRepository.save(newMentorship);
+        slackNotificationSender.mentorshipCreated(currentUser.name(), created);
         // A new mentorship has no check-ins yet.
-        return MentorshipResponse.from(mentorshipRepository.save(newMentorship), null);
+        return MentorshipResponse.from(created, null);
     }
 
     @Transactional

@@ -1,9 +1,16 @@
 package nl.hackyourfuture.dojoserver.mentorship;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import jakarta.persistence.EntityManager;
+import nl.hackyourfuture.dojoserver.admin.user.User;
+import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.slack.SlackClient;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
@@ -15,11 +22,13 @@ import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
 import org.assertj.core.api.ObjectArrayAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +43,7 @@ import java.util.Map;
 /**
  * The mentorship endpoints over MockMvc. Transactional, because it runs against the local development database.
  * Every mentorship belongs to a volunteer and a trainee seeded here, so a list filtered by them holds no local data.
+ * Create reads the caller, so it signs in with a real token, and Slack is mocked so nothing is posted.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -56,12 +66,19 @@ class MentorshipTest {
     private TraineeRepository traineeRepository;
     @Autowired
     private MentorshipRepository mentorshipRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
+    @MockitoBean
+    private SlackClient slackClient;
 
     private Volunteer jane;
     private Volunteer john;
     private Trainee ann;
     private Trainee ben;
     private String ofJane;
+    private String token;
 
     @BeforeEach
     void givenTwoVolunteersAndTwoTrainees() {
@@ -70,6 +87,17 @@ class MentorshipTest {
         ann = traineeRepository.save(trainee("Ann", "Mentored"));
         ben = traineeRepository.save(trainee("Ben", "Mentored"));
         ofJane = "?volunteerId=" + jane.getId();
+    }
+
+    @BeforeEach
+    void givenASignedInUser() {
+        User user = userRepository.save(User.builder()
+                .id(RandomUtils.generateRandomId())
+                .email(RandomUtils.generateRandomId() + "@example.org")
+                .name("Reporter")
+                .isActive(true)
+                .build());
+        token = tokenService.issue(user, TokenType.API_TOKEN).plaintextToken();
     }
 
     @Test
@@ -106,6 +134,22 @@ class MentorshipTest {
                     assertThat(stored.getTrainee()).isEqualTo(ann);
                     assertThat(stored.getType()).isEqualTo(MentorshipType.ENGLISH_MENTORSHIP);
                 });
+    }
+
+    @Test
+    void createPostsTheMentorshipWithBothSidesToSlack() {
+        assertThat(post(bodyWith("type", "ENGLISH_MENTORSHIP"))).hasStatus(201);
+
+        Mentorship created = mentorshipRepository
+                .findAll(MentorshipSpecifications.volunteerIdIn(List.of(jane.getId()))).getFirst();
+        ArgumentCaptor<String> message = ArgumentCaptor.forClass(String.class);
+        verify(slackClient).sendNotification(message.capture());
+        assertThat(message.getValue()).contains(
+                "New mentorship",
+                "Mentorship: [English mentorship](", created.getProfilePath() + ")",
+                "[Jane Roe](", jane.getProfilePath() + ") → [Ann Mentored](", ann.getProfilePath() + ")",
+                "By: Reporter",
+                "| 1 Mar 2026 | — |");
     }
 
     @Test
@@ -432,7 +476,8 @@ class MentorshipTest {
     }
 
     private MvcTestResult post(String body) {
-        return mvc.post().uri(MENTORSHIPS).contentType(MediaType.APPLICATION_JSON).content(body).exchange();
+        return mvc.post().uri(MENTORSHIPS).header(AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(body).exchange();
     }
 
     private MvcTestResult put(String id, String body) {

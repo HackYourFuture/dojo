@@ -10,11 +10,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.mentorship.dto.MentorshipRequest;
 import nl.hackyourfuture.dojoserver.mentorship.dto.MentorshipResponse;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -118,9 +120,11 @@ public class MentorshipController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public MentorshipResponse createMentorship(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Valid @RequestBody
             MentorshipRequest request) {
-        return mentorshipService.createMentorship(request);
+        return mentorshipService.createMentorship(currentUser, request);
     }
 
     @PutMapping("/{id}")

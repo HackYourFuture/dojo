@@ -8,10 +8,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import nl.hackyourfuture.dojoserver.authentication.AuthenticatedUser;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.dto.MentorshipCheckinRequest;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.dto.MentorshipCheckinResponse;
 import nl.hackyourfuture.dojoserver.shared.DojoError;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,12 +67,14 @@ public class MentorshipCheckinController {
             content = @Content(schema = @Schema(implementation = DojoError.class))
     )
     public MentorshipCheckinResponse createCheckin(
+            @AuthenticationPrincipal
+            AuthenticatedUser currentUser,
             @Parameter(description = "ID of the mentorship", example = "pK4nW8sLqT")
             @PathVariable
             String mentorshipId,
             @Valid @RequestBody
             MentorshipCheckinRequest request) {
-        return checkinService.createCheckin(mentorshipId, request);
+        return checkinService.createCheckin(currentUser, mentorshipId, request);
     }
 
     @PutMapping("/{checkinId}")

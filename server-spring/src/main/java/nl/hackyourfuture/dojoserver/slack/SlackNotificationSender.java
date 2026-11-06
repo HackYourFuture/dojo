@@ -3,6 +3,8 @@ package nl.hackyourfuture.dojoserver.slack;
 import lombok.RequiredArgsConstructor;
 import nl.hackyourfuture.dojoserver.config.DojoProperties;
 import nl.hackyourfuture.dojoserver.interaction.Interaction;
+import nl.hackyourfuture.dojoserver.mentorship.Mentorship;
+import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckin;
 import nl.hackyourfuture.dojoserver.partner.organisation.Organisation;
 import nl.hackyourfuture.dojoserver.shared.StringUtils;
 import nl.hackyourfuture.dojoserver.trainee.assessment.Assessment;
@@ -72,7 +74,7 @@ public class SlackNotificationSender {
 
     public void traineeInteractionCreated(String reporter, Trainee trainee, Interaction interaction) {
         var message = """
-                ### :speech_balloon: Interaction logged
+                ### :speech_balloon: Trainee interaction logged
                 Trainee: %s
                 By: %s
 
@@ -161,7 +163,7 @@ public class SlackNotificationSender {
 
     public void volunteerInteractionCreated(String reporter, Volunteer volunteer, Interaction interaction) {
         var message = """
-                ### :speech_balloon: Interaction logged
+                ### :speech_balloon: Volunteer interaction logged
                 Volunteer: %s
                 By: %s
 
@@ -170,6 +172,47 @@ public class SlackNotificationSender {
                 | %s | %s |
                 ---""".formatted(volunteerLink(volunteer, "interactions"), reporter,
                 value(interaction.getType()), cell(interaction.getTitle()));
+        slackClient.sendNotification(message);
+    }
+
+    public void mentorshipCreated(String reporter, Mentorship mentorship) {
+        var message = """
+                ### :handshake: New mentorship
+                Mentorship: %s
+                %s → %s
+                By: %s
+
+                | Start date | End date |
+                | --- | --- |
+                | %s | %s |
+                ---""".formatted(
+                mentorshipLink(mentorship),
+                volunteerLink(mentorship.getVolunteer()),
+                traineeLink(mentorship.getTrainee()),
+                reporter,
+                value(mentorship.getStartDate()),
+                value(mentorship.getEndDate()));
+        slackClient.sendNotification(message);
+    }
+
+    // The notes stay in Dojo: the message only says who checked in and when.
+    public void mentorshipCheckinCreated(String reporter, Mentorship mentorship, MentorshipCheckin checkin) {
+        var message = """
+                ### :calendar: Mentorship check-in logged
+                Mentorship: %s
+                %s → %s
+                By: %s
+
+                | Date | Next check-in |
+                | --- | --- |
+                | %s | %s |
+                ---""".formatted(
+                mentorshipLink(mentorship),
+                volunteerLink(mentorship.getVolunteer()),
+                traineeLink(mentorship.getTrainee()),
+                reporter,
+                value(checkin.getDate()),
+                value(mentorship.getNextCheckinDate()));
         slackClient.sendNotification(message);
     }
 
@@ -202,7 +245,7 @@ public class SlackNotificationSender {
 
     public void organisationInteractionCreated(String reporter, Organisation organisation, Interaction interaction) {
         var message = """
-                ### :speech_balloon: Interaction logged
+                ### :speech_balloon: Organisation interaction logged
                 Organisation: %s
                 By: %s
 
@@ -229,6 +272,11 @@ public class SlackNotificationSender {
 
     private String volunteerLink(Volunteer volunteer, String tab) {
         return link(volunteer.getDisplayName(), volunteer.getProfilePath() + "/" + tab);
+    }
+
+    // A mentorship has no name, so its type is the link text.
+    private String mentorshipLink(Mentorship mentorship) {
+        return link(value(mentorship.getType()), mentorship.getProfilePath());
     }
 
     private String organisationLink(Organisation organisation) {
