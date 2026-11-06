@@ -1,12 +1,19 @@
 package nl.hackyourfuture.dojoserver.mentorship.checkin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import jakarta.persistence.EntityManager;
+import nl.hackyourfuture.dojoserver.admin.user.User;
+import nl.hackyourfuture.dojoserver.admin.user.UserRepository;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenService;
+import nl.hackyourfuture.dojoserver.authentication.token.TokenType;
 import nl.hackyourfuture.dojoserver.mentorship.Mentorship;
 import nl.hackyourfuture.dojoserver.mentorship.MentorshipRepository;
 import nl.hackyourfuture.dojoserver.mentorship.MentorshipType;
 import nl.hackyourfuture.dojoserver.shared.RandomUtils;
+import nl.hackyourfuture.dojoserver.slack.SlackClient;
 import nl.hackyourfuture.dojoserver.trainee.profile.JobPath;
 import nl.hackyourfuture.dojoserver.trainee.profile.LearningStatus;
 import nl.hackyourfuture.dojoserver.trainee.profile.Track;
@@ -17,11 +24,13 @@ import nl.hackyourfuture.dojoserver.volunteer.VolunteerRepository;
 import nl.hackyourfuture.dojoserver.volunteer.VolunteerStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +44,7 @@ import java.util.Map;
 /**
  * The check-in endpoints over MockMvc, and the last check-in they give the mentorship. Transactional, because it
  * runs against the local development database; every record belongs to the volunteer and trainee seeded here.
+ * Create reads the caller, so it signs in with a real token, and Slack is mocked so nothing is posted.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,9 +69,16 @@ class MentorshipCheckinTest {
     private MentorshipRepository mentorshipRepository;
     @Autowired
     private MentorshipCheckinRepository checkinRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenService tokenService;
+    @MockitoBean
+    private SlackClient slackClient;
 
     private Mentorship mentorship;
     private Mentorship other;
+    private String token;
 
     @BeforeEach
     void givenTwoMentorshipsOfAVolunteer() {
@@ -70,6 +87,17 @@ class MentorshipCheckinTest {
         Trainee ben = traineeRepository.save(trainee("Ben", "Mentored"));
         mentorship = mentorshipRepository.save(mentorship(jane, ann));
         other = mentorshipRepository.save(mentorship(jane, ben));
+    }
+
+    @BeforeEach
+    void givenASignedInUser() {
+        User user = userRepository.save(User.builder()
+                .id(RandomUtils.generateRandomId())
+                .email(RandomUtils.generateRandomId() + "@example.org")
+                .name("Reporter")
+                .isActive(true)
+                .build());
+        token = tokenService.issue(user, TokenType.API_TOKEN).plaintextToken();
     }
 
     @Test
@@ -87,6 +115,23 @@ class MentorshipCheckinTest {
                     assertThat(stored.getDate()).isEqualTo(threeDaysAgo);
                     assertThat(stored.getNotes()).isEqualTo("Went well.");
                 });
+    }
+
+    @Test
+    void createPostsWhoCheckedInToSlackButNotTheNotes() {
+        assertThat(post(mentorship, bodyWith("notes", "Talked about the job search."))).hasStatus(201);
+
+        ArgumentCaptor<String> message = ArgumentCaptor.forClass(String.class);
+        verify(slackClient).sendNotification(message.capture());
+        assertThat(message.getValue())
+                .contains(
+                        "Mentorship check-in logged",
+                        "Mentorship: [Tech mentorship](", mentorship.getProfilePath() + ")",
+                        "[Jane Roe](", mentorship.getVolunteer().getProfilePath() + ") → [Ann Mentored](",
+                        mentorship.getTrainee().getProfilePath() + ")",
+                        "By: Reporter",
+                        "| 1 Mar 2026 | — |")
+                .doesNotContain("job search");
     }
 
     @Test
@@ -240,8 +285,8 @@ class MentorshipCheckinTest {
     }
 
     private MvcTestResult post(Mentorship mentorship, String body) {
-        return mvc.post().uri(CHECKINS, mentorship.getId()).contentType(MediaType.APPLICATION_JSON).content(body)
-                .exchange();
+        return mvc.post().uri(CHECKINS, mentorship.getId()).header(AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(body).exchange();
     }
 
     private MvcTestResult put(Mentorship mentorship, String id, String body) {

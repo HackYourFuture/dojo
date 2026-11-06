@@ -63,4 +63,8 @@ public class Mentorship {
     @LastModifiedDate
     @Setter(AccessLevel.NONE)
     private Instant updatedAt;
+
+    public String getProfilePath() {
+        return "/mentorship/" + id;
+    }
 }
