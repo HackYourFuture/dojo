@@ -1,7 +1,10 @@
-// A check-in of the mentor with the trainee. The date is a calendar date at midnight UTC, like the API's.
+import { MentorshipCheckinParticipant } from './MentorshipCheckinParticipant';
+
+// A check-in with the mentor or the trainee. The date is a calendar date at midnight UTC, like the API's.
 export interface MentorshipCheckin {
   readonly id: string;
   date: Date;
+  participant: MentorshipCheckinParticipant;
   notes: string;
 }
 

@@ -4,6 +4,7 @@ import { ListItemActions } from '../../../../components/ListItemActions';
 import MarkdownText from '../../../../components/MarkdownText';
 import { MentorshipCheckin } from '../MentorshipCheckin';
 import { formatDateForDisplay } from '../../../../data/dates';
+import { MentorshipCheckinParticipant } from '../MentorshipCheckinParticipant';
 
 // The dot that marks a check-in on the timeline.
 const dotStyle = {
@@ -21,12 +22,21 @@ const lineStyle = { flex: 1, width: '2px', bgcolor: 'divider', marginTop: 0.5 };
 
 interface MentorshipCheckinsListProps {
   checkins: MentorshipCheckin[];
+  // The names shown for who each check-in was with.
+  mentorName: string;
+  traineeName: string;
   onClickEdit: (checkin: MentorshipCheckin) => void;
   onClickDelete: (checkin: MentorshipCheckin) => void;
 }
 
-/** The check-ins as a timeline, the latest first, each with its date, its notes and a "..." menu to edit or delete it. */
-export const MentorshipCheckinsList = ({ checkins, onClickEdit, onClickDelete }: MentorshipCheckinsListProps) => {
+/** The check-ins as a timeline, the latest first, each with its date, who it was with, its notes and a "..." menu. */
+export const MentorshipCheckinsList = ({
+  checkins,
+  mentorName,
+  traineeName,
+  onClickEdit,
+  onClickDelete,
+}: MentorshipCheckinsListProps) => {
   if (checkins.length === 0) {
     return <Typography sx={{ color: 'text.secondary' }}>No check-ins yet</Typography>;
   }
@@ -49,7 +59,17 @@ export const MentorshipCheckinsList = ({ checkins, onClickEdit, onClickDelete }:
           </Box>
           <Box sx={{ flex: 1, minWidth: 0, paddingBottom: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography sx={{ fontWeight: 'bold' }}>{formatDateForDisplay(checkin.date)}</Typography>
+              <Typography>
+                <Box component="span" sx={{ fontWeight: 'bold' }}>
+                  {formatDateForDisplay(checkin.date)}
+                </Box>
+                <Box component="span" sx={{ color: 'text.secondary' }}>
+                  {' · '}
+                  {checkin.participant === MentorshipCheckinParticipant.Mentor
+                    ? `with ${mentorName} (mentor)`
+                    : `with ${traineeName} (trainee)`}
+                </Box>
+              </Typography>
               <ListItemActions onEdit={() => onClickEdit(checkin)} onDelete={() => onClickDelete(checkin)} />
             </Box>
             {/* Without the margin under the last paragraph, the gap to the next check-in is the same everywhere. */}

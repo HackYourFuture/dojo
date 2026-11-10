@@ -1,6 +1,9 @@
+import { MentorshipCheckinParticipant } from '../MentorshipCheckinParticipant';
+
 export interface MentorshipCheckinResponse {
   id: string;
   date: string; // YYYY-MM-DD
+  participant: MentorshipCheckinParticipant;
   notes: string;
 }
 

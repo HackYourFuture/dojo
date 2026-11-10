@@ -2,6 +2,8 @@ package nl.hackyourfuture.dojoserver.mentorship.checkin;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -38,6 +40,10 @@ public class MentorshipCheckin {
     private String mentorshipId;
 
     private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    private MentorshipCheckinParticipant participant;
+
     private String notes;
 
     // Managed by Spring Data JPA's AuditingEntityListener. Do not set these manually.

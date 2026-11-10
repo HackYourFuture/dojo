@@ -2,6 +2,7 @@ package nl.hackyourfuture.dojoserver.mentorship.checkin.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckin;
+import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckinParticipant;
 
 import java.time.LocalDate;
 
@@ -22,6 +23,13 @@ public record MentorshipCheckinResponse(
         LocalDate date,
 
         @Schema(
+                description = "Who the check-in was with: the mentor or the trainee",
+                example = "TRAINEE",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
+        MentorshipCheckinParticipant participant,
+
+        @Schema(
                 description = "What was discussed or agreed at this check-in",
                 example = "Discussed the final project plan.",
                 requiredMode = Schema.RequiredMode.REQUIRED
@@ -29,6 +37,7 @@ public record MentorshipCheckinResponse(
         String notes
 ) {
     public static MentorshipCheckinResponse from(MentorshipCheckin checkin) {
-        return new MentorshipCheckinResponse(checkin.getId(), checkin.getDate(), checkin.getNotes());
+        return new MentorshipCheckinResponse(checkin.getId(), checkin.getDate(), checkin.getParticipant(),
+                checkin.getNotes());
     }
 }

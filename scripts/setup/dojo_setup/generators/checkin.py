@@ -23,6 +23,12 @@ def generate_checkins(start_date: date, until: date) -> list[dict[str, Any]]:
     checkin_date = start_date + CHECKIN_INTERVAL
     while checkin_date <= until:
         if chance(0.85):
-            checkins.append({"date": checkin_date, "notes": fake.random_element(NOTES)})
+            checkins.append(
+                {
+                    "date": checkin_date,
+                    "participant": fake.random_element(["MENTOR", "TRAINEE"]),
+                    "notes": fake.random_element(NOTES),
+                }
+            )
         checkin_date += CHECKIN_INTERVAL + timedelta(days=fake.random_int(-5, 5))
     return checkins

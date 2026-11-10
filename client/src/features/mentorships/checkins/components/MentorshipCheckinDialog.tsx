@@ -1,22 +1,30 @@
 import { Box, FormControl, FormHelperText, TextField } from '@mui/material';
 import { daysFromToday, today } from '../../../../data/dates';
 
+import { DropdownSelect } from '../../../../components/DropdownSelect';
 import { FIELD_REQUIRED_ERROR } from '../../../../data/text';
 import { FormDateField } from '../../../../components/FormDateField';
 import { FormDialog } from '../../../../components/FormDialog';
 import { MentorshipCheckin } from '../MentorshipCheckin';
+import { MentorshipCheckinParticipant } from '../MentorshipCheckinParticipant';
 import { NextCheckinDateField } from '../../components/NextCheckinDateField';
 import { useState } from 'react';
 
-// The date is null while it is cleared or half typed. The next check-in date is the mentorship's, which adding can change.
-type CheckinForm = Omit<MentorshipCheckin, 'date'> & { date: Date | null; nextCheckinDate: Date | null };
+// The date is null while it is cleared or half typed, the participant until one is picked.
+// The next check-in date is the mentorship's, which adding can change.
+type CheckinForm = Omit<MentorshipCheckin, 'date' | 'participant'> & {
+  date: Date | null;
+  participant: MentorshipCheckinParticipant | null;
+  nextCheckinDate: Date | null;
+};
 
-type FormErrors = Partial<Record<'date' | 'notes', string>>;
+type FormErrors = Partial<Record<'date' | 'participant' | 'notes', string>>;
 
 // A function, so the date is the day the dialog opens, not the day the page loaded.
-const newCheckin = (): MentorshipCheckin => ({
+const newCheckin = (): Omit<CheckinForm, 'nextCheckinDate'> => ({
   id: '',
   date: today(),
+  participant: null,
   notes: '',
 });
 
@@ -28,6 +36,9 @@ const getFormErrors = (form: CheckinForm): FormErrors | null => {
   } else if (daysFromToday(form.date) > 0) {
     // The API only takes today or earlier. Checked here too, so the message sits under the field.
     errors.date = 'The date cannot be in the future';
+  }
+  if (!form.participant) {
+    errors.participant = FIELD_REQUIRED_ERROR;
   }
   if (form.notes.trim() === '') {
     errors.notes = FIELD_REQUIRED_ERROR;
@@ -43,6 +54,9 @@ interface MentorshipCheckinDialogProps {
   initialCheckin: MentorshipCheckin | null;
   // The next check-in date to start from, which the dialog offers to change while adding.
   nextCheckinDate: Date | null;
+  // The names in the options of who the check-in was with.
+  mentorName: string;
+  traineeName: string;
   onClose: () => void;
   onSave: (checkin: MentorshipCheckin, nextCheckinDate: Date | null) => void;
 }
@@ -54,6 +68,8 @@ export const MentorshipCheckinDialog = ({
   error,
   initialCheckin,
   nextCheckinDate,
+  mentorName,
+  traineeName,
   onClose,
   onSave,
 }: MentorshipCheckinDialogProps) => {
@@ -71,11 +87,11 @@ export const MentorshipCheckinDialog = ({
   const handleSubmit = () => {
     const formErrors = getFormErrors(form);
     setErrors(formErrors);
-    // Checked again only so TypeScript knows the date is set.
-    if (formErrors || !form.date) {
+    // Checked again only so TypeScript knows the date and participant are set.
+    if (formErrors || !form.date || !form.participant) {
       return;
     }
-    onSave({ id: form.id, date: form.date, notes: form.notes }, form.nextCheckinDate);
+    onSave({ id: form.id, date: form.date, participant: form.participant, notes: form.notes }, form.nextCheckinDate);
   };
 
   return (
@@ -112,6 +128,20 @@ export const MentorshipCheckinDialog = ({
           </FormControl>
         )}
       </Box>
+      <DropdownSelect
+        id="checkinParticipant"
+        name="participant"
+        label="Check-in with"
+        options={[
+          { label: `Mentor: ${mentorName}`, value: MentorshipCheckinParticipant.Mentor },
+          { label: `Trainee: ${traineeName}`, value: MentorshipCheckinParticipant.Trainee },
+        ]}
+        disabled={isLoading}
+        value={form.participant ?? undefined}
+        error={errors?.participant}
+        width="100%"
+        onChange={(event) => setField('participant', event.target.value as MentorshipCheckinParticipant)}
+      />
       {/* Taller than the notes of an assignment, as the notes are what a check-in is about. */}
       <TextField
         disabled={isLoading}

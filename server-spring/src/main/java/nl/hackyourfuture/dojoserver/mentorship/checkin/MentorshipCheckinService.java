@@ -57,6 +57,7 @@ public class MentorshipCheckinService {
                 .id(RandomUtils.generateRandomId())
                 .mentorshipId(mentorshipId)
                 .date(request.date())
+                .participant(request.participant())
                 .notes(request.notes())
                 .build();
 
@@ -70,6 +71,7 @@ public class MentorshipCheckinService {
         MentorshipCheckin checkin = findCheckin(mentorshipId, id);
 
         checkin.setDate(request.date());
+        checkin.setParticipant(request.participant());
         checkin.setNotes(request.notes());
 
         return MentorshipCheckinResponse.from(checkin);

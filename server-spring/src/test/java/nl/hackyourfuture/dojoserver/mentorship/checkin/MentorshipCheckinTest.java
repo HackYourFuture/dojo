@@ -104,15 +104,18 @@ class MentorshipCheckinTest {
     void createRecordsACheckin() {
         LocalDate threeDaysAgo = LocalDate.now().minusDays(3);
 
-        MvcTestResult result = post(mentorship, bodyWith("date", threeDaysAgo.toString(), "notes", "  Went well.  "));
+        MvcTestResult result = post(mentorship,
+                bodyWith("date", threeDaysAgo.toString(), "participant", "TRAINEE", "notes", "  Went well.  "));
 
         assertThat(result).hasStatus(201);
         assertThat(result).bodyJson().extractingPath("$.id").asString().hasSize(10);
         assertThat(result).bodyJson().extractingPath("$.date").isEqualTo(threeDaysAgo.toString());
+        assertThat(result).bodyJson().extractingPath("$.participant").isEqualTo("TRAINEE");
         assertThat(result).bodyJson().extractingPath("$.notes").isEqualTo("Went well.");
         assertThat(checkinRepository.findByMentorshipIdOrderByDateDescIdAsc(mentorship.getId())).singleElement()
                 .satisfies(stored -> {
                     assertThat(stored.getDate()).isEqualTo(threeDaysAgo);
+                    assertThat(stored.getParticipant()).isEqualTo(MentorshipCheckinParticipant.TRAINEE);
                     assertThat(stored.getNotes()).isEqualTo("Went well.");
                 });
     }
@@ -130,14 +133,14 @@ class MentorshipCheckinTest {
                         "[Jane Roe](", mentorship.getVolunteer().getProfilePath() + ") → [Ann Mentored](",
                         mentorship.getTrainee().getProfilePath() + ")",
                         "By: Reporter",
-                        "| 1 Mar 2026 | — |")
+                        "| 1 Mar 2026 | Mentor | — |")
                 .doesNotContain("job search");
     }
 
     @Test
     void notesAreRequired() {
         assertThat(post(mentorship, """
-                {"date": "2026-03-01"}
+                {"date": "2026-03-01", "participant": "MENTOR"}
                 """)).hasStatus(400);
         assertThat(post(mentorship, bodyWith("notes", null))).hasStatus(400);
         MvcTestResult blank = post(mentorship, bodyWith("notes", "   "));
@@ -151,6 +154,10 @@ class MentorshipCheckinTest {
         assertThat(post(mentorship, bodyWith("date", null))).hasStatus(400);
         assertThat(post(mentorship, bodyWith("date", "yesterday"))).hasStatus(400);
         assertThat(post(mentorship, bodyWith("notes", "x".repeat(5001)))).hasStatus(400);
+        MvcTestResult noParticipant = post(mentorship, bodyWith("participant", null));
+        assertThat(noParticipant).hasStatus(400);
+        assertThat(noParticipant).bodyJson().extractingPath("$.error").asString().contains("participant");
+        assertThat(post(mentorship, bodyWith("participant", "VOLUNTEER"))).hasStatus(400);
 
         // A check-in is something that happened, so it cannot be dated in the future.
         MvcTestResult tomorrow = post(mentorship, bodyWith("date", LocalDate.now().plusDays(1).toString()));
@@ -184,17 +191,18 @@ class MentorshipCheckinTest {
     }
 
     @Test
-    void updateReplacesDateAndNotes() {
+    void updateReplacesDateParticipantAndNotes() {
         MentorshipCheckin checkin = checkin(mentorship, LocalDate.of(2026, 3, 1));
         checkin.setNotes("First notes");
         checkinRepository.save(checkin);
 
-        MvcTestResult result =
-                put(mentorship, checkin.getId(), bodyWith("date", "2026-02-01", "notes", "Second notes"));
+        MvcTestResult result = put(mentorship, checkin.getId(),
+                bodyWith("date", "2026-02-01", "participant", "TRAINEE", "notes", "Second notes"));
 
         assertThat(result).hasStatusOk();
         assertThat(result).bodyJson().extractingPath("$.id").isEqualTo(checkin.getId());
         assertThat(result).bodyJson().extractingPath("$.date").isEqualTo("2026-02-01");
+        assertThat(result).bodyJson().extractingPath("$.participant").isEqualTo("TRAINEE");
         assertThat(result).bodyJson().extractingPath("$.notes").isEqualTo("Second notes");
     }
 
@@ -298,6 +306,7 @@ class MentorshipCheckinTest {
     private String bodyWith(Object... keysAndValues) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("date", "2026-03-01");
+        body.put("participant", "MENTOR");
         body.put("notes", "Checked in.");
         for (int i = 0; i < keysAndValues.length; i += 2) {
             body.put((String) keysAndValues[i], keysAndValues[i + 1]);
@@ -345,7 +354,7 @@ class MentorshipCheckinTest {
     }
 
     private static MentorshipCheckin checkin(String id, Mentorship mentorship, LocalDate date) {
-        return MentorshipCheckin.builder().id(id).mentorshipId(mentorship.getId()).date(date).notes("Checked in.")
-                .build();
+        return MentorshipCheckin.builder().id(id).mentorshipId(mentorship.getId()).date(date)
+                .participant(MentorshipCheckinParticipant.MENTOR).notes("Checked in.").build();
     }
 }

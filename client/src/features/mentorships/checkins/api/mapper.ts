@@ -7,6 +7,7 @@ export const mapMentorshipCheckinToDomain = (checkin: MentorshipCheckinResponse)
   return {
     id: checkin.id,
     date: new Date(checkin.date),
+    participant: checkin.participant,
     notes: checkin.notes,
   };
 };
@@ -15,6 +16,7 @@ export const mapMentorshipCheckinToDomain = (checkin: MentorshipCheckinResponse)
 export const mapDomainToMentorshipCheckinRequest = (checkin: MentorshipCheckin): MentorshipCheckinRequest => {
   return {
     date: toISODateString(checkin.date),
+    participant: checkin.participant,
     notes: checkin.notes,
   };
 };
