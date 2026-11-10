@@ -203,15 +203,16 @@ public class SlackNotificationSender {
                 %s → %s
                 By: %s
 
-                | Date | Next check-in |
-                | --- | --- |
-                | %s | %s |
+                | Date | With | Next check-in |
+                | --- | --- | --- |
+                | %s | %s | %s |
                 ---""".formatted(
                 mentorshipLink(mentorship),
                 volunteerLink(mentorship.getVolunteer()),
                 traineeLink(mentorship.getTrainee()),
                 reporter,
                 value(checkin.getDate()),
+                value(checkin.getParticipant()),
                 value(mentorship.getNextCheckinDate()));
         slackClient.sendNotification(message);
     }

@@ -133,7 +133,13 @@ export const MentorshipCheckins = ({ mentorship, isEditing }: MentorshipCheckins
             <CircularProgress />
           </Box>
         ) : (
-          <MentorshipCheckinsList checkins={checkins ?? []} onClickEdit={onClickEdit} onClickDelete={onClickDelete} />
+          <MentorshipCheckinsList
+            checkins={checkins ?? []}
+            mentorName={mentorship.volunteer.name}
+            traineeName={mentorship.trainee.name}
+            onClickEdit={onClickEdit}
+            onClickDelete={onClickDelete}
+          />
         )}
       </ProfileSection>
 
@@ -145,6 +151,8 @@ export const MentorshipCheckins = ({ mentorship, isEditing }: MentorshipCheckins
         error={dialogError}
         initialCheckin={checkinToEdit}
         nextCheckinDate={plannedNextCheckinDate}
+        mentorName={mentorship.volunteer.name}
+        traineeName={mentorship.trainee.name}
         onClose={closeDialog}
         onSave={onSave}
       />

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
+import nl.hackyourfuture.dojoserver.mentorship.checkin.MentorshipCheckinParticipant;
 
 import java.time.LocalDate;
 
@@ -14,6 +15,10 @@ public record MentorshipCheckinRequest(
         @PastOrPresent
         @Schema(description = "The date of the check-in. Today or earlier.", example = "2026-05-20")
         LocalDate date,
+
+        @NotNull
+        @Schema(description = "Who the check-in was with: the mentor or the trainee.", example = "TRAINEE")
+        MentorshipCheckinParticipant participant,
 
         @NotBlank
         @Size(max = 5000)
