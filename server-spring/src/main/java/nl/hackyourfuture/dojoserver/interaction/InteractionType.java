@@ -11,6 +11,7 @@ public enum InteractionType {
     ENGLISH_MENTORSHIP,
     TECH_SUPPORT,
     HR_MENTORSHIP,
+    TECH_MENTORSHIP,
     GRAD_MENTORSHIP,
     OTHER
 }

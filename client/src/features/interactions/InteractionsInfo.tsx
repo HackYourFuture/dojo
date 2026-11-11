@@ -7,7 +7,7 @@ import { InteractionDetailsModal } from './components/InteractionDetailsModal';
 import InteractionsList from './components/InteractionsList';
 import { ProfileSection } from '../../components/profile/ProfileSection';
 import { ProfileType } from '../../data/types/ProfileType';
-import { useGetInteractions } from './data/interaction-queries';
+import { useGetInteractionsWithCheckins } from './data/interaction-queries';
 import { useState } from 'react';
 
 interface InteractionsInfoProps {
@@ -27,7 +27,7 @@ const InteractionsInfo = ({ profileType, profileId }: InteractionsInfoProps) => 
     data: interactions,
     isLoading: interactionsLoading,
     error: interactionsError,
-  } = useGetInteractions(profileType, profileId);
+  } = useGetInteractionsWithCheckins(profileType, profileId);
 
   const handleSuccess = () => {
     setIsModalOpen(false);

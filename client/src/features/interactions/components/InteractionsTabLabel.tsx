@@ -2,7 +2,7 @@ import { Badge, Box } from '@mui/material';
 
 import { ProfileType } from '../../../data/types/ProfileType';
 import { tabCountBadgeStyle } from '../../../components/profile/fieldStyles';
-import { useGetInteractions } from '../data/interaction-queries';
+import { useGetInteractionsWithCheckins } from '../data/interaction-queries';
 
 interface InteractionsTabLabelProps {
   profileType: ProfileType;
@@ -11,7 +11,7 @@ interface InteractionsTabLabelProps {
 
 /** The label of the interactions tab, with the number of interactions in a badge. */
 export const InteractionsTabLabel = ({ profileType, profileId }: InteractionsTabLabelProps) => {
-  const { data: interactions } = useGetInteractions(profileType, profileId);
+  const { data: interactions } = useGetInteractionsWithCheckins(profileType, profileId);
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

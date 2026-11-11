@@ -103,7 +103,7 @@ features/
 ├── dark-mode/               # Dark mode switch
 ├── dashboard/               # Dashboard feature
 ├── geo/                     # City and country autocompletes searched on the API, and their profile fields
-├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles
+├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles, with the check-ins of their mentorships
 ├── login/                   # Login feature
 ├── mentorships/             # Mentorships list with its filters, the dialog to add one, the mentorship profile with its check-ins, and the mentorships on the volunteer and trainee profiles
 ├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
