@@ -2,6 +2,7 @@ import { NewVolunteer, VolunteerChanges } from '../Volunteer';
 import { createVolunteer, deleteVolunteer, updateVolunteer } from '../api/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { mentorshipKeys } from '../../mentorships/data/keys';
 import { searchKeys } from '../../search/data/keys';
 import { volunteerKeys } from './keys';
 
@@ -40,6 +41,8 @@ export const useDeleteVolunteer = (volunteerId: string) => {
       // Reset, so a list or search on screen reloads, like after going back while the delete ran.
       queryClient.resetQueries({ queryKey: volunteerKeys.list() });
       queryClient.resetQueries({ queryKey: searchKeys.all() });
+      // Their mentorships are deleted with them, so no trainee's list keeps one and asks for its check-ins.
+      queryClient.resetQueries({ queryKey: mentorshipKeys.list() });
     },
   });
 };

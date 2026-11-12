@@ -363,7 +363,7 @@ class MentorshipTest {
 
     @Test
     void pagingParametersOutOfBoundsAreRejected() {
-        assertThat(list("?size=101")).hasStatus(400);
+        assertThat(list("?size=5001")).hasStatus(400);
         assertThat(list("?size=0")).hasStatus(400);
         assertThat(list("?page=-1")).hasStatus(400);
     }

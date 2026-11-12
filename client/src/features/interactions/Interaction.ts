@@ -7,11 +7,14 @@ export interface Interaction {
   title: string;
   details: string;
   reporter: Reporter;
+  // A page the title links to, or null.
+  link: string | null;
 }
 
 export interface Reporter {
   id: string;
   name: string;
+  // A picture's URL, or `icon:<name>` for an icon the list draws instead.
   thumbnailUrl: string | null;
 }
 
@@ -27,6 +30,7 @@ export enum InteractionType {
   TechSupport = 'TECH_SUPPORT',
   GradMentorship = 'GRAD_MENTORSHIP',
   HRMentorship = 'HR_MENTORSHIP',
+  TechMentorship = 'TECH_MENTORSHIP',
   Other = 'OTHER',
 }
 

@@ -1,16 +1,35 @@
-import { Alert, Box, Chip, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from '@mui/material';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Chip,
+  Link,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 
 import { AvatarWithTooltip } from './AvatarWithTooltip';
 import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Interaction } from '../Interaction';
 import { ListItemActions } from '../../../components/ListItemActions';
 import MarkdownText from '../../../components/MarkdownText';
 import { ProfileType } from '../../../data/types/ProfileType';
+import { Link as RouterLink } from 'react-router';
 import { formatDateForDisplay, formatDateTimeForDisplay } from '../../../data/dates';
 import { formatTextToFriendly } from '../../../data/text';
 import { useAuth } from '../../../auth/hooks/useAuth';
 import { useDeleteInteraction } from '../data/mutations';
+
+// The icons a reporter can have instead of a picture, named as `icon:<name>`.
+const REPORTER_ICONS: Record<string, React.ReactNode> = {
+  'icon:Diversity2': <Diversity2Icon />,
+};
 
 interface InteractionsListProps {
   interactions: Interaction[];
@@ -77,6 +96,7 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profi
             </Typography>
           ) : (
             interactions?.map((interaction: Interaction, index: number) => {
+              const reporterIcon = REPORTER_ICONS[interaction.reporter.thumbnailUrl ?? ''];
               return (
                 <ListItem
                   key={interaction.id}
@@ -96,7 +116,16 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profi
                       paddingTop: 1,
                     }}
                   >
-                    <AvatarWithTooltip imageUrl={interaction.reporter.thumbnailUrl} name={interaction.reporter.name} />
+                    {reporterIcon ? (
+                      <Tooltip title={interaction.reporter.name} placement="top">
+                        <Avatar>{reporterIcon}</Avatar>
+                      </Tooltip>
+                    ) : (
+                      <AvatarWithTooltip
+                        imageUrl={interaction.reporter.thumbnailUrl}
+                        name={interaction.reporter.name}
+                      />
+                    )}
                   </ListItemAvatar>
                   <ListItemText
                     // A div, since the markdown details render paragraphs, which cannot be inside the default <p>.
@@ -114,7 +143,13 @@ const InteractionsList: React.FC<InteractionsListProps> = ({ interactions, profi
                       >
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
                           <Chip label={formatTextToFriendly(interaction.type)} color="primary" size="small" />
-                          <Typography>{interaction.title}</Typography>
+                          {interaction.link ? (
+                            <Link component={RouterLink} to={interaction.link} color="textPrimary" underline="hover">
+                              {interaction.title}
+                            </Link>
+                          ) : (
+                            <Typography>{interaction.title}</Typography>
+                          )}
                         </Box>
                         <Tooltip title={formatDateTimeForDisplay(interaction.date)} placement="top">
                           <Typography sx={{ paddingRight: 2 }}>{formatDateForDisplay(interaction.date)}</Typography>

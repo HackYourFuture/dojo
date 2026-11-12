@@ -11,9 +11,9 @@ import { MentorshipResponse } from './types';
 import axios from 'axios';
 
 // The latest start date first. A filter with several values goes as type=A&type=B.
-export const getMentorships = async (page: number, filters: MentorshipFilters) => {
+export const getMentorships = async (page: number, filters: MentorshipFilters, size = PAGE_SIZE) => {
   const { data } = await axios.get<PagedModel<MentorshipResponse>>('/api/mentorships', {
-    params: { page, size: PAGE_SIZE, ...mapFiltersToQueryParams(filters) },
+    params: { page, size, ...mapFiltersToQueryParams(filters) },
     paramsSerializer: { indexes: null },
   });
   return mapPageToDomain(data, mapMentorshipToDomain);

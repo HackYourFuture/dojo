@@ -89,7 +89,7 @@ public class MentorshipController {
             @Parameter(description = "Number of mentorships per page", example = "25")
             @RequestParam(defaultValue = "25")
             @Min(1)
-            @Max(100)
+            @Max(5000)
             int size) {
         return mentorshipService.getMentorships(volunteerId, traineeId, type, startDateFrom, startDateTo, endDateFrom,
                 endDateTo, page, size);
