@@ -4,6 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+rm -rf backups
 ./db-dump.sh backups
 ./db-upload.sh backups
 ./sync-storage.sh "${STORAGE_BUCKET:?}"
