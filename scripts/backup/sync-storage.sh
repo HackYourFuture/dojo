@@ -27,7 +27,7 @@ for day in $(rclone lsf --dirs-only "${remote}storage-history"); do
   day="${day%/}"
   if [[ "$day" < "$cutoff" ]]; then
     echo "Deleting history of $day"
-    rclone purge --drive-use-trash=false "${remote}storage-history/$day"
+    rclone purge "${remote}storage-history/$day"
   fi
 done
 

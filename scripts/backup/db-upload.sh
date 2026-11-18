@@ -34,11 +34,10 @@ if [ "$(date -u +%d)" = 01 ]; then
   rclone copy --verbose "$directory" "$remote/monthly"
 fi
 
-# Step 3: delete backups older than the retention of their folder, for real instead of moving
-# them to the Drive trash.
-rclone delete --verbose --drive-use-trash=false --min-age "$keep_daily" "$remote/daily"
-rclone delete --verbose --drive-use-trash=false --min-age "$keep_weekly" "$remote/weekly"
-rclone delete --verbose --drive-use-trash=false --min-age "$keep_monthly" "$remote/monthly"
+# Step 3: move backups older than the retention of their folder to the Drive trash.
+rclone delete --verbose --min-age "$keep_daily" "$remote/daily"
+rclone delete --verbose --min-age "$keep_weekly" "$remote/weekly"
+rclone delete --verbose --min-age "$keep_monthly" "$remote/monthly"
 
 # Step 4: show what is in the Drive now.
 for folder in daily weekly monthly; do
