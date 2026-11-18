@@ -4,7 +4,7 @@ A Docker image built from this folder, run every night as a scheduled job next t
 [run.sh](run.sh) runs three steps:
 
 - [db-dump.sh](db-dump.sh) dumps the database as gzipped plain SQL.
-- [db-upload.sh](db-upload.sh) uploads the dump to the Google Drive folder and deletes old ones.
+- [db-upload.sh](db-upload.sh) uploads the dump to the Google Drive folder and trashes old ones.
 - [sync-storage.sh](sync-storage.sh) mirrors the storage bucket into the Google Drive folder.
 
 The Drive folder ends up like this:
