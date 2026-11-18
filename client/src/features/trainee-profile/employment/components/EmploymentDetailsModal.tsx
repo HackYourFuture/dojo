@@ -20,6 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import { FormDateField } from '../../../../components/FormDateField';
+import { MarkdownField } from '../../../../components/markdown/MarkdownField';
 import { today } from '../../../../data/dates';
 
 interface EmploymentDetailsModalProps {
@@ -264,25 +265,14 @@ export const EmploymentDetailsModal = ({
               {requiredFieldError.feeAmount && <FormHelperText error>Fee amount is required</FormHelperText>}
             </FormControl>
           </Box>
-          <FormControl fullWidth>
-            <TextField
-              sx={{
-                lineHeight: 2,
-              }}
-              disabled={isLoading}
-              id="comments"
-              name="comments"
-              label="Comments"
-              type="text"
-              multiline
-              minRows={2}
-              maxRows={4}
-              value={employmentFields.comments ?? ''}
-              slotProps={{ inputLabel: { shrink: true } }}
-              onChange={handleEmploymentChange}
-              fullWidth
-            />
-          </FormControl>
+          <MarkdownField
+            disabled={isLoading}
+            name="comments"
+            label="Comments"
+            maxRows={4}
+            value={employmentFields.comments ?? ''}
+            onChange={handleEmploymentChange}
+          />
           {error && <Alert severity="error">{error}</Alert>}
 
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignSelf: 'flex-end' }}>

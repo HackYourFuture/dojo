@@ -3,6 +3,7 @@ import { Stack, TextField } from '@mui/material';
 
 import { ContactPerson } from '../ContactPerson';
 import { FormDialog } from '../../../../components/FormDialog';
+import { MarkdownField } from '../../../../components/markdown/MarkdownField';
 import { nameValidationError } from '../../../../data/text';
 
 interface ContactPersonDialogProps {
@@ -124,16 +125,13 @@ export const ContactPersonDialog = ({
         onChange={handleTextChange}
         slotProps={{ htmlInput: { maxLength: 200 } }}
       />
-      <TextField
+      <MarkdownField
         disabled={isLoading}
         name="notes"
         label="Notes"
-        multiline
-        minRows={2}
         maxRows={6}
         value={contactPerson.notes ?? ''}
         onChange={handleTextChange}
-        slotProps={{ htmlInput: { maxLength: 5000 } }}
       />
     </FormDialog>
   );

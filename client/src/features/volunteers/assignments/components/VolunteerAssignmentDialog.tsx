@@ -6,6 +6,7 @@ import { DropdownSelect } from '../../../../components/DropdownSelect';
 import { FIELD_REQUIRED_ERROR } from '../../../../data/text';
 import { FormDateField } from '../../../../components/FormDateField';
 import { FormDialog } from '../../../../components/FormDialog';
+import { MarkdownField } from '../../../../components/markdown/MarkdownField';
 import { VolunteerAssignment } from '../VolunteerAssignment';
 import { today } from '../../../../data/dates';
 
@@ -159,16 +160,13 @@ export const VolunteerAssignmentDialog = ({
           />
         </FormControl>
       </Stack>
-      <TextField
+      <MarkdownField
         disabled={isLoading}
         name="notes"
         label="Notes"
-        multiline
-        minRows={2}
         maxRows={6}
         value={form.notes ?? ''}
         onChange={(event) => setField('notes', event.target.value)}
-        slotProps={{ htmlInput: { maxLength: 5000 } }}
       />
     </FormDialog>
   );

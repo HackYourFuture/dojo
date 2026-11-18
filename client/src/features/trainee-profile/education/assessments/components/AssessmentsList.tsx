@@ -14,7 +14,7 @@ import { Fragment, ReactElement } from 'react';
 
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { CollapsibleMarkdownText } from '../../../../../components/CollapsibleMarkdownText';
+import { CollapsibleMarkdownText } from '../../../../../components/markdown/CollapsibleMarkdownText';
 import ErrorIcon from '@mui/icons-material/Error';
 import { ListItemActions } from '../../../../../components/ListItemActions';
 import WarningIcon from '@mui/icons-material/Warning';

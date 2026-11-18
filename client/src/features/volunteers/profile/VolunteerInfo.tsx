@@ -152,7 +152,13 @@ const VolunteerInfo = ({ volunteer, setVolunteer, isEditing }: VolunteerInfoProp
         </FieldRow>
       </ProfileSection>
 
-      <ProfileNotes notes={volunteer.notes} isEditing={isEditing} onChange={handleTextChange} />
+      <ProfileNotes
+        title="Notes"
+        name="notes"
+        value={volunteer.notes}
+        isEditing={isEditing}
+        onChange={handleTextChange}
+      />
     </Stack>
   );
 };

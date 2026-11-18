@@ -3,7 +3,7 @@ import { EmploymentHistory, EmploymentType } from '../models/employment-history'
 
 import CheckIcon from '@mui/icons-material/Check';
 import { ListItemActions } from '../../../../components/ListItemActions';
-import MarkdownText from '../../../../components/MarkdownText';
+import MarkdownText from '../../../../components/markdown/MarkdownText';
 import React from 'react';
 import { formatDateForDisplay } from '../../../../data/dates';
 import { formatTextToFriendly } from '../../../../data/text';

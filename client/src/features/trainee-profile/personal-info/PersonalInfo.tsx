@@ -13,6 +13,7 @@ import { City } from '../../geo/models/city';
 import { ProfileCityField } from '../../geo/components/ProfileCityField';
 import { ProfileCountryField } from '../../geo/components/ProfileCountryField';
 import { ProfileDateField } from '../../../components/profile/ProfileDateField';
+import { ProfileNotes } from '../../../components/profile/ProfileNotes';
 import { ProfileNumberField } from '../profile/components/ProfileNumberField';
 import { ProfileSelect } from '../../../components/profile/ProfileSelect';
 import { ProfileTextField } from '../../../components/profile/ProfileTextField';
@@ -237,18 +238,13 @@ const PersonalInfo = () => {
         </FieldRow>
       </ProfileSection>
 
-      {/* The section title labels the field. */}
-      <ProfileSection title="Comments">
-        <ProfileTextField
-          name="comments"
-          multiline
-          value={editedFields.comments}
-          isEditing={isEditing}
-          onChange={handleTextChange}
-          sx={{ width: '100%' }}
-          slotProps={{ htmlInput: { 'aria-label': 'Comments' } }}
-        />
-      </ProfileSection>
+      <ProfileNotes
+        title="Comments"
+        name="comments"
+        value={editedFields.comments}
+        isEditing={isEditing}
+        onChange={handleTextChange}
+      />
     </Stack>
   );
 };
