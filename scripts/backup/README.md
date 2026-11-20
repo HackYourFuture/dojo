@@ -9,13 +9,13 @@ A Docker image built from this folder, run every night as a scheduled job next t
 
 The Drive folder ends up like this:
 
-| Folder                   | Contents                                                  |
-|--------------------------|-----------------------------------------------------------|
-| `database/daily`         | the dump of every night, kept 14 days                     |
-| `database/weekly`        | the dump of every Monday, kept 13 weeks                   |
-| `database/monthly`       | the dump of every 1st of the month, kept 1 year           |
-| `storage`                | the mirror of the bucket                                  |
-| `storage-history/<date>` | files replaced or deleted in the mirror that day, kept 1 year |
+| Folder                   | Contents                                                      |
+|--------------------------|---------------------------------------------------------------|
+| `database/daily`         | the dump of every night, kept 14 days                         |
+| `database/weekly`        | the dump of every Monday, kept 13 weeks                       |
+| `database/monthly`       | the dump of every 1st of the month, kept 1 year               |
+| `storage/current`        | the mirror of the bucket                                      |
+| `storage/history/<date>` | files replaced or deleted in the mirror that day, kept 1 year |
 
 A failed run exits non-zero; the logs of the job show what went wrong.
 
@@ -107,5 +107,5 @@ The dump drops the existing tables first, so the database ends up exactly as it 
 Storage, the whole mirror back into a bucket, with an `s3` remote configured as in the table:
 
 ```bash
-rclone copy gdrive:storage s3:<bucket>
+rclone copy gdrive:storage/current s3:<bucket>
 ```
