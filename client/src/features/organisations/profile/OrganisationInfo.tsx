@@ -114,7 +114,13 @@ const OrganisationInfo = ({ organisation, setOrganisation, isEditing }: Organisa
 
       <ContactPersons organisationId={organisation.id} />
 
-      <ProfileNotes notes={organisation.notes} isEditing={isEditing} onChange={handleTextChange} />
+      <ProfileNotes
+        title="Notes"
+        name="notes"
+        value={organisation.notes}
+        isEditing={isEditing}
+        onChange={handleTextChange}
+      />
     </Stack>
   );
 };

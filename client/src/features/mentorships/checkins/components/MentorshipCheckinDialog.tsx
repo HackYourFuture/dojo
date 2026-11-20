@@ -1,10 +1,11 @@
-import { Box, FormControl, FormHelperText, TextField } from '@mui/material';
+import { Box, FormControl, FormHelperText } from '@mui/material';
 import { daysFromToday, today } from '../../../../data/dates';
 
 import { DropdownSelect } from '../../../../components/DropdownSelect';
 import { FIELD_REQUIRED_ERROR } from '../../../../data/text';
 import { FormDateField } from '../../../../components/FormDateField';
 import { FormDialog } from '../../../../components/FormDialog';
+import { MarkdownField } from '../../../../components/markdown/MarkdownField';
 import { MentorshipCheckin } from '../MentorshipCheckin';
 import { MentorshipCheckinParticipant } from '../MentorshipCheckinParticipant';
 import { NextCheckinDateField } from '../../components/NextCheckinDateField';
@@ -143,18 +144,16 @@ export const MentorshipCheckinDialog = ({
         onChange={(event) => setField('participant', event.target.value as MentorshipCheckinParticipant)}
       />
       {/* Taller than the notes of an assignment, as the notes are what a check-in is about. */}
-      <TextField
+      <MarkdownField
         disabled={isLoading}
         name="notes"
         label="Notes"
-        multiline
         minRows={4}
         maxRows={12}
         value={form.notes}
         onChange={(event) => setField('notes', event.target.value)}
         error={!!errors?.notes}
         helperText={errors?.notes}
-        slotProps={{ htmlInput: { maxLength: 5000 } }}
       />
     </FormDialog>
   );

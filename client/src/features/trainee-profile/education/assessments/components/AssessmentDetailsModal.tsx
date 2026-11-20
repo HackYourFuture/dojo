@@ -18,6 +18,7 @@ import {
 import { Assessment, AssessmentResult, AssessmentType } from '../models/assessment';
 
 import { FormDateField } from '../../../../../components/FormDateField';
+import { MarkdownField } from '../../../../../components/markdown/MarkdownField';
 import { today } from '../../../../../data/dates';
 import { useState } from 'react';
 
@@ -230,22 +231,14 @@ export const AssessmentDetailsModal = ({
             </FormControl>
           </Box>
 
-          <FormControl fullWidth>
-            <TextField
-              disabled={isLoading}
-              id="comments"
-              name="comments"
-              label="Comments"
-              type="text"
-              multiline
-              minRows={2}
-              maxRows={4}
-              value={assessmentFields.comments || ''}
-              onChange={handleChange}
-              fullWidth
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
-          </FormControl>
+          <MarkdownField
+            disabled={isLoading}
+            name="comments"
+            label="Comments"
+            maxRows={4}
+            value={assessmentFields.comments || ''}
+            onChange={handleChange}
+          />
 
           {error && <Alert severity="error">{error}</Alert>}
 

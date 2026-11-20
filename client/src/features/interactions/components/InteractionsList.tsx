@@ -18,7 +18,7 @@ import { ConfirmationDialog } from '../../../components/ConfirmationDialog';
 import Diversity2Icon from '@mui/icons-material/Diversity2';
 import { Interaction } from '../Interaction';
 import { ListItemActions } from '../../../components/ListItemActions';
-import MarkdownText from '../../../components/MarkdownText';
+import MarkdownText from '../../../components/markdown/MarkdownText';
 import { ProfileType } from '../../../data/types/ProfileType';
 import { Link as RouterLink } from 'react-router';
 import { formatDateForDisplay, formatDateTimeForDisplay } from '../../../data/dates';

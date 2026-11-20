@@ -15,6 +15,7 @@ import { Interaction, InteractionType } from '../Interaction';
 import FormDateTimeField from './FormDateTimeField';
 import FormSelect from './FormSelect';
 import FormTextField from './FormTextField';
+import { MarkdownField } from '../../../components/markdown/MarkdownField';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -194,12 +195,12 @@ export const InteractionDetailsModal = ({
           </Box>
 
           <Box>
-            <FormTextField
+            <MarkdownField
               disabled={isLoading}
+              name="details"
               label="Comments"
               value={interactionFields.details || ''}
               onChange={handleChange('details')}
-              multiline
               minRows={4}
               maxRows={10}
               required

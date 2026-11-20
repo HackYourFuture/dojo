@@ -4,13 +4,12 @@ import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 
+import { markdownStyle } from './markdownStyles';
+
 const preStyle = { whiteSpace: 'pre-wrap' as const };
 
-// Markdown blocks have top margins, which would add a gap above the text. Long lines wrap instead of overflowing.
-const rootStyle = { overflowWrap: 'anywhere', '& > *': { marginTop: 0 } } as const;
-
 const MarkdownText = ({ children }: { children: string }) => (
-  <Box sx={rootStyle}>
+  <Box sx={markdownStyle}>
     <Markdown
       remarkPlugins={[remarkBreaks, remarkGfm]}
       components={{

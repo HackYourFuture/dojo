@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
-import { CollapsibleMarkdownText } from '../../../../components/CollapsibleMarkdownText';
+import { CollapsibleMarkdownText } from '../../../../components/markdown/CollapsibleMarkdownText';
 import { Fragment } from 'react';
 import { ListItemActions } from '../../../../components/ListItemActions';
 import { VolunteerAssignment } from '../VolunteerAssignment';

@@ -62,6 +62,18 @@ Authentication-related logic:
 - Component is generic and has no feature-specific dependencies
 - Component represents a common UI pattern
 
+`components/markdown/` holds what shows and edits the notes and comments, which are Markdown:
+
+```
+components/markdown/
+├── MarkdownText.tsx            # Markdown shown formatted (react-markdown with remark-gfm and remark-breaks)
+├── CollapsibleMarkdownText.tsx # MarkdownText in a table row, cut off with "Show more"
+├── markdownStyles.ts           # The look of Markdown text, the same in MarkdownText and MarkdownField
+├── MarkdownField.tsx           # Text field with a toolbar for formatting, whose value is Markdown; a plain text box for a note it cannot show
+├── MarkdownLinkPopover.tsx     # The box to add, change or remove a link in a MarkdownField
+└── markdownEditor.ts           # The Milkdown editor of MarkdownField, loaded lazily: its Markdown settings and toolbar commands
+```
+
 `components/profile/` holds the pieces the profiles share:
 
 ```
@@ -76,7 +88,7 @@ components/profile/
 ├── ProfileSelect.tsx         # Dropdown, with an empty option for a nullable field
 ├── ProfileMultiSelect.tsx    # Several values picked from a list, shown as their labels until the profile is edited
 ├── ProfileDateField.tsx      # Date picker, can be cleared; works in YYYY-MM-DD strings
-├── ProfileNotes.tsx          # The Markdown notes section
+├── ProfileNotes.tsx          # A Markdown section, like the notes: a MarkdownField while editing, MarkdownText otherwise
 ├── ContactFields.tsx         # The email, phone, Slack, GitHub and LinkedIn fields of a contact tab
 ├── SocialLinks.tsx           # The website, Slack, GitHub and LinkedIn buttons of a profile header
 ├── ProfileActionsButton.tsx  # The Actions button, with a menu of the given actions

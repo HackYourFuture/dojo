@@ -1,7 +1,7 @@
 import { Box, List, ListItem, Typography } from '@mui/material';
 
 import { ListItemActions } from '../../../../components/ListItemActions';
-import MarkdownText from '../../../../components/MarkdownText';
+import MarkdownText from '../../../../components/markdown/MarkdownText';
 import { MentorshipCheckin } from '../MentorshipCheckin';
 import { formatDateForDisplay } from '../../../../data/dates';
 import { MentorshipCheckinParticipant } from '../MentorshipCheckinParticipant';
