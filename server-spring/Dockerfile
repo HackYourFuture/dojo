@@ -12,4 +12,6 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 7777
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV TZ=Europe/Amsterdam
+# Make the container more memory efficient using the following JVM options
+ENV JAVA_TOOL_OPTIONS="-Xmx384m -XX:+UseSerialGC -XX:+UseCompactObjectHeaders"
 CMD ["java", "-jar", "app.jar"]
