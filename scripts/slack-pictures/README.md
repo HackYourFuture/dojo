@@ -2,10 +2,10 @@
 
 Once a day, [sync.py](sync.py) gives every trainee and volunteer without a profile picture the
 picture from their Slack profile. It lists both through the Dojo API, keeps the people with a Slack
-id, asks Slack for their profile and uploads the picture to Dojo. People whose Slack profile still
-has the generated default avatar are skipped, so Dojo keeps showing that they have no picture until
-they upload one. Nothing is remembered between runs: whoever is still without a picture tomorrow is
-tried again.
+id, asks Slack for their profile and uploads the picture to Dojo. Someone who never uploaded a
+picture to Slack gets their Gravatar, which is what Slack shows for them, if they have one. People
+with neither are skipped, so Dojo keeps showing that they have no picture until they upload one.
+Nothing is remembered between runs: whoever is still without a picture tomorrow is tried again.
 
 A failed run exits non-zero; the logs of the job show what went wrong. The script prints Dojo ids
 and counts only, never names.

@@ -36,10 +36,20 @@ def slack_picture_url(slack_id: str) -> str | None:
             return None
         raise Exception("Slack: " + body["error"])
     profile = body["user"]["profile"]
-    if not profile.get("is_custom_image"):
+    if profile.get("is_custom_image"):
+        # Dojo stores 700x700, so anything larger than 1024 is wasted
+        return profile.get("image_1024") or profile["image_512"]
+    # Without an uploaded picture Slack shows the person's Gravatar, if they have one
+    image = profile["image_512"]
+    if "gravatar.com/" not in image:
         return None
-    # Dojo stores 700x700, so anything larger than 1024 is wasted
-    return profile.get("image_1024") or profile["image_512"]
+    # s=700 is the size Dojo stores; d=404 makes Gravatar answer 404 when the person has none
+    gravatar = image.split("?")[0] + "?s=700&d=404"
+    response = requests.head(gravatar, timeout=30)
+    if response.status_code == 404:
+        return None
+    check(response)
+    return gravatar
 
 
 def copy_picture(kind: str, person_id: str, url: str) -> None:
