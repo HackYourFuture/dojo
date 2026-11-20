@@ -41,8 +41,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
                         .requestMatchers("/actuator/health/**").permitAll()
                         .requestMatchers("/api/docs/**").permitAll()
+                        // The certificates site, where anyone can check a certificate
+                        .requestMatchers("/api/public/certificates/**").permitAll()
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .anyRequest().authenticated())
+                // SAMEORIGIN like nginx, not Spring's DENY, so the certificate page can embed its PDF.
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 // Filter-chain 401s and 403s never reach GlobalExceptionHandler; this gives them its shape.
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(securityErrorHandler)
