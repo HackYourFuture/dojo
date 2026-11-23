@@ -44,3 +44,11 @@ export const createOrganisation = async (newOrganisation: NewOrganisation) => {
 export const deleteOrganisation = async (organisationId: string) => {
   await axios.delete(`/api/organisations/${organisationId}`);
 };
+
+// The organisations the search finds for the text, sorted by name. Only the first page, for a picker.
+export const searchOrganisations = async (query: string) => {
+  const { data } = await axios.get<PagedModel<OrganisationSummaryResponse>>('/api/organisations', {
+    params: { q: query, size: 100 },
+  });
+  return data.content.map(mapOrganisationSummaryToDomain);
+};

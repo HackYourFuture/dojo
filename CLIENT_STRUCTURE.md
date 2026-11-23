@@ -118,7 +118,7 @@ features/
 ├── interactions/            # Interactions tab of the trainee, organisation and volunteer profiles, with the check-ins of their mentorships
 ├── login/                   # Login feature
 ├── mentorships/             # Mentorships list with its filters, the dialog to add one, the mentorship profile with its check-ins, and the mentorships on the volunteer and trainee profiles
-├── organisations/           # Organisations list, the dialog to add one, and the organisation profile
+├── organisations/           # Organisations list, the dialog to add one, the organisation profile and the organisation picker
 ├── profile-picture/         # Picture of the trainee, organisation and volunteer profiles
 ├── search/                  # Search feature
 ├── trainee-profile/         # Trainee profile feature (see detailed structure below)
