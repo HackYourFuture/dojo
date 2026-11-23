@@ -50,6 +50,14 @@ export interface Organisation extends OrganisationSummary {
   notes: string | null;
 }
 
+// An organisation as another record refers to it.
+export interface OrganisationReference {
+  readonly id: string;
+  name: string;
+  profilePath: string;
+  thumbnailUrl: string | null;
+}
+
 // The fields of the profile that can be edited.
 export const EDITABLE_ORGANISATION_FIELDS = [
   'name',
