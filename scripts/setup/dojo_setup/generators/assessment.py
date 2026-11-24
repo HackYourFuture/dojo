@@ -3,6 +3,7 @@ from typing import Any
 from dojo_setup.generators.randomness import YEAR, chance, date_after, fake, weighted
 
 ASSESSMENT_TYPES = [
+    "PRESENTATION",
     "FINAL_PROJECT_INTERVIEW",
     "CORE_MID_TERM_INTERVIEW",
     "CORE_END_INTERVIEW",

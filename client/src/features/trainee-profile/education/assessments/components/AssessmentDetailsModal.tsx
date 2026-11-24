@@ -179,6 +179,8 @@ export const AssessmentDetailsModal = ({
                 <MenuItem value={AssessmentType.TesterMidTermInterview}>Tester mid-term interview</MenuItem>
                 <ListSubheader>Final project</ListSubheader>
                 <MenuItem value={AssessmentType.FinalProjectInterview}>Final project interview</MenuItem>
+                <ListSubheader>Personal Development</ListSubheader>
+                <MenuItem value={AssessmentType.Presentation}>Presentation</MenuItem>
               </Select>
               {typeError && <FormHelperText>Type is required</FormHelperText>}
             </FormControl>
